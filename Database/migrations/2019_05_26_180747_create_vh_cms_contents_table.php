@@ -15,7 +15,18 @@ class CreateVhCmsContentsTable extends Migration
     {
         Schema::create('vh_cms_contents', function (Blueprint $table) {
             $table->increments('id');
+
+            $table->integer('contentable_id')->nullable();
+            $table->string('contentable_type')->nullable();
+            $table->integer('vh_form_group_id')->nullable();
+            $table->integer('order')->nullable();
+
+            $table->integer('created_by')->nullable();
+            $table->integer('updated_by')->nullable();
+            $table->integer('deleted_by')->nullable();
+
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
