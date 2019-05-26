@@ -1,2 +1,2 @@
-# vaahcms-module-cms
-CMS module for VaahCMS Framework
+# vaahcms-blog
+Blog Module for VaahCMS
