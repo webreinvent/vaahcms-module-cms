@@ -1,5 +1,5 @@
 <?php
-namespace VaahCms\Cms\Blog\Providers;
+namespace VaahCms\Modules\Cms\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;

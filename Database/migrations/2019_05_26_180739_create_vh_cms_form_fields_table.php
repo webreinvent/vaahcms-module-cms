@@ -20,7 +20,6 @@ class CreateVhCmsFormFieldsTable extends Migration
             $table->string('slug')->nullable();
             $table->string('excerpt')->nullable();
             $table->string('type')->nullable();
-            $table->string('excerpt')->nullable();
             $table->integer('order')->nullable();
             $table->boolean('is_repeatable')->nullable();
 

@@ -14,7 +14,7 @@ class DatabaseTableSeeder extends Seeder
     public function run()
     {
 
-        $this->seedBlogs();
+        $this->seeds();
 
     }
 
@@ -23,9 +23,10 @@ class DatabaseTableSeeder extends Seeder
      *
      * @return void
      */
-    function seedBlogs()
+    function seeds()
     {
-        $list = [
+
+        /*$list = [
             [
                 'title' => 'This is a sample blog',
                 'slug' => 'slug',
@@ -44,7 +45,7 @@ class DatabaseTableSeeder extends Seeder
             if (!$exist){
                 \DB::table( 'vh_blog_posts' )->insert( $item );
             }
-        }
+        }*/
 
     }
 
