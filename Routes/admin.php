@@ -16,7 +16,7 @@ Route::group(
     [
         'prefix'     => 'admin/cms/pages',
         'middleware' => ['web', 'has.admin.access'],
-        'namespace'  => 'VaahCms\Modules\Cms\Http\Controllers\Admin'
+        'namespace'  => 'Admin'
     ],
     function () {
         //------------------------------------------------
