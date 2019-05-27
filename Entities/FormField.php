@@ -31,6 +31,12 @@ class FormField extends Model
         return $this->morphTo();
     }
     //-------------------------------------------------
+    public function content($table_id)
+    {
+        return $this->hasMany('VaahCms\Modules\Cms\Entities\Content',
+            'vh_form_field_id', 'id')
+            ->where('vh_contents.table_id', $table_id);
+    }
     //-------------------------------------------------
     //-------------------------------------------------
     //-------------------------------------------------

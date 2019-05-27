@@ -27,6 +27,8 @@ Route::group(
         Route::any( '/assets', 'PageController@assets' )
             ->name( 'vh.cms.pages.assets' );
         //------------------------------------------------
+        Route::any( '/custom/fields', 'PageController@getCustomFields' )
+            ->name( 'vh.cms.custom.fields' );
         //------------------------------------------------
         //------------------------------------------------
     });

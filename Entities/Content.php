@@ -20,11 +20,14 @@ class Content extends Model
     //-------------------------------------------------
 
     protected $fillable = [
-        'contentable_id', 'contentable_type', 'vh_form_group_id',
-        'order',
+        'contentable_id', 'contentable_type', 'table_id',
         'created_by', 'updated_by', 'deleted_by'
     ];
     //-------------------------------------------------
+    public function contentable()
+    {
+        return $this->morphTo();
+    }
     //-------------------------------------------------
     //-------------------------------------------------
     //-------------------------------------------------

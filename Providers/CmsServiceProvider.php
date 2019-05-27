@@ -29,6 +29,9 @@ class CmsServiceProvider extends ServiceProvider
 
     }
 
+
+
+
     /**
      * Register the service provider.
      *
@@ -37,6 +40,19 @@ class CmsServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->register(RouteServiceProvider::class);
+        $this->registerHelpers();
+    }
+
+    /**
+     *
+     */
+    private function registerHelpers() {
+
+        //load all the helpers
+        foreach (glob(__DIR__.'/../Helpers/*.php') as $filename){
+            require_once($filename);
+        }
+
     }
 
     /**

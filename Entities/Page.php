@@ -5,6 +5,7 @@ namespace VaahCms\Modules\Cms\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use WebReinvent\VaahCms\Entities\Theme;
+use WebReinvent\VaahCms\Entities\ThemeTemplate;
 
 class Page extends Model
 {
@@ -45,25 +46,26 @@ class Page extends Model
         return $this->morphMany('VaahCms\Modules\Cms\Entities\FormField', 'fieldable');
     }
     //-------------------------------------------------
-    public static function syncPageFields($inputs)
+
+    public static function getAssetsList()
     {
 
-        $theme = Theme::slug($inputs['theme_slug'])->first();
-        $page = ThemeTem::slug($inputs['page_template'])
-            ->where('vh_theme_id', $theme->id)
-            ->first();
+        $pages = Page::all();
 
-        echo "<pre>";
-        print_r($page);
-        echo "</pre>";
-        die("<hr/>line number=123");
+        $result = [];
+        $i = 0;
+        foreach ($pages as $page)
+        {
 
-        $field = new FormField($inputs);
+            $result[$i]['label'] = $page->name;
+            $result[$i]['code'] = $page->id;
 
-        $page->formFields()->save($field);
+        }
 
+        return $result;
 
     }
+
     //-------------------------------------------------
     //-------------------------------------------------
     //-------------------------------------------------

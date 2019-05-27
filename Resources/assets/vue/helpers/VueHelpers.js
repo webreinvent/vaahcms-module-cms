@@ -54,19 +54,19 @@ const VueHelpers = {
                 this.errors([error.response.data]);
 
                 // Request made and server responded
-                this.$helpers.console(error.response.data);
-                this.$helpers.console(error.response.status);
-                this.$helpers.console(error.response.headers);
+                this.console(error.response.data);
+                this.console(error.response.status);
+                this.console(error.response.headers);
 
             } else if (error.request) {
 
                 // The request was made but no response was received
-                this.$helpers.console(error.request);
+                this.console(error.request);
                 this.errors(['Server not responding']);
 
             } else {
                 // Something happened in setting up the request that triggered an Error
-                this.$helpers.console(error.message);
+                this.console(error.message);
                 this.errors([error.message]);
             }
 

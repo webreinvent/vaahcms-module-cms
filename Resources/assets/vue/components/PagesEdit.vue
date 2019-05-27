@@ -228,4 +228,4 @@
         <!--/content body-->
     </div>
 </template>
-<script src="./PagesAddJs.js"></script>
+<script src="./PagesEditJs.js"></script>

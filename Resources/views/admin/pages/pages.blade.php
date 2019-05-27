@@ -1,7 +1,7 @@
 @extends("vaahcms::admin.default.layouts.dashboard")
 
 @section('vaahcms_extend_admin_css')
-
+    <link rel="stylesheet" href="https://unpkg.com/vue-select@3.0.0/dist/vue-select.css">
 @endsection
 
 

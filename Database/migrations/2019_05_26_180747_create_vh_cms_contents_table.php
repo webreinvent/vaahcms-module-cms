@@ -18,8 +18,11 @@ class CreateVhCmsContentsTable extends Migration
 
             $table->integer('contentable_id')->nullable();
             $table->string('contentable_type')->nullable();
-            $table->integer('vh_form_group_id')->nullable();
-            $table->integer('order')->nullable();
+
+            $table->integer('table_id')->nullable();
+
+            $table->longText('content')->nullable();
+            $table->text('meta')->nullable();
 
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
@@ -27,6 +30,7 @@ class CreateVhCmsContentsTable extends Migration
 
             $table->timestamps();
             $table->softDeletes();
+
         });
     }
 
