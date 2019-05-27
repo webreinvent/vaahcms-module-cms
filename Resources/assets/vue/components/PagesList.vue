@@ -31,18 +31,14 @@
                     <div class="d-sm-flex align-items-center justify-content-between">
                         <div>
                             <nav class="nav" v-if="stats">
+
                                 <a href="#" class="nav-link pd-l-0"
-                                   v-on:click="setFilter($event, 'all')"
-                                   v-bind:class="{'active': filters.status == 'all'}">All ({{stats.all}})</a>
-                                <a href="#" class="nav-link"
-                                   v-on:click="setFilter($event, 'active')"
-                                   v-bind:class="{'active': filters.status == 'active'}">Active ({{stats.active}})</a>
-                                <a href="#" class="nav-link"
-                                   v-on:click="setFilter($event, 'inactive')"
-                                   v-bind:class="{'active': filters.status == 'inactive'}">Inactive ({{stats.inactive}})</a>
-                                <a href="#" class="nav-link"
-                                   v-on:click="setFilter($event, 'update_available')"
-                                   v-bind:class="{'active': filters.status == 'update_available'}">Updates Available ({{stats.update_available}})</a>
+                                   v-for="stat in stats"
+                                   v-on:click="setFilterStatus($event, stat.code)"
+                                   v-bind:class="{'active': filters.status == stat.code}">
+                                    {{stat.label}} ({{stat.count}})
+                                </a>
+
                             </nav>
                         </div>
 
@@ -74,8 +70,88 @@
         <!--content body-->
 
 
+        <div class="row">
+
+            <div class="col-sm-3">
+
+
+                <div class="input-group input-group-sm">
+                    <select class="custom-select" id="inputGroupSelect04">
+                        <option selected>Bulk Actions</option>
+                        <option >Activate</option>
+                        <option value="1">Deactivate</option>
+                        <option value="2">Update</option>
+                        <option value="3">Delete</option>
+                    </select>
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button">Apply</button>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+
+        <div class="row mg-t-10 mg-b-10">
+            <div class="col-sm">
+                <table class="table bg-white" v-if="list">
+                    <thead class="thead-light">
+                    <tr >
+                        <th width="30" scope="col">
+
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="selectAll">
+                                <label class="custom-control-label" for="selectAll"></label>
+                            </div>
+
+                        </th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Create By</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr  v-for="item in list.data"
+                         class="">
+                        <th scope="row">
+
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="customCheck1">
+                                <label class="custom-control-label" for="customCheck1"></label>
+                            </div>
+
+                        </th>
+                        <td>
+                            <span class="tx-medium">{{item.title}}</span><br/>
+                            <small>{{item.name}}</small>
+                        </td>
+                        <td>
+                            {{item.status}}
+                        </td>
+
+                    </tr>
+
+
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="col">
+                <pagination  v-if="list" :limit="6" :data="list" @pagination-change-page="getList"></pagination>
+            </div>
+
+        </div>
+
+
 
         <!--/content body-->
+
+
     </div>
 </template>
 <script src="./PagesListJs.js"></script>

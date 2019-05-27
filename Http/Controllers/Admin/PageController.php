@@ -139,6 +139,48 @@ class PageController extends Controller
 
     }
     //----------------------------------------------------------
+    public function getList(Request $request)
+    {
+        $list = Page::orderBy('created_at', 'DESC');
+
+        if($request->has('q'))
+        {
+            $list->where(function ($s) use ($request) {
+                $s->where('name', 'LIKE', '%'.$request->q.'%')
+                    ->orWhere('title', 'LIKE', '%'.$request->q.'%');
+            });
+        }
+
+        if($request->has('status') && $request->get('status') != 'all')
+        {
+            $list->status($request->get('status'));
+        }
+
+
+        $i = 0;
+        $stats[$i] = ['label' => "All", 'code' => 'all'];
+        $stats[$i]['count'] = Page::count();
+
+        $page_statuses = page_statuses();
+
+        $i++;
+        foreach ($page_statuses as $status)
+        {
+            $stats[$i] = $status;
+            $stats[$i]['count'] = Page::status($status['code'])->count();
+            $i++;
+        }
+
+        $stats[$i] = ['label' => "Trashed", 'code' => 'trashed'];
+        $stats[$i]['count'] = Page::onlyTrashed()->count();
+
+        $response['status'] = 'success';
+        $response['data']['list'] = $list->paginate(10);
+        $response['data']['stats'] = $stats;
+
+        return response()->json($response);
+
+    }
     //----------------------------------------------------------
     //----------------------------------------------------------
 

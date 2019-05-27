@@ -26171,7 +26171,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             q: null,
             page: 1,
             list: null,
-            page_reload_required: null,
             stats: null,
             active_tab: 'all',
             active_item: null,
@@ -26189,12 +26188,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     mounted: function mounted() {
 
         //---------------------------------------------------------------------
-        //this.getAssets();
+        this.getAssets();
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
-
     },
 
     methods: {
@@ -26273,9 +26271,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         actionsAfter: function actionsAfter(data) {
             this.getList();
             this.page_reload_required = 1;
+        },
+        //---------------------------------------------------------------------
+        setFilterStatus: function setFilterStatus(e, status) {
+            if (e) {
+                e.preventDefault();
+            }
+
+            this.filters.status = status;
+
+            this.getList();
         }
         //---------------------------------------------------------------------
-
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
@@ -26926,79 +26933,35 @@ var render = function() {
             [
               _c("div", [
                 _vm.stats
-                  ? _c("nav", { staticClass: "nav" }, [
-                      _c(
-                        "a",
-                        {
-                          staticClass: "nav-link pd-l-0",
-                          class: { active: _vm.filters.status == "all" },
-                          attrs: { href: "#" },
-                          on: {
-                            click: function($event) {
-                              return _vm.setFilter($event, "all")
+                  ? _c(
+                      "nav",
+                      { staticClass: "nav" },
+                      _vm._l(_vm.stats, function(stat) {
+                        return _c(
+                          "a",
+                          {
+                            staticClass: "nav-link pd-l-0",
+                            class: { active: _vm.filters.status == stat.code },
+                            attrs: { href: "#" },
+                            on: {
+                              click: function($event) {
+                                return _vm.setFilterStatus($event, stat.code)
+                              }
                             }
-                          }
-                        },
-                        [_vm._v("All (" + _vm._s(_vm.stats.all) + ")")]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "a",
-                        {
-                          staticClass: "nav-link",
-                          class: { active: _vm.filters.status == "active" },
-                          attrs: { href: "#" },
-                          on: {
-                            click: function($event) {
-                              return _vm.setFilter($event, "active")
-                            }
-                          }
-                        },
-                        [_vm._v("Active (" + _vm._s(_vm.stats.active) + ")")]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "a",
-                        {
-                          staticClass: "nav-link",
-                          class: { active: _vm.filters.status == "inactive" },
-                          attrs: { href: "#" },
-                          on: {
-                            click: function($event) {
-                              return _vm.setFilter($event, "inactive")
-                            }
-                          }
-                        },
-                        [
-                          _vm._v(
-                            "Inactive (" + _vm._s(_vm.stats.inactive) + ")"
-                          )
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "a",
-                        {
-                          staticClass: "nav-link",
-                          class: {
-                            active: _vm.filters.status == "update_available"
                           },
-                          attrs: { href: "#" },
-                          on: {
-                            click: function($event) {
-                              return _vm.setFilter($event, "update_available")
-                            }
-                          }
-                        },
-                        [
-                          _vm._v(
-                            "Updates Available (" +
-                              _vm._s(_vm.stats.update_available) +
-                              ")"
-                          )
-                        ]
-                      )
-                    ])
+                          [
+                            _vm._v(
+                              "\n                                " +
+                                _vm._s(stat.label) +
+                                " (" +
+                                _vm._s(stat.count) +
+                                ")\n                            "
+                            )
+                          ]
+                        )
+                      }),
+                      0
+                    )
                   : _vm._e()
               ]),
               _vm._v(" "),
@@ -27060,6 +27023,61 @@ var render = function() {
           )
         ])
       ])
+    ]),
+    _vm._v(" "),
+    _vm._m(1),
+    _vm._v(" "),
+    _c("div", { staticClass: "row mg-t-10 mg-b-10" }, [
+      _c("div", { staticClass: "col-sm" }, [
+        _vm.list
+          ? _c("table", { staticClass: "table bg-white" }, [
+              _vm._m(2),
+              _vm._v(" "),
+              _c(
+                "tbody",
+                _vm._l(_vm.list.data, function(item) {
+                  return _c("tr", {}, [
+                    _vm._m(3, true),
+                    _vm._v(" "),
+                    _c("td", [
+                      _c("span", { staticClass: "tx-medium" }, [
+                        _vm._v(_vm._s(item.title))
+                      ]),
+                      _c("br"),
+                      _vm._v(" "),
+                      _c("small", [_vm._v(_vm._s(item.name))])
+                    ]),
+                    _vm._v(" "),
+                    _c("td", [
+                      _vm._v(
+                        "\n                        " +
+                          _vm._s(item.status) +
+                          "\n                    "
+                      )
+                    ])
+                  ])
+                }),
+                0
+              )
+            ])
+          : _vm._e()
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "row" }, [
+      _c(
+        "div",
+        { staticClass: "col" },
+        [
+          _vm.list
+            ? _c("pagination", {
+                attrs: { limit: 6, data: _vm.list },
+                on: { "pagination-change-page": _vm.getList }
+              })
+            : _vm._e()
+        ],
+        1
+      )
     ])
   ])
 }
@@ -27070,6 +27088,94 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", [
       _c("h4", { staticClass: "mg-b-0 tx-spacing--1" }, [_vm._v("Pages")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-sm-3" }, [
+        _c("div", { staticClass: "input-group input-group-sm" }, [
+          _c(
+            "select",
+            {
+              staticClass: "custom-select",
+              attrs: { id: "inputGroupSelect04" }
+            },
+            [
+              _c("option", { attrs: { selected: "" } }, [
+                _vm._v("Bulk Actions")
+              ]),
+              _vm._v(" "),
+              _c("option", [_vm._v("Activate")]),
+              _vm._v(" "),
+              _c("option", { attrs: { value: "1" } }, [_vm._v("Deactivate")]),
+              _vm._v(" "),
+              _c("option", { attrs: { value: "2" } }, [_vm._v("Update")]),
+              _vm._v(" "),
+              _c("option", { attrs: { value: "3" } }, [_vm._v("Delete")])
+            ]
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "input-group-append" }, [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-outline-secondary",
+                attrs: { type: "button" }
+              },
+              [_vm._v("Apply")]
+            )
+          ])
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", { staticClass: "thead-light" }, [
+      _c("tr", [
+        _c("th", { attrs: { width: "30", scope: "col" } }, [
+          _c("div", { staticClass: "custom-control custom-checkbox" }, [
+            _c("input", {
+              staticClass: "custom-control-input",
+              attrs: { type: "checkbox", id: "selectAll" }
+            }),
+            _vm._v(" "),
+            _c("label", {
+              staticClass: "custom-control-label",
+              attrs: { for: "selectAll" }
+            })
+          ])
+        ]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Title")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Status")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Create By")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("th", { attrs: { scope: "row" } }, [
+      _c("div", { staticClass: "custom-control custom-checkbox" }, [
+        _c("input", {
+          staticClass: "custom-control-input",
+          attrs: { type: "checkbox", id: "customCheck1" }
+        }),
+        _vm._v(" "),
+        _c("label", {
+          staticClass: "custom-control-label",
+          attrs: { for: "customCheck1" }
+        })
+      ])
     ])
   }
 ]
@@ -27240,7 +27346,29 @@ var render = function() {
           ])
         ]),
         _vm._v(" "),
-        _vm._m(1),
+        _c("div", { staticClass: "form-group" }, [
+          _c("textarea", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.page_data.content,
+                expression: "page_data.content"
+              }
+            ],
+            staticClass: "form-control",
+            attrs: { rows: "10", placeholder: "Content" },
+            domProps: { value: _vm.page_data.content },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.$set(_vm.page_data, "content", $event.target.value)
+              }
+            }
+          })
+        ]),
         _vm._v(" "),
         _c("hr", { staticClass: "mg-t-30 mg-b-30" }),
         _vm._v(" "),
@@ -27346,7 +27474,7 @@ var render = function() {
       _vm.assets
         ? _c("div", { staticClass: "col-sm-12 col-md-4" }, [
             _c("div", { staticClass: "card mg-b-15" }, [
-              _vm._m(2),
+              _vm._m(1),
               _vm._v(" "),
               _c("div", { staticClass: "card-body pd-10" }, [
                 _c("div", { staticClass: "row mg-b-10" }, [
@@ -27387,7 +27515,7 @@ var render = function() {
                     )
                   ]),
                   _vm._v(" "),
-                  _vm._m(3)
+                  _vm._m(2)
                 ]),
                 _vm._v(" "),
                 _c("table", { staticClass: "table table-condensed" }, [
@@ -27433,15 +27561,15 @@ var render = function() {
                     )
                   ]),
                   _vm._v(" "),
-                  _vm._m(4)
+                  _vm._m(3)
                 ]),
                 _vm._v(" "),
-                _vm._m(5)
+                _vm._m(4)
               ])
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "card" }, [
-              _vm._m(6),
+              _vm._m(5),
               _vm._v(" "),
               _c("div", { staticClass: "card-body pd-10" }, [
                 _c("table", { staticClass: "table table-condensed" }, [
@@ -27517,17 +27645,6 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", [
       _c("h4", { staticClass: "mg-b-0 tx-spacing--1" }, [_vm._v("Add Pages")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-group" }, [
-      _c("textarea", {
-        staticClass: "form-control",
-        attrs: { rows: "10", placeholder: "Content" }
-      })
     ])
   },
   function() {

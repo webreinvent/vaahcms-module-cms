@@ -4,8 +4,7 @@ namespace VaahCms\Modules\Cms\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use WebReinvent\VaahCms\Entities\Theme;
-use WebReinvent\VaahCms\Entities\ThemeTemplate;
+
 
 class Page extends Model
 {
@@ -34,6 +33,10 @@ class Page extends Model
     //-------------------------------------------------
     public function scopeSlug( $query, $slug ) {
         return $query->where( 'slug', $slug );
+    }
+    //-------------------------------------------------
+    public function scopeStatus( $query, $status ) {
+        return $query->where( 'status', $status );
     }
     //-------------------------------------------------
     public function formGroups()

@@ -33,4 +33,9 @@ Route::group(
         Route::any( '/store', 'PageController@storePage' )
             ->name( 'vh.cms.pages.store' );
         //------------------------------------------------
+        Route::any( '/list', 'PageController@getList' )
+            ->name( 'vh.cms.pages.list' );
+        //------------------------------------------------
+        //------------------------------------------------
+        //------------------------------------------------
     });
