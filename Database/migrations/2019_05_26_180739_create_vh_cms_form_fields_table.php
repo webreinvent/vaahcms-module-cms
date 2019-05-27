@@ -16,6 +16,9 @@ class CreateVhCmsFormFieldsTable extends Migration
         Schema::create('vh_cms_form_fields', function (Blueprint $table) {
             $table->increments('id');
 
+            $table->string('fieldable_type')->nullable();
+            $table->integer('fieldable_id')->nullable();
+
             $table->string('name')->nullable();
             $table->string('slug')->nullable();
             $table->string('excerpt')->nullable();

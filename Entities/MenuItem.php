@@ -5,12 +5,12 @@ namespace VaahCms\Modules\Cms\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class VhCmsFormField extends Model
+class MenuItem extends Model
 {
     use SoftDeletes;
 
     //-------------------------------------------------
-    protected $table = 'vh_cms_form_fields';
+    protected $table = 'vh_cms_menu_items';
     //-------------------------------------------------
     protected $dates = [
         'created_at', 'updated_at', 'deleted_at'
@@ -20,9 +20,9 @@ class VhCmsFormField extends Model
     //-------------------------------------------------
 
     protected $fillable = [
-        'name', 'slug', 'excerpt',
-        'type', 'order', 'is_repeatable',
-
+        'name', 'slug', 'title',
+        'attr_id', 'attr_class', 'vh_menu_id',
+        'order', 'uri', 'is_active', 'vh_permission_slug',
         'created_by', 'updated_by', 'deleted_by'
     ];
     //-------------------------------------------------

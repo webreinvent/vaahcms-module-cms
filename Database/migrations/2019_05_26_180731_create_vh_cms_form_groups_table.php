@@ -16,6 +16,8 @@ class CreateVhCmsFormGroupsTable extends Migration
         Schema::create('vh_cms_form_groups', function (Blueprint $table) {
             $table->increments('id');
 
+            $table->string('groupable_type')->nullable();
+            $table->integer('groupable_id')->nullable();
             $table->string('name')->nullable();
             $table->string('slug')->nullable();
             $table->string('excerpt')->nullable();

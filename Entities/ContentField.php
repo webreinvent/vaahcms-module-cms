@@ -5,7 +5,7 @@ namespace VaahCms\Modules\Cms\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class VhCmsContentField extends Model
+class ContentField extends Model
 {
     use SoftDeletes;
 
