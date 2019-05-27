@@ -20,7 +20,8 @@ class Content extends Model
     //-------------------------------------------------
 
     protected $fillable = [
-        'contentable_id', 'contentable_type', 'table_id',
+        'contentable_type', 'contentable_id', 'vh_cms_form_group_id',
+        'vh_cms_form_field_id', 'content', 'meta',
         'created_by', 'updated_by', 'deleted_by'
     ];
     //-------------------------------------------------

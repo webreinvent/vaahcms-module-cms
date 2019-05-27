@@ -148,16 +148,19 @@ export default {
                 e.preventDefault();
             }
 
-            var url = this.urls.current+"/assets";
+            var url = this.urls.current+"/store";
             var params = this.page_data;
+            params.page_template_slug = this.page_template.code;
 
             this.$helpers.console(this.page_data, 'page_data');
 
-            //this.$helpers.ajax(url, params, this.fnAfter);
+            this.$helpers.ajax(url, params, this.storeDraftAfter);
 
         },
         //---------------------------------------------------------------------
-        fnAfter: function (data) {
+        storeDraftAfter: function (data) {
+
+            this.$helpers.console(data, '--->');
 
             this.$helpers.stopNprogress();
         },

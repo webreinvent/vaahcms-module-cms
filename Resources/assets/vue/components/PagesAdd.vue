@@ -72,7 +72,9 @@
                 </div>
 
                 <div class="form-group">
-                    <textarea class="form-control" rows="10" placeholder="Content"></textarea>
+                    <textarea class="form-control" rows="10"
+                              v-model="page_data.content"
+                              placeholder="Content"></textarea>
                 </div>
 
                 <hr class="mg-t-30 mg-b-30">
@@ -81,18 +83,23 @@
 
                 <div v-if="page_data.custom_fields">
 
-                    <div v-for="field in page_data.custom_fields">
+                    <div v-for="group in page_data.custom_fields">
 
-                        <div class="form-group" v-if="field.type == 'text'">
-                            <label>{{field.name}}</label>
-                            <input class="form-control" v-model="field.content" placeholder="Page Title" />
-                            <div v-if="field.excerpt" class="invalid-feedback show">{{field.excerpt}}</div>
-                        </div>
 
-                        <div class="form-group" v-if="field.type == 'textarea'">
-                            <label>{{field.name}}</label>
-                            <textarea class="form-control" v-model="field.content" placeholder="Content"></textarea>
-                            <div v-if="field.excerpt" class="invalid-feedback show">{{field.excerpt}}</div>
+                        <div v-for="field in group.fields">
+
+                            <div class="form-group" v-if="field.type == 'text'">
+                                <label>{{field.name}}</label>
+                                <input class="form-control" v-model="field.content" placeholder="Page Title" />
+                                <div v-if="field.excerpt" class="invalid-feedback show">{{field.excerpt}}</div>
+                            </div>
+
+                            <div class="form-group" v-if="field.type == 'textarea'">
+                                <label>{{field.name}}</label>
+                                <textarea class="form-control" v-model="field.content" placeholder="Content"></textarea>
+                                <div v-if="field.excerpt" class="invalid-feedback show">{{field.excerpt}}</div>
+                            </div>
+
                         </div>
 
                     </div>
@@ -115,7 +122,9 @@
 
                         <div class="row mg-b-10">
                             <div class="col-sm-12">
-                                <input class="form-control form-control-sm" placeholder="Page Name"/>
+                                <input class="form-control form-control-sm"
+                                       v-model="page_data.name"
+                                       placeholder="Page Name"/>
                             </div>
                         </div>
 

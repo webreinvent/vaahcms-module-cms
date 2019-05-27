@@ -26129,15 +26129,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                                                 e.preventDefault();
                                     }
 
-                                    var url = this.urls.current + "/assets";
+                                    var url = this.urls.current + "/store";
                                     var params = this.page_data;
+                                    params.page_template_slug = this.page_template.code;
 
                                     this.$helpers.console(this.page_data, 'page_data');
 
-                                    //this.$helpers.ajax(url, params, this.fnAfter);
+                                    this.$helpers.ajax(url, params, this.storeDraftAfter);
                         },
                         //---------------------------------------------------------------------
-                        fnAfter: function fnAfter(data) {
+                        storeDraftAfter: function storeDraftAfter(data) {
+
+                                    this.$helpers.console(data, '--->');
 
                                     this.$helpers.stopNprogress();
                         }
@@ -27246,80 +27249,94 @@ var render = function() {
         _vm.page_data.custom_fields
           ? _c(
               "div",
-              _vm._l(_vm.page_data.custom_fields, function(field) {
-                return _c("div", [
-                  field.type == "text"
-                    ? _c("div", { staticClass: "form-group" }, [
-                        _c("label", [_vm._v(_vm._s(field.name))]),
-                        _vm._v(" "),
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: field.content,
-                              expression: "field.content"
-                            }
-                          ],
-                          staticClass: "form-control",
-                          attrs: { placeholder: "Page Title" },
-                          domProps: { value: field.content },
-                          on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
+              _vm._l(_vm.page_data.custom_fields, function(group) {
+                return _c(
+                  "div",
+                  _vm._l(group.fields, function(field) {
+                    return _c("div", [
+                      field.type == "text"
+                        ? _c("div", { staticClass: "form-group" }, [
+                            _c("label", [_vm._v(_vm._s(field.name))]),
+                            _vm._v(" "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: field.content,
+                                  expression: "field.content"
+                                }
+                              ],
+                              staticClass: "form-control",
+                              attrs: { placeholder: "Page Title" },
+                              domProps: { value: field.content },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    field,
+                                    "content",
+                                    $event.target.value
+                                  )
+                                }
                               }
-                              _vm.$set(field, "content", $event.target.value)
-                            }
-                          }
-                        }),
-                        _vm._v(" "),
-                        field.excerpt
-                          ? _c(
-                              "div",
-                              { staticClass: "invalid-feedback show" },
-                              [_vm._v(_vm._s(field.excerpt))]
-                            )
-                          : _vm._e()
-                      ])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  field.type == "textarea"
-                    ? _c("div", { staticClass: "form-group" }, [
-                        _c("label", [_vm._v(_vm._s(field.name))]),
-                        _vm._v(" "),
-                        _c("textarea", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: field.content,
-                              expression: "field.content"
-                            }
-                          ],
-                          staticClass: "form-control",
-                          attrs: { placeholder: "Content" },
-                          domProps: { value: field.content },
-                          on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
+                            }),
+                            _vm._v(" "),
+                            field.excerpt
+                              ? _c(
+                                  "div",
+                                  { staticClass: "invalid-feedback show" },
+                                  [_vm._v(_vm._s(field.excerpt))]
+                                )
+                              : _vm._e()
+                          ])
+                        : _vm._e(),
+                      _vm._v(" "),
+                      field.type == "textarea"
+                        ? _c("div", { staticClass: "form-group" }, [
+                            _c("label", [_vm._v(_vm._s(field.name))]),
+                            _vm._v(" "),
+                            _c("textarea", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: field.content,
+                                  expression: "field.content"
+                                }
+                              ],
+                              staticClass: "form-control",
+                              attrs: { placeholder: "Content" },
+                              domProps: { value: field.content },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    field,
+                                    "content",
+                                    $event.target.value
+                                  )
+                                }
                               }
-                              _vm.$set(field, "content", $event.target.value)
-                            }
-                          }
-                        }),
-                        _vm._v(" "),
-                        field.excerpt
-                          ? _c(
-                              "div",
-                              { staticClass: "invalid-feedback show" },
-                              [_vm._v(_vm._s(field.excerpt))]
-                            )
-                          : _vm._e()
-                      ])
-                    : _vm._e()
-                ])
+                            }),
+                            _vm._v(" "),
+                            field.excerpt
+                              ? _c(
+                                  "div",
+                                  { staticClass: "invalid-feedback show" },
+                                  [_vm._v(_vm._s(field.excerpt))]
+                                )
+                              : _vm._e()
+                          ])
+                        : _vm._e()
+                    ])
+                  }),
+                  0
+                )
               }),
               0
             )
@@ -27332,7 +27349,31 @@ var render = function() {
               _vm._m(2),
               _vm._v(" "),
               _c("div", { staticClass: "card-body pd-10" }, [
-                _vm._m(3),
+                _c("div", { staticClass: "row mg-b-10" }, [
+                  _c("div", { staticClass: "col-sm-12" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.page_data.name,
+                          expression: "page_data.name"
+                        }
+                      ],
+                      staticClass: "form-control form-control-sm",
+                      attrs: { placeholder: "Page Name" },
+                      domProps: { value: _vm.page_data.name },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.page_data, "name", $event.target.value)
+                        }
+                      }
+                    })
+                  ])
+                ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "row mg-b-10" }, [
                   _c("div", { staticClass: "col-sm-6" }, [
@@ -27346,7 +27387,7 @@ var render = function() {
                     )
                   ]),
                   _vm._v(" "),
-                  _vm._m(4)
+                  _vm._m(3)
                 ]),
                 _vm._v(" "),
                 _c("table", { staticClass: "table table-condensed" }, [
@@ -27392,15 +27433,15 @@ var render = function() {
                     )
                   ]),
                   _vm._v(" "),
-                  _vm._m(5)
+                  _vm._m(4)
                 ]),
                 _vm._v(" "),
-                _vm._m(6)
+                _vm._m(5)
               ])
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "card" }, [
-              _vm._m(7),
+              _vm._m(6),
               _vm._v(" "),
               _c("div", { staticClass: "card-body pd-10" }, [
                 _c("table", { staticClass: "table table-condensed" }, [
@@ -27495,19 +27536,6 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "card-header pd-10" }, [
       _c("strong", [_vm._v("Publish")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "row mg-b-10" }, [
-      _c("div", { staticClass: "col-sm-12" }, [
-        _c("input", {
-          staticClass: "form-control form-control-sm",
-          attrs: { placeholder: "Page Name" }
-        })
-      ])
     ])
   },
   function() {

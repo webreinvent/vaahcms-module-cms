@@ -22,6 +22,7 @@ class CreateVhCmsFormGroupsTable extends Migration
             $table->string('slug')->nullable();
             $table->string('excerpt')->nullable();
             $table->boolean('is_repeatable')->nullable();
+            $table->boolean('is_auto_generated')->nullable();
 
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();

@@ -21,9 +21,9 @@ class Page extends Model
     protected $dateFormat = 'Y-m-d H:i:s';
     //-------------------------------------------------
     protected $fillable = [
-        'vh_cms_page_id', 'name', 'title', 'slug',
+        'vh_theme_template_id', 'vh_cms_page_id', 'name', 'title', 'slug',
         'content',
-        'attr_id', 'attr_class', 'page_template',
+        'attr_id', 'attr_class',
         'status', 'visibility', 'meta',
         'created_by', 'updated_by', 'deleted_by'
     ];
@@ -38,12 +38,12 @@ class Page extends Model
     //-------------------------------------------------
     public function formGroups()
     {
-        return $this->morphMany('VaahCms\Modules\Cms\Entities\FormGroup', 'groupable');
+        return $this->morphMany(FormGroup::class, 'groupable');
     }
     //-------------------------------------------------
-    public function formFields()
+    public function contents()
     {
-        return $this->morphMany('VaahCms\Modules\Cms\Entities\FormField', 'fieldable');
+        return $this->morphMany(Content::class, 'contentable');
     }
     //-------------------------------------------------
 

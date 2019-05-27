@@ -5,6 +5,7 @@ namespace VaahCms\Modules\Cms\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use VaahCms\Modules\Cms\Entities\Content;
 use VaahCms\Modules\Cms\Entities\Page;
 use WebReinvent\VaahCms\Entities\ThemeTemplate;
 
@@ -66,7 +67,7 @@ class PageController extends Controller
         $template = ThemeTemplate::find($template->id);
 
         $response['status'] = 'success';
-        $response['data']['list'] = $template->formFields;
+        $response['data']['list'] = $template->formGroups()->with(['fields'])->get();
 
         return response()->json($response);
 
@@ -90,12 +91,49 @@ class PageController extends Controller
 
         $data = [];
 
-        $response['status'] = 'failed';
-        $response['errors'][] = 'error';
+        $template = ThemeTemplate::theme(vh_get_theme_id())->slug($request->page_template_slug)->first();
+
+        $page = Page::where('vh_theme_template_id', $template->id)
+            ->slug(str_slug($request->title))->first();
+
+        if(!$page)
+        {
+            $page = new Page();
+        }
+
+        $page->fill($request->all());
+        $page->vh_theme_template_id = $template->id;
+        $page->save();
+
+
+        foreach($request->custom_fields as $group)
+        {
+            foreach ($group['fields'] as $field)
+            {
+
+                $insert['vh_cms_form_group_id'] = $group['id'];
+                $insert['vh_cms_form_field_id'] = $field['id'];
+                $insert['contentable_id'] = $page->id;
+                $insert['contentable_type'] = Page::class;;
+
+
+                $content = Content::firstOrCreate($insert);
+
+                $insert['content'] = $field['content'];
+
+                $content->fill($insert);
+
+                $content->save();
+
+                $page->contents()->save($content);
+
+            }
+        }
+
+
 
         $response['status'] = 'success';
-        $response['messages'][] = 'Saved';
-        $response['data'] = $data;
+        $response['data'] = $page;
 
         return response()->json($response);
 

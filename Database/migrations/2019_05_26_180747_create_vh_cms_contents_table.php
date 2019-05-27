@@ -16,10 +16,10 @@ class CreateVhCmsContentsTable extends Migration
         Schema::create('vh_cms_contents', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->integer('contentable_id')->nullable();
             $table->string('contentable_type')->nullable();
-
-            $table->integer('table_id')->nullable();
+            $table->integer('contentable_id')->nullable();
+            $table->integer('vh_cms_form_group_id')->nullable();
+            $table->integer('vh_cms_form_field_id')->nullable();
 
             $table->longText('content')->nullable();
             $table->text('meta')->nullable();

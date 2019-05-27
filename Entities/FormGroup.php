@@ -20,9 +20,10 @@ class FormGroup extends Model
     //-------------------------------------------------
 
     protected $fillable = [
-        'groupable_id', 'groupable_type',
+        'groupable_type', 'groupable_id',
         'name', 'slug', 'excerpt',
         'is_repeatable',
+        'is_auto_generated',
         'created_by', 'updated_by', 'deleted_by'
     ];
     //-------------------------------------------------
@@ -31,11 +32,11 @@ class FormGroup extends Model
         return $this->morphTo();
     }
     //-------------------------------------------------
-    public function formFields()
+    public function fields()
     {
-        return $this->morphMany('VaahCms\Modules\Cms\Entities\FormField', 'fieldable');
+        return $this->hasMany('VaahCms\Modules\Cms\Entities\FormField',
+            'vh_cms_form_group_id', 'id');
     }
-    //-------------------------------------------------
     //-------------------------------------------------
     //-------------------------------------------------
 }

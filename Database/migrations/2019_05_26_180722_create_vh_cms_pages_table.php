@@ -16,6 +16,7 @@ class CreateVhCmsPagesTable extends Migration
         Schema::create('vh_cms_pages', function (Blueprint $table) {
             $table->increments('id');
 
+            $table->integer('vh_theme_template_id')->nullable();
             $table->integer('vh_cms_page_id')->nullable();
             $table->string('name')->nullable();
             $table->string('title')->nullable();
@@ -23,7 +24,6 @@ class CreateVhCmsPagesTable extends Migration
             $table->string('slug')->nullable();
             $table->string('attr_id')->nullable();
             $table->string('attr_class')->nullable();
-            $table->string('page_template')->nullable();
             $table->string('status')->nullable();
             $table->string('visibility')->nullable();
             $table->text('meta')->nullable();

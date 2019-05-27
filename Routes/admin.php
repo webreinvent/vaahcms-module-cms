@@ -30,5 +30,7 @@ Route::group(
         Route::any( '/custom/fields', 'PageController@getCustomFields' )
             ->name( 'vh.cms.custom.fields' );
         //------------------------------------------------
+        Route::any( '/store', 'PageController@storePage' )
+            ->name( 'vh.cms.pages.store' );
         //------------------------------------------------
     });
