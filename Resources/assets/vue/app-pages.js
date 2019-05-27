@@ -26,6 +26,7 @@ Vue.use(VueHelpers);
 //---------Comp Imports
 import PagesList from './components/PagesList';
 import PagesAdd from './components/PagesAdd';
+import PagesEdit from './components/PagesEdit';
 
 //---------/Comp Imports
 
@@ -40,6 +41,10 @@ const router = new VueRouter({
         },
         {   path: '/add',
             component: PagesAdd
+        },
+        {   path: '/edit/:id',
+            component: PagesEdit,
+            props: true
         },
         { path: '*', redirect: '/' }
     ]

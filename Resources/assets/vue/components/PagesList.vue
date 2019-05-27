@@ -123,11 +123,21 @@
 
                         </th>
                         <td>
-                            <span class="tx-medium">{{item.title}}</span><br/>
+
+                            <router-link :to="{ path: '/edit/'+item.id}" class="tx-medium">
+                                {{item.title}}
+                            </router-link><br/>
+
                             <small>{{item.name}}</small>
+                            
                         </td>
+
                         <td>
                             {{item.status}}
+                        </td>
+
+                        <td>
+
                         </td>
 
                     </tr>

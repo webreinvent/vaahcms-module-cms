@@ -182,6 +182,49 @@ class PageController extends Controller
 
     }
     //----------------------------------------------------------
+
+    //----------------------------------------------------------
+    public function getPageDetails(Request $request, $id)
+    {
+
+
+        $data = [];
+
+        $page = Page::find($id);
+
+        if(!$page)
+        {
+            $response['status'] = 'failed';
+            $response['errors'][] = 'Page not found';
+            return response()->json($response);
+        }
+
+
+        $groups = $page->template->formGroups()->with(['fields'])->get();
+
+
+        foreach ($groups as $group)
+        {
+            foreach ($group->fields as $field)
+            {
+                $field->content = $page->contents()
+                    ->where('vh_cms_form_group_id', $group->id)
+                    ->where('vh_cms_form_field_id', $field->id)
+                    ->first();
+
+            }
+        }
+
+        $page->custom_fields = $groups;
+
+        $response['status'] = 'success';
+        $response['data'] = $page;
+
+        return response()->json($response);
+
+    }
+    //----------------------------------------------------------
+    //----------------------------------------------------------
     //----------------------------------------------------------
 
 

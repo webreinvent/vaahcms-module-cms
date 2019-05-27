@@ -4,6 +4,7 @@ namespace VaahCms\Modules\Cms\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use WebReinvent\VaahCms\Entities\ThemeTemplate;
 
 
 class Page extends Model
@@ -47,6 +48,13 @@ class Page extends Model
     public function contents()
     {
         return $this->morphMany(Content::class, 'contentable');
+    }
+    //-------------------------------------------------
+    public function template()
+    {
+        return $this->belongsTo(ThemeTemplate::class,
+            'vh_theme_template_id', 'id'
+        );
     }
     //-------------------------------------------------
 

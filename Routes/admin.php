@@ -36,6 +36,8 @@ Route::group(
         Route::any( '/list', 'PageController@getList' )
             ->name( 'vh.cms.pages.list' );
         //------------------------------------------------
+        Route::any( '/page/{id}', 'PageController@getPageDetails' )
+            ->name( 'vh.cms.pages.detail' );
         //------------------------------------------------
         //------------------------------------------------
     });

@@ -8,7 +8,7 @@ import LabelEdit from 'label-edit'
 
 export default {
 
-    props: ['urls'],
+    props: ['urls', 'id'],
     components:{
         'pagination': pagination,
         'v-select': vSelect,
@@ -79,8 +79,6 @@ export default {
                 e.preventDefault();
             }
 
-            console.log(this.urls);
-
             var url = this.urls.current+"/assets";
             var params = {};
             this.$helpers.ajax(url, params, this.getAssetsAfter);
@@ -92,8 +90,23 @@ export default {
 
             //this.$helpers.console(this.assets, 'from app->');
 
-            this.getCustomFields();
+            this.getPageDetails();
 
+        },
+        //---------------------------------------------------------------------
+        getPageDetails: function () {
+            var url = this.urls.current+"/page/"+this.id;
+            var params = {};
+            this.$helpers.ajax(url, params, this.getPageDetailsAfter);
+        },
+        //---------------------------------------------------------------------
+        getPageDetailsAfter: function (data) {
+
+            this.$helpers.console(data, '-->');
+
+            this.page_data = data;
+
+            this.$helpers.stopNprogress();
         },
         //---------------------------------------------------------------------
         getCustomFields: function () {

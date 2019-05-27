@@ -6,7 +6,7 @@
             <div class="col-sm">
                 <div class="d-sm-flex align-items-center justify-content-between">
                     <div>
-                        <h4 class="mg-b-0 tx-spacing--1">Add Pages</h4>
+                        <h4 class="mg-b-0 tx-spacing--1">Edit Pages {{id}}</h4>
                     </div>
                     <div class="d-none d-md-block">
 
@@ -61,12 +61,6 @@
 
                         </p>
 
-
-
-
-
-
-
                     </div>
 
                 </div>
@@ -85,13 +79,13 @@
 
                         <div class="form-group" v-if="field.type == 'text'">
                             <label>{{field.name}}</label>
-                            <input class="form-control" v-model="field.content" placeholder="Page Title" />
+                            <input class="form-control" v-model="field.content.content" placeholder="Page Title" />
                             <div v-if="field.excerpt" class="invalid-feedback show">{{field.excerpt}}</div>
                         </div>
 
                         <div class="form-group" v-if="field.type == 'textarea'">
                             <label>{{field.name}}</label>
-                            <textarea class="form-control" v-model="field.content" placeholder="Content"></textarea>
+                            <textarea class="form-control" v-model="field.content.content" placeholder="Content"></textarea>
                             <div v-if="field.excerpt" class="invalid-feedback show">{{field.excerpt}}</div>
                         </div>
 
@@ -213,6 +207,7 @@
 
                     </div>
                 </div>
+
 
             </div>
             <!--/left hand side form-->
