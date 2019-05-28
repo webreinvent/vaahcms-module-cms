@@ -1,22 +1,15 @@
 import pagination from 'laravel-vue-pagination';
 
-//https://github.com/sagalbot/vue-select
-import vSelect from 'vue-select'
 
+import vhSelect from 'vaah-vue-select'
 
-//https://github.com/myokyawhtun/label-edit
-import LabelEdit from 'label-edit'
-
-import VaahVueSelect from './reusable/VaahVueSelect';
 
 export default {
 
     props: ['urls', 'id'],
     components:{
         'pagination': pagination,
-        'v-select': vSelect,
-        'label-edit': LabelEdit,
-        'vh-select': VaahVueSelect,
+        'vh-select': vhSelect,
     },
     data()
     {
@@ -32,14 +25,7 @@ export default {
             page_reload_required: null,
             stats: null,
             custom_fields: null,
-            page_data:{
-                title: null,
-                slug: null,
-                slug_edit: null,
-                name: null,
-                permalink: this.urls.base,
-                custom_fields: null
-            }
+            page_data:null
         };
 
         return obj;
@@ -59,6 +45,9 @@ export default {
             this.page_data.slug = this.$helpers.strToSlug(newVal);
             this.page_data.parmalink = this.urls.base+"/"+this.page_data.slug;
 
+        },
+        'page_data.vh_theme_template_id': function (newVal, oldVal) {
+            this.getEditPageCustomFields();
         }
 
     },
@@ -107,14 +96,6 @@ export default {
             this.$helpers.console(data, '-->');
 
             this.page_data = data;
-            this.page_template = {
-                label: data.template.name,
-                code: data.template.id,
-            };
-
-
-            this.$helpers.console(this.page_template, 'this.page_template');
-            this.$helpers.console(this.assets.page_templates, 'assets.page_templates');
 
             this.$helpers.stopNprogress();
         },
@@ -128,7 +109,7 @@ export default {
 
             var url = this.urls.current+"/"+this.id+"/custom/fields";
             var params = {
-                page_template_id: this.page_template.code
+                vh_theme_template_id: this.page_data.vh_theme_template_id
             };
 
             this.$helpers.console(params, 'params-->');
@@ -175,7 +156,6 @@ export default {
 
             var url = this.urls.current+"/store";
             var params = this.page_data;
-            params.vh_theme_page_template = this.page_template.code;
 
             this.$helpers.console(this.page_data, 'page_data');
 

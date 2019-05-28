@@ -1,7 +1,7 @@
 <template>
     <div>
 
-
+        <!--content header-->
         <div class="row">
             <div class="col-sm">
                 <div class="d-sm-flex align-items-center justify-content-between">
@@ -22,8 +22,13 @@
 
         </div>
 
-        <!--content header-->
-        <div class="row mg-b-10 mg-t-10">
+
+
+        <!--/content header-->
+
+        <!--content body-->
+
+        <div class="row mg-b-10 mg-t-10" v-if="page_data" >
 
             <!--right hand side form-->
             <div class="col-sm-12 col-md-8">
@@ -106,7 +111,7 @@
 
 
             <!--left hand side form-->
-            <div class="col-sm-12 col-md-4" v-if="assets">
+            <div class="col-sm-12 col-md-4"  >
 
                 <div class="card mg-b-15">
                     <div class="card-header pd-10"><strong>Publish</strong></div>
@@ -132,14 +137,14 @@
                             <tr>
                                 <td width="100">Status</td>
                                 <td>
-
-                                    Options
                                     <vh-select
-                                               :option_key="code"
-                                               :option_value="label"
-                                               :options="assets.page_statuses"></vh-select>
-
-                                    <v-select v-model="page_data" :options="assets.page_statuses"></v-select>
+                                            :options="assets.page_statuses"
+                                            v-model="page_data.status"
+                                            option_value="slug"
+                                            option_text="name"
+                                            default_text="Select Status"
+                                            select_class="form-control form-control-sm"
+                                    ></vh-select>
 
                                 </td>
                             </tr>
@@ -147,7 +152,15 @@
                             <tr>
                                 <td>Visibility</td>
                                 <td>
-                                    <v-select v-model="page_visibility" :options="assets.page_visibilities"></v-select>
+
+                                    <vh-select :options="assets.page_visibilities"
+                                               v-model="page_data.visibility"
+                                               option_value="slug"
+                                               option_text="name"
+                                               default_text="Select Visibility"
+                                               select_class="form-control form-control-sm"
+                                    ></vh-select>
+
                                 </td>
                             </tr>
 
@@ -185,7 +198,15 @@
                             <tr>
                                 <td width="100">Parent</td>
                                 <td>
-                                    <v-select  v-model="page_parent" :options="assets.pages_list"></v-select>
+
+                                    <vh-select :options="assets.pages_list"
+                                               v-model="page_data.vh_cms_page_id"
+                                               option_value="id"
+                                               option_text="name"
+                                               default_text="Select Parent Page"
+                                               select_class="form-control form-control-sm"
+                                    ></vh-select>
+
                                 </td>
                             </tr>
 
@@ -195,17 +216,18 @@
 
                                     <div class="input-group">
 
-                                        <v-select  v-model="page_template"
-                                                   style="min-width: 150px;"
-                                                   v-on:input="getEditPageCustomFields"
-                                                   :options="assets.page_templates">
-                                        </v-select>
-
+                                        <vh-select :options="assets.page_templates"
+                                                   v-model="page_data.vh_theme_template_id"
+                                                   option_value="id"
+                                                   option_text="name"
+                                                   default_text="Select Page Template"
+                                                   select_class="form-control form-control-sm"
+                                        ></vh-select>
 
                                         <div class="input-group-append">
 
                                             <button class="btn btn-xs btn-light"
-                                            v-on:click="getEditPageCustomFields">
+                                                    v-on:click="getEditPageCustomFields">
                                                 <i class="fas fa-sync"></i>
                                             </button>
 
@@ -230,11 +252,6 @@
 
 
         </div>
-        <!--/content header-->
-
-        <!--content body-->
-
-
 
         <!--/content body-->
     </div>

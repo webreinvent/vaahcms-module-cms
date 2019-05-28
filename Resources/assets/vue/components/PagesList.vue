@@ -34,9 +34,9 @@
 
                                 <a href="#" class="nav-link pd-l-0"
                                    v-for="stat in stats"
-                                   v-on:click="setFilterStatus($event, stat.code)"
-                                   v-bind:class="{'active': filters.status == stat.code}">
-                                    {{stat.label}} ({{stat.count}})
+                                   v-on:click="setFilterStatus($event, stat.slug)"
+                                   v-bind:class="{'active': filters.status == stat.slug}">
+                                    {{stat.name}} ({{stat.count}})
                                 </a>
 
                             </nav>

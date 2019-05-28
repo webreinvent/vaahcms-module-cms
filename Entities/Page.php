@@ -89,8 +89,8 @@ class Page extends Model
         foreach ($pages as $page)
         {
 
-            $result[$i]['label'] = $page->name;
-            $result[$i]['code'] = $page->id;
+            $result[$i]['name'] = $page->name;
+            $result[$i]['id'] = $page->id;
 
         }
 

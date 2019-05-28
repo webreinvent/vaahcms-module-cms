@@ -25217,24 +25217,6 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ "./Resources/assets/vue/components/reusable/VaahVueSelect.js":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__VaahVueSelect__ = __webpack_require__("./Resources/assets/vue/components/reusable/VaahVueSelect.js");
-/* unused harmony reexport VaahVueSelect */
-
-
-/* harmony default export */ __webpack_exports__["a"] = ({
-    install: function install(Vue, options) {
-        Vue.component('vh-select', __WEBPACK_IMPORTED_MODULE_0__VaahVueSelect__["a" /* default */]);
-    }
-});
-
-
-
-/***/ }),
-
 /***/ "./Resources/assets/vue/helpers/VueHelpers.js":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -26227,17 +26209,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_laravel_vue_pagination__ = __webpack_require__("../../../node_modules/laravel-vue-pagination/dist/laravel-vue-pagination.common.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_laravel_vue_pagination___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_laravel_vue_pagination__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_select__ = __webpack_require__("./node_modules/vue-select/dist/vue-select.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_select___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_vue_select__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_label_edit__ = __webpack_require__("./node_modules/label-edit/dist/vue-label-edit.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_label_edit___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_label_edit__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__reusable_VaahVueSelect__ = __webpack_require__("./Resources/assets/vue/components/reusable/VaahVueSelect.js");
-
-
-//https://github.com/sagalbot/vue-select
-
-
-//https://github.com/myokyawhtun/label-edit
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vaah_vue_select__ = __webpack_require__("./node_modules/vaah-vue-select/dist/VaahVueSelect.esm.js");
 
 
 
@@ -26247,9 +26219,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             props: ['urls', 'id'],
             components: {
                         'pagination': __WEBPACK_IMPORTED_MODULE_0_laravel_vue_pagination___default.a,
-                        'v-select': __WEBPACK_IMPORTED_MODULE_1_vue_select___default.a,
-                        'label-edit': __WEBPACK_IMPORTED_MODULE_2_label_edit___default.a,
-                        'vh-select': __WEBPACK_IMPORTED_MODULE_3__reusable_VaahVueSelect__["a" /* default */]
+                        'vh-select': __WEBPACK_IMPORTED_MODULE_1_vaah_vue_select__["a" /* default */]
             },
             data: function data() {
                         var obj = {
@@ -26264,14 +26234,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                                     page_reload_required: null,
                                     stats: null,
                                     custom_fields: null,
-                                    page_data: {
-                                                title: null,
-                                                slug: null,
-                                                slug_edit: null,
-                                                name: null,
-                                                permalink: this.urls.base,
-                                                custom_fields: null
-                                    }
+                                    page_data: null
                         };
 
                         return obj;
@@ -26290,6 +26253,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
                                     this.page_data.slug = this.$helpers.strToSlug(newVal);
                                     this.page_data.parmalink = this.urls.base + "/" + this.page_data.slug;
+                        },
+                        'page_data.vh_theme_template_id': function page_dataVh_theme_template_id(newVal, oldVal) {
+                                    this.getEditPageCustomFields();
                         }
 
             },
@@ -26336,13 +26302,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                                     this.$helpers.console(data, '-->');
 
                                     this.page_data = data;
-                                    this.page_template = {
-                                                label: data.template.name,
-                                                code: data.template.id
-                                    };
-
-                                    this.$helpers.console(this.page_template, 'this.page_template');
-                                    this.$helpers.console(this.assets.page_templates, 'assets.page_templates');
 
                                     this.$helpers.stopNprogress();
                         },
@@ -26355,7 +26314,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
                                     var url = this.urls.current + "/" + this.id + "/custom/fields";
                                     var params = {
-                                                page_template_id: this.page_template.code
+                                                vh_theme_template_id: this.page_data.vh_theme_template_id
                                     };
 
                                     this.$helpers.console(params, 'params-->');
@@ -26400,7 +26359,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
                                     var url = this.urls.current + "/store";
                                     var params = this.page_data;
-                                    params.vh_theme_page_template = this.page_template.code;
 
                                     this.$helpers.console(this.page_data, 'page_data');
 
@@ -27040,6 +26998,16 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 
 /***/ }),
 
+/***/ "./node_modules/vaah-vue-select/dist/VaahVueSelect.esm.js":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(global) {var e=function(e,t,n,o,i,l,s,a,r,u){"boolean"!=typeof s&&(r=a,a=s,s=!1);var d,_="function"==typeof n?n.options:n;if(e&&e.render&&(_.render=e.render,_.staticRenderFns=e.staticRenderFns,_._compiled=!0,i&&(_.functional=!0)),o&&(_._scopeId=o),l?(d=function(e){(e=e||this.$vnode&&this.$vnode.ssrContext||this.parent&&this.parent.$vnode&&this.parent.$vnode.ssrContext)||"undefined"==typeof __VUE_SSR_CONTEXT__||(e=__VUE_SSR_CONTEXT__),t&&t.call(this,r(e)),e&&e._registeredComponents&&e._registeredComponents.add(l)},_._ssrRegister=d):t&&(d=s?function(){t.call(this,u(this.$root.$options.shadowRoot))}:function(e){t.call(this,a(e))}),d)if(_.functional){var v=_.render;_.render=function(e,t){return d.call(t),v(e,t)}}else{var c=_.beforeCreate;_.beforeCreate=c?[].concat(c,d):[d]}return n}({render:function(){var e=this,t=e.$createElement,n=e._self._c||t;return e.vh_options?n("div",{staticClass:"vaah-vue-select"},[n("select",{directives:[{name:"model",rawName:"v-model",value:e.vh_selected,expression:"vh_selected"}],class:e.vh_class,attrs:{input:e.sendSelectedValue()},domProps:{value:e.vh_selected},on:{change:function(t){var n=Array.prototype.filter.call(t.target.options,function(e){return e.selected}).map(function(e){return"_value"in e?e._value:e.value});e.vh_selected=t.target.multiple?n:n[0]}}},[n("option",{attrs:{value:""}},[e._v(e._s(e.vh_default_text))]),e._v(" "),e._l(e.vh_options,function(t){return e.vh_option_value?n("option",{domProps:{value:t[e.vh_option_value]}},[e._v(e._s(t[e.vh_option_text]))]):e._l(e.vh_options,function(t){return n("option",[e._v(e._s(t))])})})],2)]):e._e()},staticRenderFns:[]},void 0,{name:"VaahVueSelect",props:{options:{type:Array,default:function(){return[]}},value:{default:""},option_value:{type:String,default:null},option_text:{type:String,default:null},default_text:{type:String,default:"Select Option"},select_class:{type:String,default:"form-control"}},data:function(){return{vh_options:this.options,vh_selected:this.value,vh_option_value:this.option_value,vh_option_text:this.option_text,vh_default_text:this.default_text,vh_class:this.select_class}},methods:{sendSelectedValue:function(){this.$emit("input",this.vh_selected)}}},void 0,!1,void 0,void 0,void 0);function t(n){t.installed||(t.installed=!0,n.component("vaah-vue-select",e))}var n={install:t},o=null;"undefined"!=typeof window?o=window.Vue:"undefined"!=typeof global&&(o=global.Vue),o&&o.use(n),e.install=t;/* harmony default export */ __webpack_exports__["a"] = (e);
+
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__("./node_modules/webpack/buildin/global.js")))
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/component-normalizer.js":
 /***/ (function(module, exports) {
 
@@ -27211,18 +27179,18 @@ var render = function() {
                           "a",
                           {
                             staticClass: "nav-link pd-l-0",
-                            class: { active: _vm.filters.status == stat.code },
+                            class: { active: _vm.filters.status == stat.slug },
                             attrs: { href: "#" },
                             on: {
                               click: function($event) {
-                                return _vm.setFilterStatus($event, stat.code)
+                                return _vm.setFilterStatus($event, stat.slug)
                               }
                             }
                           },
                           [
                             _vm._v(
                               "\n                                " +
-                                _vm._s(stat.label) +
+                                _vm._s(stat.name) +
                                 " (" +
                                 _vm._s(stat.count) +
                                 ")\n                            "
@@ -28041,248 +28009,254 @@ var render = function() {
       ])
     ]),
     _vm._v(" "),
-    _c("div", { staticClass: "row mg-b-10 mg-t-10" }, [
-      _c("div", { staticClass: "col-sm-12 col-md-8" }, [
-        _c("div", { staticClass: "form-group" }, [
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.page_data.title,
-                expression: "page_data.title"
-              }
-            ],
-            staticClass: "form-control",
-            attrs: { placeholder: "Page Title" },
-            domProps: { value: _vm.page_data.title },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
+    _vm.page_data
+      ? _c("div", { staticClass: "row mg-b-10 mg-t-10" }, [
+          _c("div", { staticClass: "col-sm-12 col-md-8" }, [
+            _c("div", { staticClass: "form-group" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.page_data.title,
+                    expression: "page_data.title"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { placeholder: "Page Title" },
+                domProps: { value: _vm.page_data.title },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.page_data, "title", $event.target.value)
+                  }
                 }
-                _vm.$set(_vm.page_data, "title", $event.target.value)
-              }
-            }
-          }),
-          _vm._v(" "),
-          _c("div", { staticClass: "mg-t-5" }, [
-            _vm.page_data.slug_edit == true
-              ? _c(
-                  "div",
-                  { staticClass: "input-group input-group-sm mg-b-10" },
-                  [
-                    _c("div", { staticClass: "input-group-prepend" }, [
-                      _c("span", { staticClass: "input-group-text" }, [
-                        _vm._v(_vm._s(_vm.urls.base) + "/")
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.page_data.slug,
-                          expression: "page_data.slug"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      attrs: { type: "text", placeholder: "Username" },
-                      domProps: { value: _vm.page_data.slug },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
+              }),
+              _vm._v(" "),
+              _c("div", { staticClass: "mg-t-5" }, [
+                _vm.page_data.slug_edit == true
+                  ? _c(
+                      "div",
+                      { staticClass: "input-group input-group-sm mg-b-10" },
+                      [
+                        _c("div", { staticClass: "input-group-prepend" }, [
+                          _c("span", { staticClass: "input-group-text" }, [
+                            _vm._v(_vm._s(_vm.urls.base) + "/")
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.page_data.slug,
+                              expression: "page_data.slug"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: { type: "text", placeholder: "Username" },
+                          domProps: { value: _vm.page_data.slug },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.page_data,
+                                "slug",
+                                $event.target.value
+                              )
+                            }
                           }
-                          _vm.$set(_vm.page_data, "slug", $event.target.value)
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "input-group-append" }, [
-                      _c(
-                        "button",
-                        {
-                          staticClass: "btn btn-outline-light",
-                          attrs: { type: "button" },
-                          on: { click: _vm.updatePageSlug }
-                        },
-                        [_vm._v("Save")]
-                      ),
+                        }),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "input-group-append" }, [
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-outline-light",
+                              attrs: { type: "button" },
+                              on: { click: _vm.updatePageSlug }
+                            },
+                            [_vm._v("Save")]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-outline-light",
+                              attrs: { type: "button" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.setSlugEdit(null)
+                                }
+                              }
+                            },
+                            [_vm._v("Cancel")]
+                          )
+                        ])
+                      ]
+                    )
+                  : _c("p", [
+                      _c("strong", [_vm._v("Permalink:")]),
+                      _vm._v(" "),
+                      _c("a", { attrs: { href: _vm.page_data.permalink } }, [
+                        _vm._v(
+                          _vm._s(_vm.urls.base) +
+                            "/" +
+                            _vm._s(_vm.page_data.slug)
+                        )
+                      ]),
                       _vm._v(" "),
                       _c(
                         "button",
                         {
-                          staticClass: "btn btn-outline-light",
-                          attrs: { type: "button" },
+                          staticClass: "btn btn-xs btn-light mg-l-10",
                           on: {
                             click: function($event) {
-                              return _vm.setSlugEdit(null)
+                              return _vm.setSlugEdit(true)
                             }
                           }
                         },
-                        [_vm._v("Cancel")]
+                        [
+                          _vm._v(
+                            "\n                            Edit\n                        "
+                          )
+                        ]
                       )
                     ])
-                  ]
-                )
-              : _c("p", [
-                  _c("strong", [_vm._v("Permalink:")]),
-                  _vm._v(" "),
-                  _c("a", { attrs: { href: _vm.page_data.permalink } }, [
-                    _vm._v(
-                      _vm._s(_vm.urls.base) + "/" + _vm._s(_vm.page_data.slug)
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-xs btn-light mg-l-10",
-                      on: {
-                        click: function($event) {
-                          return _vm.setSlugEdit(true)
-                        }
-                      }
-                    },
-                    [
-                      _vm._v(
-                        "\n                            Edit\n                        "
-                      )
-                    ]
-                  )
-                ])
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "form-group" }, [
-          _c("textarea", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.page_data.content,
-                expression: "page_data.content"
-              }
-            ],
-            staticClass: "form-control",
-            attrs: { rows: "10", placeholder: "Content" },
-            domProps: { value: _vm.page_data.content },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group" }, [
+              _c("textarea", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.page_data.content,
+                    expression: "page_data.content"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { rows: "10", placeholder: "Content" },
+                domProps: { value: _vm.page_data.content },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.page_data, "content", $event.target.value)
+                  }
                 }
-                _vm.$set(_vm.page_data, "content", $event.target.value)
-              }
-            }
-          })
-        ]),
-        _vm._v(" "),
-        _c("hr", { staticClass: "mg-t-30 mg-b-30" }),
-        _vm._v(" "),
-        _c("h5", [_vm._v("Custom Fields")]),
-        _vm._v(" "),
-        _vm.page_data.custom_fields
-          ? _c(
-              "div",
-              _vm._l(_vm.page_data.custom_fields, function(group) {
-                return _c(
+              })
+            ]),
+            _vm._v(" "),
+            _c("hr", { staticClass: "mg-t-30 mg-b-30" }),
+            _vm._v(" "),
+            _c("h5", [_vm._v("Custom Fields")]),
+            _vm._v(" "),
+            _vm.page_data.custom_fields
+              ? _c(
                   "div",
-                  _vm._l(group.fields, function(field) {
-                    return _c("div", [
-                      field.type == "text"
-                        ? _c("div", { staticClass: "form-group" }, [
-                            _c("label", [_vm._v(_vm._s(field.name))]),
-                            _vm._v(" "),
-                            _c("input", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: field.content.content,
-                                  expression: "field.content.content"
-                                }
-                              ],
-                              staticClass: "form-control",
-                              attrs: { placeholder: "Page Title" },
-                              domProps: { value: field.content.content },
-                              on: {
-                                input: function($event) {
-                                  if ($event.target.composing) {
-                                    return
+                  _vm._l(_vm.page_data.custom_fields, function(group) {
+                    return _c(
+                      "div",
+                      _vm._l(group.fields, function(field) {
+                        return _c("div", [
+                          field.type == "text"
+                            ? _c("div", { staticClass: "form-group" }, [
+                                _c("label", [_vm._v(_vm._s(field.name))]),
+                                _vm._v(" "),
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: field.content.content,
+                                      expression: "field.content.content"
+                                    }
+                                  ],
+                                  staticClass: "form-control",
+                                  attrs: { placeholder: "Page Title" },
+                                  domProps: { value: field.content.content },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        field.content,
+                                        "content",
+                                        $event.target.value
+                                      )
+                                    }
                                   }
-                                  _vm.$set(
-                                    field.content,
-                                    "content",
-                                    $event.target.value
-                                  )
-                                }
-                              }
-                            }),
-                            _vm._v(" "),
-                            field.excerpt
-                              ? _c(
-                                  "div",
-                                  { staticClass: "invalid-feedback show" },
-                                  [_vm._v(_vm._s(field.excerpt))]
-                                )
-                              : _vm._e()
-                          ])
-                        : _vm._e(),
-                      _vm._v(" "),
-                      field.type == "textarea"
-                        ? _c("div", { staticClass: "form-group" }, [
-                            _c("label", [_vm._v(_vm._s(field.name))]),
-                            _vm._v(" "),
-                            _c("textarea", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: field.content.content,
-                                  expression: "field.content.content"
-                                }
-                              ],
-                              staticClass: "form-control",
-                              attrs: { placeholder: "Content" },
-                              domProps: { value: field.content.content },
-                              on: {
-                                input: function($event) {
-                                  if ($event.target.composing) {
-                                    return
+                                }),
+                                _vm._v(" "),
+                                field.excerpt
+                                  ? _c(
+                                      "div",
+                                      { staticClass: "invalid-feedback show" },
+                                      [_vm._v(_vm._s(field.excerpt))]
+                                    )
+                                  : _vm._e()
+                              ])
+                            : _vm._e(),
+                          _vm._v(" "),
+                          field.type == "textarea"
+                            ? _c("div", { staticClass: "form-group" }, [
+                                _c("label", [_vm._v(_vm._s(field.name))]),
+                                _vm._v(" "),
+                                _c("textarea", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: field.content.content,
+                                      expression: "field.content.content"
+                                    }
+                                  ],
+                                  staticClass: "form-control",
+                                  attrs: { placeholder: "Content" },
+                                  domProps: { value: field.content.content },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        field.content,
+                                        "content",
+                                        $event.target.value
+                                      )
+                                    }
                                   }
-                                  _vm.$set(
-                                    field.content,
-                                    "content",
-                                    $event.target.value
-                                  )
-                                }
-                              }
-                            }),
-                            _vm._v(" "),
-                            field.excerpt
-                              ? _c(
-                                  "div",
-                                  { staticClass: "invalid-feedback show" },
-                                  [_vm._v(_vm._s(field.excerpt))]
-                                )
-                              : _vm._e()
-                          ])
-                        : _vm._e()
-                    ])
+                                }),
+                                _vm._v(" "),
+                                field.excerpt
+                                  ? _c(
+                                      "div",
+                                      { staticClass: "invalid-feedback show" },
+                                      [_vm._v(_vm._s(field.excerpt))]
+                                    )
+                                  : _vm._e()
+                              ])
+                            : _vm._e()
+                        ])
+                      }),
+                      0
+                    )
                   }),
                   0
                 )
-              }),
-              0
-            )
-          : _vm._e()
-      ]),
-      _vm._v(" "),
-      _vm.assets
-        ? _c("div", { staticClass: "col-sm-12 col-md-4" }, [
+              : _vm._e()
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-sm-12 col-md-4" }, [
             _c("div", { staticClass: "card mg-b-15" }, [
               _vm._m(0),
               _vm._v(" "),
@@ -28337,25 +28311,20 @@ var render = function() {
                     _c(
                       "td",
                       [
-                        _vm._v(
-                          "\n\n                                Options\n                                "
-                        ),
                         _c("vh-select", {
                           attrs: {
-                            option_key: _vm.code,
-                            option_value: _vm.label,
-                            options: _vm.assets.page_statuses
-                          }
-                        }),
-                        _vm._v(" "),
-                        _c("v-select", {
-                          attrs: { options: _vm.assets.page_statuses },
+                            options: _vm.assets.page_statuses,
+                            option_value: "slug",
+                            option_text: "name",
+                            default_text: "Select Status",
+                            select_class: "form-control form-control-sm"
+                          },
                           model: {
-                            value: _vm.page_data,
+                            value: _vm.page_data.status,
                             callback: function($$v) {
-                              _vm.page_data = $$v
+                              _vm.$set(_vm.page_data, "status", $$v)
                             },
-                            expression: "page_data"
+                            expression: "page_data.status"
                           }
                         })
                       ],
@@ -28369,14 +28338,20 @@ var render = function() {
                     _c(
                       "td",
                       [
-                        _c("v-select", {
-                          attrs: { options: _vm.assets.page_visibilities },
+                        _c("vh-select", {
+                          attrs: {
+                            options: _vm.assets.page_visibilities,
+                            option_value: "slug",
+                            option_text: "name",
+                            default_text: "Select Visibility",
+                            select_class: "form-control form-control-sm"
+                          },
                           model: {
-                            value: _vm.page_visibility,
+                            value: _vm.page_data.visibility,
                             callback: function($$v) {
-                              _vm.page_visibility = $$v
+                              _vm.$set(_vm.page_data, "visibility", $$v)
                             },
-                            expression: "page_visibility"
+                            expression: "page_data.visibility"
                           }
                         })
                       ],
@@ -28412,14 +28387,20 @@ var render = function() {
                     _c(
                       "td",
                       [
-                        _c("v-select", {
-                          attrs: { options: _vm.assets.pages_list },
+                        _c("vh-select", {
+                          attrs: {
+                            options: _vm.assets.pages_list,
+                            option_value: "id",
+                            option_text: "name",
+                            default_text: "Select Parent Page",
+                            select_class: "form-control form-control-sm"
+                          },
                           model: {
-                            value: _vm.page_parent,
+                            value: _vm.page_data.vh_cms_page_id,
                             callback: function($$v) {
-                              _vm.page_parent = $$v
+                              _vm.$set(_vm.page_data, "vh_cms_page_id", $$v)
                             },
-                            expression: "page_parent"
+                            expression: "page_data.vh_cms_page_id"
                           }
                         })
                       ],
@@ -28435,16 +28416,24 @@ var render = function() {
                         "div",
                         { staticClass: "input-group" },
                         [
-                          _c("v-select", {
-                            staticStyle: { "min-width": "150px" },
-                            attrs: { options: _vm.assets.page_templates },
-                            on: { input: _vm.getEditPageCustomFields },
+                          _c("vh-select", {
+                            attrs: {
+                              options: _vm.assets.page_templates,
+                              option_value: "id",
+                              option_text: "name",
+                              default_text: "Select Page Template",
+                              select_class: "form-control form-control-sm"
+                            },
                             model: {
-                              value: _vm.page_template,
+                              value: _vm.page_data.vh_theme_template_id,
                               callback: function($$v) {
-                                _vm.page_template = $$v
+                                _vm.$set(
+                                  _vm.page_data,
+                                  "vh_theme_template_id",
+                                  $$v
+                                )
                               },
-                              expression: "page_template"
+                              expression: "page_data.vh_theme_template_id"
                             }
                           }),
                           _vm._v(" "),
@@ -28467,8 +28456,8 @@ var render = function() {
               ])
             ])
           ])
-        : _vm._e()
-    ])
+        ])
+      : _vm._e()
   ])
 }
 var staticRenderFns = [

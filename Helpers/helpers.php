@@ -3,8 +3,8 @@
 function page_statuses()
 {
     $list = [
-        ["label" => 'Draft', "code" => 'draft'],
-        ["label" => 'Pending Review', "code" => str_slug('Pending Review')],
+        ["name" => 'Draft', "slug" => 'draft'],
+        ["name" => 'Pending Review', "slug" => str_slug('Pending Review')],
     ];
 
     return $list;
@@ -14,8 +14,8 @@ function page_statuses()
 function page_visibilities()
 {
     $list = [
-        ["label" => 'Public', "code" => 'public'],
-        ["label" => 'Private', "code" => str_slug('private')],
+        ["name" => 'Public', "slug" => 'public'],
+        ["name" => 'Private', "slug" => str_slug('private')],
     ];
 
     return $list;

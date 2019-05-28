@@ -74,7 +74,7 @@ class PageController extends Controller
         $rules = array(
             'title' => 'required',
             'name' => 'required',
-            'vh_theme_page_template' => 'required',
+            'vh_theme_template_id' => 'required',
         );
 
         $validator = \Validator::make( $request->all(), $rules);
@@ -88,7 +88,7 @@ class PageController extends Controller
 
         $data = [];
 
-        $template = ThemeTemplate::find($request->vh_theme_page_template)->first();
+        $template = ThemeTemplate::find($request->vh_theme_template_id)->first();
 
         if($request->has('id'))
         {
@@ -167,7 +167,7 @@ class PageController extends Controller
 
 
         $i = 0;
-        $stats[$i] = ['label' => "All", 'code' => 'all'];
+        $stats[$i] = ['name' => "All", 'slug' => 'all'];
         $stats[$i]['count'] = Page::count();
 
         $page_statuses = page_statuses();
@@ -176,11 +176,11 @@ class PageController extends Controller
         foreach ($page_statuses as $status)
         {
             $stats[$i] = $status;
-            $stats[$i]['count'] = Page::status($status['code'])->count();
+            $stats[$i]['count'] = Page::status($status['slug'])->count();
             $i++;
         }
 
-        $stats[$i] = ['label' => "Trashed", 'code' => 'trashed'];
+        $stats[$i] = ['name' => "Trashed", 'slug' => 'trashed'];
         $stats[$i]['count'] = Page::onlyTrashed()->count();
 
         $response['status'] = 'success';
@@ -238,7 +238,7 @@ class PageController extends Controller
     public function getPageCustomFields(Request $request, $id)
     {
         $rules = array(
-            'page_template_id' => 'required',
+            'vh_theme_template_id' => 'required',
         );
 
         $validator = \Validator::make( $request->all(), $rules);
@@ -259,10 +259,10 @@ class PageController extends Controller
             return response()->json($response);
         }
 
-        $page->vh_theme_template_id = $request->page_template_id;
+        $page->vh_theme_template_id = $request->vh_theme_template_id;
         $page->save();
 
-        $template = ThemeTemplate::syncTemplateCustomFields($request->page_template_id);
+        $template = ThemeTemplate::syncTemplateCustomFields($request->vh_theme_template_id);
 
 
         $page = Page::where('id', $id)->with(['template'])->first();
