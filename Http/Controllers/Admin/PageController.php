@@ -31,6 +31,7 @@ class PageController extends Controller
         $data = [];
 
         $data['page_templates'] = ThemeTemplate::getAssetsList();
+        $data['page_template_default'] = ThemeTemplate::getDefaultPageTemplate();
         $data['page_statuses'] = page_statuses();
         $data['page_visibilities'] = page_visibilities();
         $data['pages_list'] = Page::getAssetsList();
@@ -45,7 +46,7 @@ class PageController extends Controller
     public function getCustomFields(Request $request)
     {
         $rules = array(
-            'page_template_slug' => 'required',
+            'page_template_id' => 'required',
         );
 
         $validator = \Validator::make( $request->all(), $rules);
@@ -59,12 +60,7 @@ class PageController extends Controller
 
         $data = [];
 
-        $template = ThemeTemplate::theme(vh_get_theme_id())->slug($request->page_template_slug)->first();
-
-        //sync all the fields types
-        view(vh_get_theme_slug()."::page-templates.".$template->slug)->render();
-
-        $template = ThemeTemplate::find($template->id);
+        $template = ThemeTemplate::syncTemplateCustomFields($request->page_template_id);
 
         $response['status'] = 'success';
         $response['data']['list'] = $template->formGroups()->with(['fields'])->get();
@@ -78,6 +74,7 @@ class PageController extends Controller
         $rules = array(
             'title' => 'required',
             'name' => 'required',
+            'vh_theme_page_template' => 'required',
         );
 
         $validator = \Validator::make( $request->all(), $rules);
@@ -91,10 +88,17 @@ class PageController extends Controller
 
         $data = [];
 
-        $template = ThemeTemplate::theme(vh_get_theme_id())->slug($request->page_template_slug)->first();
+        $template = ThemeTemplate::find($request->vh_theme_page_template)->first();
 
-        $page = Page::where('vh_theme_template_id', $template->id)
-            ->slug(str_slug($request->title))->first();
+        if($request->has('id'))
+        {
+            $page = Page::find($request->id);
+        } else
+        {
+            $page = Page::where('vh_theme_template_id', $template->id)
+                ->slug(str_slug($request->title))->first();
+        }
+
 
         if(!$page)
         {
@@ -102,7 +106,6 @@ class PageController extends Controller
         }
 
         $page->fill($request->all());
-        $page->vh_theme_template_id = $template->id;
         $page->save();
 
 
@@ -119,7 +122,13 @@ class PageController extends Controller
 
                 $content = Content::firstOrCreate($insert);
 
-                $insert['content'] = $field['content'];
+                if(is_array($field['content']))
+                {
+                    $insert['content'] = $field['content']['content'];
+                } else
+                {
+                    $insert['content'] = $field['content'];
+                }
 
                 $content->fill($insert);
 
@@ -190,7 +199,7 @@ class PageController extends Controller
 
         $data = [];
 
-        $page = Page::find($id);
+        $page = Page::where('id', $id)->with(['template'])->first();
 
         if(!$page)
         {
@@ -207,10 +216,12 @@ class PageController extends Controller
         {
             foreach ($group->fields as $field)
             {
+                $page_content = [
+                    'vh_cms_form_group_id' => $group->id,
+                    'vh_cms_form_field_id' => $field->id,
+                ];
                 $field->content = $page->contents()
-                    ->where('vh_cms_form_group_id', $group->id)
-                    ->where('vh_cms_form_field_id', $field->id)
-                    ->first();
+                    ->firstOrCreate($page_content);
 
             }
         }
@@ -224,6 +235,61 @@ class PageController extends Controller
 
     }
     //----------------------------------------------------------
+    public function getPageCustomFields(Request $request, $id)
+    {
+        $rules = array(
+            'page_template_id' => 'required',
+        );
+
+        $validator = \Validator::make( $request->all(), $rules);
+        if ( $validator->fails() ) {
+
+            $errors             = errorsToArray($validator->errors());
+            $response['status'] = 'failed';
+            $response['errors'] = $errors;
+            return response()->json($response);
+        }
+
+        $page = Page::where('id', $id)->with(['template'])->first();
+
+        if(!$page)
+        {
+            $response['status'] = 'failed';
+            $response['errors'][] = 'Page not found';
+            return response()->json($response);
+        }
+
+        $page->vh_theme_template_id = $request->page_template_id;
+        $page->save();
+
+        $template = ThemeTemplate::syncTemplateCustomFields($request->page_template_id);
+
+
+        $page = Page::where('id', $id)->with(['template'])->first();
+
+        $groups = $page->template->formGroups()->with(['fields'])->get();
+
+        foreach ($groups as $group)
+        {
+            foreach ($group->fields as $field)
+            {
+                $page_content = [
+                    'vh_cms_form_group_id' => $group->id,
+                    'vh_cms_form_field_id' => $field->id,
+                ];
+                $field->content = $page->contents()
+                    ->firstOrCreate($page_content);
+            }
+        }
+
+        $page->custom_fields = $groups;
+
+        $response['status'] = 'success';
+        $response['data'] = $page;
+
+        return response()->json($response);
+
+    }
     //----------------------------------------------------------
     //----------------------------------------------------------
 

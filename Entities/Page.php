@@ -24,9 +24,30 @@ class Page extends Model
         'vh_theme_template_id', 'vh_cms_page_id', 'name', 'title', 'slug',
         'content',
         'attr_id', 'attr_class',
-        'status', 'visibility', 'meta',
+        'status', 'visibility', 'meta', 'published_at',
         'created_by', 'updated_by', 'deleted_by'
     ];
+    //-------------------------------------------------
+    protected $appends  = [
+        'label', 'code'
+    ];
+
+    //-------------------------------------------------
+    public function getLabelAttribute() {
+
+        $list = page_statuses();
+
+        if(isset($list[$this->status]))
+        {
+            return $list[$this->status];
+        }
+
+        return null;
+    }
+    //-------------------------------------------------
+    public function getCodeAttribute() {
+        return $this->status;
+    }
     //-------------------------------------------------
     public function setSlugAttribute( $value ) {
         $this->attributes['slug'] = str_slug( $value );

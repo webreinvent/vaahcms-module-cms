@@ -25,6 +25,16 @@ class Content extends Model
         'created_by', 'updated_by', 'deleted_by'
     ];
     //-------------------------------------------------
+    public function getContentAttribute($value) {
+
+        if(is_null($value))
+        {
+            return "";
+        }
+
+        return $value;
+    }
+    //-------------------------------------------------
     public function contentable()
     {
         return $this->morphTo();

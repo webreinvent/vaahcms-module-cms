@@ -36,8 +36,10 @@ Route::group(
         Route::any( '/list', 'PageController@getList' )
             ->name( 'vh.cms.pages.list' );
         //------------------------------------------------
-        Route::any( '/page/{id}', 'PageController@getPageDetails' )
+        Route::any( '/{id}', 'PageController@getPageDetails' )
             ->name( 'vh.cms.pages.detail' );
         //------------------------------------------------
+        Route::any( '/{id}/custom/fields', 'PageController@getPageCustomFields' )
+            ->name( 'vh.cms.pages.detail.custom.fields' );
         //------------------------------------------------
     });

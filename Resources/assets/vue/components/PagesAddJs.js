@@ -23,10 +23,7 @@ export default {
             page_status: 'draft',
             page_visibility: 'public',
             page_parent: null,
-            page_template: {
-                code: 'default',
-                label: 'Default',
-            },
+            page_template: {},
             list: null,
             page_reload_required: null,
             stats: null,
@@ -89,6 +86,7 @@ export default {
         getAssetsAfter: function (data) {
 
             this.assets = data;
+            this.page_template = data.page_template_default;
 
             //this.$helpers.console(this.assets, 'from app->');
 
@@ -105,7 +103,7 @@ export default {
 
             var url = this.urls.current+"/custom/fields";
             var params = {
-                page_template_slug: this.page_template.code
+                page_template_id: this.page_template.code
             };
 
             this.$helpers.console(params, 'params-->');
@@ -150,7 +148,7 @@ export default {
 
             var url = this.urls.current+"/store";
             var params = this.page_data;
-            params.page_template_slug = this.page_template.code;
+            params.vh_theme_page_template = this.page_template.code;
 
             this.$helpers.console(this.page_data, 'page_data');
 

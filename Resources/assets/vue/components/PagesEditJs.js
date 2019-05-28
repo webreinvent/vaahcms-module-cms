@@ -3,8 +3,11 @@ import pagination from 'laravel-vue-pagination';
 //https://github.com/sagalbot/vue-select
 import vSelect from 'vue-select'
 
+
 //https://github.com/myokyawhtun/label-edit
 import LabelEdit from 'label-edit'
+
+import VaahVueSelect from './reusable/VaahVueSelect';
 
 export default {
 
@@ -13,6 +16,7 @@ export default {
         'pagination': pagination,
         'v-select': vSelect,
         'label-edit': LabelEdit,
+        'vh-select': VaahVueSelect,
     },
     data()
     {
@@ -23,10 +27,7 @@ export default {
             page_status: 'draft',
             page_visibility: 'public',
             page_parent: null,
-            page_template: {
-                code: 'default',
-                label: 'Default',
-            },
+            page_template: {},
             list: null,
             page_reload_required: null,
             stats: null,
@@ -87,6 +88,7 @@ export default {
         getAssetsAfter: function (data) {
 
             this.assets = data;
+            //this.page_template = data.page_template_default;
 
             //this.$helpers.console(this.assets, 'from app->');
 
@@ -95,7 +97,7 @@ export default {
         },
         //---------------------------------------------------------------------
         getPageDetails: function () {
-            var url = this.urls.current+"/page/"+this.id;
+            var url = this.urls.current+"/"+this.id;
             var params = {};
             this.$helpers.ajax(url, params, this.getPageDetailsAfter);
         },
@@ -105,35 +107,45 @@ export default {
             this.$helpers.console(data, '-->');
 
             this.page_data = data;
+            this.page_template = {
+                label: data.template.name,
+                code: data.template.id,
+            };
+
+
+            this.$helpers.console(this.page_template, 'this.page_template');
+            this.$helpers.console(this.assets.page_templates, 'assets.page_templates');
 
             this.$helpers.stopNprogress();
         },
         //---------------------------------------------------------------------
-        getCustomFields: function () {
+        getEditPageCustomFields: function () {
 
             if(!this.page_template)
             {
                 return false;
             }
 
-            var url = this.urls.current+"/custom/fields";
+            var url = this.urls.current+"/"+this.id+"/custom/fields";
             var params = {
-                page_template_slug: this.page_template.code
+                page_template_id: this.page_template.code
             };
 
             this.$helpers.console(params, 'params-->');
 
-            this.$helpers.ajax(url, params, this.getCustomFieldsAfter);
+            this.$helpers.ajax(url, params, this.getEditPageCustomFieldsAfter);
         },
         //---------------------------------------------------------------------
-        getCustomFieldsAfter: function (data) {
+        getEditPageCustomFieldsAfter: function (data) {
 
             this.$helpers.console(data, 'custom fields');
 
-            this.page_data.custom_fields = data.list;
+            this.page_data = data;
 
             this.$helpers.stopNprogress();
         },
+
+        //---------------------------------------------------------------------
 
         //---------------------------------------------------------------------
         slugUpdated: function (text) {
@@ -155,25 +167,29 @@ export default {
         },
 
         //---------------------------------------------------------------------
-        storeDraft: function (e) {
+        storePage: function (e) {
             if(e)
             {
                 e.preventDefault();
             }
 
-            var url = this.urls.current+"/assets";
+            var url = this.urls.current+"/store";
             var params = this.page_data;
+            params.vh_theme_page_template = this.page_template.code;
 
             this.$helpers.console(this.page_data, 'page_data');
 
-            //this.$helpers.ajax(url, params, this.fnAfter);
+            this.$helpers.ajax(url, params, this.storePageAfter);
 
         },
         //---------------------------------------------------------------------
-        fnAfter: function (data) {
+        storePageAfter: function (data) {
+
+            this.$helpers.console(data, '--->');
 
             this.$helpers.stopNprogress();
         },
+        //---------------------------------------------------------------------
         //---------------------------------------------------------------------
     }
 }

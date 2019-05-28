@@ -27,6 +27,7 @@ class CreateVhCmsPagesTable extends Migration
             $table->string('status')->nullable();
             $table->string('visibility')->nullable();
             $table->text('meta')->nullable();
+            $table->dateTime('published_at')->nullable();
 
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();

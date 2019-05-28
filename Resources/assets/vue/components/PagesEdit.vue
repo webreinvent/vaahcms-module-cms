@@ -66,7 +66,7 @@
                 </div>
 
                 <div class="form-group">
-                    <textarea class="form-control" rows="10" placeholder="Content"></textarea>
+                    <textarea class="form-control" rows="10" v-model="page_data.content" placeholder="Content"></textarea>
                 </div>
 
                 <hr class="mg-t-30 mg-b-30">
@@ -75,18 +75,24 @@
 
                 <div v-if="page_data.custom_fields">
 
-                    <div v-for="field in page_data.custom_fields">
+                    <div v-for="group in page_data.custom_fields">
 
-                        <div class="form-group" v-if="field.type == 'text'">
-                            <label>{{field.name}}</label>
-                            <input class="form-control" v-model="field.content.content" placeholder="Page Title" />
-                            <div v-if="field.excerpt" class="invalid-feedback show">{{field.excerpt}}</div>
-                        </div>
 
-                        <div class="form-group" v-if="field.type == 'textarea'">
-                            <label>{{field.name}}</label>
-                            <textarea class="form-control" v-model="field.content.content" placeholder="Content"></textarea>
-                            <div v-if="field.excerpt" class="invalid-feedback show">{{field.excerpt}}</div>
+                        <div v-for="field in group.fields">
+
+                            <div class="form-group" v-if="field.type == 'text'">
+                                <label>{{field.name}}</label>
+                                <input class="form-control" v-model="field.content.content" placeholder="Page Title" />
+                                <div v-if="field.excerpt" class="invalid-feedback show">{{field.excerpt}}</div>
+                            </div>
+
+                            <div class="form-group" v-if="field.type == 'textarea'">
+                                <label>{{field.name}}</label>
+                                <textarea class="form-control" v-model="field.content.content" placeholder="Content"></textarea>
+                                <div v-if="field.excerpt" class="invalid-feedback show">{{field.excerpt}}</div>
+                            </div>
+
+
                         </div>
 
                     </div>
@@ -109,13 +115,13 @@
 
                         <div class="row mg-b-10">
                             <div class="col-sm-12">
-                                <input class="form-control form-control-sm" placeholder="Page Name"/>
+                                <input class="form-control form-control-sm" v-model="page_data.name" placeholder="Page Name"/>
                             </div>
                         </div>
 
                         <div class="row mg-b-10">
-                            <div class="col-sm-6">
-                                <button v-on:click="storeDraft" class="btn btn-sm btn-light">Save Draft</button>
+                            <div class="col-sm-6" v-if="!page_data.published_at">
+                                <button v-on:click="storePage" class="btn btn-sm btn-light">Save Draft</button>
                             </div>
                             <div class="col-sm-6 text-right">
                                 <button class="btn btn-sm btn-light pull-right">Preview</button>
@@ -126,7 +132,15 @@
                             <tr>
                                 <td width="100">Status</td>
                                 <td>
-                                    <v-select v-model="page_status" :options="assets.page_statuses"></v-select>
+
+                                    Options
+                                    <vh-select
+                                               :option_key="code"
+                                               :option_value="label"
+                                               :options="assets.page_statuses"></vh-select>
+
+                                    <v-select v-model="page_data" :options="assets.page_statuses"></v-select>
+
                                 </td>
                             </tr>
 
@@ -137,10 +151,10 @@
                                 </td>
                             </tr>
 
-                            <tr>
+                            <tr v-if="page_data.published_at">
                                 <td>Published At</td>
                                 <td>
-                                    <strong>May 4, 2017 @ 14:11</strong>
+                                    <strong>{{page_data.published_at}}</strong>
                                 </td>
                             </tr>
 
@@ -180,16 +194,18 @@
                                 <td>
 
                                     <div class="input-group">
+
                                         <v-select  v-model="page_template"
                                                    style="min-width: 150px;"
-                                                   v-on:input="getCustomFields"
+                                                   v-on:input="getEditPageCustomFields"
                                                    :options="assets.page_templates">
                                         </v-select>
+
 
                                         <div class="input-group-append">
 
                                             <button class="btn btn-xs btn-light"
-                                            v-on:click="getCustomFields">
+                                            v-on:click="getEditPageCustomFields">
                                                 <i class="fas fa-sync"></i>
                                             </button>
 
