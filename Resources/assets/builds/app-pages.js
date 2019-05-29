@@ -28222,7 +28222,10 @@ var render = function() {
                                   ],
                                   staticClass: "form-control",
                                   attrs: { placeholder: "Content" },
-                                  domProps: { value: field.content.content },
+                                  domProps: {
+                                    value: field.content.content,
+                                    innerHTML: _vm._s(field.content.content)
+                                  },
                                   on: {
                                     input: function($event) {
                                       if ($event.target.composing) {

@@ -111,16 +111,19 @@ class PageController extends Controller
 
         foreach($request->custom_fields as $group)
         {
+
+
             foreach ($group['fields'] as $field)
             {
+                $insert = [];
 
                 $insert['vh_cms_form_group_id'] = $group['id'];
                 $insert['vh_cms_form_field_id'] = $field['id'];
                 $insert['contentable_id'] = $page->id;
                 $insert['contentable_type'] = Page::class;;
 
-
                 $content = Content::firstOrCreate($insert);
+
 
                 if(is_array($field['content']))
                 {
@@ -216,12 +219,13 @@ class PageController extends Controller
         {
             foreach ($group->fields as $field)
             {
-                $page_content = [
-                    'vh_cms_form_group_id' => $group->id,
-                    'vh_cms_form_field_id' => $field->id,
-                ];
+                $insert = [];
+                $insert['vh_cms_form_group_id'] = $group['id'];
+                $insert['vh_cms_form_field_id'] = $field['id'];
+                $insert['contentable_id'] = $page->id;
+                $insert['contentable_type'] = Page::class;;
                 $field->content = $page->contents()
-                    ->firstOrCreate($page_content);
+                    ->firstOrCreate($insert);
 
             }
         }
@@ -273,6 +277,7 @@ class PageController extends Controller
         {
             foreach ($group->fields as $field)
             {
+
                 $page_content = [
                     'vh_cms_form_group_id' => $group->id,
                     'vh_cms_form_field_id' => $field->id,

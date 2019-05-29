@@ -93,7 +93,7 @@
 
                             <div class="form-group" v-if="field.type == 'textarea'">
                                 <label>{{field.name}}</label>
-                                <textarea class="form-control" v-model="field.content.content" placeholder="Content"></textarea>
+                                <textarea class="form-control" v-model="field.content.content" v-html="field.content.content" placeholder="Content"></textarea>
                                 <div v-if="field.excerpt" class="invalid-feedback show">{{field.excerpt}}</div>
                             </div>
 
