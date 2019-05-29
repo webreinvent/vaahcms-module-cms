@@ -10,10 +10,11 @@
                     </div>
                     <div class="d-none d-md-block">
 
-                        <router-link class="btn btn-sm pd-x-15 btn-primary btn-uppercase"
-                                     :to="{ path: '/add'}">
+                        <button class="btn btn-sm pd-x-15 btn-primary btn-uppercase"
+                                @click="showModalMenuAdd">
                             <i class="fas fa-plus"></i> Add New
-                        </router-link>
+                        </button>
+
 
                     </div>
                 </div>
@@ -25,58 +26,92 @@
         <!--content body-->
         <div class="row mg-t-15">
 
-            <div class="col-xs-12 col-sm-5 col-md-3">
 
-                <div class="card">
-                    <div class="card-header">Pages</div>
-                    <div class="card-body pd-0-f">
+            <div class="col-12">
 
-                        <div>
-
-                            <table class="table  table-condensed  table-sm">
-
-                                <tr>
-                                    <td width="25">
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" >
-                                            <label class="custom-control-label"></label>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        Page title
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" >
-                                            <label class="custom-control-label"></label>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        Page title
-                                    </td>
-                                </tr>
-
-                            </table>
-
-                        </div>
-
-
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label>Theme Location</label>
+                        <select class="custom-select">
+                            <option selected>Select Location</option>
+                            <option value="1">Top Menu</option>
+                            <option value="2">Side Bar</option>
+                            <option value="3">Footer</option>
+                        </select>
                     </div>
-
-                    <div class="card-footer">
-
-                        <button class="btn btn-xs btn-primary">Add</button>
-
+                    <div class="form-group col-md-6">
+                        <label >Menu</label>
+                        <select class="custom-select">
+                            <option selected>Select Location</option>
+                            <option value="1">Top Menu</option>
+                            <option value="2">Side Bar</option>
+                            <option value="3">Footer</option>
+                        </select>
                     </div>
+                </div>
+
+                <hr/>
+
+                <div class="admin-menus">
+
+
+                    <ul>
+                        <li>
+
+                            <div class="menu-block">
+                                Menu 1
+
+                                <span class="btn-group btn-group-xs">
+                                    <button class="btn btn-xs btn-light btn-icon pull-right" ><i class="fas fa-pencil-alt"></i></button>
+                                    <button class="btn btn-xs btn-light btn-icon pull-right" ><i class="fas fa-plus"></i></button>
+                                </span>
+
+                            </div>
+
+                        </li>
+                        <li>
+                            <div class="menu-block">
+                                Menu 3
+
+                                <span class="btn-group btn-group-xs">
+                                    <button class="btn btn-xs btn-light btn-icon pull-right" ><i class="fas fa-plus"></i></button>
+                                    <button class="btn btn-xs btn-light btn-icon pull-right" ><i class="fas fa-arrow-down"></i></button>
+                                </span>
+
+                            </div>
+
+                            <ul>
+                                <li>
+                                    <div class="menu-block">
+                                    Sub menu 1
+                                        <span class="btn-group btn-group-xs">
+                                        <button class="btn btn-xs btn-light btn-icon pull-right" ><i class="fas fa-plus"></i></button>
+                                        <button class="btn btn-xs btn-light btn-icon pull-right" ><i class="fas fa-arrow-down"></i></button>
+                                        </span>
+
+                                    </div>
+
+                                </li>
+                                <li>
+                                    <div class="menu-block">
+                                        Sub menu 2
+                                        <span class="btn-group btn-group-xs pull-right">
+                                        <button class="btn btn-xs btn-light btn-icon " ><i class="fas fa-plus"></i></button>
+                                        <button class="btn btn-xs btn-light btn-icon" ><i class="fas fa-arrow-down"></i></button>
+                                        </span>
+
+                                    </div>
+
+                                </li>
+                            </ul>
+                        </li>
+
+
+                    </ul>
+
 
                 </div>
 
-            </div>
-            <div class="col-xs-12 col-sm-7 col-md-9">
-                Right
             </div>
 
 
@@ -84,6 +119,52 @@
 
 
         <!--/content body-->
+
+
+        <!--modal-->
+        <div class="modal fade" id="ModalAddMenu" tabindex="-1" role="dialog" >
+              <div class="modal-dialog" v-if="assets">
+                <div class="modal-content tx-14">
+                  <div class="modal-header">
+                    <h6 class="modal-title">Add New Menu</h6>
+                    <button type="button" class="close" data-dismiss="modal">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+
+                   <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Select Theme Location</label>
+                    <div class="col-sm-10">
+
+                        <vh-select
+                                :options="assets.theme_menu_locations"
+                                v-model="new_menu.vh_theme_location_id"
+                                option_value="id"
+                                option_text="name"
+                                default_text="Select Theme Location"
+                                select_class="custom-select"
+                        ></vh-select>
+
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Menu Name</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" placeholder="Menu Name">
+                    </div>
+                  </div>
+
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary tx-13" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary tx-13" @click="storeMenu">Save changes</button>
+                  </div>
+                </div>
+              </div>
+        </div>
+        <!--/modal-->
+
 
 
     </div>

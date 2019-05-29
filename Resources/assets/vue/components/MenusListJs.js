@@ -1,13 +1,16 @@
 import pagination from 'laravel-vue-pagination';
+import vhSelect from 'vaah-vue-select'
 
 export default {
 
     props: ['urls'],
     components:{
         'pagination': pagination,
+        'vh-select': vhSelect,
     },
     data()
     {
+
         let obj = {
             assets: null,
             q: null,
@@ -20,7 +23,13 @@ export default {
             filters: {
                 q: null,
                 status: 'all',
+            },
+            new_menu: {
+                vh_theme_location_id: null,
+                name: null
             }
+
+
         };
 
         return obj;
@@ -33,7 +42,7 @@ export default {
     mounted() {
 
         //---------------------------------------------------------------------
-        //this.getAssets();
+        this.getAssets();
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
@@ -61,8 +70,31 @@ export default {
 
             this.$helpers.console(this.assets, 'from app->');
 
-            //this.getList();
+            this.$helpers.stopNprogress();
 
+        },
+        //---------------------------------------------------------------------
+        showModalMenuAdd: function()
+        {
+
+            $("#ModalAddMenu").modal('show');
+
+        },
+        //---------------------------------------------------------------------
+        storeMenu: function (e) {
+            if(e)
+            {
+                e.preventDefault();
+            }
+
+            var url = this.urls.current+"/store";
+            var params = this.new_menu;
+            this.$helpers.ajax(url, params, this.storeMenuAfter);
+        },
+        //---------------------------------------------------------------------
+        storeMenuAfter: function (data) {
+
+            this.getAssets();
         },
         //---------------------------------------------------------------------
 

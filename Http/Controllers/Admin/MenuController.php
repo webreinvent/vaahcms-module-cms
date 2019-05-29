@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use VaahCms\Modules\Cms\Entities\Content;
 use VaahCms\Modules\Cms\Entities\Page;
+use WebReinvent\VaahCms\Entities\ThemeLocation;
 use WebReinvent\VaahCms\Entities\ThemeTemplate;
 
 class MenuController extends Controller
@@ -30,11 +31,7 @@ class MenuController extends Controller
     {
         $data = [];
 
-        $data['page_templates'] = ThemeTemplate::getAssetsList();
-        $data['page_template_default'] = ThemeTemplate::getDefaultPageTemplate();
-        $data['page_statuses'] = page_statuses();
-        $data['page_visibilities'] = page_visibilities();
-        $data['pages_list'] = Page::getAssetsList();
+        $data['theme_menu_locations'] = ThemeLocation::getMenuLocationsForAssets();
 
         $response['status'] = 'success';
         $response['data'] = $data;

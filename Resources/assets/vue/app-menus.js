@@ -1,6 +1,8 @@
 
 window.Vue = require('vue');
 
+import BootstrapVue from 'bootstrap-vue'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 //---------Package imports
 import VueRouter from 'vue-router';
@@ -20,6 +22,7 @@ Vue.config.async = false;
 Vue.prototype.moment = moment;
 Vue.use(VueResource);
 Vue.use(VueRouter);
+Vue.use(BootstrapVue);
 Vue.use(VueHelpers);
 //---------/Helpers
 
