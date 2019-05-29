@@ -26687,12 +26687,72 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col-xs-12 col-md-3" }, [
-        _vm._v("\n            Left\n        ")
+    return _c("div", { staticClass: "row mg-t-15" }, [
+      _c("div", { staticClass: "col-xs-12 col-sm-5 col-md-3" }, [
+        _c("div", { staticClass: "card" }, [
+          _c("div", { staticClass: "card-header" }, [_vm._v("Pages")]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body pd-0-f" }, [
+            _c("div", [
+              _c("table", { staticClass: "table  table-condensed  table-sm" }, [
+                _c("tr", [
+                  _c("td", { attrs: { width: "25" } }, [
+                    _c(
+                      "div",
+                      { staticClass: "custom-control custom-checkbox" },
+                      [
+                        _c("input", {
+                          staticClass: "custom-control-input",
+                          attrs: { type: "checkbox" }
+                        }),
+                        _vm._v(" "),
+                        _c("label", { staticClass: "custom-control-label" })
+                      ]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _vm._v(
+                      "\n                                    Page title\n                                "
+                    )
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("tr", [
+                  _c("td", [
+                    _c(
+                      "div",
+                      { staticClass: "custom-control custom-checkbox" },
+                      [
+                        _c("input", {
+                          staticClass: "custom-control-input",
+                          attrs: { type: "checkbox" }
+                        }),
+                        _vm._v(" "),
+                        _c("label", { staticClass: "custom-control-label" })
+                      ]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _vm._v(
+                      "\n                                    Page title\n                                "
+                    )
+                  ])
+                ])
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-footer" }, [
+            _c("button", { staticClass: "btn btn-xs btn-primary" }, [
+              _vm._v("Add")
+            ])
+          ])
+        ])
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "col-xs-12 col-md-9" }, [
+      _c("div", { staticClass: "col-xs-12 col-sm-7 col-md-9" }, [
         _vm._v("\n            Right\n        ")
       ])
     ])
