@@ -43,3 +43,25 @@ Route::group(
             ->name( 'vh.cms.pages.detail.custom.fields' );
         //------------------------------------------------
     });
+
+
+
+Route::group(
+    [
+        'prefix'     => 'admin/cms/menus',
+        'middleware' => ['web', 'has.admin.access'],
+        'namespace'  => 'Admin'
+    ],
+    function () {
+        //------------------------------------------------
+        //------------------------------------------------
+        Route::get( '/', 'MenuController@index' )
+            ->name( 'vh.cms.menus' );
+        //------------------------------------------------
+        Route::any( '/assets', 'MenuController@assets' )
+            ->name( 'vh.cms.menus.assets' );
+        //------------------------------------------------
+        Route::any( '/list', 'MenuController@getList' )
+            ->name( 'vh.cms.menus.list' );
+        //------------------------------------------------
+    });

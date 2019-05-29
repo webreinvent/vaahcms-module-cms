@@ -21,6 +21,7 @@ var path_vue = __dirname+"/";
 mix.setPublicPath(path_vue);
 
 mix.js(path+'vue/app-pages.js',  './Resources/assets/builds')
+    .js(path+'vue/app-menus.js',  './Resources/assets/builds')
     .version();
 
 

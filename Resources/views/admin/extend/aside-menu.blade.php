@@ -14,6 +14,12 @@
 </li>
 
 
+<li class="nav-item"><a href="{{route("vh.cms.menus")}}" class="nav-link">
+        <i data-feather="link-2"></i> <span>Menu</span>
+    </a>
+</li>
+
+
 
 <li class="nav-item"><a href="dashboard-one.html" class="nav-link">
         <i data-feather="message-square"></i> <span>Comments</span>
