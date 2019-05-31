@@ -66,28 +66,6 @@ class MenuItem extends Model
 
     }
     //-------------------------------------------------
-    public static function getNewSort($menu_id)
-    {
-
-        $menu = MenuItem::where('id', $menu_id)->first();
-
-
-        //find menu on the same label
-        $count_menus = MenuItem::where('parent_id', $menu->parent_id)
-            ->where('depth', $menu->depth)
-            ->count();
-
-        if($menu->depth)
-        {
-            return $count_menus+1;
-        } else
-        {
-            return 1;
-        }
-
-
-    }
-    //-------------------------------------------------
     public static function hasParent($menu_id)
     {
         $menu = MenuItem::where('id', $menu_id)->first();
@@ -127,26 +105,30 @@ class MenuItem extends Model
     //-------------------------------------------------
 
     //-------------------------------------------------
-    public static function getTreeArray($menu_id)
-    {
-        $result = [];
-        $i = 0;
+    public static function recursiveDelete($id){
 
-        $list = MenuItem::where('vh_menu_id', $menu_id)
+        $parent = MenuItem::findOrFail($id);
 
-            ->get()->toArray();
+        $array_of_ids = MenuItem::getChildrenIds($parent);
 
+        array_push($array_of_ids, $id);
 
-        $tree = MenuItem::buildTree($list);
+        MenuItem::destroy($array_of_ids);
 
-
-
-
-
-        $result = reset_child($tree);
-
-
-        return $result;
     }
+
+    //-------------------------------------------------
+
+    public static function getChildrenIds($category){
+        $ids = [];
+        foreach ($category->childrens as $cat) {
+            $ids[] = $cat->id;
+            $ids = array_merge($ids, MenuItem::getChildrenIds($cat));
+        }
+        return $ids;
+
+    }
+    //-------------------------------------------------
+
     //-------------------------------------------------
 }

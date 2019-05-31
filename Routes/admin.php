@@ -76,5 +76,8 @@ Route::group(
         Route::any( '/items/{menu_id}/store', 'MenuController@getMenuItemsStore' )
             ->name( 'vh.cms.menus.menu.items.store' );
         //------------------------------------------------
+        Route::any( '/items/{menu_item_id}/delete', 'MenuController@deleteMenuItem' )
+            ->name( 'vh.cms.menus.menu.item.delete' );
+        //------------------------------------------------
         //------------------------------------------------
     });

@@ -28,11 +28,22 @@ mix.js(path+'vue/app-pages.js',  './Resources/assets/builds')
 //mix.copyDirectory(admin_copy_path, admin_copy_path_des, false);
 
 
+
 mix.webpackConfig({
     watchOptions: {
         aggregateTimeout: 2000,
         poll: 20,
         ignored: [
+            '/Config/',
+            '/Database/',
+            '/Entities/',
+            '/Helpers/',
+            '/Http/',
+            '/Providers/',
+            '/Resources/',
+            '/Routes/',
+            '/node_modules/',
+            '/vendor/',
 
         ]
     }

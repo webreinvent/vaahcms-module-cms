@@ -26015,7 +26015,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 status: 'all'
             },
             new_menu: {
-                vh_theme_location_id: null,
+                parent_id: null,
                 name: null
             },
             active_location_id: null,
@@ -26023,27 +26023,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             active_menu_id: null,
             menu_items: null,
             new_menu_item: {
+                id: null,
                 name: null,
-                vh_cms_menu_item_id: null
-            },
-
-            tree: {
-                name: 'root',
-                childerns: [{
-                    name: 'item1',
-                    childerns: [{
-                        name: 'item1.1'
-                    }, {
-                        name: 'item1.2',
-                        childerns: [{
-                            name: 'item1.2.1'
-                        }]
-                    }]
-                }, {
-                    name: 'item2'
-                }]
+                vh_page_id: null,
+                parent_id: null
             }
-
         };
 
         return obj;
@@ -26077,8 +26061,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         getAssetsAfter: function getAssetsAfter(data) {
 
             this.assets = data;
-
-            this.$helpers.console(this.assets, 'from app->');
 
             this.$helpers.stopNprogress();
         },
@@ -26126,8 +26108,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             this.menus_list = data;
 
-            this.$helpers.console(this.menus_list);
-
             this.$helpers.stopNprogress();
         },
         //---------------------------------------------------------------------
@@ -26150,15 +26130,31 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.assets.menu_items = data.assets;
             this.menu_items = data.list;
 
-            this.$helpers.console(this.menu_items, 'this.menu_items');
-
             this.$helpers.stopNprogress();
         },
         //---------------------------------------------------------------------
-        showModalMenuItemAdd: function showModalMenuItemAdd() {
+        addRootMenu: function addRootMenu() {
+            this.new_menu_item.parent_id = null;
             $("#ModalAddMenuItem").modal('show');
         },
         //---------------------------------------------------------------------
+        addSubMenu: function addSubMenu(menu_item) {
+            this.new_menu_item.parent_id = menu_item.id;
+            $("#ModalAddMenuItem").modal('show');
+        },
+        //---------------------------------------------------------------------
+        editMenu: function editMenu(menu_item) {
+            this.$helpers.console(menu_item, 'menu_item');
+
+            this.new_menu_item.parent_id = menu_item.parent_id;
+            this.new_menu_item.vh_page_id = menu_item.vh_page_id;
+            this.new_menu_item.name = menu_item.name;
+            this.new_menu_item.id = menu_item.id;
+
+            //this.$helpers.console(this.new_menu_item, 'edit menu');
+
+            $("#ModalAddMenuItem").modal('show');
+        },
         //---------------------------------------------------------------------
         storeMenuItem: function storeMenuItem() {
             var url = this.urls.current + "/items/" + this.active_menu_id + "/store";
@@ -26176,36 +26172,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
         //---------------------------------------------------------------------
 
-
         //---------------------------------------------------------------------
-        actions: function actions(e, action, inputs, data) {
-            if (e) {
-                e.preventDefault();
-            }
-
-            var url = this.urls.current + "/actions";
-            var params = {
-                action: action,
-                inputs: inputs,
-                data: data
-            };
-
-            this.$helpers.ajax(url, params, this.actionsAfter);
+        deleteItem: function deleteItem(menu_item) {
+            this.$helpers.console('testing menu list');
+            var url = this.urls.current + "/items/" + menu_item.id + "/delete";
+            var params = {};
+            this.$helpers.ajax(url, params, this.deleteItemAfter);
         },
         //---------------------------------------------------------------------
-        actionsAfter: function actionsAfter(data) {
-            this.getList();
-            this.page_reload_required = 1;
-        },
-        //---------------------------------------------------------------------
-        setFilterStatus: function setFilterStatus(e, status) {
-            if (e) {
-                e.preventDefault();
-            }
-
-            this.filters.status = status;
-
-            this.getList();
+        deleteItemAfter: function deleteItemAfter(data) {
+            this.getMenuItems();
         }
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
@@ -26237,10 +26213,87 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['menu_item'],
-    name: 'menutree'
+    name: 'menutree',
+    data: function data() {
+        var obj = {
+            assets: null,
+            q: null,
+            page: 1,
+            list: null
+        };
+
+        return obj;
+    },
+
+    watch: {},
+    mounted: function mounted() {
+
+        //---------------------------------------------------------------------
+        //this.getAssets();
+        //---------------------------------------------------------------------
+        //---------------------------------------------------------------------
+        //---------------------------------------------------------------------
+        //---------------------------------------------------------------------
+    },
+
+    methods: {
+        //---------------------------------------------------------------------
+        deleteItem: function deleteItem(menu_item) {
+
+            this.$helpers.console('testing menu tree');
+
+            this.$emit('deleteItem', menu_item);
+        },
+        //---------------------------------------------------------------------
+        addSubMenu: function addSubMenu(menu_item) {
+
+            this.$helpers.console('testing menu tree');
+
+            this.$emit('addSubMenu', menu_item);
+        },
+        //---------------------------------------------------------------------
+        editMenu: function editMenu(menu_item) {
+
+            this.$helpers.console(menu_item, 'menu tree-->');
+
+            this.$emit('editMenu', menu_item);
+        }
+        //---------------------------------------------------------------------
+    }
 });
 
 /***/ }),
@@ -56010,11 +56063,11 @@ var render = function() {
     _vm._v(" "),
     _vm.assets
       ? _c("div", { staticClass: "row mg-t-15" }, [
-          _c("div", { staticClass: "col-12" }, [
+          _c("div", { staticClass: "col-sm-12 col-md-3" }, [
             _c("div", { staticClass: "form-row" }, [
               _c(
                 "div",
-                { staticClass: "form-group col-md-6" },
+                { staticClass: "form-group col-md-12" },
                 [
                   _c("label", [_vm._v("Theme Location")]),
                   _vm._v(" "),
@@ -56042,7 +56095,7 @@ var render = function() {
               _vm.menus_list
                 ? _c(
                     "div",
-                    { staticClass: "form-group col-md-6" },
+                    { staticClass: "form-group col-md-12" },
                     [
                       _c("label", [_vm._v("Menu")]),
                       _vm._v(" "),
@@ -56068,34 +56121,55 @@ var render = function() {
                   )
                 : _vm._e(),
               _vm._v(" "),
-              _c("button", { on: { click: _vm.getMenuItems } }, [
-                _vm._v("Reload")
+              _c("div", { staticClass: "form-group col-md-12" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-block btn-sm btn-success",
+                    on: { click: _vm.getMenuItems }
+                  },
+                  [
+                    _c("i", { staticClass: "fas fa-sync-alt" }),
+                    _vm._v(" Reload Menu\n                ")
+                  ]
+                )
               ])
-            ]),
-            _vm._v(" "),
-            _c("hr"),
-            _vm._v(" "),
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-sm-12 col-md-9" }, [
             _c(
               "div",
               { staticClass: "admin-menus" },
               [
-                _vm._l(_vm.menu_items, function(menu_item) {
+                _vm._l(_vm.menu_items, function(menu_item, index) {
                   return _vm.menu_items
-                    ? _c("menutree", { attrs: { menu_item: menu_item } })
+                    ? _c("menutree", {
+                        key: index,
+                        attrs: { urls: _vm.urls, menu_item: menu_item },
+                        on: {
+                          deleteItem: _vm.deleteItem,
+                          addSubMenu: _vm.addSubMenu,
+                          editMenu: _vm.editMenu
+                        }
+                      })
                     : _vm._e()
                 }),
                 _vm._v(" "),
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-sm pd-x-15 btn-primary btn-uppercase",
-                    on: { click: _vm.showModalMenuItemAdd }
-                  },
-                  [
-                    _c("i", { staticClass: "fas fa-plus" }),
-                    _vm._v(" Add Menu Item\n                ")
-                  ]
-                )
+                _vm.menu_items
+                  ? _c(
+                      "button",
+                      {
+                        staticClass:
+                          "btn mg-t-10 btn-sm pd-x-15 btn-primary btn-uppercase",
+                        on: { click: _vm.addRootMenu }
+                      },
+                      [
+                        _c("i", { staticClass: "fas fa-plus" }),
+                        _vm._v(" Add Menu Item\n                ")
+                      ]
+                    )
+                  : _vm._e()
               ],
               2
             )
@@ -56225,29 +56299,35 @@ var render = function() {
                       _vm._v("Select Page")
                     ]),
                     _vm._v(" "),
-                    _c(
-                      "div",
-                      { staticClass: "col-sm-10" },
-                      [
-                        _c("vh-select", {
-                          attrs: {
-                            options: _vm.assets.pages,
-                            option_value: "id",
-                            option_text: "name",
-                            default_text: "Select Page",
-                            select_class: "custom-select"
-                          },
-                          model: {
-                            value: _vm.new_menu_item.vh_page_id,
-                            callback: function($$v) {
-                              _vm.$set(_vm.new_menu_item, "vh_page_id", $$v)
-                            },
-                            expression: "new_menu_item.vh_page_id"
-                          }
-                        })
-                      ],
-                      1
-                    )
+                    _c("div", { staticClass: "col-sm-10" }, [
+                      _c(
+                        "select",
+                        { staticClass: "custom-select" },
+                        _vm._l(_vm.assets.pages, function(page) {
+                          return _vm.assets.pages
+                            ? _c(
+                                "option",
+                                {
+                                  domProps: { value: page.id },
+                                  model: {
+                                    value: _vm.new_menu_item.vh_page_id,
+                                    callback: function($$v) {
+                                      _vm.$set(
+                                        _vm.new_menu_item,
+                                        "vh_page_id",
+                                        $$v
+                                      )
+                                    },
+                                    expression: "new_menu_item.vh_page_id"
+                                  }
+                                },
+                                [_vm._v(_vm._s(page.name))]
+                              )
+                            : _vm._e()
+                        }),
+                        0
+                      )
+                    ])
                   ])
                 : _vm._e(),
               _vm._v(" "),
@@ -56267,7 +56347,7 @@ var render = function() {
                       }
                     ],
                     staticClass: "form-control",
-                    attrs: { type: "email", placeholder: "Menu Link Name" },
+                    attrs: { type: "text", placeholder: "Menu Link Name" },
                     domProps: { value: _vm.new_menu_item.name },
                     on: {
                       input: function($event) {
@@ -56279,39 +56359,7 @@ var render = function() {
                     }
                   })
                 ])
-              ]),
-              _vm._v(" "),
-              _vm.assets && _vm.assets.menu_items
-                ? _c("div", { staticClass: "form-group row" }, [
-                    _c("label", { staticClass: "col-sm-2 col-form-label" }, [
-                      _vm._v("Parent Menu Item")
-                    ]),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      { staticClass: "col-sm-10" },
-                      [
-                        _c("vh-select", {
-                          attrs: {
-                            options: _vm.assets.menu_items,
-                            option_value: "id",
-                            option_text: "name",
-                            default_text: "Select Parent Menu Item",
-                            select_class: "custom-select"
-                          },
-                          model: {
-                            value: _vm.new_menu_item.parent_id,
-                            callback: function($$v) {
-                              _vm.$set(_vm.new_menu_item, "parent_id", $$v)
-                            },
-                            expression: "new_menu_item.parent_id"
-                          }
-                        })
-                      ],
-                      1
-                    )
-                  ])
-                : _vm._e()
+              ])
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "modal-footer" }, [
@@ -56407,15 +56455,79 @@ var render = function() {
       ? _c("ul", { staticClass: "tree" }, [
           _c(
             "li",
+            {},
             [
-              _vm._v(
-                "\n            " + _vm._s(_vm.menu_item.name) + "\n            "
-              ),
-              _vm._l(_vm.menu_item.childrens, function(item) {
+              _c("div", { staticClass: "d-flex flex-row mg-b-3 " }, [
+                _c(
+                  "div",
+                  { staticClass: "pd-l-10 pd-t-5 bg-gray-200 flex-grow-1" },
+                  [
+                    _vm._v(
+                      "\n                    " +
+                        _vm._s(_vm.menu_item.name) +
+                        "\n                "
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "bg-gray-300 mg-l-auto btn-group btn-group-sm"
+                  },
+                  [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-xs btn-icon",
+                        on: {
+                          click: function($event) {
+                            return _vm.addSubMenu(_vm.menu_item)
+                          }
+                        }
+                      },
+                      [_c("i", { staticClass: "fas fa-plus" })]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-xs btn-icon",
+                        on: {
+                          click: function($event) {
+                            return _vm.editMenu(_vm.menu_item)
+                          }
+                        }
+                      },
+                      [_c("i", { staticClass: "fas fa-edit" })]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-xs btn-icon",
+                        on: {
+                          click: function($event) {
+                            return _vm.deleteItem(_vm.menu_item)
+                          }
+                        }
+                      },
+                      [_c("i", { staticClass: "fas fa-trash" })]
+                    )
+                  ]
+                )
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.menu_item.childrens, function(item, index) {
                 return _vm.menu_item.childrens
                   ? _c("menutree", {
-                      key: _vm.index,
-                      attrs: { menu_item: item }
+                      key: index,
+                      attrs: { menu_item: item },
+                      on: {
+                        deleteItem: _vm.deleteItem,
+                        addSubMenu: _vm.addSubMenu,
+                        editMenu: _vm.editMenu
+                      }
                     })
                   : _vm._e()
               })

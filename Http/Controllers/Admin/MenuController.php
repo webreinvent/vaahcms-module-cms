@@ -134,12 +134,11 @@ class MenuController extends Controller
         $inputs = $request->all();
 
         $inputs['depth'] = 1;
-        $inputs['sort'] = MenuItem::count();
+
 
         if(isset($inputs['parent_id']))
         {
             $inputs['depth'] = MenuItem::getNewDepth($inputs['parent_id']);
-            $inputs['sort'] = MenuItem::getNewSort($inputs['parent_id']);
         }
 
 
@@ -168,6 +167,18 @@ class MenuController extends Controller
 
     }
     //----------------------------------------------------------
+    public function deleteMenuItem(Request $request, $menu_item_id)
+    {
+        $data = [];
+
+        MenuItem::recursiveDelete($menu_item_id);
+
+        $response['status'] = 'success';
+        $response['data'] = $data;
+
+        return response()->json($response);
+
+    }
     //----------------------------------------------------------
     //----------------------------------------------------------
 

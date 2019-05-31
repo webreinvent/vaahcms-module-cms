@@ -26,11 +26,9 @@
         <!--content body-->
         <div class="row mg-t-15" v-if="assets">
 
-
-            <div class="col-12">
-
+            <div class="col-sm-12 col-md-3">
                 <div class="form-row">
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-12">
                         <label>Theme Location</label>
 
                         <vh-select
@@ -45,7 +43,7 @@
 
 
                     </div>
-                    <div class="form-group col-md-6" v-if="menus_list">
+                    <div class="form-group col-md-12" v-if="menus_list">
                         <label >Menu</label>
                         <vh-select
                                 :options="menus_list"
@@ -61,19 +59,32 @@
 
                     </div>
 
-                    <button v-on:click="getMenuItems">Reload</button>
-                </div>
+                    <div class="form-group col-md-12">
+                    <button class="btn btn-block btn-sm btn-success" v-on:click="getMenuItems">
+                        <i class="fas fa-sync-alt"></i> Reload Menu
+                    </button>
 
-                <hr/>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-md-9">
 
                 <div class="admin-menus">
 
+                    <menutree v-if="menu_items" v-for="(menu_item, index) in menu_items"
+                              :key="index"
+                              :urls="urls"
+                              @deleteItem="deleteItem"
+                              @addSubMenu="addSubMenu"
+                              @editMenu="editMenu"
+                              :menu_item="menu_item"></menutree>
 
-                    <menutree v-if="menu_items" v-for="menu_item in menu_items" :menu_item="menu_item"></menutree>
 
-
-                    <button class="btn btn-sm pd-x-15 btn-primary btn-uppercase"
-                            @click="showModalMenuItemAdd">
+                    <button class="btn mg-t-10 btn-sm pd-x-15 btn-primary btn-uppercase"
+                            v-if="menu_items"
+                            @click="addRootMenu">
                         <i class="fas fa-plus"></i> Add Menu Item
                     </button>
 
@@ -83,8 +94,6 @@
 
 
         </div>
-
-
         <!--/content body-->
 
 
@@ -149,37 +158,22 @@
                   <div class="form-group row" v-if="assets">
                       <label class="col-sm-2 col-form-label">Select Page</label>
                       <div class="col-sm-10">
-                          <vh-select
-                                  :options="assets.pages"
-                                  v-model="new_menu_item.vh_page_id"
-                                  option_value="id"
-                                  option_text="name"
-                                  default_text="Select Page"
-                                  select_class="custom-select"
-                          ></vh-select>
+
+                          <select class="custom-select">
+                              <option v-if="assets.pages"
+                                      v-for="page in assets.pages"
+                                      v-bind:value="page.id"
+                                      v-model="new_menu_item.vh_page_id"
+                              >{{page.name}}</option>
+                          </select>
+
                       </div>
                   </div>
 
                    <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Menu Link Name</label>
                     <div class="col-sm-10">
-                      <input type="email" class="form-control" v-model="new_menu_item.name" placeholder="Menu Link Name">
-                    </div>
-                  </div>
-
-
-                  <div class="form-group row" v-if="assets && assets.menu_items">
-
-                    <label class="col-sm-2 col-form-label">Parent Menu Item</label>
-                    <div class="col-sm-10">
-                        <vh-select
-                                :options="assets.menu_items"
-                                v-model="new_menu_item.parent_id"
-                                option_value="id"
-                                option_text="name"
-                                default_text="Select Parent Menu Item"
-                                select_class="custom-select"
-                        ></vh-select>
+                      <input type="text" class="form-control" v-model="new_menu_item.name" placeholder="Menu Link Name">
                     </div>
                   </div>
 

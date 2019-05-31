@@ -2,6 +2,7 @@ import pagination from 'laravel-vue-pagination';
 import vhSelect from 'vaah-vue-select'
 import menutree from './MenuTree'
 
+
 export default {
 
     props: ['urls'],
@@ -27,7 +28,7 @@ export default {
                 status: 'all',
             },
             new_menu: {
-                vh_theme_location_id: null,
+                parent_id: null,
                 name: null
             },
             active_location_id:null,
@@ -35,36 +36,11 @@ export default {
             active_menu_id:null,
             menu_items:null,
             new_menu_item: {
+                id: null,
                 name: null,
-                vh_cms_menu_item_id: null,
+                vh_page_id: null,
+                parent_id: null,
             },
-
-            tree: {
-                name: 'root',
-                childerns: [
-                    {
-                        name: 'item1',
-                        childerns: [
-                            {
-                                name: 'item1.1'
-                            },
-                            {
-                                name: 'item1.2',
-                                childerns: [
-                                    {
-                                        name: 'item1.2.1'
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        name: 'item2'
-                    }
-                ]
-            }
-
-
         };
 
         return obj;
@@ -102,8 +78,6 @@ export default {
         getAssetsAfter: function (data) {
 
             this.assets = data;
-
-            this.$helpers.console(this.assets, 'from app->');
 
             this.$helpers.stopNprogress();
 
@@ -157,8 +131,6 @@ export default {
 
             this.menus_list = data;
 
-            this.$helpers.console(this.menus_list);
-
             this.$helpers.stopNprogress();
 
         },
@@ -183,16 +155,37 @@ export default {
             this.assets.menu_items = data.assets;
             this.menu_items = data.list;
 
-            this.$helpers.console(this.menu_items, 'this.menu_items');
 
             this.$helpers.stopNprogress();
 
         },
         //---------------------------------------------------------------------
-        showModalMenuItemAdd: function () {
+        addRootMenu: function () {
+            this.new_menu_item.parent_id = null;
             $("#ModalAddMenuItem").modal('show');
         },
         //---------------------------------------------------------------------
+        addSubMenu: function(menu_item)
+        {
+            this.new_menu_item.parent_id = menu_item.id;
+            $("#ModalAddMenuItem").modal('show');
+
+        },
+        //---------------------------------------------------------------------
+        editMenu: function(menu_item)
+        {
+            this.$helpers.console(menu_item, 'menu_item');
+
+
+            this.new_menu_item.parent_id = menu_item.parent_id;
+            this.new_menu_item.vh_page_id = menu_item.vh_page_id;
+            this.new_menu_item.name = menu_item.name;
+            this.new_menu_item.id = menu_item.id;
+
+            //this.$helpers.console(this.new_menu_item, 'edit menu');
+
+            $("#ModalAddMenuItem").modal('show');
+        },
         //---------------------------------------------------------------------
         storeMenuItem: function () {
             var url = this.urls.current+"/items/"+this.active_menu_id+"/store";
@@ -206,42 +199,22 @@ export default {
             $("#ModalAddMenuItem").modal('hide');
 
             this.getMenuItems();
+
+
         },
 
         //---------------------------------------------------------------------
 
-
         //---------------------------------------------------------------------
-        actions: function (e, action, inputs, data) {
-            if(e)
-            {
-                e.preventDefault();
-            }
-
-            var url = this.urls.current+"/actions";
-            var params = {
-                action: action,
-                inputs: inputs,
-                data: data,
-            };
-
-            this.$helpers.ajax(url, params, this.actionsAfter);
+        deleteItem: function (menu_item) {
+            this.$helpers.console('testing menu list');
+            var url = this.urls.current+"/items/"+menu_item.id+"/delete";
+            var params = {};
+            this.$helpers.ajax(url, params, this.deleteItemAfter);
         },
         //---------------------------------------------------------------------
-        actionsAfter: function (data) {
-            this.getList();
-            this.page_reload_required = 1;
-        },
-        //---------------------------------------------------------------------
-        setFilterStatus: function (e, status) {
-            if(e)
-            {
-                e.preventDefault();
-            }
-
-            this.filters.status = status;
-
-            this.getList();
+        deleteItemAfter: function (data) {
+            this.getMenuItems();
         },
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
