@@ -1,6 +1,6 @@
 import pagination from 'laravel-vue-pagination';
 import vhSelect from 'vaah-vue-select'
-import tree from './reusable/tree'
+import menutree from './MenuTree'
 
 export default {
 
@@ -8,7 +8,7 @@ export default {
     components:{
         'pagination': pagination,
         'vh-select': vhSelect,
-        'tree': tree,
+        'menutree': menutree,
     },
     data()
     {
@@ -170,7 +170,7 @@ export default {
                 return false;
             }
 
-            var url = this.urls.current+"/menus/items/"+this.active_menu_id;
+            var url = this.urls.current+"/items/"+this.active_menu_id;
             var params = {};
             this.$helpers.ajax(url, params, this.getMenuItemsAfter);
         },
@@ -195,7 +195,7 @@ export default {
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
         storeMenuItem: function () {
-            var url = this.urls.current+"/menus/items/"+this.active_menu_id+"/store";
+            var url = this.urls.current+"/items/"+this.active_menu_id+"/store";
             var params = this.new_menu_item;
             params.vh_menu_id = this.active_menu_id;
             this.$helpers.ajax(url, params, this.storeMenuItemAfter);

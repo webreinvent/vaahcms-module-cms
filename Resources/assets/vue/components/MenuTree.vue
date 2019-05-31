@@ -3,13 +3,13 @@
         <ul class="tree" v-if="menu_item">
             <li>
                 {{menu_item.name}}
-                <tree
+                <menutree
                         v-if="menu_item.childrens"
                         v-for="item in menu_item.childrens"
                         :menu_item="item"
                         :key="index"
                 >
-                </tree>
+                </menutree>
             </li>
         </ul>
     </div>
@@ -17,6 +17,6 @@
 <script>
     export default {
         props: [ 'menu_item' ],
-        name: 'tree'
+        name: 'menutree'
     }
 </script>

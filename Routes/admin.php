@@ -70,10 +70,10 @@ Route::group(
         Route::any( '/location/menus/{location_id}', 'MenuController@getLocationMenus' )
             ->name( 'vh.cms.menus.location' );
         //------------------------------------------------
-        Route::any( '/menus/items/{menu_id}', 'MenuController@getMenuItems' )
+        Route::any( '/items/{menu_id}', 'MenuController@getMenuItems' )
             ->name( 'vh.cms.menus.menu.items' );
         //------------------------------------------------
-        Route::any( '/menus/items/{menu_id}/store', 'MenuController@getMenuItemsStore' )
+        Route::any( '/items/{menu_id}/store', 'MenuController@getMenuItemsStore' )
             ->name( 'vh.cms.menus.menu.items.store' );
         //------------------------------------------------
         //------------------------------------------------

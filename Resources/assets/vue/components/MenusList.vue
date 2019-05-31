@@ -29,11 +29,6 @@
 
             <div class="col-12">
 
-
-
-                <tree v-if="menu_items" :menu_items="menu_items"></tree>
-
-
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label>Theme Location</label>
@@ -74,27 +69,7 @@
                 <div class="admin-menus">
 
 
-                    <table class="table table-ordered">
-
-                        <template v-if="menu_items">
-
-                            <tr v-for="item in menu_items">
-                                <td>{{item.id}}</td>
-                                <td>{{item.depth}}</td>
-                                <td>
-
-                                    <span v-for="index in item.depth">
-                                        -
-                                    </span>
-
-                                    {{item.name}}
-                                </td>
-                            </tr>
-
-                        </template>
-
-                    </table>
-
+                    <menutree v-if="menu_items" v-for="menu_item in menu_items" :menu_item="menu_item"></menutree>
 
 
                     <button class="btn btn-sm pd-x-15 btn-primary btn-uppercase"
