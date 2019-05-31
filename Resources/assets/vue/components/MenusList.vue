@@ -24,30 +24,49 @@
         </div>
 
         <!--content body-->
-        <div class="row mg-t-15">
+        <div class="row mg-t-15" v-if="assets">
 
 
             <div class="col-12">
 
+
+
+                <tree v-if="menu_items" :menu_items="menu_items"></tree>
+
+
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label>Theme Location</label>
-                        <select class="custom-select">
-                            <option selected>Select Location</option>
-                            <option value="1">Top Menu</option>
-                            <option value="2">Side Bar</option>
-                            <option value="3">Footer</option>
-                        </select>
+
+                        <vh-select
+                                :options="assets.theme_menu_locations"
+                                v-model="active_location_id"
+                                option_value="id"
+                                option_text="name"
+                                default_text="Select Theme Location"
+                                select_class="custom-select"
+                                v-on:change="getLocationMenus"
+                        ></vh-select>
+
+
                     </div>
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-6" v-if="menus_list">
                         <label >Menu</label>
-                        <select class="custom-select">
-                            <option selected>Select Location</option>
-                            <option value="1">Top Menu</option>
-                            <option value="2">Side Bar</option>
-                            <option value="3">Footer</option>
-                        </select>
+                        <vh-select
+                                :options="menus_list"
+                                v-model="active_menu_id"
+                                option_value="id"
+                                option_text="name"
+                                default_text="Select Menu"
+                                select_class="custom-select"
+                                v-on:change="getMenuItems"
+                        ></vh-select>
+
+
+
                     </div>
+
+                    <button v-on:click="getMenuItems">Reload</button>
                 </div>
 
                 <hr/>
@@ -55,60 +74,33 @@
                 <div class="admin-menus">
 
 
-                    <ul>
-                        <li>
+                    <table class="table table-ordered">
 
-                            <div class="menu-block">
-                                Menu 1
+                        <template v-if="menu_items">
 
-                                <span class="btn-group btn-group-xs">
-                                    <button class="btn btn-xs btn-light btn-icon pull-right" ><i class="fas fa-pencil-alt"></i></button>
-                                    <button class="btn btn-xs btn-light btn-icon pull-right" ><i class="fas fa-plus"></i></button>
-                                </span>
+                            <tr v-for="item in menu_items">
+                                <td>{{item.id}}</td>
+                                <td>{{item.depth}}</td>
+                                <td>
 
-                            </div>
+                                    <span v-for="index in item.depth">
+                                        -
+                                    </span>
 
-                        </li>
-                        <li>
-                            <div class="menu-block">
-                                Menu 3
+                                    {{item.name}}
+                                </td>
+                            </tr>
 
-                                <span class="btn-group btn-group-xs">
-                                    <button class="btn btn-xs btn-light btn-icon pull-right" ><i class="fas fa-plus"></i></button>
-                                    <button class="btn btn-xs btn-light btn-icon pull-right" ><i class="fas fa-arrow-down"></i></button>
-                                </span>
+                        </template>
 
-                            </div>
-
-                            <ul>
-                                <li>
-                                    <div class="menu-block">
-                                    Sub menu 1
-                                        <span class="btn-group btn-group-xs">
-                                        <button class="btn btn-xs btn-light btn-icon pull-right" ><i class="fas fa-plus"></i></button>
-                                        <button class="btn btn-xs btn-light btn-icon pull-right" ><i class="fas fa-arrow-down"></i></button>
-                                        </span>
-
-                                    </div>
-
-                                </li>
-                                <li>
-                                    <div class="menu-block">
-                                        Sub menu 2
-                                        <span class="btn-group btn-group-xs pull-right">
-                                        <button class="btn btn-xs btn-light btn-icon " ><i class="fas fa-plus"></i></button>
-                                        <button class="btn btn-xs btn-light btn-icon" ><i class="fas fa-arrow-down"></i></button>
-                                        </span>
-
-                                    </div>
-
-                                </li>
-                            </ul>
-                        </li>
+                    </table>
 
 
-                    </ul>
 
+                    <button class="btn btn-sm pd-x-15 btn-primary btn-uppercase"
+                            @click="showModalMenuItemAdd">
+                        <i class="fas fa-plus"></i> Add Menu Item
+                    </button>
 
                 </div>
 
@@ -149,9 +141,10 @@
                     </div>
                   </div>
                   <div class="form-group row">
+
                     <label class="col-sm-2 col-form-label">Menu Name</label>
                     <div class="col-sm-10">
-                      <input type="text" class="form-control" placeholder="Menu Name">
+                      <input type="text" class="form-control" v-model="new_menu.name" placeholder="Menu Name">
                     </div>
                   </div>
 
@@ -159,6 +152,67 @@
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary tx-13" data-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary tx-13" @click="storeMenu">Save changes</button>
+                  </div>
+                </div>
+              </div>
+        </div>
+        <!--/modal-->
+
+        <!--modal-->
+        <div class="modal fade" id="ModalAddMenuItem" tabindex="-1" role="dialog" >
+              <div class="modal-dialog">
+                <div class="modal-content tx-14">
+                  <div class="modal-header">
+                    <h6 class="modal-title">Add Menu Item</h6>
+                    <button type="button" class="close" data-dismiss="modal">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+
+
+                  <div class="form-group row" v-if="assets">
+                      <label class="col-sm-2 col-form-label">Select Page</label>
+                      <div class="col-sm-10">
+                          <vh-select
+                                  :options="assets.pages"
+                                  v-model="new_menu_item.vh_page_id"
+                                  option_value="id"
+                                  option_text="name"
+                                  default_text="Select Page"
+                                  select_class="custom-select"
+                          ></vh-select>
+                      </div>
+                  </div>
+
+                   <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Menu Link Name</label>
+                    <div class="col-sm-10">
+                      <input type="email" class="form-control" v-model="new_menu_item.name" placeholder="Menu Link Name">
+                    </div>
+                  </div>
+
+
+                  <div class="form-group row" v-if="assets && assets.menu_items">
+
+                    <label class="col-sm-2 col-form-label">Parent Menu Item</label>
+                    <div class="col-sm-10">
+                        <vh-select
+                                :options="assets.menu_items"
+                                v-model="new_menu_item.parent_id"
+                                option_value="id"
+                                option_text="name"
+                                default_text="Select Parent Menu Item"
+                                select_class="custom-select"
+                        ></vh-select>
+                    </div>
+                  </div>
+
+
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary tx-13" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary tx-13" v-on:click="storeMenuItem" >Save changes</button>
                   </div>
                 </div>
               </div>

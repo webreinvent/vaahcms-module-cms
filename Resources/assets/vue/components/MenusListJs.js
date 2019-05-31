@@ -1,5 +1,6 @@
 import pagination from 'laravel-vue-pagination';
 import vhSelect from 'vaah-vue-select'
+import tree from './reusable/tree'
 
 export default {
 
@@ -7,6 +8,7 @@ export default {
     components:{
         'pagination': pagination,
         'vh-select': vhSelect,
+        'tree': tree,
     },
     data()
     {
@@ -27,6 +29,39 @@ export default {
             new_menu: {
                 vh_theme_location_id: null,
                 name: null
+            },
+            active_location_id:null,
+            menus_list:null,
+            active_menu_id:null,
+            menu_items:null,
+            new_menu_item: {
+                name: null,
+                vh_cms_menu_item_id: null,
+            },
+
+            tree: {
+                name: 'root',
+                childerns: [
+                    {
+                        name: 'item1',
+                        childerns: [
+                            {
+                                name: 'item1.1'
+                            },
+                            {
+                                name: 'item1.2',
+                                childerns: [
+                                    {
+                                        name: 'item1.2.1'
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        name: 'item2'
+                    }
+                ]
             }
 
 
@@ -94,48 +129,87 @@ export default {
         //---------------------------------------------------------------------
         storeMenuAfter: function (data) {
 
-            this.getAssets();
-        },
-        //---------------------------------------------------------------------
+            this.active_menu = data;
+            $("#ModalAddMenu").modal('hide');
 
-        getList: function (page) {
-
-
-            var url = this.urls.current+"/list";
-
-            if(!page)
-            {
-                page = this.page;
-            }
-
-            if(this.page)
-            {
-                url = url+"?page="+page;
-            }
-
-            url = url+"&status="+this.filters.status;
-
-            if(this.filters.q)
-            {
-                url = url+"&q="+this.filters.q;
-            }
-
-            var params = {};
-            this.$helpers.ajax(url, params, this.getListAfter);
-
-        },
-        //---------------------------------------------------------------------
-        getListAfter: function (data) {
-
-            this.list = data.list;
-            this.stats = data.stats;
-            this.page = data.list.current_page;
-
-            this.$helpers.console(this.list);
+            this.new_menu = {
+                vh_theme_location_id: null,
+                name: null
+            };
 
             this.$helpers.stopNprogress();
 
         },
+        //---------------------------------------------------------------------
+        getLocationMenus: function () {
+
+            if(this.active_location_id == "")
+            {
+                return false;
+            }
+
+            var url = this.urls.current+"/location/menus/"+this.active_location_id;
+            var params = {};
+            this.$helpers.ajax(url, params, this.getMenusAfter);
+        },
+        //---------------------------------------------------------------------
+        getMenusAfter: function (data) {
+
+            this.menus_list = data;
+
+            this.$helpers.console(this.menus_list);
+
+            this.$helpers.stopNprogress();
+
+        },
+        //---------------------------------------------------------------------
+        getMenuItems: function () {
+
+            if(this.active_menu_id == "")
+            {
+                return false;
+            }
+
+            var url = this.urls.current+"/menus/items/"+this.active_menu_id;
+            var params = {};
+            this.$helpers.ajax(url, params, this.getMenuItemsAfter);
+        },
+        //---------------------------------------------------------------------
+        getMenuItemsAfter: function (data) {
+
+            this.menu_items = null;
+            this.assets.menu_items = null;
+
+            this.assets.menu_items = data.assets;
+            this.menu_items = data.list;
+
+            this.$helpers.console(this.menu_items, 'this.menu_items');
+
+            this.$helpers.stopNprogress();
+
+        },
+        //---------------------------------------------------------------------
+        showModalMenuItemAdd: function () {
+            $("#ModalAddMenuItem").modal('show');
+        },
+        //---------------------------------------------------------------------
+        //---------------------------------------------------------------------
+        storeMenuItem: function () {
+            var url = this.urls.current+"/menus/items/"+this.active_menu_id+"/store";
+            var params = this.new_menu_item;
+            params.vh_menu_id = this.active_menu_id;
+            this.$helpers.ajax(url, params, this.storeMenuItemAfter);
+        },
+        //---------------------------------------------------------------------
+        storeMenuItemAfter: function (data) {
+
+            $("#ModalAddMenuItem").modal('hide');
+
+            this.getMenuItems();
+        },
+
+        //---------------------------------------------------------------------
+
 
         //---------------------------------------------------------------------
         actions: function (e, action, inputs, data) {

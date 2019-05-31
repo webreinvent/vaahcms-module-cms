@@ -39,8 +39,16 @@ class CmsServiceProvider extends ServiceProvider
      */
     public function register()
     {
+
         $this->app->register(RouteServiceProvider::class);
+
+        $loader = \Illuminate\Foundation\AliasLoader::getInstance();
+
+        $this->app->register(\Nestable\NestableServiceProvider::class);
+        $loader->alias('Nestable', \Nestable\Facades\NestableService::class);
+
         $this->registerHelpers();
+
     }
 
     /**

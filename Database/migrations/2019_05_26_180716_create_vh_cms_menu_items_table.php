@@ -16,13 +16,15 @@ class CreateVhCmsMenuItemsTable extends Migration
         Schema::create('vh_cms_menu_items', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->integer('vh_cms_menu_item_id')->nullable();
+            $table->integer('parent_id')->nullable();
+
             $table->string('name')->nullable();
             $table->string('slug')->nullable();
             $table->string('title')->nullable();
             $table->string('attr_id')->nullable();
             $table->string('attr_class')->nullable();
             $table->integer('vh_menu_id')->nullable();
+            $table->integer('vh_page_id')->nullable();
             $table->integer('order')->nullable();
             $table->string('uri')->nullable();
             $table->boolean('is_active')->nullable();
