@@ -53,6 +53,10 @@ class Page extends Model
         $this->attributes['slug'] = str_slug( $value );
     }
     //-------------------------------------------------
+    public function setContentAttribute( $value ) {
+        $this->attributes['content'] = nl2br( $value );
+    }
+    //-------------------------------------------------
     public function scopeSlug( $query, $slug ) {
         return $query->where( 'slug', $slug );
     }
@@ -92,6 +96,7 @@ class Page extends Model
             $result[$i]['name'] = $page->name;
             $result[$i]['id'] = $page->id;
 
+            $i++;
         }
 
         return $result;

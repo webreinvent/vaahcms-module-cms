@@ -50,6 +50,13 @@ class MenuItem extends Model
         return $this->children()->with('childrens');
     }
     //-------------------------------------------------
+    public function page()
+    {
+        return $this->belongsTo(Page::class, 'vh_page_id');
+    }
+    //-------------------------------------------------
+    //-------------------------------------------------
+    //-------------------------------------------------
     public static function getNewDepth($menu_id)
     {
 

@@ -191,6 +191,9 @@ export default {
             var url = this.urls.current+"/items/"+this.active_menu_id+"/store";
             var params = this.new_menu_item;
             params.vh_menu_id = this.active_menu_id;
+
+            this.$helpers.console(params, 'new page');
+
             this.$helpers.ajax(url, params, this.storeMenuItemAfter);
         },
         //---------------------------------------------------------------------

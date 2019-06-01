@@ -73,7 +73,7 @@ Route::group(
         Route::any( '/items/{menu_id}', 'MenuController@getMenuItems' )
             ->name( 'vh.cms.menus.menu.items' );
         //------------------------------------------------
-        Route::any( '/items/{menu_id}/store', 'MenuController@getMenuItemsStore' )
+        Route::any( '/items/{menu_id}/store', 'MenuController@storeMenuItems' )
             ->name( 'vh.cms.menus.menu.items.store' );
         //------------------------------------------------
         Route::any( '/items/{menu_item_id}/delete', 'MenuController@deleteMenuItem' )

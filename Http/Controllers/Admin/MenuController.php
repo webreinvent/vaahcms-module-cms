@@ -112,7 +112,7 @@ class MenuController extends Controller
 
     }
     //----------------------------------------------------------
-    public function getMenuItemsStore(Request $request)
+    public function storeMenuItems(Request $request)
     {
         $rules = array(
             'name' => 'required',
@@ -142,7 +142,7 @@ class MenuController extends Controller
         }
 
 
-        if($request->has('id'))
+        if(isset($inputs['id']) && !is_null($inputs['id']) )
         {
             $menu_item = MenuItem::find($inputs['id']);
         } else

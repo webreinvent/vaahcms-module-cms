@@ -159,11 +159,12 @@
                       <label class="col-sm-2 col-form-label">Select Page</label>
                       <div class="col-sm-10">
 
-                          <select class="custom-select">
+                          <select v-model="new_menu_item.vh_page_id" class="custom-select">
+                              <option selected>Select Page</option>
                               <option v-if="assets.pages"
                                       v-for="page in assets.pages"
                                       v-bind:value="page.id"
-                                      v-model="new_menu_item.vh_page_id"
+
                               >{{page.name}}</option>
                           </select>
 
