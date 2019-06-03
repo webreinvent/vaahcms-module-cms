@@ -107,10 +107,8 @@ export default {
                 return false;
             }
 
-            var url = this.urls.current+"/"+this.id+"/custom/fields";
-            var params = {
-                vh_theme_template_id: this.page_data.vh_theme_template_id
-            };
+            var url = this.urls.current+"/"+this.id+"/custom/fields/"+this.page_data.vh_theme_template_id;
+            var params = {};
 
             this.$helpers.console(params, 'params-->');
 

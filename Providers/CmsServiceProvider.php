@@ -1,6 +1,7 @@
 <?php
 namespace VaahCms\Modules\Cms\Providers;
 
+
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
 use VaahCms\Modules\Cms\Providers\RouteServiceProvider;
@@ -26,6 +27,7 @@ class CmsServiceProvider extends ServiceProvider
         $this->registerViews();
         $this->registerFactories();
         $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->registerBladeDirectives();
 
     }
 
@@ -134,5 +136,20 @@ class CmsServiceProvider extends ServiceProvider
     public function provides()
     {
         return [];
+    }
+
+
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function registerBladeDirectives()
+    {
+
+        \Blade::directive('hello', function ($expression) {
+            return "<?php echo 'Hello ' . {$expression}; ?>";
+        });
+
     }
 }

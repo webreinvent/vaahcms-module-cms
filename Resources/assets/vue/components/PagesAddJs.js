@@ -6,6 +6,8 @@ import vSelect from 'vue-select'
 //https://github.com/myokyawhtun/label-edit
 import LabelEdit from 'label-edit'
 
+import vhSelect from 'vaah-vue-select'
+
 export default {
 
     props: ['urls'],
@@ -13,6 +15,7 @@ export default {
         'pagination': pagination,
         'v-select': vSelect,
         'label-edit': LabelEdit,
+        'vh-select': vhSelect,
     },
     data()
     {
@@ -20,9 +23,6 @@ export default {
             assets: null,
             q: null,
             page: 1,
-            page_status: 'draft',
-            page_visibility: 'public',
-            page_parent: null,
             page_template: {},
             list: null,
             page_reload_required: null,
@@ -34,7 +34,10 @@ export default {
                 slug_edit: null,
                 name: null,
                 permalink: this.urls.base,
-                custom_fields: null
+                custom_fields: null,
+                vh_theme_template_id: null,
+                status: 'draft',
+                visibility: 'public',
             }
         };
 
@@ -86,34 +89,37 @@ export default {
         getAssetsAfter: function (data) {
 
             this.assets = data;
-            this.page_template = data.page_template_default;
+            this.page_data.vh_theme_template_id = data.page_template_default.id;
+            this.page_data.custom_fields = data.page_custom_fields;
 
-            //this.$helpers.console(this.assets, 'from app->');
+            this.$helpers.stopNprogress();
 
-            this.getCustomFields();
+            //this.getCustomFields();
 
         },
         //---------------------------------------------------------------------
         getCustomFields: function () {
 
-            if(!this.page_template)
+            this.$helpers.console(this.page_data, 'line 105');
+
+            if(!this.page_data.vh_theme_template_id)
             {
                 return false;
             }
 
-            var url = this.urls.current+"/custom/fields";
-            var params = {
-                page_template_id: this.page_template.code
-            };
+            var url = this.urls.current+"/custom/fields/"+this.page_data.vh_theme_template_id;
+            var params = {};
 
-            this.$helpers.console(params, 'params-->');
+            this.$helpers.console(params, 'line 115');
 
             this.$helpers.ajax(url, params, this.getCustomFieldsAfter);
         },
         //---------------------------------------------------------------------
         getCustomFieldsAfter: function (data) {
 
-            this.$helpers.console(data, 'custom fields');
+            this.page_data.custom_fields = null;
+
+            this.$helpers.console(data, 'line 124');
 
             this.page_data.custom_fields = data.list;
 
@@ -148,7 +154,6 @@ export default {
 
             var url = this.urls.current+"/store";
             var params = this.page_data;
-            params.vh_theme_page_template = this.page_template.code;
 
             this.$helpers.console(this.page_data, 'page_data');
 
@@ -158,9 +163,12 @@ export default {
         //---------------------------------------------------------------------
         storeDraftAfter: function (data) {
 
-            this.$helpers.console(data, '--->');
+            this.$helpers.console(data, 'stored data --->');
 
-            this.$helpers.stopNprogress();
+            let id = data.id;
+
+            this.$router.push({ path: `/edit/${id}`});
+
         },
         //---------------------------------------------------------------------
     }

@@ -32,6 +32,7 @@ class PageController extends Controller
 
         $data['page_templates'] = ThemeTemplate::getAssetsList();
         $data['page_template_default'] = ThemeTemplate::getDefaultPageTemplate();
+        $data['page_custom_fields'] = ThemeTemplate::syncTemplateCustomFields($data['page_template_default']['id']);
         $data['page_statuses'] = page_statuses();
         $data['page_visibilities'] = page_visibilities();
         $data['pages_list'] = Page::getAssetsList();
@@ -43,24 +44,12 @@ class PageController extends Controller
 
     }
     //----------------------------------------------------------
-    public function getCustomFields(Request $request)
+    public function getCustomFields(Request $request, $vh_theme_template_id)
     {
-        $rules = array(
-            'page_template_id' => 'required',
-        );
-
-        $validator = \Validator::make( $request->all(), $rules);
-        if ( $validator->fails() ) {
-
-            $errors             = errorsToArray($validator->errors());
-            $response['status'] = 'failed';
-            $response['errors'] = $errors;
-            return response()->json($response);
-        }
 
         $data = [];
 
-        $template = ThemeTemplate::syncTemplateCustomFields($request->page_template_id);
+        $template = ThemeTemplate::syncTemplateCustomFields($vh_theme_template_id);
 
         $response['status'] = 'success';
         $response['data']['list'] = $template->formGroups()->with(['fields'])->get();
@@ -239,20 +228,9 @@ class PageController extends Controller
 
     }
     //----------------------------------------------------------
-    public function getPageCustomFields(Request $request, $id)
+    public function getPageCustomFields(Request $request, $id, $vh_theme_template_id)
     {
-        $rules = array(
-            'vh_theme_template_id' => 'required',
-        );
 
-        $validator = \Validator::make( $request->all(), $rules);
-        if ( $validator->fails() ) {
-
-            $errors             = errorsToArray($validator->errors());
-            $response['status'] = 'failed';
-            $response['errors'] = $errors;
-            return response()->json($response);
-        }
 
         $page = Page::where('id', $id)->with(['template'])->first();
 
@@ -263,10 +241,10 @@ class PageController extends Controller
             return response()->json($response);
         }
 
-        $page->vh_theme_template_id = $request->vh_theme_template_id;
+        $page->vh_theme_template_id = $vh_theme_template_id;
         $page->save();
 
-        $template = ThemeTemplate::syncTemplateCustomFields($request->vh_theme_template_id);
+        $template = ThemeTemplate::syncTemplateCustomFields($vh_theme_template_id);
 
 
         $page = Page::where('id', $id)->with(['template'])->first();

@@ -26,7 +26,7 @@
         <div class="row mg-b-10 mg-t-10">
 
             <!--right hand side form-->
-            <div class="col-sm-12 col-md-8">
+            <div class="col-sm-12 col-md-8" v-if="page_data">
 
                 <div class="form-group">
                     <input class="form-control" v-model="page_data.title" placeholder="Page Title" />
@@ -80,8 +80,9 @@
 
                     <div v-for="group in page_data.custom_fields">
 
+                        <div v-if="group && group.fields">
 
-                        <div v-for="field in group.fields">
+                            <div  v-for="field in group.fields">
 
                             <div class="form-group" v-if="field.type == 'text'">
                                 <label>{{field.name}}</label>
@@ -95,6 +96,8 @@
                                 <div v-if="field.excerpt" class="invalid-feedback show">{{field.excerpt}}</div>
                             </div>
 
+
+                        </div>
                         </div>
 
                     </div>
@@ -136,14 +139,29 @@
                             <tr>
                                 <td width="100">Status</td>
                                 <td>
-                                    <v-select v-model="page_status" :options="assets.page_statuses"></v-select>
+                                    <vh-select :options="assets.page_statuses"
+                                               v-model="page_data.status"
+                                               option_value="slug"
+                                               option_text="name"
+                                               default_text="Select Page Visibility"
+                                               select_class="custom-select"
+                                    ></vh-select>
+
                                 </td>
                             </tr>
 
                             <tr>
                                 <td>Visibility</td>
                                 <td>
-                                    <v-select v-model="page_visibility" :options="assets.page_visibilities"></v-select>
+
+                                    <vh-select :options="assets.page_visibilities"
+                                               v-model="page_data.visibility"
+                                               option_value="slug"
+                                               option_text="name"
+                                               default_text="Select Page Visibility"
+                                               select_class="custom-select"
+                                    ></vh-select>
+
                                 </td>
                             </tr>
 
@@ -181,7 +199,15 @@
                             <tr>
                                 <td width="100">Parent</td>
                                 <td>
-                                    <v-select  v-model="page_parent" :options="assets.pages_list"></v-select>
+
+                                    <vh-select :options="assets.pages_list"
+                                               v-model="page_data.parent_id"
+                                               option_value="id"
+                                               option_text="name"
+                                               default_text="Select Page Template"
+                                               select_class="custom-select"
+                                    ></vh-select>
+
                                 </td>
                             </tr>
 
@@ -189,12 +215,17 @@
                                 <td>Template</td>
                                 <td>
 
-                                    <div class="input-group">
-                                        <v-select  v-model="page_template"
-                                                   style="min-width: 150px;"
-                                                   v-on:input="getCustomFields"
-                                                   :options="assets.page_templates">
-                                        </v-select>
+                                    <div class="input-group" v-if="page_data.vh_theme_template_id">
+
+                                        <vh-select :options="assets.page_templates"
+                                                   v-model="page_data.vh_theme_template_id"
+                                                   option_value="id"
+                                                   option_text="name"
+                                                   default_text="Select Page Template"
+                                                   select_class="custom-select"
+                                                   v-on:change="getCustomFields"
+                                        ></vh-select>
+
 
                                         <div class="input-group-append">
 

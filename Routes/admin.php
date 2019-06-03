@@ -27,7 +27,7 @@ Route::group(
         Route::any( '/assets', 'PageController@assets' )
             ->name( 'vh.cms.pages.assets' );
         //------------------------------------------------
-        Route::any( '/custom/fields', 'PageController@getCustomFields' )
+        Route::any( '/custom/fields/{vh_theme_template_id}', 'PageController@getCustomFields' )
             ->name( 'vh.cms.custom.fields' );
         //------------------------------------------------
         Route::any( '/store', 'PageController@storePage' )
@@ -39,7 +39,7 @@ Route::group(
         Route::any( '/{id}', 'PageController@getPageDetails' )
             ->name( 'vh.cms.pages.detail' );
         //------------------------------------------------
-        Route::any( '/{id}/custom/fields', 'PageController@getPageCustomFields' )
+        Route::any( '/{id}/custom/fields/{vh_theme_template_id}', 'PageController@getPageCustomFields' )
             ->name( 'vh.cms.pages.detail.custom.fields' );
         //------------------------------------------------
     });
