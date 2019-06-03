@@ -103,7 +103,9 @@ class MenuController extends Controller
             ->get()
             ->toArray();
 
-        $data['list'] = MenuItem::with('childrens')->whereNull('parent_id')->get();
+        $data['list'] = MenuItem::with('childrens')
+            ->where('vh_menu_id', $menu_id)
+            ->whereNull('parent_id')->get();
 
         $response['status'] = 'success';
         $response['data'] = $data;

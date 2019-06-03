@@ -244,6 +244,8 @@ class PageController extends Controller
         $page->vh_theme_template_id = $vh_theme_template_id;
         $page->save();
 
+
+
         $template = ThemeTemplate::syncTemplateCustomFields($vh_theme_template_id);
 
 
