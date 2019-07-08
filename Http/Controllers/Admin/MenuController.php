@@ -135,13 +135,14 @@ class MenuController extends Controller
 
         $inputs = $request->all();
 
-        $inputs['depth'] = 1;
+
+        /*$inputs['depth'] = 1;
 
 
         if(isset($inputs['parent_id']))
         {
             $inputs['depth'] = MenuItem::getNewDepth($inputs['parent_id']);
-        }
+        }*/
 
 
         if(isset($inputs['id']) && !is_null($inputs['id']) )

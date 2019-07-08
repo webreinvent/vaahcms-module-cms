@@ -20,8 +20,8 @@ class CreateVhCmsPagesTable extends Migration
             $table->integer('vh_cms_page_id')->nullable();
             $table->string('name')->nullable();
             $table->string('title')->nullable();
-            $table->longText('content')->nullable();
             $table->string('slug')->nullable();
+            $table->longText('content')->nullable();
             $table->string('attr_id')->nullable();
             $table->string('attr_class')->nullable();
             $table->string('status')->nullable();

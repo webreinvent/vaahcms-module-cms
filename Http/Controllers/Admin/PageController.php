@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use VaahCms\Modules\Cms\Entities\Content;
 use VaahCms\Modules\Cms\Entities\Page;
+use WebReinvent\VaahCms\Entities\Theme;
 use WebReinvent\VaahCms\Entities\ThemeTemplate;
 
 class PageController extends Controller
@@ -200,9 +201,16 @@ class PageController extends Controller
             return response()->json($response);
         }
 
+        if(!$page->template()->first())
+        {
+            $default = ThemeTemplate::getDefaultPageTemplate();
+            $page->vh_theme_template_id = $default['id'];
+            $page->save();
+            $page = Page::where('id', $id)->with(['template'])->first();
+        }
+
 
         $groups = $page->template->formGroups()->with(['fields'])->get();
-
 
         foreach ($groups as $group)
         {
