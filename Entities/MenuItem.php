@@ -27,7 +27,7 @@ class MenuItem extends Model
     protected $fillable = [
         'name', 'slug', 'title', 'parent_id', 'depth', 'sort',
         'attr_id', 'attr_class', 'vh_menu_id', 'vh_page_id',
-        'order', 'uri', 'is_active', 'vh_permission_slug',
+        'order', 'is_home', 'uri', 'is_active', 'vh_permission_slug',
         'created_by', 'updated_by', 'deleted_by'
     ];
     //-------------------------------------------------

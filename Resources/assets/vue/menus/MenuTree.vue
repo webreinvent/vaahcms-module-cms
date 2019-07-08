@@ -12,7 +12,7 @@
                     <div class="bg-gray-300 mg-l-auto btn-group btn-group-sm">
 
                         <button class="btn btn-xs btn-primary btn-icon"
-                                v-if="is_home">
+                                v-if="menu_item.is_home == 1">
                             <i class="fas fa-home"></i>
                         </button>
 

@@ -198,9 +198,9 @@ class MenuController extends Controller
             case 'make_it_home':
 
                 //if is_home is set then mark other is_home as null
-                MenuItem::whereNotNull('is_home')->update(['is_home'=> null]);
+                MenuItem::where('is_home', 1)->update(['is_home' => null]);
 
-                $menu_item = MenuItem::find($inputs['id']);
+                $menu_item = MenuItem::find($inputs['inputs']['id']);
                 $menu_item->is_home = true;
                 $menu_item->save();
 
