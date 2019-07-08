@@ -145,6 +145,10 @@ class MenuController extends Controller
         }*/
 
 
+        //if is_home is set then mark other is_home as null
+        MenuItem::whereNotNull('is_home')->update(['is_home'=> null]);
+
+
         if(isset($inputs['id']) && !is_null($inputs['id']) )
         {
             $menu_item = MenuItem::find($inputs['id']);
@@ -154,12 +158,8 @@ class MenuController extends Controller
         }
 
         $inputs['slug'] = str_slug($inputs['name']);
-
         $menu_item->fill($inputs);
-
         $menu_item->save();
-
-
 
 
         $response['status'] = 'success';

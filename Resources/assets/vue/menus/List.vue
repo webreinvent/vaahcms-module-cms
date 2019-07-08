@@ -156,8 +156,8 @@
 
 
                   <div class="form-group row" v-if="assets">
-                      <label class="col-sm-2 col-form-label">Select Page</label>
-                      <div class="col-sm-10">
+                      <label class="col-sm-5 col-form-label">Select Page</label>
+                      <div class="col-sm-7">
 
                           <select v-model="new_menu_item.vh_page_id" class="custom-select">
                               <option selected>Select Page</option>
@@ -172,12 +172,23 @@
                   </div>
 
                    <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">Menu Link Name</label>
-                    <div class="col-sm-10">
+                    <label class="col-sm-5 col-form-label">Menu Link Name</label>
+                    <div class="col-sm-7">
                       <input type="text" class="form-control" v-model="new_menu_item.name" placeholder="Menu Link Name">
                     </div>
                   </div>
 
+                      <div class="form-group row">
+                          <label class="col-sm-5 col-form-label">Menu Link Name</label>
+                          <div class="col-sm-7">
+
+                              <div class="custom-control custom-checkbox">
+                                  <input type="checkbox" class="custom-control-input" v-model="new_menu_item.is_home" id="isHome">
+                                  <label class="custom-control-label" for="isHome">Make this as Home Page</label>
+                              </div>
+
+                          </div>
+                      </div>
 
                   </div>
                   <div class="modal-footer">
@@ -193,4 +204,4 @@
 
     </div>
 </template>
-<script src="./MenusListJs.js"></script>
+<script src="./ListJs.js"></script>

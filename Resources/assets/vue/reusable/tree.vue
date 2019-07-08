@@ -1,3 +1,4 @@
+<script src="../../../../../../../../vaahcms-ready-test/vaahcms/Modules/Cms/Resources/assets/vue/app-menus.js"></script>
 <template>
     <div>
         <ul class="tree" v-if="menu_item">

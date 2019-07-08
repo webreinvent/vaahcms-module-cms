@@ -26,6 +26,7 @@ class CreateVhCmsMenuItemsTable extends Migration
             $table->integer('vh_menu_id')->nullable();
             $table->integer('vh_page_id')->nullable();
             $table->integer('order')->nullable();
+            $table->boolean('is_home')->nullable();
             $table->string('uri')->nullable();
             $table->boolean('is_active')->nullable();
             $table->string('vh_permission_slug')->nullable();

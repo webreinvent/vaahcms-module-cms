@@ -2,6 +2,7 @@
 namespace VaahCms\Modules\Cms\Providers;
 
 
+use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
 use VaahCms\Modules\Cms\Providers\RouteServiceProvider;
@@ -20,8 +21,9 @@ class CmsServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(Router $router)
     {
+        $this->registerMiddleware($router);
         $this->registerTranslations();
         $this->registerConfig();
         $this->registerViews();
@@ -32,6 +34,15 @@ class CmsServiceProvider extends ServiceProvider
     }
 
 
+    /**
+     *
+     */
+    private function registerMiddleware($router) {
+
+        //register middleware
+        $router->aliasMiddleware('check.cms.dependencies', \VaahCms\Modules\Cms\Http\Middleware\CheckCmsDependencies::class);
+
+    }
 
 
     /**

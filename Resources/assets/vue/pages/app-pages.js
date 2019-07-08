@@ -7,7 +7,7 @@ import VueRouter from 'vue-router';
 import VueResource from 'vue-resource';
 import moment from 'moment'
 
-import VueHelpers from './helpers/VueHelpers';
+import VueHelpers from './../helpers/VueHelpers';
 //---------/Package imports
 
 //---------Configs
@@ -24,9 +24,9 @@ Vue.use(VueHelpers);
 //---------/Helpers
 
 //---------Comp Imports
-import PagesList from './components/PagesList';
-import PagesAdd from './components/PagesAdd';
-import PagesEdit from './components/PagesEdit';
+import PagesList from './List';
+import PagesAdd from './Add';
+import PagesEdit from './Edit';
 
 //---------/Comp Imports
 

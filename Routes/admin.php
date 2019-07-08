@@ -15,7 +15,7 @@
 Route::group(
     [
         'prefix'     => 'admin/cms/pages',
-        'middleware' => ['web', 'has.admin.access'],
+        'middleware' => ['web', 'has.admin.access', 'check.cms.dependencies'],
         'namespace'  => 'Admin'
     ],
     function () {
@@ -49,7 +49,7 @@ Route::group(
 Route::group(
     [
         'prefix'     => 'admin/cms/menus',
-        'middleware' => ['web', 'has.admin.access'],
+        'middleware' => ['web', 'has.admin.access', 'check.cms.dependencies'],
         'namespace'  => 'Admin'
     ],
     function () {

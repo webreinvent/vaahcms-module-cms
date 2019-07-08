@@ -164,4 +164,4 @@
 
     </div>
 </template>
-<script src="./PagesListJs.js"></script>
+<script src="./ListJs.js"></script>

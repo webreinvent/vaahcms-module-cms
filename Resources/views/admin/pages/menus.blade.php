@@ -11,7 +11,7 @@
 
 @section('content')
 
-    <div id="vh-app-pages">
+    <div id="vh-app-menus">
 
         <router-view :urls="urls"></router-view>
 

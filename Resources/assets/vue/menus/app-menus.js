@@ -9,7 +9,7 @@ import VueRouter from 'vue-router';
 import VueResource from 'vue-resource';
 import moment from 'moment'
 
-import VueHelpers from './helpers/VueHelpers';
+import VueHelpers from './../helpers/VueHelpers';
 //---------/Package imports
 
 //---------Configs
@@ -27,7 +27,7 @@ Vue.use(VueHelpers);
 //---------/Helpers
 
 //---------Comp Imports
-import MenusList from './components/MenusList';
+import MenusList from './List';
 
 //---------/Comp Imports
 
@@ -52,7 +52,7 @@ var debug = $('#debug').attr('content');
 //---------/Variables
 
 const app = new Vue({
-    el: '#vh-app-pages',
+    el: '#vh-app-menus',
     components:{
 
     },

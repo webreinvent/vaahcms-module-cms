@@ -1,12 +1,12 @@
 <template>
     <div>
 
-        <!--content header-->
+
         <div class="row">
             <div class="col-sm">
                 <div class="d-sm-flex align-items-center justify-content-between">
                     <div>
-                        <h4 class="mg-b-0 tx-spacing--1">Edit Pages {{id}}</h4>
+                        <h4 class="mg-b-0 tx-spacing--1">Add Pages</h4>
                     </div>
                     <div class="d-none d-md-block">
 
@@ -22,16 +22,11 @@
 
         </div>
 
-
-
-        <!--/content header-->
-
-        <!--content body-->
-
-        <div class="row mg-b-10 mg-t-10" v-if="page_data" >
+        <!--content header-->
+        <div class="row mg-b-10 mg-t-10">
 
             <!--right hand side form-->
-            <div class="col-sm-12 col-md-8">
+            <div class="col-sm-12 col-md-8" v-if="page_data">
 
                 <div class="form-group">
                     <input class="form-control" v-model="page_data.title" placeholder="Page Title" />
@@ -66,12 +61,15 @@
 
                         </p>
 
+
                     </div>
 
                 </div>
 
                 <div class="form-group">
-                    <textarea class="form-control" rows="10" v-model="page_data.content" placeholder="Content"></textarea>
+                    <textarea class="form-control" rows="10"
+                              v-model="page_data.content"
+                              placeholder="Content"></textarea>
                 </div>
 
                 <hr class="mg-t-30 mg-b-30">
@@ -82,22 +80,24 @@
 
                     <div v-for="group in page_data.custom_fields">
 
+                        <div v-if="group && group.fields">
 
-                        <div v-for="field in group.fields">
+                            <div  v-for="field in group.fields">
 
                             <div class="form-group" v-if="field.type == 'text'">
                                 <label>{{field.name}}</label>
-                                <input class="form-control" v-model="field.content.content" placeholder="Page Title" />
+                                <input class="form-control" v-model="field.content" placeholder="Page Title" />
                                 <div v-if="field.excerpt" class="invalid-feedback show">{{field.excerpt}}</div>
                             </div>
 
                             <div class="form-group" v-if="field.type == 'textarea'">
                                 <label>{{field.name}}</label>
-                                <textarea class="form-control" v-model="field.content.content" v-html="field.content.content" placeholder="Content"></textarea>
+                                <textarea class="form-control" v-model="field.content" placeholder="Content"></textarea>
                                 <div v-if="field.excerpt" class="invalid-feedback show">{{field.excerpt}}</div>
                             </div>
 
 
+                        </div>
                         </div>
 
                     </div>
@@ -111,7 +111,7 @@
 
 
             <!--left hand side form-->
-            <div class="col-sm-12 col-md-4"  >
+            <div class="col-sm-12 col-md-4" v-if="assets">
 
                 <div class="card mg-b-15">
                     <div class="card-header pd-10"><strong>Publish</strong></div>
@@ -120,13 +120,15 @@
 
                         <div class="row mg-b-10">
                             <div class="col-sm-12">
-                                <input class="form-control form-control-sm" v-model="page_data.name" placeholder="Page Name"/>
+                                <input class="form-control form-control-sm"
+                                       v-model="page_data.name"
+                                       placeholder="Page Name"/>
                             </div>
                         </div>
 
                         <div class="row mg-b-10">
-                            <div class="col-sm-6" v-if="!page_data.published_at">
-                                <button v-on:click="storePage" class="btn btn-sm btn-light">Save Draft</button>
+                            <div class="col-sm-6">
+                                <button v-on:click="storeDraft" class="btn btn-sm btn-light">Save Draft</button>
                             </div>
                             <div class="col-sm-6 text-right">
                                 <button class="btn btn-sm btn-light pull-right">Preview</button>
@@ -137,13 +139,12 @@
                             <tr>
                                 <td width="100">Status</td>
                                 <td>
-                                    <vh-select
-                                            :options="assets.page_statuses"
-                                            v-model="page_data.status"
-                                            option_value="slug"
-                                            option_text="name"
-                                            default_text="Select Status"
-                                            select_class="form-control form-control-sm"
+                                    <vh-select :options="assets.page_statuses"
+                                               v-model="page_data.status"
+                                               option_value="slug"
+                                               option_text="name"
+                                               default_text="Select Page Visibility"
+                                               select_class="custom-select"
                                     ></vh-select>
 
                                 </td>
@@ -157,17 +158,17 @@
                                                v-model="page_data.visibility"
                                                option_value="slug"
                                                option_text="name"
-                                               default_text="Select Visibility"
-                                               select_class="form-control form-control-sm"
+                                               default_text="Select Page Visibility"
+                                               select_class="custom-select"
                                     ></vh-select>
 
                                 </td>
                             </tr>
 
-                            <tr v-if="page_data.published_at">
+                            <tr>
                                 <td>Published At</td>
                                 <td>
-                                    <strong>{{page_data.published_at}}</strong>
+                                    <strong>May 4, 2017 @ 14:11</strong>
                                 </td>
                             </tr>
 
@@ -200,11 +201,11 @@
                                 <td>
 
                                     <vh-select :options="assets.pages_list"
-                                               v-model="page_data.vh_cms_page_id"
+                                               v-model="page_data.parent_id"
                                                option_value="id"
                                                option_text="name"
-                                               default_text="Select Parent Page"
-                                               select_class="form-control form-control-sm"
+                                               default_text="Select Page Template"
+                                               select_class="custom-select"
                                     ></vh-select>
 
                                 </td>
@@ -214,20 +215,22 @@
                                 <td>Template</td>
                                 <td>
 
-                                    <div class="input-group">
+                                    <div class="input-group" v-if="page_data.vh_theme_template_id">
 
                                         <vh-select :options="assets.page_templates"
                                                    v-model="page_data.vh_theme_template_id"
                                                    option_value="id"
                                                    option_text="name"
                                                    default_text="Select Page Template"
-                                                   select_class="form-control form-control-sm"
+                                                   select_class="custom-select"
+                                                   v-on:change="getCustomFields"
                                         ></vh-select>
+
 
                                         <div class="input-group-append">
 
                                             <button class="btn btn-xs btn-light"
-                                                    v-on:click="getEditPageCustomFields">
+                                            v-on:click="getCustomFields">
                                                 <i class="fas fa-sync"></i>
                                             </button>
 
@@ -246,14 +249,18 @@
                     </div>
                 </div>
 
-
             </div>
             <!--/left hand side form-->
 
 
         </div>
+        <!--/content header-->
+
+        <!--content body-->
+
+
 
         <!--/content body-->
     </div>
 </template>
-<script src="./PagesEditJs.js"></script>
+<script src="./AddJs.js"></script>
