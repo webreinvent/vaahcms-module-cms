@@ -11,6 +11,16 @@
 
                     <div class="bg-gray-300 mg-l-auto btn-group btn-group-sm">
 
+                        <button class="btn btn-xs btn-primary btn-icon"
+                                v-if="is_home">
+                            <i class="fas fa-home"></i>
+                        </button>
+
+                        <button class="btn btn-xs btn-icon"
+                                v-else
+                                v-on:click="makeItHome(menu_item)">
+                            <i class="fas fa-home"></i>
+                        </button>
 
                         <button class="btn btn-xs btn-icon"
                         v-on:click="addSubMenu(menu_item)">
@@ -76,25 +86,22 @@
         methods: {
             //---------------------------------------------------------------------
             deleteItem: function (menu_item) {
-
-                this.$helpers.console('testing menu tree');
-
                 this.$emit('deleteItem', menu_item)
             },
             //---------------------------------------------------------------------
             addSubMenu: function (menu_item) {
-
-                this.$helpers.console('testing menu tree');
-
                 this.$emit('addSubMenu', menu_item)
             },
             //---------------------------------------------------------------------
             editMenu: function (menu_item) {
-
-                this.$helpers.console(menu_item, 'menu tree-->');
-
                 this.$emit('editMenu', menu_item)
             },
+            //---------------------------------------------------------------------
+            makeItHome: function (menu_item) {
+                this.$emit('makeItHome', menu_item)
+            },
+            //---------------------------------------------------------------------
+            //---------------------------------------------------------------------
             //---------------------------------------------------------------------
         }
     }

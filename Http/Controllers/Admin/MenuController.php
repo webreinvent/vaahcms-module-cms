@@ -170,6 +170,51 @@ class MenuController extends Controller
 
     }
     //----------------------------------------------------------
+    public function actions(Request $request)
+    {
+        $rules = array(
+            'action' => 'required',
+            'inputs' => 'required',
+        );
+
+        $validator = \Validator::make( $request->all(), $rules);
+        if ( $validator->fails() ) {
+
+            $errors             = errorsToArray($validator->errors());
+            $response['status'] = 'failed';
+            $response['errors'] = $errors;
+            return response()->json($response);
+        }
+
+        $response['status'] = 'success';
+        $response['messages'][] = 'Action was successful';
+
+        $inputs = $request->all();
+
+        switch ($request->action)
+        {
+
+            //------------------------------------
+            case 'make_it_home':
+
+                //if is_home is set then mark other is_home as null
+                MenuItem::whereNotNull('is_home')->update(['is_home'=> null]);
+
+                $menu_item = MenuItem::find($inputs['id']);
+                $menu_item->is_home = true;
+                $menu_item->save();
+
+                break;
+            //------------------------------------
+            //------------------------------------
+            //------------------------------------
+
+        }
+
+        return response()->json($response);
+
+    }
+    //----------------------------------------------------------
     public function deleteMenuItem(Request $request, $menu_item_id)
     {
         $data = [];

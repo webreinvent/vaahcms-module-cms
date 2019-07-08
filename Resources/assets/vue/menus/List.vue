@@ -79,6 +79,7 @@
                               @deleteItem="deleteItem"
                               @addSubMenu="addSubMenu"
                               @editMenu="editMenu"
+                              @makeItHome="makeItHome"
                               :menu_item="menu_item"></menutree>
 
 

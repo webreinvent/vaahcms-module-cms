@@ -160,6 +160,35 @@ export default {
 
         },
         //---------------------------------------------------------------------
+        actions: function (e, action, inputs, data) {
+            if(e)
+            {
+                e.preventDefault();
+            }
+
+            var url = this.urls.current+"/actions";
+            var params = {
+                action: action,
+                inputs: inputs,
+                data: data,
+            };
+
+            this.$helpers.ajax(url, params, this.actionsAfter);
+        },
+        //---------------------------------------------------------------------
+        actionsAfter: function (data) {
+            this.getMenuItems();
+        },
+        //---------------------------------------------------------------------
+
+        makeItHome: function (menu_item) {
+            var inputs = {id: menu_item.id};
+            var data = {is_home:true};
+            this.actions(false, 'make_it_home', inputs, data)
+        },
+        //---------------------------------------------------------------------
+
+        //---------------------------------------------------------------------
         addRootMenu: function () {
             this.new_menu_item.parent_id = null;
             $("#ModalAddMenuItem").modal('show');

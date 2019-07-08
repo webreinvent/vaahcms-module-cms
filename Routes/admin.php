@@ -67,6 +67,9 @@ Route::group(
         Route::any( '/store', 'MenuController@store' )
             ->name( 'vh.cms.menus.store' );
         //------------------------------------------------
+        Route::any( '/actions', 'MenuController@actions' )
+            ->name( 'vh.cms.menus.actions' );
+        //------------------------------------------------
         Route::any( '/location/menus/{location_id}', 'MenuController@getLocationMenus' )
             ->name( 'vh.cms.menus.location' );
         //------------------------------------------------
