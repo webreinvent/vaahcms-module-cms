@@ -29,8 +29,8 @@ class CmsServiceProvider extends ServiceProvider
         $this->registerViews();
         $this->registerFactories();
         $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->registerSeeders();
         $this->registerBladeDirectives();
-
     }
 
 
@@ -71,6 +71,19 @@ class CmsServiceProvider extends ServiceProvider
 
         //load all the helpers
         foreach (glob(__DIR__.'/../Helpers/*.php') as $filename){
+            require_once($filename);
+        }
+
+    }
+
+
+    /**
+     *
+     */
+    private function registerSeeders() {
+
+        //load all the helpers
+        foreach (glob(__DIR__.'/../Database/Seeds/*.php') as $filename){
             require_once($filename);
         }
 
