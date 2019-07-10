@@ -35,17 +35,6 @@ class CmsServiceProvider extends ServiceProvider
 
 
     /**
-     *
-     */
-    private function registerMiddleware($router) {
-
-        //register middleware
-        $router->aliasMiddleware('check.cms.dependencies', \VaahCms\Modules\Cms\Http\Middleware\CheckCmsDependencies::class);
-
-    }
-
-
-    /**
      * Register the service provider.
      *
      * @return void
@@ -61,6 +50,16 @@ class CmsServiceProvider extends ServiceProvider
         $loader->alias('Nestable', \Nestable\Facades\NestableService::class);
 
         $this->registerHelpers();
+
+    }
+
+    /**
+     *
+     */
+    private function registerMiddleware($router) {
+
+        //register middleware
+        $router->aliasMiddleware('check.cms.dependencies', \VaahCms\Modules\Cms\Http\Middleware\CheckCmsDependencies::class);
 
     }
 
