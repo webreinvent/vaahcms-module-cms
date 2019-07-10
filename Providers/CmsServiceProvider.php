@@ -23,6 +23,7 @@ class CmsServiceProvider extends ServiceProvider
      */
     public function boot(Router $router)
     {
+
         $this->registerMiddleware($router);
         $this->registerTranslations();
         $this->registerConfig();
@@ -121,6 +122,9 @@ class CmsServiceProvider extends ServiceProvider
         $this->loadViewsFrom(array_merge(array_map(function ($path) {
             return $path . '/views/vaahcms/modules/cms';
         }, \Config::get('view.paths')), [$sourcePath]), 'cms');
+
+
+
     }
 
     /**
