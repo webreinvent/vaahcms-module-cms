@@ -20,13 +20,7 @@ var path_vue = __dirname+"/";
 
 mix.setPublicPath(path_vue);
 
-mix.js(path+'vue/pages/app-pages.js',  './Resources/assets/builds')
-    .js(path+'vue/menus/app-menus.js',  './Resources/assets/builds')
-    .version();
-
-
-//mix.copyDirectory(admin_copy_path, admin_copy_path_des, false);
-
+mix.js(path+'vue/app.js',  './Resources/assets/builds').version();
 
 
 mix.webpackConfig({

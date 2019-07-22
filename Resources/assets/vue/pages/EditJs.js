@@ -1,13 +1,24 @@
 import pagination from 'laravel-vue-pagination';
-
+import TableLoader from './../reusable/TableLoader';
 
 import vhSelect from 'vaah-vue-select'
 
 
 export default {
 
-    props: ['urls', 'id'],
+    props: [ 'id'],
+    computed:{
+        ajax_url(){
+            let ajax_url = this.$store.state.urls.pages;
+            return ajax_url;
+        },
+        urls()
+        {
+            return this.$store.state.urls;
+        }
+    },
     components:{
+        't-loader': TableLoader,
         'pagination': pagination,
         'vh-select': vhSelect,
     },
@@ -33,16 +44,14 @@ export default {
     watch: {
 
         'page_data.title': function(newVal, oldVal){
-            this.$helpers.console(newVal, 'newVal');
-            this.$helpers.console(oldVal, 'oldVal');
 
-            this.page_data.slug = this.$helpers.strToSlug(newVal);
+            this.page_data.slug = this.$vaahcms.strToSlug(newVal);
             this.page_data.parmalink = this.urls.base+"/"+this.page_data.slug;
 
         },
         'page_data.slug': function(newVal, oldVal){
 
-            this.page_data.slug = this.$helpers.strToSlug(newVal);
+            this.page_data.slug = this.$vaahcms.strToSlug(newVal);
             this.page_data.parmalink = this.urls.base+"/"+this.page_data.slug;
 
         },
@@ -69,9 +78,9 @@ export default {
                 e.preventDefault();
             }
 
-            var url = this.urls.current+"/assets";
+            var url = this.ajax_url+"/assets";
             var params = {};
-            this.$helpers.ajax(url, params, this.getAssetsAfter);
+            this.$vaahcms.ajax(url, params, this.getAssetsAfter);
         },
         //---------------------------------------------------------------------
         getAssetsAfter: function (data) {
@@ -79,25 +88,25 @@ export default {
             this.assets = data;
             //this.page_template = data.page_template_default;
 
-            //this.$helpers.console(this.assets, 'from app->');
+            //this.$vaahcms.console(this.assets, 'from app->');
 
             this.getPageDetails();
 
         },
         //---------------------------------------------------------------------
         getPageDetails: function () {
-            var url = this.urls.current+"/"+this.id;
+            var url = this.ajax_url+"/"+this.id;
             var params = {};
-            this.$helpers.ajax(url, params, this.getPageDetailsAfter);
+            this.$vaahcms.ajax(url, params, this.getPageDetailsAfter);
         },
         //---------------------------------------------------------------------
         getPageDetailsAfter: function (data) {
 
-            this.$helpers.console(data, '-->');
+            this.$vaahcms.console(data, '-->');
 
             this.page_data = data;
 
-            this.$helpers.stopNprogress();
+            this.$vaahcms.stopNprogress();
         },
         //---------------------------------------------------------------------
         getEditPageCustomFields: function () {
@@ -107,21 +116,21 @@ export default {
                 return false;
             }
 
-            var url = this.urls.current+"/"+this.id+"/custom/fields/"+this.page_data.vh_theme_template_id;
+            var url = this.ajax_url+"/"+this.id+"/custom/fields/"+this.page_data.vh_theme_template_id;
             var params = {};
 
-            this.$helpers.console(params, 'params-->');
+            this.$vaahcms.console(params, 'params-->');
 
-            this.$helpers.ajax(url, params, this.getEditPageCustomFieldsAfter);
+            this.$vaahcms.ajax(url, params, this.getEditPageCustomFieldsAfter);
         },
         //---------------------------------------------------------------------
         getEditPageCustomFieldsAfter: function (data) {
 
-            this.$helpers.console(data, 'custom fields');
+            this.$vaahcms.console(data, 'custom fields');
 
             this.page_data = data;
 
-            this.$helpers.stopNprogress();
+            this.$vaahcms.stopNprogress();
         },
 
         //---------------------------------------------------------------------
@@ -140,7 +149,7 @@ export default {
         //---------------------------------------------------------------------
         updatePageSlug: function () {
 
-            this.page_data.slug = this.$helpers.strToSlug(this.page_data.slug);
+            this.page_data.slug = this.$vaahcms.strToSlug(this.page_data.slug);
             this.page_data.slug_edit = null;
 
         },
@@ -152,20 +161,20 @@ export default {
                 e.preventDefault();
             }
 
-            var url = this.urls.current+"/store";
+            var url = this.ajax_url+"/store";
             var params = this.page_data;
 
-            this.$helpers.console(this.page_data, 'page_data');
+            this.$vaahcms.console(this.page_data, 'page_data');
 
-            this.$helpers.ajax(url, params, this.storePageAfter);
+            this.$vaahcms.ajax(url, params, this.storePageAfter);
 
         },
         //---------------------------------------------------------------------
         storePageAfter: function (data) {
 
-            this.$helpers.console(data, '--->');
+            this.$vaahcms.console(data, '--->');
 
-            this.$helpers.stopNprogress();
+            this.$vaahcms.stopNprogress();
         },
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------

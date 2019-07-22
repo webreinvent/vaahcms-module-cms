@@ -1,9 +1,17 @@
 import pagination from 'laravel-vue-pagination';
+import TableLoader from './../reusable/TableLoader';
 
 export default {
 
     props: ['urls'],
+    computed:{
+        ajax_url(){
+            let ajax_url = this.$store.state.urls.pages;
+            return ajax_url;
+        }
+    },
     components:{
+        't-loader': TableLoader,
         'pagination': pagination,
     },
     data()
@@ -50,16 +58,16 @@ export default {
 
             console.log(this.urls);
 
-            var url = this.urls.current+"/assets";
+            var url = this.ajax_url+"/assets";
             var params = {};
-            this.$helpers.ajax(url, params, this.getAssetsAfter);
+            this.$vaahcms.ajax(url, params, this.getAssetsAfter);
         },
         //---------------------------------------------------------------------
         getAssetsAfter: function (data) {
 
             this.assets = data;
 
-            this.$helpers.console(this.assets, 'from app->');
+            this.$vaahcms.console(this.assets, 'from app->');
 
             this.getList();
 
@@ -69,7 +77,7 @@ export default {
         getList: function (page) {
 
 
-            var url = this.urls.current+"/list";
+            var url = this.ajax_url+"/list";
 
             if(!page)
             {
@@ -89,7 +97,7 @@ export default {
             }
 
             var params = {};
-            this.$helpers.ajax(url, params, this.getListAfter);
+            this.$vaahcms.ajax(url, params, this.getListAfter);
 
         },
         //---------------------------------------------------------------------
@@ -99,9 +107,9 @@ export default {
             this.stats = data.stats;
             this.page = data.list.current_page;
 
-            this.$helpers.console(this.list);
+            this.$vaahcms.console(this.list);
 
-            this.$helpers.stopNprogress();
+            this.$vaahcms.stopNprogress();
 
         },
 
@@ -112,14 +120,14 @@ export default {
                 e.preventDefault();
             }
 
-            var url = this.urls.current+"/actions";
+            var url = this.ajax_url+"/actions";
             var params = {
                 action: action,
                 inputs: inputs,
                 data: data,
             };
 
-            this.$helpers.ajax(url, params, this.actionsAfter);
+            this.$vaahcms.ajax(url, params, this.actionsAfter);
         },
         //---------------------------------------------------------------------
         actionsAfter: function (data) {

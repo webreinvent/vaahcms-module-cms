@@ -11,7 +11,7 @@
                     <div class="d-none d-md-block">
 
                         <router-link class="btn btn-sm pd-x-15 btn-primary btn-uppercase"
-                                     :to="{ path: '/add'}">
+                                     :to="{ path: '/pages/create'}">
                             <i class="fas fa-plus"></i> Add New
                         </router-link>
 
@@ -95,6 +95,9 @@
 
         <div class="row mg-t-10 mg-b-10">
             <div class="col-sm">
+
+                <t-loader v-if="!list"></t-loader>
+
                 <table class="table bg-white" v-if="list">
                     <thead class="thead-light">
                     <tr >
@@ -124,7 +127,7 @@
                         </th>
                         <td>
 
-                            <router-link :to="{ path: '/edit/'+item.id}" class="tx-medium">
+                            <router-link :to="{ path: '/pages/edit/'+item.id}" class="tx-medium">
                                 {{item.title}}
                             </router-link><br/>
 

@@ -11,7 +11,7 @@
                     <div class="d-none d-md-block">
 
                         <router-link class="btn btn-sm pd-x-15 btn-light btn-uppercase"
-                                     :to="{ path: '/'}">
+                                     :to="{ path: '/pages'}">
                             <i class="fas fa-arrow-left"></i> Back
                         </router-link>
 
@@ -27,6 +27,14 @@
         <!--/content header-->
 
         <!--content body-->
+
+        <div class="row mg-b-10 mg-t-10" v-if="!page_data">
+
+            <div class="col-sm-12 col-md-8">
+                <t-loader ></t-loader>
+            </div>
+
+        </div>
 
         <div class="row mg-b-10 mg-t-10" v-if="page_data" >
 

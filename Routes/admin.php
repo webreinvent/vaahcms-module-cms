@@ -12,6 +12,24 @@
 */
 
 
+
+Route::group(
+    [
+        'prefix'     => 'admin/cms',
+        'middleware' => ['web', 'has.admin.access', 'check.cms.dependencies'],
+        'namespace'  => 'Admin'
+    ],
+    function () {
+        //------------------------------------------------
+        //------------------------------------------------
+        Route::get( '/', 'DashboardController@index' )
+            ->name( 'vh.cms' );
+        //------------------------------------------------
+        //------------------------------------------------
+    });
+
+
+
 Route::group(
     [
         'prefix'     => 'admin/cms/pages',

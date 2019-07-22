@@ -11,7 +11,7 @@
                     <div class="d-none d-md-block">
 
                         <router-link class="btn btn-sm pd-x-15 btn-light btn-uppercase"
-                                     :to="{ path: '/'}">
+                                     :to="{ path: '/pages'}">
                             <i class="fas fa-arrow-left"></i> Back
                         </router-link>
 
@@ -84,20 +84,20 @@
 
                             <div  v-for="field in group.fields">
 
-                            <div class="form-group" v-if="field.type == 'text'">
-                                <label>{{field.name}}</label>
-                                <input class="form-control" v-model="field.content" placeholder="Page Title" />
-                                <div v-if="field.excerpt" class="invalid-feedback show">{{field.excerpt}}</div>
+                                <div class="form-group" v-if="field.type == 'text'">
+                                    <label>{{field.name}}</label>
+                                    <input class="form-control" v-model="field.content" placeholder="Page Title" />
+                                    <div v-if="field.excerpt" class="invalid-feedback show">{{field.excerpt}}</div>
+                                </div>
+
+                                <div class="form-group" v-if="field.type == 'textarea'">
+                                    <label>{{field.name}}</label>
+                                    <textarea class="form-control" v-model="field.content" placeholder="Content"></textarea>
+                                    <div v-if="field.excerpt" class="invalid-feedback show">{{field.excerpt}}</div>
+                                </div>
+
+
                             </div>
-
-                            <div class="form-group" v-if="field.type == 'textarea'">
-                                <label>{{field.name}}</label>
-                                <textarea class="form-control" v-model="field.content" placeholder="Content"></textarea>
-                                <div v-if="field.excerpt" class="invalid-feedback show">{{field.excerpt}}</div>
-                            </div>
-
-
-                        </div>
                         </div>
 
                     </div>
@@ -230,7 +230,7 @@
                                         <div class="input-group-append">
 
                                             <button class="btn btn-xs btn-light"
-                                            v-on:click="getCustomFields">
+                                                    v-on:click="getCustomFields">
                                                 <i class="fas fa-sync"></i>
                                             </button>
 
@@ -263,4 +263,4 @@
         <!--/content body-->
     </div>
 </template>
-<script src="./AddJs.js"></script>
+<script src="./CreateJs.js"></script>
