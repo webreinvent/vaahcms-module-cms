@@ -1,15 +1,23 @@
 import pagination from 'laravel-vue-pagination';
 import vhSelect from 'vaah-vue-select'
 import menutree from './MenuTree'
+import TableLoader from './../reusable/TableLoader';
 
 
 export default {
 
-    props: ['urls'],
+    props: [],
+    computed:{
+        ajax_url(){
+            let ajax_url = this.$store.state.urls.menus;
+            return ajax_url;
+        }
+    },
     components:{
         'pagination': pagination,
         'vh-select': vhSelect,
         'menutree': menutree,
+        't-loader': TableLoader,
     },
     data()
     {
@@ -70,16 +78,16 @@ export default {
 
             console.log(this.urls);
 
-            var url = this.urls.current+"/assets";
+            var url = this.ajax_url+"/assets";
             var params = {};
-            this.$helpers.ajax(url, params, this.getAssetsAfter);
+            this.$vaahcms.ajax(url, params, this.getAssetsAfter);
         },
         //---------------------------------------------------------------------
         getAssetsAfter: function (data) {
 
             this.assets = data;
 
-            this.$helpers.stopNprogress();
+            this.$vaahcms.stopNprogress();
 
         },
         //---------------------------------------------------------------------
@@ -96,9 +104,9 @@ export default {
                 e.preventDefault();
             }
 
-            var url = this.urls.current+"/store";
+            var url = this.ajax_url+"/store";
             var params = this.new_menu;
-            this.$helpers.ajax(url, params, this.storeMenuAfter);
+            this.$vaahcms.ajax(url, params, this.storeMenuAfter);
         },
         //---------------------------------------------------------------------
         storeMenuAfter: function (data) {
@@ -111,7 +119,7 @@ export default {
                 name: null
             };
 
-            this.$helpers.stopNprogress();
+            this.getLocationMenus();
 
         },
         //---------------------------------------------------------------------
@@ -122,16 +130,18 @@ export default {
                 return false;
             }
 
-            var url = this.urls.current+"/location/menus/"+this.active_location_id;
+            var url = this.ajax_url+"/location/menus/"+this.active_location_id;
             var params = {};
-            this.$helpers.ajax(url, params, this.getMenusAfter);
+            this.$vaahcms.ajax(url, params, this.getMenusAfter);
         },
         //---------------------------------------------------------------------
         getMenusAfter: function (data) {
 
+            this.menus_list = null;
+
             this.menus_list = data;
 
-            this.$helpers.stopNprogress();
+            this.$vaahcms.stopNprogress();
 
         },
         //---------------------------------------------------------------------
@@ -142,9 +152,9 @@ export default {
                 return false;
             }
 
-            var url = this.urls.current+"/items/"+this.active_menu_id;
+            var url = this.ajax_url+"/items/"+this.active_menu_id;
             var params = {};
-            this.$helpers.ajax(url, params, this.getMenuItemsAfter);
+            this.$vaahcms.ajax(url, params, this.getMenuItemsAfter);
         },
         //---------------------------------------------------------------------
         getMenuItemsAfter: function (data) {
@@ -156,7 +166,7 @@ export default {
             this.menu_items = data.list;
 
 
-            this.$helpers.stopNprogress();
+            this.$vaahcms.stopNprogress();
 
         },
         //---------------------------------------------------------------------
@@ -166,14 +176,14 @@ export default {
                 e.preventDefault();
             }
 
-            var url = this.urls.current+"/actions";
+            var url = this.ajax_url+"/actions";
             var params = {
                 action: action,
                 inputs: inputs,
                 data: data,
             };
 
-            this.$helpers.ajax(url, params, this.actionsAfter);
+            this.$vaahcms.ajax(url, params, this.actionsAfter);
         },
         //---------------------------------------------------------------------
         actionsAfter: function (data) {
@@ -203,7 +213,7 @@ export default {
         //---------------------------------------------------------------------
         editMenu: function(menu_item)
         {
-            this.$helpers.console(menu_item, 'menu_item');
+            this.$vaahcms.console(menu_item, 'menu_item');
 
 
             this.new_menu_item.parent_id = menu_item.parent_id;
@@ -211,27 +221,25 @@ export default {
             this.new_menu_item.name = menu_item.name;
             this.new_menu_item.id = menu_item.id;
 
-            //this.$helpers.console(this.new_menu_item, 'edit menu');
+            //this.$vaahcms.console(this.new_menu_item, 'edit menu');
 
             $("#ModalAddMenuItem").modal('show');
         },
         //---------------------------------------------------------------------
         storeMenuItem: function () {
-            var url = this.urls.current+"/items/"+this.active_menu_id+"/store";
+            var url = this.ajax_url+"/items/"+this.active_menu_id+"/store";
             var params = this.new_menu_item;
             params.vh_menu_id = this.active_menu_id;
 
-            this.$helpers.console(params, 'new page');
+            this.$vaahcms.console(params, 'new page');
 
-            this.$helpers.ajax(url, params, this.storeMenuItemAfter);
+            this.$vaahcms.ajax(url, params, this.storeMenuItemAfter);
         },
         //---------------------------------------------------------------------
         storeMenuItemAfter: function (data) {
 
             $("#ModalAddMenuItem").modal('hide');
-
             this.getMenuItems();
-
 
         },
 
@@ -239,10 +247,10 @@ export default {
 
         //---------------------------------------------------------------------
         deleteItem: function (menu_item) {
-            this.$helpers.console('testing menu list');
-            var url = this.urls.current+"/items/"+menu_item.id+"/delete";
+            this.$vaahcms.console('testing menu list');
+            var url = this.ajax_url+"/items/"+menu_item.id+"/delete";
             var params = {};
-            this.$helpers.ajax(url, params, this.deleteItemAfter);
+            this.$vaahcms.ajax(url, params, this.deleteItemAfter);
         },
         //---------------------------------------------------------------------
         deleteItemAfter: function (data) {

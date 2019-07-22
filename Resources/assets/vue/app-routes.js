@@ -52,6 +52,17 @@ const routes_pages =     {
 routes.push(routes_pages);
 //----------/pages
 
+//----------menus
+import MenusList from "./menus/List";
+
+const routes_menus =     {
+    path: '/menus',
+    component: MenusList,
+    props: true,
+};
+
+routes.push(routes_menus);
+//----------/pages
 
 
 

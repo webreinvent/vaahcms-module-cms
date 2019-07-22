@@ -17,8 +17,12 @@ export const store = new Vuex.Store({
             base: base_url,
             current: current_url,
             pages: current_url+'/pages',
+            menus: current_url+'/menus',
         },
         pages: {
+            assets: null,
+        },
+        menus: {
             assets: null,
         },
 
