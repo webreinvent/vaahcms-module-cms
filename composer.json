@@ -8,8 +8,8 @@
         }
     ],
     "require": {
-        "php": "^7.0",
-        "atayahmet/laravel-nestable": "*"
+        "php": "^7.2",
+        "webreinvent/laravel-nestable": "*"
     },
     "extra": {
         "laravel": {
@@ -17,7 +17,7 @@
                 "VaahCms\\Modules\\Cms\\Providers\\CmsServiceProvider"
             ],
             "aliases": {
-                
+
             }
         }
     },
