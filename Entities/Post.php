@@ -4,6 +4,7 @@ namespace VaahCms\Modules\Cms\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class Post extends Model
 {
@@ -30,7 +31,7 @@ class Post extends Model
     //-------------------------------------------------
     public function setSlugAttribute()
     {
-        $this->attributes['slug'] = str_slug($this->title);
+        $this->attributes['slug'] = Str::slug($this->title);
     }
     //-------------------------------------------------
 

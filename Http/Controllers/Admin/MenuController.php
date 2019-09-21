@@ -5,6 +5,7 @@ namespace VaahCms\Modules\Cms\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Str;
 use VaahCms\Modules\Cms\Entities\Content;
 use VaahCms\Modules\Cms\Entities\Menu;
 use VaahCms\Modules\Cms\Entities\MenuItem;
@@ -71,7 +72,7 @@ class MenuController extends Controller
             $menu = new Menu();
         }
 
-        $inputs['slug'] = str_slug($inputs['name']);
+        $inputs['slug'] = Str::slug($inputs['name']);
 
         $menu->fill($inputs);
         $menu->save();
@@ -157,7 +158,7 @@ class MenuController extends Controller
             $menu_item = new MenuItem();
         }
 
-        $inputs['slug'] = str_slug($inputs['name']);
+        $inputs['slug'] = Str::slug($inputs['name']);
         $menu_item->fill($inputs);
         $menu_item->save();
 

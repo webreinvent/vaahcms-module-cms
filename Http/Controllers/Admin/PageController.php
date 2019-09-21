@@ -5,6 +5,7 @@ namespace VaahCms\Modules\Cms\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Str;
 use VaahCms\Modules\Cms\Entities\Content;
 use VaahCms\Modules\Cms\Entities\Page;
 use WebReinvent\VaahCms\Entities\Theme;
@@ -86,7 +87,7 @@ class PageController extends Controller
         } else
         {
             $page = Page::where('vh_theme_template_id', $template->id)
-                ->slug(str_slug($request->title))->first();
+                ->slug(Str::slug($request->title))->first();
         }
 
 

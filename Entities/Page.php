@@ -4,6 +4,7 @@ namespace VaahCms\Modules\Cms\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 use WebReinvent\VaahCms\Entities\ThemeTemplate;
 
 
@@ -50,7 +51,7 @@ class Page extends Model
     }
     //-------------------------------------------------
     public function setSlugAttribute( $value ) {
-        $this->attributes['slug'] = str_slug( $value );
+        $this->attributes['slug'] = Str::slug( $value );
     }
     //-------------------------------------------------
     public function setContentAttribute( $value ) {
