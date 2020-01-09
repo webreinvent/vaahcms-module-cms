@@ -6,7 +6,7 @@
 
 
 @section('vaahcms_extend_admin_js')
-    <script src="{{vh_module_assets_url("Cms", "assets/builds/app.js")}}" defer></script>
+    <script src="{{vh_module_assets_url("Cms", "builds/app.js")}}" defer></script>
 @endsection
 
 @section('content')

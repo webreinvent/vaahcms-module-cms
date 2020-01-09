@@ -28,6 +28,7 @@ class CmsServiceProvider extends ServiceProvider
         $this->registerTranslations();
         $this->registerConfig();
         $this->registerViews();
+        $this->registerAssets();
         $this->registerFactories();
         $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
         $this->registerSeeders();
@@ -128,6 +129,25 @@ class CmsServiceProvider extends ServiceProvider
     }
 
     /**
+     * Register views.
+     *
+     * @return void
+     */
+    public function registerAssets()
+    {
+
+        $sourcePath = __DIR__.'/../Resources/assets';
+
+        $desPath = public_path('vaahcms/modules/cms/assets');
+
+        $this->publishes([
+            $sourcePath => $desPath
+        ],'assets');
+
+    }
+
+
+    /**
      * Register translations.
      *
      * @return void
@@ -145,7 +165,7 @@ class CmsServiceProvider extends ServiceProvider
 
     /**
      * Register an additional directory of factories.
-     * 
+     *
      * @return void
      */
     public function registerFactories()
