@@ -1,11 +1,11 @@
-<?php
-namespace VaahCms\Modules\Cms\Providers;
+<?php namespace VaahCms\Modules\Cms\Providers;
 
 
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
 use VaahCms\Modules\Cms\Providers\RouteServiceProvider;
+use VaahCms\Modules\Cms\Providers\EventServiceProvider;
 
 class CmsServiceProvider extends ServiceProvider
 {
@@ -45,13 +45,11 @@ class CmsServiceProvider extends ServiceProvider
     {
 
         $this->app->register(RouteServiceProvider::class);
-
+        $this->app->register(EventServiceProvider::class);
         $loader = \Illuminate\Foundation\AliasLoader::getInstance();
 
-        $this->app->register(\Nestable\NestableServiceProvider::class);
-        $loader->alias('Nestable', \Nestable\Facades\NestableService::class);
-
         $this->registerHelpers();
+        $this->registerLibraries();
 
     }
 
@@ -61,7 +59,7 @@ class CmsServiceProvider extends ServiceProvider
     private function registerMiddleware($router) {
 
         //register middleware
-        $router->aliasMiddleware('check.cms.dependencies', \VaahCms\Modules\Cms\Http\Middleware\CheckCmsDependencies::class);
+        //$router->aliasMiddleware('sample.middleware', \Cms\Http\Middleware\SampleMiddleware::class);
 
     }
 
@@ -77,13 +75,24 @@ class CmsServiceProvider extends ServiceProvider
 
     }
 
+    /**
+     *
+     */
+    private function registerLibraries()
+    {
+        //load all the helpers
+        foreach (glob(__DIR__.'/Libraries/*.php') as $filename){
+            require_once($filename);
+        }
+    }
+
 
     /**
      *
      */
     private function registerSeeders() {
 
-        //load all the helpers
+        //load all the seeds
         foreach (glob(__DIR__.'/../Database/Seeds/*.php') as $filename){
             require_once($filename);
         }
@@ -124,8 +133,6 @@ class CmsServiceProvider extends ServiceProvider
             return $path . '/views/vaahcms/modules/cms';
         }, \Config::get('view.paths')), [$sourcePath]), 'cms');
 
-
-
     }
 
     /**
@@ -143,6 +150,7 @@ class CmsServiceProvider extends ServiceProvider
         $this->publishes([
             $sourcePath => $desPath
         ],'assets');
+
 
     }
 
@@ -165,7 +173,7 @@ class CmsServiceProvider extends ServiceProvider
 
     /**
      * Register an additional directory of factories.
-     *
+     * 
      * @return void
      */
     public function registerFactories()
@@ -194,9 +202,11 @@ class CmsServiceProvider extends ServiceProvider
     public function registerBladeDirectives()
     {
 
+        /*
         \Blade::directive('hello', function ($expression) {
             return "<?php echo 'Hello ' . {$expression}; ?>";
         });
+        */
 
     }
 }

@@ -15,13 +15,14 @@ const fs_extra = require('fs-extra');
  |
  */
 
-var path = __dirname+'/Resources/assets/';
-var path_vue = __dirname+"/";
+let path = './../../../public/vaahcms/modules/cms/assets';
 
-mix.setPublicPath(path_vue);
+mix.setPublicPath(path);
+let css_path = path+'/css/';
 
-mix.js(path+'vue/app.js',  './Resources/assets/builds').version();
+var path_vue = __dirname+"/Vue/app.js";
 
+mix.js(path_vue,  './builds').version();
 
 mix.webpackConfig({
     watchOptions: {

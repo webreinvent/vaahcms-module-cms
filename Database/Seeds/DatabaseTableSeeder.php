@@ -13,9 +13,7 @@ class DatabaseTableSeeder extends Seeder
      */
     public function run()
     {
-
         $this->seeds();
-
     }
 
     /**
@@ -25,27 +23,6 @@ class DatabaseTableSeeder extends Seeder
      */
     function seeds()
     {
-
-        /*$list = [
-            [
-                'title' => 'This is a sample blog',
-                'slug' => 'slug',
-                'details' => 'details',
-
-            ],
-        ];
-
-
-        foreach($list as $item)
-        {
-            $exist = \DB::table( 'vh_blog_posts' )
-                ->where( 'slug', $item['slug'] )
-                ->first();
-
-            if (!$exist){
-                \DB::table( 'vh_blog_posts' )->insert( $item );
-            }
-        }*/
 
     }
 

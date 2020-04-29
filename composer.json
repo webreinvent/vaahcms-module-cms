@@ -1,15 +1,14 @@
 {
     "name": "vaahcms/cms",
-    "description": "",
+    "description": "Cms",
     "authors": [
         {
-            "name": "WebReinvent",
-            "email": "we@webreinvent.com"
+            "name": "vaah",
+            "email": "support@vaah.dev"
         }
     ],
     "require": {
-        "php": "^7.2",
-        "webreinvent/laravel-nestable": "*"
+        "php": "^7.0"
     },
     "extra": {
         "laravel": {
@@ -17,7 +16,6 @@
                 "VaahCms\\Modules\\Cms\\Providers\\CmsServiceProvider"
             ],
             "aliases": {
-
             }
         }
     },

@@ -1,6 +1,4 @@
-<?php
-
-namespace VaahCms\Modules\Cms\Providers;
+<?php namespace VaahCms\Modules\Cms\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
@@ -34,8 +32,8 @@ class RouteServiceProvider extends ServiceProvider
     public function map()
     {
         $this->mapApiRoutes();
-        $this->mapAdminRoutes();
-        $this->mapWebRoutes();
+        $this->mapBackendRoutes();
+        $this->mapFrontendRoutes();
     }
 
     /**
@@ -45,11 +43,11 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function mapAdminRoutes()
+    protected function mapBackendRoutes()
     {
-        Route::middleware('web')
+        Route::middleware(['web','has.backend.access'])
             ->namespace($this->namespace)
-            ->group(__DIR__ . '/../Routes/admin.php');
+            ->group(__DIR__ . '/../Routes/backend.php');
     }
 
 
@@ -60,11 +58,11 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function mapWebRoutes()
+    protected function mapFrontendRoutes()
     {
         Route::middleware('web')
             ->namespace($this->namespace)
-            ->group(__DIR__ . '/../Routes/web.php');
+            ->group(__DIR__ . '/../Routes/frontend.php');
     }
 
     /**
