@@ -23,3 +23,5 @@ Route::group(
             ->name( 'vh.backend.cms' );
         //------------------------------------------------
     });
+
+include('backend/content-types.php');

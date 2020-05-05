@@ -21,6 +21,7 @@ export default {
     data()
     {
         return {
+            namespace: namespace,
             is_content_loading: false,
             is_btn_loading: false,
             assets: null,
@@ -51,14 +52,14 @@ export default {
             let update = {
                 state_name: name,
                 state_value: value,
-                namespace: namespace,
+                namespace: this.namespace,
             };
             this.$vaah.updateState(update);
         },
         //---------------------------------------------------------------------
         updateView: function()
         {
-            this.$store.dispatch(namespace+'/updateView', this.$route);
+            this.$store.dispatch(this.namespace+'/updateView', this.$route);
         },
         //---------------------------------------------------------------------
         onLoad: function()
@@ -84,7 +85,7 @@ export default {
         },
         //---------------------------------------------------------------------
         async getAssets() {
-            await this.$store.dispatch(namespace+'/getAssets');
+            await this.$store.dispatch(this.namespace+'/getAssets');
             this.getList();
             this.getModuleSection();
         },
@@ -205,6 +206,9 @@ export default {
             this.update('is_list_loading', false);
 
             if(data){
+
+                console.log('--->data.list', data.list);
+
                 this.update('list', data.list);
 
 

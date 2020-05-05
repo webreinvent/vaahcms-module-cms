@@ -41,14 +41,11 @@ Vue.config.delimiters = ['@{{', '}}'];
 Vue.config.async = false;
 //---------Configs
 
-
-
 import vaah from './vaahvue/helpers/VaahHelper';
 
 //---------Helpers
 Vue.use(VueAxios, axios);
 Vue.use(VueRouter);
-Vue.use(Vuex);
 Vue.use(Vuex);
 Vue.use(VueFuse);
 Vue.use(vaah);
@@ -98,7 +95,7 @@ Vue.use(Buefy, {
 
 
 Vue.component('vh-pagination', VaahVuePagination);
-Vue.component('vh-copy', VaahVueClickToCopy)
+Vue.component('vh-copy', VaahVueClickToCopy);
 
 //---------Variables
 var base_url = $('base').attr("href");
@@ -115,7 +112,7 @@ import router from './routes/router';
 //---------/Routes
 
 
-const cmsApp = new Vue({
+const cmsApp     = new Vue({
     el: '#cmsApp',
     components:{
 
