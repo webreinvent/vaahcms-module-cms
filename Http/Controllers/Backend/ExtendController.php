@@ -50,6 +50,17 @@ class ExtendController extends Controller
             'label'=> 'Dashboard'
         ];
 
+        $list[1] = [
+            'link' => self::$link."content-types/",
+            'icon' => 'tachometer-alt',
+            'label'=> 'Contents'
+        ];
+
+        $list[1]['child'][] =  [
+            'link' => self::$link."content-types/",
+            'label'=> 'Types'
+        ];
+
 
         $response['status'] = 'success';
         $response['data'] = $list;
