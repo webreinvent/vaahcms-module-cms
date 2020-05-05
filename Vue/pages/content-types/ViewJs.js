@@ -1,9 +1,9 @@
 import GlobalComponents from '../../vaahvue/helpers/GlobalComponents'
 import TableTrView from '../../vaahvue/reusable/TableTrView'
 import TableTrActedBy from '../../vaahvue/reusable/TableTrActedBy'
-import TableTrStatus from './partials/TableTrStatus'
+import TableTrStatus from '../../vaahvue/reusable/TableTrStatus'
 
-let namespace = 'permissions';
+let namespace = 'content_types';
 
 export default {
     computed:{

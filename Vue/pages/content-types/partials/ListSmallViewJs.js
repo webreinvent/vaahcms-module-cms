@@ -1,4 +1,4 @@
-let namespace = 'permissions';
+let namespace = 'content_types';
 export default {
     computed: {
         root() {return this.$store.getters['root/state']},
