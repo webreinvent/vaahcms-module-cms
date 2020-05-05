@@ -9,7 +9,7 @@
 
 
     @if(env('APP_MODULE_CMS_ENV') == 'develop')
-        <script src="http://localhost:8080/cms/assets/builds/app.js" defer></script>
+        <script src="http://localhost:8080/cms/assets/build/app.js" defer></script>
     @else
         <script src="{{vh_module_assets_url("Cms", "build/app.js")}}"></script>
     @endif

@@ -23,7 +23,29 @@ const router = new VueRouter({
 });
 
 //----PROTECT VUE ROUTES WITH MIDDLEWARE
+router.beforeEach(async (to, from, next) => {
 
+    if (!to.meta.middleware) {
+        return next()
+    }
+
+    const middleware = to.meta.middleware;
+
+    const context = {
+        to,
+        from,
+        next,
+        store
+    };
+
+    const res = await middleware[0]({
+        ...context,
+        next: middlewarePipeline(context, middleware, 1)
+    });
+
+    return res;
+
+});
 //----END OF PROTECT VUE ROUTES WITH MIDDLEWARE
 
 
