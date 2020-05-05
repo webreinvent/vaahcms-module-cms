@@ -6,15 +6,21 @@ use Illuminate\Routing\Controller;
 
 class ExtendController extends Controller
 {
+    public static $link;
 
     //----------------------------------------------------------
     public function __construct()
     {
+        $base_url = route('vh.backend.cms')."#/";
+        $link = $base_url;
+        self::$link = $link;
     }
     //----------------------------------------------------------
     public static function topLeftMenu()
     {
-        $links = [];
+        $links = [
+
+        ];
 
         $response['status'] = 'success';
         $response['data'] = $links;
@@ -34,6 +40,22 @@ class ExtendController extends Controller
         return $response;
     }
 
+    //----------------------------------------------------------
+    public static function sidebarMenu()
+    {
+
+        $list[0] = [
+            'link' => self::$link,
+            'icon' => 'tachometer-alt',
+            'label'=> 'Dashboard'
+        ];
+
+
+        $response['status'] = 'success';
+        $response['data'] = $list;
+
+        return $response;
+    }
     //----------------------------------------------------------
 
 }

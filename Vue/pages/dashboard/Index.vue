@@ -4,7 +4,7 @@
     <!--sections-->
     <section class="section">
         <div class="container">
-            <h1 class="title">Dashboard</h1>
+            <h1 class="title">Dashboard - CMS</h1>
         </div>
     </section>
     <!--sections-->

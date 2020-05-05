@@ -2,24 +2,7 @@
 
     <div class="container-backend">
 
-        <TopMenu/>
-
-
-        <Aside/>
-        <!--sections-->
-        <section class="section">
-
-            <div class="container">
-
-                <Notices></Notices>
-
-                <router-view></router-view>
-
-            </div>
-        </section>
-        <!--sections-->
-
-        <Footer/>
+        <router-view></router-view>
 
     </div>
 

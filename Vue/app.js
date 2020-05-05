@@ -115,8 +115,8 @@ import router from './routes/router';
 //---------/Routes
 
 
-const app = new Vue({
-    el: '#app',
+const cmsApp = new Vue({
+    el: '#cmsApp',
     components:{
 
     },
