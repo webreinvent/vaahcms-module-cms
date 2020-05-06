@@ -8,7 +8,7 @@ export default {
         root() {return this.$store.getters['root/state']},
         page() {return this.$store.getters[namespace+'/state']},
         ajax_url() {return this.$store.getters[namespace+'/state'].ajax_url},
-        item() {return this.$store.getters[namespace+'/state'].active_item},
+        new_item() {return this.$store.getters[namespace+'/state'].new_item},
     },
     components:{
         ...GlobalComponents,
@@ -17,6 +17,7 @@ export default {
     data()
     {
         return {
+            namespace: namespace,
             is_content_loading: false,
             is_btn_loading: null,
             labelPosition: 'on-border',
@@ -32,6 +33,8 @@ export default {
     },
     mounted() {
         //----------------------------------------------------
+
+        //----------------------------------------------------
         this.onLoad();
         //----------------------------------------------------
 
@@ -45,51 +48,27 @@ export default {
             let update = {
                 state_name: name,
                 state_value: value,
-                namespace: namespace,
+                namespace: this.namespace,
             };
             this.$vaah.updateState(update);
         },
         //---------------------------------------------------------------------
         updateView: function()
         {
-            this.$store.dispatch(namespace+'/updateView', this.$route);
+            this.$store.dispatch(this.namespace+'/updateView', this.$route);
         },
         //---------------------------------------------------------------------
         onLoad: function()
         {
             this.is_content_loading = true;
-
             this.updateView();
             this.getAssets();
-            this.getItem();
         },
         //---------------------------------------------------------------------
         async getAssets() {
             await this.$store.dispatch(namespace+'/getAssets');
         },
-        //---------------------------------------------------------------------
-        getItem: function () {
-            this.$Progress.start();
-            this.params = {};
-            let url = this.ajax_url+'/item/'+this.$route.params.id;
-            this.$vaah.ajax(url, this.params, this.getItemAfter);
-        },
-        //---------------------------------------------------------------------
-        getItemAfter: function (data, res) {
-            this.$Progress.finish();
-            this.is_content_loading = false;
 
-            if(data)
-            {
-                this.title = data.name;
-                this.update('active_item', data);
-            } else
-            {
-                //if item does not exist or delete then redirect to list
-                this.update('active_item', null);
-                this.$router.push({name: 'perm.list'});
-            }
-        },
         //---------------------------------------------------------------------
         store: function () {
             this.$Progress.start();

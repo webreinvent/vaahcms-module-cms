@@ -7,7 +7,11 @@
             <div class="columns">
 
                 <!--left-->
-                <div class="column" :class="{'is-12': page.list_view == 'large'}">
+                <div class="column"
+                     :class="{'is-12': page.list_view == 'large',
+                     'is-8': page.list_view == 'medium',
+                     'is-4': page.list_view == 'small',
+                     }">
 
                     <!--card-->
                     <div class="card" v-if="page.assets && page.list">
@@ -16,22 +20,25 @@
                         <div class="card-header">
 
                             <div class="card-header-title">
-                                Permissions
+                                Content Types
                             </div>
 
                             <div class="card-header-buttons">
                                 <div class="field has-addons is-pulled-right">
 
-
+                                    <p class="control">
+                                        <b-button type="is-light"
+                                                  @click="toCreate()"
+                                                  icon-left="plus">
+                                            Create
+                                        </b-button>
+                                    </p>
                                     <div class="control">
-
                                         <b-button type="is-light"
                                                   @click="sync()"
                                                   :loading="is_btn_loading"
                                                   icon-left="redo-alt">
                                         </b-button>
-
-
                                     </div>
                                 </div>
                             </div>
@@ -51,7 +58,7 @@
                                 <div class="level">
 
                                     <!--left-->
-                                    <div class="level-left" v-if="hasPermission('can-update-permissions')">
+                                    <div class="level-left" >
                                         <div  class="level-item">
                                             <b-field >
 
@@ -260,6 +267,7 @@
                 </div>
                 <!--/left-->
 
+                <router-view @eReloadList="getList"></router-view>
 
             </div>
 

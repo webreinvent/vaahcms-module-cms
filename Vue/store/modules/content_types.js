@@ -101,6 +101,16 @@ export default {
                 list_view = 'large';
             }
 
+            if(payload.name == 'content.types.create')
+            {
+                list_view = 'medium';
+            };
+
+            if(payload.name == 'content.types.edit')
+            {
+                list_view = 'medium';
+            };
+
             let view = {
                 key: 'list_view',
                 value: list_view

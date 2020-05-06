@@ -1,6 +1,6 @@
-<script src="./EditJs.js"></script>
+<script src="./CreateJs.js"></script>
 <template>
-    <div class="column" v-if="page.assets && item">
+    <div class="column" v-if="page.assets">
 
         <div class="card">
 
@@ -8,18 +8,13 @@
             <header class="card-header">
 
                 <div class="card-header-title">
-                    <span>{{$vaah.limitString(title, 15)}}</span>
+                    <span>{{$vaah.limitString('Create New Content Type', 15)}}</span>
                 </div>
 
 
                 <div class="card-header-buttons">
 
                     <div class="field has-addons is-pulled-right">
-                        <p class="control">
-                            <b-button @click="$vaah.copy(item.id)"  type="is-light">
-                                <small><b>#{{item.id}}</b></small>
-                            </b-button>
-                        </p>
 
                         <p class="control">
                             <b-button icon-left="save"
@@ -53,7 +48,7 @@
                         <p class="control">
                             <b-button tag="router-link"
                                       type="is-light"
-                                      :to="{name: 'perm.view', params:{id:item.id}}"
+                                      :to="{name: 'content.types.list'}"
                                       icon-left="times">
                             </b-button>
                         </p>
@@ -73,22 +68,21 @@
                 <div class="block">
 
                     <b-field label="Name" :label-position="labelPosition">
-                        <b-input name="permission-name" dusk="permission-name" v-model="item.name"></b-input>
+                        <b-input name="permission-name"
+                                 dusk="permission-name"
+                                 v-model="new_item.name"></b-input>
                     </b-field>
 
-                    <b-field label="Detail" :label-position="labelPosition">
-                        <b-input name="permission-detail" dusk="permission-detail" type="textarea" v-model="item.details"></b-input>
-                    </b-field>
 
                     <b-field label="Is Active" :label-position="labelPosition">
                         <b-radio-button name="permission-is_active" dusk="permission-is_active"
-                                        v-model="item.is_active"
+                                        v-model="new_item.is_active"
                                         :native-value=1>
                             <span>Yes</span>
                         </b-radio-button>
 
                         <b-radio-button type="is-danger" name="permission-is_active" dusk="permission-is_active"
-                                        v-model="item.is_active"
+                                        v-model="new_item.is_active"
                                         :native-value=0>
                             <span>No</span>
                         </b-radio-button>

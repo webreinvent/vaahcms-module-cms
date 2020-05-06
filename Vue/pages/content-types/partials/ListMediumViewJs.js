@@ -14,6 +14,7 @@ export default {
     data()
     {
         let obj = {
+            namespace: namespace,
 
         };
 
@@ -35,7 +36,7 @@ export default {
             let update = {
                 state_name: name,
                 state_value: value,
-                namespace: namespace,
+                namespace: this.namespace,
             };
             this.$vaah.updateState(update);
         },

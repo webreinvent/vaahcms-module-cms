@@ -4,6 +4,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use VaahCms\Modules\Cms\Entities\ContentType;
 use WebReinvent\VaahCms\Entities\Permission;
 use WebReinvent\VaahCms\Entities\Role;
 
@@ -47,62 +48,22 @@ class ContentTypesController extends Controller
     //----------------------------------------------------------
     public function getList(Request $request)
     {
-        if(!\Auth::user()->hasPermission('has-access-of-permissions-section'))
-        {
-            $response['status'] = 'failed';
-            $response['errors'][] = trans("vaahcms::messages.permission_denied");
-
-            return response()->json($response);
-        }
-
-        $response = Permission::getList($request);
+        $response = ContentType::getList($request);
         return response()->json($response);
     }
     //----------------------------------------------------------
     public function getItem(Request $request, $id)
     {
 
-        if(!\Auth::user()->hasPermission('can-read-permissions'))
-        {
-            $response['status'] = 'failed';
-            $response['errors'][] = trans("vaahcms::messages.permission_denied");
-
-            return response()->json($response);
-        }
-
-        $response = Permission::getDetail($id);
+        $response = ContentType::getItem($id);
         return response()->json($response);
 
     }
     //----------------------------------------------------------
-    //----------------------------------------------------------
-
-    public function getItemRoles(Request $request, $id)
-    {
-
-        if(!\Auth::user()->hasPermission('can-read-permissions'))
-        {
-            $response['status'] = 'failed';
-            $response['errors'][] = trans("vaahcms::messages.permission_denied");
-
-            return response()->json($response);
-        }
-
-        $response = Permission::getItemRoles($request,$id);
-        return response()->json($response);
-    }
     //----------------------------------------------------------
     public function postStore(Request $request,$id)
     {
-        if(!\Auth::user()->hasPermission('can-update-permissions'))
-        {
-            $response['status'] = 'failed';
-            $response['errors'][] = trans("vaahcms::messages.permission_denied");
-
-            return response()->json($response);
-        }
-
-        $response = Permission::updateDetail($request,$id);
+        $response = ContentType::postStore($request,$id);
         return response()->json($response);
     }
 
@@ -134,46 +95,35 @@ class ContentTypesController extends Controller
 
             //------------------------------------
             case 'bulk-change-status':
-                $response = Permission::bulkStatusChange($request);
+                $response = ContentType::bulkStatusChange($request);
                 break;
             //------------------------------------
             case 'bulk-trash':
 
-                $response = Permission::bulkTrash($request);
+                $response = ContentType::bulkTrash($request);
 
                 break;
             //------------------------------------
             case 'bulk-restore':
 
-                $response = Permission::bulkRestore($request);
+                $response = ContentType::bulkRestore($request);
 
                 break;
 
             //------------------------------------
             case 'bulk-delete':
 
-                $response = Permission::bulkDelete($request);
+                $response = ContentType::bulkDelete($request);
 
                 break;
-            //------------------------------------
-            case 'toggle_role_active_status':
 
-                $response = Permission::bulkChangeRoleStatus($request);
-
-                break;
             //------------------------------------
         }
 
         return response()->json($response);
 
     }
-    //----------------------------------------------------------
 
-    public function getModuleSections(Request $request)
-    {
-        $response = Permission::getModuleSections($request);
-        return response()->json($response);
-    }
     //----------------------------------------------------------
     //----------------------------------------------------------
     //----------------------------------------------------------

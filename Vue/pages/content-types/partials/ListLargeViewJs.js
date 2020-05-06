@@ -14,6 +14,7 @@ export default {
     data()
     {
         let obj = {
+            namespace: namespace,
             icon_copy: "<b-icon icon='envelope' size='is-small'></b-icon>"
         };
 
@@ -35,10 +36,12 @@ export default {
             let update = {
                 state_name: name,
                 state_value: value,
-                namespace: namespace,
+                namespace: this.namespace,
             };
             this.$vaah.updateState(update);
         },
+        //---------------------------------------------------------------------
+
         //---------------------------------------------------------------------
         setRowClass: function(row, index)
         {

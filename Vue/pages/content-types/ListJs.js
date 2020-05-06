@@ -70,6 +70,12 @@ export default {
             this.setDateFilter();
         },
         //---------------------------------------------------------------------
+        toCreate: function()
+        {
+            this.update('active_item', null);
+            this.$router.push({name:'content.types.create'});
+        },
+        //---------------------------------------------------------------------
         updateQueryString: function()
         {
             let query = this.$vaah.removeEmpty(this.$route.query);
@@ -87,7 +93,6 @@ export default {
         async getAssets() {
             await this.$store.dispatch(this.namespace+'/getAssets');
             this.getList();
-            this.getModuleSection();
         },
         //---------------------------------------------------------------------
         toggleFilters: function()
@@ -285,16 +290,7 @@ export default {
             this.getList();
         },
         //---------------------------------------------------------------------
-        getModuleSection: function () {
 
-            let url = this.ajax_url+'/getModuleSections';
-            this.$vaah.ajaxGet(url, this.query_string, this.getModuleSectionAfter);
-        },
-        //---------------------------------------------------------------------
-        getModuleSectionAfter: function (data,res) {
-
-            this.moduleSection = data;
-        },
         //---------------------------------------------------------------------
         setFilter: function () {
 
