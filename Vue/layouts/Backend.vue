@@ -1,10 +1,6 @@
 <template>
 
-    <div class="container-backend">
-
-        <router-view></router-view>
-
-    </div>
+    <router-view></router-view>
 
 </template>
 

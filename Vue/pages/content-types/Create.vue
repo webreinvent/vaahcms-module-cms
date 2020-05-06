@@ -68,26 +68,76 @@
                 <div class="block">
 
                     <b-field label="Name" :label-position="labelPosition">
-                        <b-input name="permission-name"
-                                 dusk="permission-name"
-                                 v-model="new_item.name"></b-input>
+                        <b-input v-model="new_item.name"></b-input>
                     </b-field>
 
+                    <b-field label="Slug" :label-position="labelPosition">
+                        <b-input v-model="new_item.slug"></b-input>
+                    </b-field>
 
-                    <b-field label="Is Active" :label-position="labelPosition">
-                        <b-radio-button name="permission-is_active" dusk="permission-is_active"
-                                        v-model="new_item.is_active"
+                    <b-field label="Content Plural Name" :label-position="labelPosition">
+                        <b-input v-model="new_item.plural_name"></b-input>
+                    </b-field>
+
+                    <b-field label="Content Plural Slug" :label-position="labelPosition">
+                        <b-input v-model="new_item.plural_slug"></b-input>
+                    </b-field>
+
+                    <b-field label="Content Singular Name" :label-position="labelPosition">
+                        <b-input v-model="new_item.singular_name"></b-input>
+                    </b-field>
+
+                    <b-field label="Content Singular Slug" :label-position="labelPosition">
+                        <b-input v-model="new_item.singular_slug"></b-input>
+                    </b-field>
+
+                    <b-field label="Excerpt" :label-position="labelPosition">
+                        <b-input type="textarea"
+                                 maxlength="200"
+                                 v-model="new_item.singular_slug"></b-input>
+                    </b-field>
+
+                    <b-field label="Is Published" :label-position="labelPosition">
+                        <b-radio-button v-model="new_item.is_published"
                                         :native-value=1>
                             <span>Yes</span>
                         </b-radio-button>
 
-                        <b-radio-button type="is-danger" name="permission-is_active" dusk="permission-is_active"
-                                        v-model="new_item.is_active"
+                        <b-radio-button type="is-danger"
+                                        v-model="new_item.is_published"
                                         :native-value=0>
                             <span>No</span>
                         </b-radio-button>
                     </b-field>
 
+                    <b-field label="Is Comments Allowed" :label-position="labelPosition">
+                        <b-radio-button v-model="new_item.is_commentable"
+                                        :native-value=1>
+                            <span>Yes</span>
+                        </b-radio-button>
+
+                        <b-radio-button type="is-danger"
+                                        v-model="new_item.is_commentable"
+                                        :native-value=0>
+                            <span>No</span>
+                        </b-radio-button>
+                    </b-field>
+
+
+                    <b-field label="List Statuses" :label-position="labelPosition">
+
+                        <draggable v-model="new_item.content_statuses"
+                                   group="content_statuses"
+                                   @start="drag=true"
+                                   @end="drag=true">
+                            <div v-for="(status, index) in new_item.content_statuses"
+                                 :key="index">
+                                {{status}}
+                            </div>
+
+                        </draggable>
+
+                    </b-field>
 
                 </div>
             </div>

@@ -1,4 +1,5 @@
 import GlobalComponents from '../../vaahvue/helpers/GlobalComponents'
+import draggable from 'vuedraggable';
 
 let namespace = 'content_types';
 
@@ -12,6 +13,7 @@ export default {
     },
     components:{
         ...GlobalComponents,
+        draggable,
 
     },
     data()
@@ -29,7 +31,8 @@ export default {
     watch: {
         $route(to, from) {
             this.updateView()
-        }
+        },
+
     },
     mounted() {
         //----------------------------------------------------
