@@ -28,19 +28,7 @@
                         <p class="control">
 
 
-                            <b-dropdown aria-role="list" position="is-bottom-left">
-                                <button class="button is-light"
-                                        slot="trigger">
-                                    <b-icon icon="caret-down"></b-icon>
-                                </button>
 
-                                <b-dropdown-item aria-role="listitem"
-                                                 @click="setLocalAction('save-and-close')">
-                                    <b-icon icon="check"></b-icon>
-                                    Save & Close
-                                </b-dropdown-item>
-
-                            </b-dropdown>
 
 
                         </p>
@@ -154,5 +142,3 @@
 
     </div>
 </template>
-
-
