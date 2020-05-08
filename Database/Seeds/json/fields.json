@@ -41,7 +41,7 @@
         "excerpt": ""
     },
     {
-        "name": "SEO Meta Keywords",
+        "name": "SEO Meta Keyword",
         "excerpt": ""
     },
     {
@@ -58,6 +58,14 @@
     },
     {
         "name": "Date",
+        "excerpt": ""
+    },
+    {
+        "name": "Time",
+        "excerpt": ""
+    },
+    {
+        "name": "Date Time",
         "excerpt": ""
     },
     {
@@ -84,10 +92,7 @@
         "name": "List",
         "excerpt": ""
     },
-    {
-        "name": "Image Gallery",
-        "excerpt": ""
-    },
+
     {
         "name": "Image Group",
         "excerpt": ""

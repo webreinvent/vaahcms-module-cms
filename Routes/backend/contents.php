@@ -19,7 +19,7 @@ Route::group(
         Route::get('/list', 'ContentsController@getList')
             ->name('backend.cms.content.types.list');
         //---------------------------------------------------------
-        Route::get('/item/{id}', 'ContentsController@getItem')
+        Route::any('/item/{id}', 'ContentsController@getItem')
             ->name('backend.cms.contents.item');
         //---------------------------------------------------------
         Route::post('/store/{id}', 'ContentsController@postStore')

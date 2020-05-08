@@ -97,9 +97,9 @@ export default {
             return this.$vaah.hasPermission(this.permissions, slug);
         },
         //---------------------------------------------------------------------
-        toContentStructure: function (item) {
+        toEdit: function (item) {
             this.update('active_item', item);
-            this.$router.push({name:'content.types.content.structure', params:{id:item.id}});
+            this.$router.push({name:'contents.edit', params:{id:item.id}});
 
         }
         //---------------------------------------------------------------------

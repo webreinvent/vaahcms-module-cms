@@ -1,4 +1,5 @@
 import GlobalComponents from '../../vaahvue/helpers/GlobalComponents'
+import ContentFieldAll from '../../vaahvue/reusable/content-fields/All'
 
 let namespace = 'contents';
 
@@ -12,7 +13,7 @@ export default {
     },
     components:{
         ...GlobalComponents,
-
+        ContentFieldAll,
     },
     data()
     {
@@ -24,6 +25,7 @@ export default {
             params: {},
             local_action: null,
             title: null,
+            groups: null
         }
     },
     watch: {
@@ -73,6 +75,9 @@ export default {
             this.$Progress.start();
             this.params = {};
             let url = this.ajax_url+'/item/'+this.$route.params.id;
+
+            console.log('--->', url);
+
             this.$vaah.ajax(url, this.params, this.getItemAfter);
         },
         //---------------------------------------------------------------------
@@ -82,13 +87,13 @@ export default {
 
             if(data)
             {
-                this.title = data.name;
-                this.update('active_item', data);
+                this.update('active_item', data.item);
+                this.groups = data.groups;
             } else
             {
                 //if item does not exist or delete then redirect to list
                 this.update('active_item', null);
-                this.$router.push({name: 'perm.list'});
+                this.$router.push({name: 'contents.list', params:{slug: page.content_slug}});
             }
         },
         //---------------------------------------------------------------------

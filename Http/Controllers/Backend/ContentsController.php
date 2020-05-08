@@ -21,11 +21,17 @@ class ContentsController extends Controller
 
     //----------------------------------------------------------
 
-    public function getAssets(Request $request)
+    public function getAssets(Request $request, $content_slug)
     {
 
         $data['fields'] = Field::select('id', 'name', 'slug')->get();
         $data['content_type'] = $request->content_type;
+        $groups = ContentType::getItemWithRelations($request->content_type->id);
+
+        if($groups['status'] == 'success')
+        {
+            $data['groups'] = $groups['data']->groups;
+        }
 
         $response['status'] = 'success';
         $response['data'] = $data;
@@ -33,28 +39,26 @@ class ContentsController extends Controller
         return response()->json($response);
     }
     //----------------------------------------------------------
-    public function postCreate(Request $request)
+    public function postCreate(Request $request, $content_slug)
     {
         $response = Content::postCreate($request);
         return response()->json($response);
     }
     //----------------------------------------------------------
-    public function getList(Request $request)
+    public function getList(Request $request, $content_slug)
     {
         $response = Content::getList($request);
         return response()->json($response);
     }
     //----------------------------------------------------------
-    public function getItem(Request $request, $id)
+    public function getItem(Request $request, $content_slug, $id)
     {
-
         $response = Content::getItem($id);
         return response()->json($response);
-
     }
 
     //----------------------------------------------------------
-    public function postStore(Request $request,$id)
+    public function postStore(Request $request, $content_slug, $id)
     {
         $response = Content::postStore($request,$id);
         return response()->json($response);
@@ -62,7 +66,7 @@ class ContentsController extends Controller
 
     //----------------------------------------------------------
     //----------------------------------------------------------
-    public function postActions(Request $request, $action)
+    public function postActions(Request $request, $content_slug, $action)
     {
         $rules = array(
             'inputs' => 'required',

@@ -15,6 +15,7 @@ class Content extends Model {
     protected $table = 'vh_cms_contents';
     //-------------------------------------------------
     protected $dates = [
+        'is_published_at',
         'created_at',
         'updated_at',
         'deleted_at'
@@ -95,6 +96,13 @@ class Content extends Model {
         )->select('id', 'uuid', 'first_name', 'last_name', 'email');
     }
     //-------------------------------------------------
+    public function contentType()
+    {
+        return $this->belongsTo(ContentType::class,
+            'vh_cms_content_type_id', 'id'
+        );
+    }
+    //-------------------------------------------------
     public function fields()
     {
         return $this->hasMany(ContentField::class,
@@ -105,15 +113,49 @@ class Content extends Model {
     public static function postCreate($request)
     {
 
-        $validation = static::validation($request);
+        /*$validation = static::validation($request);
         if(isset($validation['status']) && $validation['status'] == 'failed')
         {
             return $validation;
-        }
+        }*/
+
+
+
+        $inputs = $request->all();
 
         $item = new static();
-        $item->fill($request->all());
+
+        $fillable['name'] = $inputs['name'];
+        $fillable['name'] = Str::slug($inputs['name']);
+        $fillable['vh_cms_content_type_id'] = $request->content_type->id;
+        $fillable['is_published_at'] = \Carbon::now();
+        $fillable['status'] = 'published';
+
+        $item->fill($fillable);
         $item->save();
+
+
+        foreach ($inputs['groups'] as $group)
+        {
+
+            foreach ($group['fields'] as $field)
+            {
+                $content_field = [];
+                $content_field['vh_cms_content_id'] = $item->id;
+                $content_field['vh_cms_group_id'] = $group['id'];
+                $content_field['vh_cms_group_sort'] = $group['sort'];
+                $content_field['vh_cms_group_field_id'] = $field['id'];
+                $content_field['vh_cms_group_field_sort'] = $field['sort'];
+                $content_field['content'] = $field['content'];
+
+                $store_field = new ContentField();
+                $store_field->fill($content_field);
+                $store_field->save();
+
+            }
+
+        }
+
 
         $response['status'] = 'success';
         $response['data']['item'] =$item;
@@ -203,12 +245,56 @@ class Content extends Model {
     public static function getItem($id)
     {
 
-        $item = static::where('id', $id)->with(['createdByUser', 'updatedByUser', 'deletedByUser'])
+        $item = static::where('id', $id)
+            ->with(['createdByUser', 'updatedByUser', 'deletedByUser'])
+            ->with(['fields' => function($f){
+                $f->with(['group', 'field']);
+            }])
             ->withTrashed()
             ->first();
 
+        $groups = [];
+
+        $content_type = $item->contentType;
+
+
+        $i = 0;
+        foreach ($content_type->groups as $group)
+        {
+
+            $groups[$i] = $group;
+
+            $y = 0;
+            foreach ($group->fields as $field)
+            {
+                $groups[$i]['fields'][$y] = $field;
+                $groups[$i]['fields'][$y]['type'] = $field->type;
+
+                $groups[$i]['fields'][$y]['content'] = null;
+                $groups[$i]['fields'][$y]['meta'] = null;
+
+                $content = ContentField::where('vh_cms_content_id', $item->id);
+                $content->where('vh_cms_group_id', $group->id);
+                $content->where('vh_cms_group_field_id', $field->id);
+                $content = $content->first();
+
+
+                if($content)
+                {
+                    $groups[$i]['fields'][$y]['content'] = $content->content;
+                    $groups[$i]['fields'][$y]['meta'] = $content->meta;
+                }
+
+
+                $y++;
+            }
+
+            $i++;
+        }
+
         $response['status'] = 'success';
-        $response['data'] = $item;
+        $response['data']['item'] = $item;
+        $response['data']['groups'] = $groups;
 
         return $response;
 

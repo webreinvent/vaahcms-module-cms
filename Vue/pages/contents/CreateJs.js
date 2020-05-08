@@ -1,5 +1,6 @@
+
 import GlobalComponents from '../../vaahvue/helpers/GlobalComponents'
-import draggable from 'vuedraggable';
+import ContentFieldAll from '../../vaahvue/reusable/content-fields/All'
 
 let namespace = 'contents';
 
@@ -14,8 +15,7 @@ export default {
     },
     components:{
         ...GlobalComponents,
-        draggable,
-
+        ContentFieldAll,
     },
     data()
     {
@@ -81,16 +81,63 @@ export default {
             this.is_content_loading = true;
             this.updateView();
             this.getAssets();
+
         },
         //---------------------------------------------------------------------
         async getAssets() {
-            await this.$store.dispatch(namespace+'/getAssets');
-        },
+            await this.$store.dispatch(this.namespace+'/getAssets');
 
+            //this.addFieldsToNewItem();
+        },
+        //---------------------------------------------------------------------
+        addFieldsToNewItem: function()
+        {
+            let group;
+            let field_key;
+            let field;
+
+            for(let key in this.assets.groups)
+            {
+                group = this.assets.groups[key];
+
+                for(field_key in group.fields)
+                {
+                    field = group.fields[field_key];
+
+                    field = {
+                        vh_cms_group_id: group.id,
+                        vh_cms_group_sort: group.sort,
+                        vh_cms_group_field_id: field.id,
+                        vh_cms_group_field_sort: field.sort,
+                        content: null,
+                        meta: null,
+                        group: group,
+                        field: field,
+
+                    };
+
+                    console.log('--->', field);
+
+                    this.new_item.fields.push(field);
+
+                }
+
+
+
+
+            }
+
+            console.log('--->', this.new_item.fields);
+
+        },
         //---------------------------------------------------------------------
         create: function () {
-            this.$Progress.start();
+            //this.$Progress.start();
             let params = this.new_item;
+
+            params.groups = this.assets.groups;
+
+            console.log('--->', params);
 
             let url = this.ajax_url+'/create';
             this.$vaah.ajax(url, params, this.createAfter);

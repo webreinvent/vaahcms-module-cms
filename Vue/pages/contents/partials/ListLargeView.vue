@@ -19,9 +19,9 @@
                 <b-table-column field="actions" label=""
                                 width="80">
 
-                    <b-tooltip label="Content Structure" type="is-dark">
+                    <b-tooltip label="Edit" type="is-dark">
                         <b-button size="is-small"
-                                  @click="toContentStructure(props.row)"
+                                  @click="toEdit(props.row)"
                                   icon-left="align-left">
                         </b-button>
                     </b-tooltip>
