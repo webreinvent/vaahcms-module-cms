@@ -4,10 +4,11 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use VaahCms\Modules\Cms\Entities\Content;
 use VaahCms\Modules\Cms\Entities\ContentType;
 use VaahCms\Modules\Cms\Entities\Field;
 
-class ContentTypesController extends Controller
+class ContentsController extends Controller
 {
 
     public $theme;
@@ -18,10 +19,13 @@ class ContentTypesController extends Controller
         $this->theme = vh_get_backend_theme();
     }
 
+    //----------------------------------------------------------
+
     public function getAssets(Request $request)
     {
 
         $data['fields'] = Field::select('id', 'name', 'slug')->get();
+        $data['content_type'] = $request->content_type;
 
         $response['status'] = 'success';
         $response['data'] = $data;
@@ -31,41 +35,28 @@ class ContentTypesController extends Controller
     //----------------------------------------------------------
     public function postCreate(Request $request)
     {
-        $response = ContentType::postCreate($request);
+        $response = Content::postCreate($request);
         return response()->json($response);
     }
     //----------------------------------------------------------
     public function getList(Request $request)
     {
-        $response = ContentType::getList($request);
+        $response = Content::getList($request);
         return response()->json($response);
     }
     //----------------------------------------------------------
     public function getItem(Request $request, $id)
     {
 
-        $response = ContentType::getItem($id);
+        $response = Content::getItem($id);
         return response()->json($response);
 
     }
-    //----------------------------------------------------------
-    public function getItemRelations(Request $request, $id)
-    {
 
-        $response = ContentType::getItemWithRelations($id);
-        return response()->json($response);
-
-    }
-    //----------------------------------------------------------
-    public function postStoreGroups(Request $request, $id)
-    {
-        $response = ContentType::postStoreGroups($request, $id);
-        return response()->json($response);
-    }
     //----------------------------------------------------------
     public function postStore(Request $request,$id)
     {
-        $response = ContentType::postStore($request,$id);
+        $response = Content::postStore($request,$id);
         return response()->json($response);
     }
 
@@ -97,25 +88,25 @@ class ContentTypesController extends Controller
 
             //------------------------------------
             case 'bulk-change-status':
-                $response = ContentType::bulkStatusChange($request);
+                $response = Content::bulkStatusChange($request);
                 break;
             //------------------------------------
             case 'bulk-trash':
 
-                $response = ContentType::bulkTrash($request);
+                $response = Content::bulkTrash($request);
 
                 break;
             //------------------------------------
             case 'bulk-restore':
 
-                $response = ContentType::bulkRestore($request);
+                $response = Content::bulkRestore($request);
 
                 break;
 
             //------------------------------------
             case 'bulk-delete':
 
-                $response = ContentType::bulkDelete($request);
+                $response = Content::bulkDelete($request);
 
                 break;
 

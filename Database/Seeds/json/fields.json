@@ -1,0 +1,123 @@
+[
+
+    {
+        "name": "Text",
+        "excerpt": ""
+    },
+    {
+        "name": "Textarea",
+        "excerpt": ""
+    },
+    {
+        "name": "Title",
+        "excerpt": ""
+    },
+    {
+        "name": "Slug",
+        "excerpt": ""
+    },
+    {
+        "name": "Editor",
+        "excerpt": ""
+    },
+    {
+        "name": "Visual Editor",
+        "excerpt": ""
+    },
+    {
+        "name": "Image",
+        "excerpt": ""
+    },
+    {
+        "name": "Media",
+        "excerpt": ""
+    },
+    {
+        "name": "Markdown",
+        "excerpt": ""
+    },
+    {
+        "name": "SEO Title",
+        "excerpt": ""
+    },
+    {
+        "name": "SEO Meta Keywords",
+        "excerpt": ""
+    },
+    {
+        "name": "SEO Meta Description",
+        "excerpt": ""
+    },
+    {
+        "name": "Number",
+        "excerpt": ""
+    },
+    {
+        "name": "Boolean",
+        "excerpt": ""
+    },
+    {
+        "name": "Date",
+        "excerpt": ""
+    },
+    {
+        "name": "Email",
+        "excerpt": ""
+    },
+    {
+        "name": "Password",
+        "excerpt": ""
+    },
+    {
+        "name": "UUID",
+        "excerpt": ""
+    },
+    {
+        "name": "Currency Code",
+        "excerpt": ""
+    },
+    {
+        "name": "Price",
+        "excerpt": ""
+    },
+    {
+        "name": "List",
+        "excerpt": ""
+    },
+    {
+        "name": "Image Gallery",
+        "excerpt": ""
+    },
+    {
+        "name": "Image Group",
+        "excerpt": ""
+    },
+    {
+        "name": "Phone Number",
+        "excerpt": ""
+    },
+    {
+        "name": "Address",
+        "excerpt": ""
+    },
+    {
+        "name": "Relation",
+        "excerpt": ""
+    },
+    {
+        "name": "Tags",
+        "excerpt": ""
+    },
+    {
+        "name": "Json",
+        "excerpt": ""
+    },
+    {
+        "name": "Twitter Card",
+        "excerpt": ""
+    },
+    {
+        "name": "Facebook Card",
+        "excerpt": ""
+    }
+]

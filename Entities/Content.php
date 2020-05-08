@@ -6,13 +6,13 @@ use Illuminate\Support\Str;
 use WebReinvent\VaahCms\Entities\User;
 use WebReinvent\VaahCms\Traits\CrudWithUuidObservantTrait;
 
-class ContentType extends Model {
+class Content extends Model {
 
     use SoftDeletes;
     use CrudWithUuidObservantTrait;
 
     //-------------------------------------------------
-    protected $table = 'vh_cms_content_types';
+    protected $table = 'vh_cms_contents';
     //-------------------------------------------------
     protected $dates = [
         'created_at',
@@ -24,18 +24,14 @@ class ContentType extends Model {
     //-------------------------------------------------
     protected $fillable = [
         'uuid',
+        'parent_id',
+        'vh_cms_content_type_id',
+        'vh_theme_id',
+        'vh_theme_template_id',
         'name',
         'slug',
-        'plural',
-        'plural_slug',
-        'singular',
-        'singular_slug',
-        'excerpt',
-        'is_published',
-        'is_commentable',
-        'content_statuses',
-        'total_records',
-        'published_records',
+        'is_published_at',
+        'status',
         'total_comments',
         'meta',
         'created_by',
@@ -43,48 +39,6 @@ class ContentType extends Model {
         'deleted_by'
     ];
 
-    //-------------------------------------------------
-    protected $appends  = [
-    ];
-    //-------------------------------------------------
-    public function setNameAttribute($value)
-    {
-        if($value)
-        {
-            $this->attributes['name'] = ucwords($value);
-        }
-
-        $this->attributes['name'] = null;
-    }
-    //-------------------------------------------------
-    public function getNameAttribute($value)
-    {
-        if($value)
-        {
-            return ucwords($value);
-        }
-        return null;
-    }
-    //-------------------------------------------------
-
-    //-------------------------------------------------
-    public function setContentStatusesAttribute($value)
-    {
-        if($value)
-        {
-            $this->attributes['meta'] = json_encode($value);
-        }
-        $this->attributes['meta'] = null;
-    }
-    //-------------------------------------------------
-    public function getContentStatusesAttribute($value)
-    {
-        if($value)
-        {
-            return json_decode($value);
-        }
-        return null;
-    }
     //-------------------------------------------------
     public function setMetaAttribute($value)
     {
@@ -141,10 +95,10 @@ class ContentType extends Model {
         )->select('id', 'uuid', 'first_name', 'last_name', 'email');
     }
     //-------------------------------------------------
-    public function groups()
+    public function fields()
     {
-        return $this->hasMany(Group::class,
-            'vh_cms_content_type_id', 'id'
+        return $this->hasMany(ContentField::class,
+            'vh_cms_content_id', 'id'
         );
     }
     //-------------------------------------------------
@@ -173,6 +127,8 @@ class ContentType extends Model {
     {
 
         $list = static::orderBy('id', 'desc');
+
+        $list->where('vh_cms_content_type_id', $request->content_type->id);
 
         if($request['trashed'] == 'true')
         {
@@ -244,8 +200,6 @@ class ContentType extends Model {
 
     }
     //-------------------------------------------------
-
-    //-------------------------------------------------
     public static function getItem($id)
     {
 
@@ -257,93 +211,6 @@ class ContentType extends Model {
         $response['data'] = $item;
 
         return $response;
-
-    }
-    //-------------------------------------------------
-    public static function getItemWithRelations($id)
-    {
-
-        $item = static::where('id', $id)
-            ->with(['createdByUser', 'updatedByUser',
-                'deletedByUser', 'groups.fields.type'])
-            ->withTrashed()
-            ->first();
-
-        $response['status'] = 'success';
-        $response['data'] = $item;
-
-        return $response;
-
-    }
-    //-------------------------------------------------
-    public static function postStoreGroups($request,$id)
-    {
-
-        $rules = array(
-            '*.fields' => 'required|array',
-            '*.fields.*.name' => 'required',
-        );
-
-        $validator = \Validator::make( $request->all(), $rules);
-        if ( $validator->fails() ) {
-
-            $errors             = errorsToArray($validator->errors());
-            $response['status'] = 'failed';
-            $response['errors'] = $errors;
-            return $response;
-        }
-
-
-        //find delete groups
-
-
-        foreach($request->all() as $g_index => $group)
-        {
-
-
-
-            if(isset($group['id']))
-            {
-                $stored_group = Group::find($group['id']);
-            } else{
-                $stored_group = new Group();
-            }
-
-            $stored_group->fill($group);
-            $stored_group->sort = $g_index;
-            $stored_group->slug = Str::slug($group['name']);
-            $stored_group->vh_cms_content_type_id = $id;
-            $stored_group->save();
-
-
-            foreach ($group['fields'] as $f_index => $field)
-            {
-                if(isset($field['id']))
-                {
-                    $stored_field = GroupField::find($field['id']);
-                } else{
-                    $stored_field = new GroupField();
-                }
-
-                $stored_field->fill($field);
-                $stored_field->sort = $f_index;
-                $stored_field->slug = Str::slug($field['name']);
-                $stored_field->vh_cms_group_id = $stored_group->id;
-                $stored_field->save();
-            }
-        }
-
-        $response = [];
-
-        $response['status'] = 'success';
-        $response['data'][] = '';
-        $response['messages'][] = 'Action was successful';
-        if(env('APP_DEBUG'))
-        {
-            $response['hint'][] = '';
-        }
-        return $response;
-
 
     }
     //-------------------------------------------------
@@ -566,11 +433,6 @@ class ContentType extends Model {
 
         return $response;
     }
-    //-------------------------------------------------
-    //-------------------------------------------------
-    //-------------------------------------------------
-    //-------------------------------------------------
-    //-------------------------------------------------
     //-------------------------------------------------
     //-------------------------------------------------
     //-------------------------------------------------

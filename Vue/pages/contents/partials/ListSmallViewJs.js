@@ -1,4 +1,4 @@
-let namespace = 'content_types';
+let namespace = 'contents';
 export default {
     computed: {
         root() {return this.$store.getters['root/state']},
@@ -15,7 +15,6 @@ export default {
     {
         let obj = {
             namespace: namespace,
-            icon_copy: "<b-icon icon='envelope' size='is-small'></b-icon>"
         };
 
         return obj;
@@ -41,8 +40,6 @@ export default {
             this.$vaah.updateState(update);
         },
         //---------------------------------------------------------------------
-
-        //---------------------------------------------------------------------
         setRowClass: function(row, index)
         {
 
@@ -63,24 +60,10 @@ export default {
             this.$router.push({name: 'perm.view', params:{id:item.id}})
         },
         //---------------------------------------------------------------------
-        changeStatus: function (id) {
-            this.$Progress.start();
-            let url = this.ajax_url+'/actions/bulk-change-status';
-            let params = {
-                inputs: [id],
-                data: null
-            };
-            this.$vaah.ajax(url, params, this.changeStatusAfter);
+        getRole: function (item) {
+            this.update('active_item', item);
+            this.$router.push({name: 'perm.role', params:{id:item.id}})
         },
-        //---------------------------------------------------------------------
-        changeStatusAfter: function (data,res) {
-            this.$emit('eReloadList');
-            this.update('is_list_loading', false);
-            this.$store.dispatch('root/reloadPermissions');
-
-        },
-        //---------------------------------------------------------------------
-
         //---------------------------------------------------------------------
         copiedData: function (data) {
 
@@ -96,13 +79,6 @@ export default {
         {
             return this.$vaah.hasPermission(this.permissions, slug);
         },
-        //---------------------------------------------------------------------
-        toContentStructure: function (item) {
-            this.update('active_item', item);
-            this.$router.push({name:'content.types.content.structure', params:{id:item.id}});
-
-        }
-        //---------------------------------------------------------------------
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
     }

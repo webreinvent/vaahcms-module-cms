@@ -8,7 +8,7 @@
             <header class="card-header">
 
                 <div class="card-header-title">
-                    <span>{{$vaah.limitString('Create New Content Type', 15)}}</span>
+                    <span>Create New Content Type</span>
                 </div>
 
 
@@ -20,7 +20,7 @@
                             <b-button icon-left="save"
                                       type="is-light"
                                       :loading="is_btn_loading"
-                                      @click="store()">
+                                      @click="create()">
                                 Save
                             </b-button>
                         </p>
@@ -64,7 +64,7 @@
                     </b-field>
 
                     <b-field label="Content Plural Name" :label-position="labelPosition">
-                        <b-input v-model="new_item.plural_name"></b-input>
+                        <b-input v-model="new_item.plural"></b-input>
                     </b-field>
 
                     <b-field label="Content Plural Slug" :label-position="labelPosition">
@@ -72,7 +72,7 @@
                     </b-field>
 
                     <b-field label="Content Singular Name" :label-position="labelPosition">
-                        <b-input v-model="new_item.singular_name"></b-input>
+                        <b-input v-model="new_item.singular"></b-input>
                     </b-field>
 
                     <b-field label="Content Singular Slug" :label-position="labelPosition">
@@ -82,7 +82,7 @@
                     <b-field label="Excerpt" :label-position="labelPosition">
                         <b-input type="textarea"
                                  maxlength="200"
-                                 v-model="new_item.singular_slug"></b-input>
+                                 v-model="new_item.excerpt"></b-input>
                     </b-field>
 
                     <b-field label="Is Published" :label-position="labelPosition">
@@ -114,17 +114,54 @@
 
                     <b-field label="List Statuses" :label-position="labelPosition">
 
-                        <draggable v-model="new_item.content_statuses"
-                                   group="content_statuses"
-                                   @start="drag=true"
-                                   @end="drag=true">
-                            <div v-for="(status, index) in new_item.content_statuses"
-                                 :key="index">
-                                {{status}}
-                            </div>
+                        <div class="draggable">
+                            <draggable v-model="new_item.content_statuses"
+                                       group="content_statuses"
+                                       >
 
-                        </draggable>
+                                    <div v-for="(status, index) in new_item.content_statuses"
+                                         :key="index">
 
+
+                                        <b-field class="has-margin-bottom-5" expanded>
+                                            <p class="control drag">
+                                                <span class="button is-static">:::</span>
+                                            </p>
+
+                                            <b-input v-model="new_item.content_statuses[index]"
+                                                     v-if="index == edit_status_index && !disable_status_editing"
+                                                     expanded></b-input>
+
+                                            <b-input v-model="new_item.content_statuses[index]"
+                                                     v-else
+                                                     disabled
+                                                     expanded></b-input>
+
+
+                                            <p class="control">
+                                                <b-button
+                                                          @click="toggleEditStatus(index)"
+                                                          icon-left="edit">
+                                                </b-button>
+                                            </p>
+                                        </b-field>
+
+
+
+                                    </div>
+
+                            </draggable>
+                        </div>
+
+
+
+
+                    </b-field>
+
+                    <b-field label="New Status" :label-position="labelPosition">
+                        <b-input type="text" v-model="new_status"
+                                 placeholder="Type new status and press enter"
+                                 @keyup.enter.native="addStatus()"></b-input>
                     </b-field>
 
                 </div>

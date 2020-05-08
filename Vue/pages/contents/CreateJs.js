@@ -1,13 +1,14 @@
 import GlobalComponents from '../../vaahvue/helpers/GlobalComponents'
 import draggable from 'vuedraggable';
 
-let namespace = 'content_types';
+let namespace = 'contents';
 
 export default {
     props: ['id'],
     computed:{
         root() {return this.$store.getters['root/state']},
         page() {return this.$store.getters[namespace+'/state']},
+        assets() {return this.$store.getters[namespace+'/state'].assets},
         ajax_url() {return this.$store.getters[namespace+'/state'].ajax_url},
         new_item() {return this.$store.getters[namespace+'/state'].new_item},
     },
@@ -36,44 +37,6 @@ export default {
             this.updateView()
         },
 
-        'new_item.name': {
-            deep: true,
-            handler(new_val, old_val) {
-
-                if(new_val)
-                {
-                    this.new_item.slug = this.$vaah.strToSlug(new_val);
-                    this.updateNewItem();
-                }
-
-            }
-        },
-
-        'new_item.plural': {
-            deep: true,
-            handler(new_val, old_val) {
-
-                if(new_val)
-                {
-                    this.new_item.plural_slug = this.$vaah.strToSlug(new_val);
-                    this.updateNewItem();
-                }
-
-            }
-        },
-
-        'new_item.singular': {
-            deep: true,
-            handler(new_val, old_val) {
-
-                if(new_val)
-                {
-                    this.new_item.singular_slug = this.$vaah.strToSlug(new_val);
-                    this.updateNewItem();
-                }
-
-            }
-        },
 
     },
     mounted() {
@@ -124,25 +87,6 @@ export default {
             await this.$store.dispatch(namespace+'/getAssets');
         },
 
-        //---------------------------------------------------------------------
-        addStatus: function()
-        {
-            this.new_item.content_statuses.push(this.new_status);
-            this.new_status = null;
-            this.update('new_item', this.new_item);
-        },
-        //---------------------------------------------------------------------
-        toggleEditStatus: function(status_index)
-        {
-            this.edit_status_index = status_index;
-            if(this.disable_status_editing)
-            {
-                this.disable_status_editing = false;
-            } else
-            {
-                this.disable_status_editing = true;
-            }
-        },
         //---------------------------------------------------------------------
         create: function () {
             this.$Progress.start();

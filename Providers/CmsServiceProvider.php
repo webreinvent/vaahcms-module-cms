@@ -4,6 +4,8 @@
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
+use VaahCms\Modules\Cms\Http\Middleware\SetContent;
+use VaahCms\Modules\Cms\Http\Middleware\SetContentType;
 use VaahCms\Modules\Cms\Providers\RouteServiceProvider;
 use VaahCms\Modules\Cms\Providers\EventServiceProvider;
 
@@ -24,6 +26,7 @@ class CmsServiceProvider extends ServiceProvider
     public function boot(Router $router)
     {
 
+
         $this->registerMiddleware($router);
         $this->registerTranslations();
         $this->registerConfig();
@@ -43,14 +46,11 @@ class CmsServiceProvider extends ServiceProvider
      */
     public function register()
     {
-
         $this->app->register(RouteServiceProvider::class);
         $this->app->register(EventServiceProvider::class);
         $loader = \Illuminate\Foundation\AliasLoader::getInstance();
-
         $this->registerHelpers();
         $this->registerLibraries();
-
     }
 
     /**
@@ -59,7 +59,7 @@ class CmsServiceProvider extends ServiceProvider
     private function registerMiddleware($router) {
 
         //register middleware
-        //$router->aliasMiddleware('sample.middleware', \Cms\Http\Middleware\SampleMiddleware::class);
+        $router->aliasMiddleware('set.content.type', SetContentType::class);
 
     }
 
@@ -173,7 +173,7 @@ class CmsServiceProvider extends ServiceProvider
 
     /**
      * Register an additional directory of factories.
-     * 
+     *
      * @return void
      */
     public function registerFactories()

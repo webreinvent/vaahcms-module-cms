@@ -9,8 +9,7 @@
                 <!--left-->
                 <div class="column"
                      :class="{'is-12': page.list_view == 'large',
-                     'is-8': page.list_view == 'medium',
-                     'is-4': page.list_view == 'small',
+                     'is-2': page.list_view == 'small',
                      }">
 
                     <!--card-->
@@ -20,7 +19,7 @@
                         <div class="card-header">
 
                             <div class="card-header-title">
-                                Content Types
+                                {{page.assets.content_type.name}}
                             </div>
 
                             <div class="card-header-buttons">
@@ -103,19 +102,19 @@
                                                          v-model="query_string.q">
                                                 </b-input>
 
-                                                <p class="control">
+                                                <p class="control" v-if="page.list_view !='small'">
                                                     <button class="button is-primary"
                                                             @click="getList">
                                                         Filter
                                                     </button>
                                                 </p>
-                                                <p class="control">
+                                                <p class="control" v-if="page.list_view !='small'">
                                                     <button class="button is-primary"
                                                             @click="resetPage">
                                                         Reset
                                                     </button>
                                                 </p>
-                                                <p class="control">
+                                                <p class="control" v-if="page.list_view !='small'">
                                                     <button class="button is-primary"
                                                             @click="toggleFilters()"
                                                             slot="trigger">

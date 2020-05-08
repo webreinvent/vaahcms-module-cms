@@ -1,7 +1,6 @@
 import GlobalComponents from '../../vaahvue/helpers/GlobalComponents'
-import draggable from 'vuedraggable';
 
-let namespace = 'content_types';
+let namespace = 'contents';
 
 export default {
     props: ['id'],
@@ -9,11 +8,10 @@ export default {
         root() {return this.$store.getters['root/state']},
         page() {return this.$store.getters[namespace+'/state']},
         ajax_url() {return this.$store.getters[namespace+'/state'].ajax_url},
-        new_item() {return this.$store.getters[namespace+'/state'].new_item},
+        item() {return this.$store.getters[namespace+'/state'].active_item},
     },
     components:{
         ...GlobalComponents,
-        draggable,
 
     },
     data()
@@ -26,59 +24,14 @@ export default {
             params: {},
             local_action: null,
             title: null,
-            new_status: null,
-            disable_status_editing: true,
-            edit_status_index: null,
         }
     },
     watch: {
         $route(to, from) {
             this.updateView()
-        },
-
-        'new_item.name': {
-            deep: true,
-            handler(new_val, old_val) {
-
-                if(new_val)
-                {
-                    this.new_item.slug = this.$vaah.strToSlug(new_val);
-                    this.updateNewItem();
-                }
-
-            }
-        },
-
-        'new_item.plural': {
-            deep: true,
-            handler(new_val, old_val) {
-
-                if(new_val)
-                {
-                    this.new_item.plural_slug = this.$vaah.strToSlug(new_val);
-                    this.updateNewItem();
-                }
-
-            }
-        },
-
-        'new_item.singular': {
-            deep: true,
-            handler(new_val, old_val) {
-
-                if(new_val)
-                {
-                    this.new_item.singular_slug = this.$vaah.strToSlug(new_val);
-                    this.updateNewItem();
-                }
-
-            }
-        },
-
+        }
     },
     mounted() {
-        //----------------------------------------------------
-
         //----------------------------------------------------
         this.onLoad();
         //----------------------------------------------------
@@ -98,16 +51,6 @@ export default {
             this.$vaah.updateState(update);
         },
         //---------------------------------------------------------------------
-        updateNewItem: function()
-        {
-            let update = {
-                state_name: 'new_item',
-                state_value: this.new_item,
-                namespace: this.namespace,
-            };
-            this.$vaah.updateState(update);
-        },
-        //---------------------------------------------------------------------
         updateView: function()
         {
             this.$store.dispatch(this.namespace+'/updateView', this.$route);
@@ -116,43 +59,51 @@ export default {
         onLoad: function()
         {
             this.is_content_loading = true;
+
             this.updateView();
             this.getAssets();
+            this.getItem();
         },
         //---------------------------------------------------------------------
         async getAssets() {
             await this.$store.dispatch(namespace+'/getAssets');
         },
-
         //---------------------------------------------------------------------
-        addStatus: function()
-        {
-            this.new_item.content_statuses.push(this.new_status);
-            this.new_status = null;
-            this.update('new_item', this.new_item);
+        getItem: function () {
+            this.$Progress.start();
+            this.params = {};
+            let url = this.ajax_url+'/item/'+this.$route.params.id;
+            this.$vaah.ajax(url, this.params, this.getItemAfter);
         },
         //---------------------------------------------------------------------
-        toggleEditStatus: function(status_index)
-        {
-            this.edit_status_index = status_index;
-            if(this.disable_status_editing)
+        getItemAfter: function (data, res) {
+            this.$Progress.finish();
+            this.is_content_loading = false;
+
+            if(data)
             {
-                this.disable_status_editing = false;
+                this.title = data.name;
+                this.update('active_item', data);
             } else
             {
-                this.disable_status_editing = true;
+                //if item does not exist or delete then redirect to list
+                this.update('active_item', null);
+                this.$router.push({name: 'perm.list'});
             }
         },
         //---------------------------------------------------------------------
-        create: function () {
+        store: function () {
             this.$Progress.start();
-            let params = this.new_item;
 
-            let url = this.ajax_url+'/create';
-            this.$vaah.ajax(url, params, this.createAfter);
+            let params = {
+                item: this.item,
+            };
+
+            let url = this.ajax_url+'/store/'+this.item.id;
+            this.$vaah.ajax(url, params, this.storeAfter);
         },
         //---------------------------------------------------------------------
-        createAfter: function (data, res) {
+        storeAfter: function (data, res) {
 
             this.$Progress.finish();
 
@@ -164,7 +115,7 @@ export default {
                 {
                     this.saveAndClose()
                 }else{
-                    //this.$router.push({name: 'content.types.list'});
+                    this.$router.push({name: 'perm.view', params:{id:this.id}});
                     this.$root.$emit('eReloadItem');
                 }
 

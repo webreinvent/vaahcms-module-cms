@@ -5,13 +5,29 @@ let base_url = document.getElementsByTagName('base')[0].getAttribute("href");
 let debug = document.getElementById('debug').getAttribute('content');
 //---------/Variables
 
+let current_url = window.location;
+
+let hash_url = current_url.hash;
+
+hash_url = hash_url.split('?');
+hash_url = hash_url[0];
+hash_url = hash_url.replace("#", '/');
+hash_url = hash_url.split('/');
+
+console.log('--->hash_url', hash_url);
+
+let content_slug = hash_url[3];
+
+console.log('--->content_slug', content_slug);
+
 let json_url = base_url+"/backend/cms/json";
-let ajax_url = base_url+"/backend/cms/content-types";
+let ajax_url = base_url+"/backend/cms/contents/"+content_slug;
 
 export default {
     namespaced: true,
     state: {
         debug: debug,
+        content_slug: content_slug,
         base_url: base_url,
         ajax_url: ajax_url,
         json_url: json_url,
@@ -94,17 +110,17 @@ export default {
         updateView({ state, commit, dispatch, getters }, payload) {
             let list_view;
 
-            if(payload && payload.name && payload.name == 'content.types.list')
+            if(payload && payload.name && payload.name == 'contents.list')
             {
                 list_view = 'large';
             }
 
-            if(payload.name == 'content.types.create')
+            if(payload.name == 'contents.edit')
             {
-                list_view = 'medium';
+                list_view = 'small';
             };
 
-            if(payload.name == 'content.types.content.structure')
+            if(payload.name == 'contents.create')
             {
                 list_view = 'small';
             };
