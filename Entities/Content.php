@@ -270,8 +270,12 @@ class Content extends Model {
                 $groups[$i]['fields'][$y] = $field;
                 $groups[$i]['fields'][$y]['type'] = $field->type;
 
+
+                $groups[$i]['fields'][$y]['vh_cms_content_field_id'] = null;
                 $groups[$i]['fields'][$y]['content'] = null;
                 $groups[$i]['fields'][$y]['meta'] = null;
+
+
 
                 $content = ContentField::where('vh_cms_content_id', $item->id);
                 $content->where('vh_cms_group_id', $group->id);
@@ -281,6 +285,7 @@ class Content extends Model {
 
                 if($content)
                 {
+                    $groups[$i]['fields'][$y]['vh_cms_content_field_id'] = $content->id;
                     $groups[$i]['fields'][$y]['content'] = $content->content;
                     $groups[$i]['fields'][$y]['meta'] = $content->meta;
                 }
@@ -303,46 +308,47 @@ class Content extends Model {
     public static function postStore($request,$id)
     {
 
+        $inputs = $request->all();
+
+        $item = static::where('id',$id)->withTrashed()->first();
+
+        $item->fill($inputs['item']);
+        $item->slug = Str::slug($inputs['item']['name']);
+        $item->save();
 
 
-        $input = $request->item;
-
-
-        $validation = static::validation($input);
-        if(isset($validation['status']) && $validation['status'] == 'failed')
+        $i = 0;
+        foreach ($inputs['groups'] as $group)
         {
-            return $validation;
+
+            $groups[$i] = $group;
+
+            $y = 0;
+            foreach ($group['fields'] as $field)
+            {
+                $stored_field = null;
+                if(isset($field['vh_cms_content_field_id']) && !empty($field['vh_cms_content_field_id']))
+                {
+                    $stored_field = ContentField::find($field['vh_cms_content_field_id']);
+                }
+
+                if(!$stored_field)
+                {
+                    $stored_field = new ContentField();
+                    $stored_field->vh_cms_content_id = $item->id;
+                    $stored_field->vh_cms_group_id = $group['id'];
+                    $stored_field->vh_cms_group_field_id = $field['id'];
+                }
+
+                $stored_field->content = $field['content'];
+                $stored_field->meta = $field['meta'];
+                $stored_field->save();
+
+                $y++;
+            }
+
+            $i++;
         }
-
-        // check if name exist
-        $user = static::where('id','!=',$input['id'])->where('name',$input['name'])->first();
-
-        if($user)
-        {
-            $response['status'] = 'failed';
-            $response['errors'][] = "This name is already exist.";
-            return $response;
-        }
-
-
-        // check if slug exist
-        $user = static::where('id','!=',$input['id'])->where('slug',$input['slug'])->first();
-
-        if($user)
-        {
-            $response['status'] = 'failed';
-            $response['errors'][] = "This slug is already exist.";
-            return $response;
-        }
-
-        $update = static::where('id',$id)->withTrashed()->first();
-
-        $update->name = $input['name'];
-        $update->slug = Str::slug($input['slug']);
-        $update->details = $input['details'];
-        $update->is_active = $input['is_active'];
-
-        $update->save();
 
 
         $response['status'] = 'success';

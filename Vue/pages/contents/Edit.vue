@@ -21,9 +21,11 @@
 
                     <div class="card-content">
 
-                        <div v-if="group.fields.length>0"
+                        <div class="content-structure-fields">
+
+                            <div v-if="group.fields.length>0"
                              v-for="(field, f_index) in group.fields"
-                             :class="'field-type-'+field.type.slug"
+                             :class="'field-type '+field.type.slug"
                              :key="f_index">
 
                             <ContentFieldAll :field_type="field.type"
@@ -40,6 +42,7 @@
 
                         </div>
 
+                        </div>
 
                     </div>
 
@@ -70,7 +73,7 @@
                                     <b-button icon-left="save"
                                               type="is-light"
                                               :loading="is_btn_loading"
-                                              @click="create()">
+                                              @click="store()">
                                         Save
                                     </b-button>
                                 </p>

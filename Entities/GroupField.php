@@ -105,6 +105,25 @@ class GroupField extends Model {
         );
     }
     //-------------------------------------------------
+    public static function deleteItem($id)
+    {
+
+        //delete content fields
+        ContentField::where('vh_cms_group_field_id', $id)->forceDelete();
+
+        //delete group
+        static::where('id', $id)->forceDelete();
+
+    }
+    //-------------------------------------------------
+    public static function deleteItems($ids_array){
+
+        foreach ($ids_array as $id)
+        {
+            static::deleteItem($id);
+        }
+
+    }
     //-------------------------------------------------
     //-------------------------------------------------
 

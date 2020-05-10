@@ -280,7 +280,7 @@ class ContentType extends Model {
     {
 
         $rules = array(
-            '*.fields' => 'required|array',
+            '*.fields' => 'array',
             '*.fields.*.name' => 'required',
         );
 
@@ -294,13 +294,38 @@ class ContentType extends Model {
         }
 
 
+
         //find delete groups
+        $stored_groups = Group::where('vh_cms_content_type_id', $id)
+            ->get()->pluck('id')->toArray();
+        $input_groups = collect($request->all())->pluck('id')->toArray();
+        $groups_to_delete = array_diff($stored_groups, $input_groups);
+        if(count($groups_to_delete) > 0)
+        {
+            Group::deleteItems($groups_to_delete);
+        }
 
 
         foreach($request->all() as $g_index => $group)
         {
 
 
+            if(isset($group['id']) && !empty($group['id']))
+            {
+                $stored_group_fields = GroupField::where('vh_cms_group_id', $group['id'])
+                    ->get()
+                    ->pluck('id')
+                    ->toArray();
+
+                $input_group_fields = collect($group['fields'])->pluck('id')->toArray();
+                $fields_to_delete = array_diff($stored_group_fields, $input_group_fields);
+
+                if(count($fields_to_delete) > 0)
+                {
+                    GroupField::deleteItems($fields_to_delete);
+                }
+
+            }
 
             if(isset($group['id']))
             {

@@ -19,10 +19,12 @@
 
                     <div class="card-content">
 
-                        <div v-if="group.fields.length>0"
-                             v-for="(field, f_index) in group.fields"
-                             :class="'field-type-'+field.type.slug"
-                             :key="f_index">
+                        <div class="content-structure-fields">
+
+                            <div v-if="group.fields.length>0"
+                                 v-for="(field, f_index) in group.fields"
+                                 :class="'field-type '+field.type.slug"
+                                 :key="f_index">
 
                                 <ContentFieldAll :field_type="field.type"
                                                  :field_slug="field.type.slug"
@@ -36,7 +38,11 @@
                                                  @onFocus=""/>
 
 
+                            </div>
+
                         </div>
+
+
 
 
                     </div>

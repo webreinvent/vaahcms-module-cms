@@ -102,7 +102,11 @@ export default {
 
             let params = {
                 item: this.item,
+                groups: this.groups
             };
+
+
+            console.log('--->', params);
 
             let url = this.ajax_url+'/store/'+this.item.id;
             this.$vaah.ajax(url, params, this.storeAfter);
@@ -120,7 +124,7 @@ export default {
                 {
                     this.saveAndClose()
                 }else{
-                    this.$router.push({name: 'perm.view', params:{id:this.id}});
+                    //this.$router.push({name: 'perm.view', params:{id:this.id}});
                     this.$root.$emit('eReloadItem');
                 }
 
