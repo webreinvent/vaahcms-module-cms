@@ -25,9 +25,7 @@ class ContentField extends Model {
         'uuid',
         'vh_cms_content_id',
         'vh_cms_group_id',
-        'vh_cms_group_sort',
         'vh_cms_group_field_id',
-        'vh_cms_group_field_sort',
         'content',
         'meta',
         'created_by',
@@ -35,6 +33,48 @@ class ContentField extends Model {
         'deleted_by'
     ];
 
+    //-------------------------------------------------
+    public function setContentAttribute($value)
+    {
+        if(is_array($value) || is_object($value))
+        {
+            $this->attributes['content'] = json_encode($value);
+        }
+
+        $this->attributes['content'] = $value;
+
+    }
+    //-------------------------------------------------
+    public function getContentAttribute($value)
+    {
+
+        if(!$value)
+        {
+            return null;
+        }
+
+        if($value)
+        {
+
+            if(vh_is_json($value))
+            {
+                return json_decode($value);
+            }
+
+
+            $slug = $this->field->type->slug;
+
+            if($slug == 'image' || $slug == 'media')
+            {
+                $value = asset($value);
+            }
+
+            return $value;
+        }
+
+
+        return null;
+    }
     //-------------------------------------------------
     public function setMetaAttribute($value)
     {
@@ -53,6 +93,9 @@ class ContentField extends Model {
         }
         return null;
     }
+    //-------------------------------------------------
+
+    //-------------------------------------------------
     //-------------------------------------------------
     public function getTableColumns() {
         return $this->getConnection()->getSchemaBuilder()

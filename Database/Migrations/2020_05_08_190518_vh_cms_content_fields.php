@@ -20,9 +20,7 @@ class VhCmsContentFields extends Migration
 
             $table->integer('vh_cms_content_id')->nullable();
             $table->integer('vh_cms_group_id')->nullable();
-            $table->integer('vh_cms_group_sort')->nullable();
             $table->integer('vh_cms_group_field_id')->nullable();
-            $table->integer('vh_cms_group_field_sort')->nullable();
             $table->text('content')->nullable();
 
             $table->text('meta')->nullable();

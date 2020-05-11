@@ -13,6 +13,13 @@ import Vuex from 'vuex';
 import VueFuse from 'vue-fuse'
 import VueProgressBar from 'vue-progressbar'
 
+
+
+import VaahVuePagination from 'vaah-vue-pagination'
+import VaahVueClickToCopy from 'vaah-vue-clicktocopy'
+//---------/Package imports
+
+//---File Uploader
 import vueFilePond, {setOptions} from 'vue-filepond';
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.esm.js';
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.esm.js';
@@ -20,12 +27,6 @@ import FilePondPluginImageEdit from 'filepond-plugin-image-edit';
 import FilePondPluginImageCrop from 'filepond-plugin-image-crop';
 import FilePondPluginFileRename from 'filepond-plugin-file-rename';
 import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
-
-import VaahVuePagination from 'vaah-vue-pagination'
-import VaahVueClickToCopy from 'vaah-vue-clicktocopy'
-//---------/Package imports
-
-//---File Uploader
 setOptions({
     allowDrop: true,
     allowReplace: false,
@@ -34,7 +35,10 @@ setOptions({
 const FilePond = vueFilePond( FilePondPluginFileValidateType, FilePondPluginImagePreview,
     FilePondPluginImageEdit, FilePondPluginImageCrop, FilePondPluginFileRename,
     FilePondPluginFileValidateSize  );
+
+Vue.component('file-pond', FilePond);
 //---/File Uploader
+
 
 //---------Configs
 Vue.config.delimiters = ['@{{', '}}'];
@@ -52,7 +56,7 @@ Vue.use(vaah);
 //---------/Helpers
 
 
-Vue.component('file-pond', FilePond);
+
 
 //--------Progress
 const options = {

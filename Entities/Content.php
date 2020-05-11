@@ -143,9 +143,7 @@ class Content extends Model {
                 $content_field = [];
                 $content_field['vh_cms_content_id'] = $item->id;
                 $content_field['vh_cms_group_id'] = $group['id'];
-                $content_field['vh_cms_group_sort'] = $group['sort'];
                 $content_field['vh_cms_group_field_id'] = $field['id'];
-                $content_field['vh_cms_group_field_sort'] = $field['sort'];
                 $content_field['content'] = $field['content'];
 
                 $store_field = new ContentField();
@@ -340,9 +338,23 @@ class Content extends Model {
                     $stored_field->vh_cms_group_field_id = $field['id'];
                 }
 
+                if(is_array($field['content']) || is_object($field['content']))
+                {
+                    $field['content'] = json_encode($field['content']);
+                }
+
                 $stored_field->content = $field['content'];
                 $stored_field->meta = $field['meta'];
-                $stored_field->save();
+                try{
+                    $stored_field->save();
+                }catch(\Exception $e)
+                {
+                    $response['status'] = 'failed';
+                    $response['inputs'] = $field;
+                    $response['errors'][] = $e->getMessage();
+                   return $response;
+                }
+
 
                 $y++;
             }

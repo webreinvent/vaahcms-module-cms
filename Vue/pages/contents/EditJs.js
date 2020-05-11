@@ -8,6 +8,7 @@ export default {
     computed:{
         root() {return this.$store.getters['root/state']},
         page() {return this.$store.getters[namespace+'/state']},
+        assets() {return this.$store.getters[namespace+'/state'].assets},
         ajax_url() {return this.$store.getters[namespace+'/state'].ajax_url},
         item() {return this.$store.getters[namespace+'/state'].active_item},
     },
@@ -93,7 +94,7 @@ export default {
             {
                 //if item does not exist or delete then redirect to list
                 this.update('active_item', null);
-                this.$router.push({name: 'contents.list', params:{slug: page.content_slug}});
+                this.$router.push({name: 'contents.list', params:{slug: this.page.content_slug}});
             }
         },
         //---------------------------------------------------------------------

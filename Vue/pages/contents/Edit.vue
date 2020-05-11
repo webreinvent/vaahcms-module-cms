@@ -1,6 +1,6 @@
 <script src="./EditJs.js"></script>
 <template>
-    <div class="column" v-if="page.assets && item && groups">
+    <div class="column" v-if="assets && item && groups">
 
         <div class="columns">
             <div class="column">
@@ -25,22 +25,32 @@
 
                             <div v-if="group.fields.length>0"
                              v-for="(field, f_index) in group.fields"
-                             :class="'field-type '+field.type.slug"
+                             :class="'field-type field-'+field.type.slug"
                              :key="f_index">
 
-                            <ContentFieldAll :field_type="field.type"
-                                             :field_slug="field.type.slug"
-                                             :label="field.name"
-                                             :placeholder="field.name"
-                                             :labelPosition="labelPosition"
-                                             v-model="field.content"
-                                             @onInput=""
-                                             @onChange=""
-                                             @onBlur=""
-                                             @onFocus=""/>
+                                {{field.name}}
+                                <hr/>
+
+                                <ContentFieldAll :field_type="field.type"
+                                                 :field_slug="field.type.slug"
+                                                 :label="field.name"
+                                                 :placeholder="field.name"
+                                                 :labelPosition="labelPosition"
+                                                 :upload_url="root.assets.urls.upload"
+                                                 :currency_options="assets.currency_codes"
+                                                 :app_url="root.assets.urls.public"
+                                                 v-model="field.content"
+                                                 @onInput=""
+                                                 @onChange=""
+                                                 @onBlur=""
+                                                 @onFocus=""/>
+
+                                <hr/>
+
+                                {{field.content}}
 
 
-                        </div>
+                            </div>
 
                         </div>
 

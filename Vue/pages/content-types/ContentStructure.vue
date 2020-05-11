@@ -48,7 +48,7 @@
                     <!--/header-->
 
                     <!--content-->
-                    <div class="card-content">
+                    <div class="card-content"  style="max-height: 600px; overflow: auto;">
 
 
                         <div class="card" v-if="item.groups.length > 0"
@@ -221,7 +221,8 @@
                     <!--/header-->
 
                     <!--content-->
-                    <div class="card-content" v-if="assets && assets.fields">
+                    <div class="card-content" style="max-height: 600px; overflow: auto;"
+                         v-if="assets && assets.fields">
 
                         <div class="draggable" >
                             <draggable :list="assets.fields"
