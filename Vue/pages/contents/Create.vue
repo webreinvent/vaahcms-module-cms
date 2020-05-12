@@ -23,7 +23,7 @@
 
                             <div v-if="group.fields.length>0"
                                  v-for="(field, f_index) in group.fields"
-                                 :class="'field-type '+field.type.slug"
+                                 :class="'field-type field-'+field.type.slug"
                                  :key="f_index">
 
                                 <ContentFieldAll :field_type="field.type"

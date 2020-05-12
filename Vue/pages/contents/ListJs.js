@@ -33,9 +33,14 @@ export default {
     },
     watch: {
         $route(to, from) {
-            this.updateView();
+            console.log('--->route watch', to);
             this.updateQueryString();
-            this.updateActiveItem();
+
+            if(to.query.page && to.name === 'contents.list')
+            {
+                this.updateStore();
+                this.updateActiveItem();
+            }
         }
     },
     mounted() {
@@ -57,17 +62,19 @@ export default {
             this.$vaah.updateState(update);
         },
         //---------------------------------------------------------------------
-        updateView: function()
+        updateStore: function()
         {
-            this.$store.dispatch(this.namespace+'/updateView', this.$route);
+            console.log('--->', this.$route);
+            this.$store.dispatch(this.namespace+'/updateStore', this.$route);
+            this.setDateFilter();
+            this.updateQueryString();
+            this.getAssets();
         },
         //---------------------------------------------------------------------
         onLoad: function()
         {
-            this.updateView();
-            this.updateQueryString();
-            this.getAssets();
-            this.setDateFilter();
+            console.log('--->on load');
+            this.updateStore();
         },
         //---------------------------------------------------------------------
         toCreate: function()

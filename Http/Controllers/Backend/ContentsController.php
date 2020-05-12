@@ -27,6 +27,8 @@ class ContentsController extends Controller
         $data['fields'] = Field::select('id', 'name', 'slug')->get();
         $data['content_type'] = $request->content_type;
         $data['currency_codes'] = vh_get_currency_list();
+
+
         $groups = ContentType::getItemWithRelations($request->content_type->id);
 
         if($groups['status'] == 'success')

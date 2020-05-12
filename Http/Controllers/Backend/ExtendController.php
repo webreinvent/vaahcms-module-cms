@@ -53,7 +53,7 @@ class ExtendController extends Controller
 
         $list[1] = [
             'link' => self::$link."content-types/",
-            'icon' => 'tachometer-alt',
+            'icon' => 'file-alt',
             'label'=> 'Contents'
         ];
 
@@ -69,7 +69,7 @@ class ExtendController extends Controller
             foreach ($content_types as $content_type)
             {
                 $list[1]['child'][] =  [
-                    'link' => self::$link."contents/".$content_type->slug,
+                    'link' => self::$link."contents/".$content_type->slug."/list",
                     'label'=> $content_type->name
                 ];
             }

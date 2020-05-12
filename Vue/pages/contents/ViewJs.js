@@ -29,7 +29,7 @@ export default {
     },
     watch: {
         $route(to, from) {
-            this.updateView();
+            this.updateStore();
             this.getItem();
         }
     },
@@ -40,7 +40,6 @@ export default {
         this.$root.$on('eReloadItem', this.getItem);
         //----------------------------------------------------
         this.$root.$on('eResetBulkActions', this.resetBulkAction);
-        //----------------------------------------------------
         //----------------------------------------------------
     },
     methods: {
@@ -55,16 +54,16 @@ export default {
             this.$vaah.updateState(update);
         },
         //---------------------------------------------------------------------
-        updateView: function()
+        updateStore: function()
         {
-            this.$store.dispatch(this.namespace+'/updateView', this.$route);
+            this.$store.dispatch(this.namespace+'/updateStore', this.$route);
+
         },
         //---------------------------------------------------------------------
         onLoad: function()
         {
             this.is_content_loading = true;
-
-            this.updateView();
+            this.updateStore();
             this.getAssets();
             this.getItem();
         },

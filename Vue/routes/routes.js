@@ -145,8 +145,9 @@ import ContentsView from "./../pages/contents/View";
 import ContentsEdit from "./../pages/contents/Edit";
 
 routes_list =     {
-    path: '/contents/:slug',
+    path: '/contents/:slug/',
     component: Backend,
+    name: 'contents',
     props: true,
     meta: {
         middleware: [
@@ -155,7 +156,7 @@ routes_list =     {
     },
     children: [
         {
-            path: '/',
+            path: 'list',
             name: 'contents.list',
             component: ContentsList,
             props: true,

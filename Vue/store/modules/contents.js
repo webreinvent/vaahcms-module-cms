@@ -5,31 +5,15 @@ let base_url = document.getElementsByTagName('base')[0].getAttribute("href");
 let debug = document.getElementById('debug').getAttribute('content');
 //---------/Variables
 
-let current_url = window.location;
-
-let hash_url = current_url.hash;
-
-hash_url = hash_url.split('?');
-hash_url = hash_url[0];
-hash_url = hash_url.replace("#", '/');
-hash_url = hash_url.split('/');
-
-console.log('--->hash_url', hash_url);
-
-let content_slug = hash_url[3];
-
-console.log('--->content_slug', content_slug);
-
 let json_url = base_url+"/backend/cms/json";
-let ajax_url = base_url+"/backend/cms/contents/"+content_slug;
 
 export default {
     namespaced: true,
     state: {
         debug: debug,
-        content_slug: content_slug,
+        content_slug: null,
         base_url: base_url,
-        ajax_url: ajax_url,
+        ajax_url: null,
         json_url: json_url,
         assets: null,
         assets_is_fetching: null,
@@ -80,7 +64,7 @@ export default {
         //-----------------------------------------------------------------
         async getAssets({ state, commit, dispatch, getters }) {
 
-            if(!state.assets_is_fetching || !state.assets)
+            if(!state.assets_is_fetching || !state.assets || state.assets_reload == true)
             {
                 let payload = {
                     key: 'assets_is_fetching',
@@ -100,16 +84,33 @@ export default {
                 };
 
                 commit('updateState', payload);
+
+                payload = {
+                    key: 'assets_reload',
+                    value: false
+                };
+                commit('updateState', payload);
+
             }
 
         },
         //-----------------------------------------------------------------
-        updateView({ state, commit, dispatch, getters }, payload) {
+        updateStore({ state, commit, dispatch, getters }, payload) {
             let list_view;
+            let update;
+
 
             if(payload && payload.name && payload.name == 'contents.list')
             {
                 list_view = 'large';
+
+                update = {
+                    key: 'assets_reload',
+                    value: true
+                };
+
+                commit('updateState', update);
+
             }
 
             if(payload.name == 'contents.edit')
@@ -122,12 +123,29 @@ export default {
                 list_view = 'small';
             };
 
-            let view = {
+            update = {
                 key: 'list_view',
                 value: list_view
             };
 
-            commit('updateState', view);
+            commit('updateState', update);
+
+
+            //update ajax url
+            let ajax = state.base_url+"/backend/cms/contents/"+payload.params.slug;
+            update = {
+                key: 'ajax_url',
+                value: ajax
+            };
+
+            commit('updateState', update);
+
+            update = {
+                key: 'content_slug',
+                value: payload.params.slug
+            };
+
+            commit('updateState', update);
 
         },
         //-----------------------------------------------------------------
