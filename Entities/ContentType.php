@@ -52,9 +52,10 @@ class ContentType extends Model {
         if($value)
         {
             $this->attributes['name'] = ucwords($value);
+        } else{
+            $this->attributes['name'] = null;
         }
 
-        $this->attributes['name'] = null;
     }
     //-------------------------------------------------
     public function getNameAttribute($value)
@@ -72,9 +73,10 @@ class ContentType extends Model {
     {
         if($value)
         {
-            $this->attributes['meta'] = json_encode($value);
+            $this->attributes['content_statuses'] = json_encode($value);
+        } else{
+            $this->attributes['content_statuses'] = null;
         }
-        $this->attributes['meta'] = null;
     }
     //-------------------------------------------------
     public function getContentStatusesAttribute($value)
@@ -91,8 +93,9 @@ class ContentType extends Model {
         if($value)
         {
             $this->attributes['meta'] = json_encode($value);
+        } else{
+            $this->attributes['meta'] = null;
         }
-        $this->attributes['meta'] = null;
     }
     //-------------------------------------------------
     public function getMetaAttribute($value)

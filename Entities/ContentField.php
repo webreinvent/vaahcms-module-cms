@@ -39,10 +39,9 @@ class ContentField extends Model {
         if(is_array($value) || is_object($value))
         {
             $this->attributes['content'] = json_encode($value);
+        } else{
+            $this->attributes['content'] = $value;
         }
-
-        $this->attributes['content'] = $value;
-
     }
     //-------------------------------------------------
     public function getContentAttribute($value)

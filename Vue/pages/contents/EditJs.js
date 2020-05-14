@@ -1,6 +1,10 @@
 import GlobalComponents from '../../vaahvue/helpers/GlobalComponents'
 import ContentFieldAll from '../../vaahvue/reusable/content-fields/All'
 
+import ContentFields from './partials/ContentFields'
+import TemplateFields from './partials/TemplateFields'
+import CustomFields from './partials/CustomFields'
+
 let namespace = 'contents';
 
 export default {
@@ -15,6 +19,9 @@ export default {
     components:{
         ...GlobalComponents,
         ContentFieldAll,
+        ContentFields,
+        TemplateFields,
+        CustomFields,
     },
     data()
     {
@@ -76,9 +83,6 @@ export default {
             this.$Progress.start();
             this.params = {};
             let url = this.ajax_url+'/item/'+this.$route.params.id;
-
-            console.log('--->', url);
-
             this.$vaah.ajax(url, this.params, this.getItemAfter);
         },
         //---------------------------------------------------------------------
@@ -140,8 +144,23 @@ export default {
         //---------------------------------------------------------------------
         saveAndClose: function () {
             this.update('active_item', null);
-            this.$router.push({name:'perm.list'});
+            this.$router.push({name:'contents.list'});
         },
+        //---------------------------------------------------------------------
+        expandAll: function () {
+
+            $('.collapse-content').each(function (index, item) {
+                $(item).slideDown();
+            });
+
+        },
+        //---------------------------------------------------------------------
+        collapseAll: function () {
+            $('.collapse-content').each(function (index, item) {
+                $(item).slideUp();
+            });
+        },
+        //---------------------------------------------------------------------
         //---------------------------------------------------------------------
     }
 }

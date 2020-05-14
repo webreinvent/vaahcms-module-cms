@@ -1,6 +1,9 @@
 
 import GlobalComponents from '../../vaahvue/helpers/GlobalComponents'
 import ContentFieldAll from '../../vaahvue/reusable/content-fields/All'
+import ContentFields from './partials/ContentFields'
+import TemplateFields from './partials/TemplateFields'
+import CustomFields from './partials/CustomFields'
 
 let namespace = 'contents';
 
@@ -16,6 +19,9 @@ export default {
     components:{
         ...GlobalComponents,
         ContentFieldAll,
+        ContentFields,
+        TemplateFields,
+        CustomFields,
     },
     data()
     {
@@ -85,50 +91,9 @@ export default {
         //---------------------------------------------------------------------
         async getAssets() {
             await this.$store.dispatch(this.namespace+'/getAssets');
-
-            //this.addFieldsToNewItem();
         },
         //---------------------------------------------------------------------
-        addFieldsToNewItem: function()
-        {
-            let group;
-            let field_key;
-            let field;
 
-            for(let key in this.assets.groups)
-            {
-                group = this.assets.groups[key];
-
-                for(field_key in group.fields)
-                {
-                    field = group.fields[field_key];
-
-                    field = {
-                        vh_cms_group_id: group.id,
-                        vh_cms_group_sort: group.sort,
-                        vh_cms_group_field_id: field.id,
-                        vh_cms_group_field_sort: field.sort,
-                        content: null,
-                        meta: null,
-                        group: group,
-                        field: field,
-
-                    };
-
-                    console.log('--->', field);
-
-                    this.new_item.fields.push(field);
-
-                }
-
-
-
-
-            }
-
-            console.log('--->', this.new_item.fields);
-
-        },
         //---------------------------------------------------------------------
         create: function () {
             //this.$Progress.start();
@@ -171,6 +136,37 @@ export default {
             this.update('active_item', null);
             this.$router.push({name:'perm.list'});
         },
+        //---------------------------------------------------------------------
+        expandAll: function () {
+
+            $('.collapse-content').each(function (index, item) {
+                $(item).slideDown();
+            });
+
+        },
+        //---------------------------------------------------------------------
+        collapseAll: function () {
+            $('.collapse-content').each(function (index, item) {
+                $(item).slideUp();
+            });
+        },
+        //---------------------------------------------------------------------
+        setActiveTheme: function () {
+            let theme = this.$vaah.findInArrayByKey(this.assets.themes, 'id', this.new_item.vh_theme_id);
+            this.update('active_theme', theme);
+        },
+        //---------------------------------------------------------------------
+        setActiveTemplate: function () {
+            let template = this.$vaah.findInArrayByKey(this.page.active_theme.templates, 'id', this.new_item.vh_theme_template_id);
+            this.update('active_template', template);
+
+            let groups = [];
+            groups[0] = template;
+
+            console.log('--->', groups);
+
+            this.update('active_template_groups', groups);
+        }
         //---------------------------------------------------------------------
     }
 }

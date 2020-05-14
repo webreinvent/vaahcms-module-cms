@@ -148,6 +148,8 @@ export default {
             this.$Progress.start();
             let params = this.new_item;
 
+            console.log('--->', params);
+
             let url = this.ajax_url+'/create';
             this.$vaah.ajax(url, params, this.createAfter);
         },

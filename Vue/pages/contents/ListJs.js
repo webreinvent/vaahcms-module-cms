@@ -33,7 +33,6 @@ export default {
     },
     watch: {
         $route(to, from) {
-            console.log('--->route watch', to);
             this.updateQueryString();
 
             if(to.query.page && to.name === 'contents.list')
@@ -47,7 +46,6 @@ export default {
         //----------------------------------------------------
         this.onLoad();
         //----------------------------------------------------
-        console.log('--->', window.location);
         //----------------------------------------------------
     },
     methods: {
@@ -73,7 +71,6 @@ export default {
         //---------------------------------------------------------------------
         onLoad: function()
         {
-            console.log('--->on load');
             this.updateStore();
         },
         //---------------------------------------------------------------------
@@ -219,11 +216,8 @@ export default {
 
             if(data){
 
-                console.log('--->data.list', data.list);
 
                 this.update('list', data.list);
-
-
                 this.update('total_roles', data.totalRole);
                 this.update('total_users', data.totalUser);
 

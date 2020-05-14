@@ -36,6 +36,10 @@ export default {
             data: {},
             action: null,
         },
+        active_theme: null,
+        active_theme_templates: null,
+        active_template_groups: null,
+        active_template: null,
         new_item:{
             parent_id: null,
             vh_cms_content_type_id: null,
@@ -44,7 +48,7 @@ export default {
             name: null,
             slug: null,
             is_published_at: null,
-            status: null,
+            status: "",
             total_comments: null,
             meta: null,
             fields: [
@@ -74,16 +78,48 @@ export default {
 
                 let url = state.ajax_url+'/assets';
 
-                console.log('--->assets url', url);
-
                 let params = {};
                 let data = await Vaah.ajaxGet(url, params);
+                let assets = data.data.data;
                 payload = {
                     key: 'assets',
-                    value: data.data.data
+                    value: assets
                 };
 
                 commit('updateState', payload);
+
+
+                payload = {
+                    key: 'active_theme',
+                    value: assets.default_theme
+                };
+
+                commit('updateState', payload);
+
+                payload = {
+                    key: 'active_template',
+                    value: assets.default_template[0]
+                };
+
+                commit('updateState', payload);
+
+                payload = {
+                    key: 'active_template_groups',
+                    value: assets.default_template
+                };
+
+                commit('updateState', payload);
+
+                state.new_item.vh_theme_id = assets.default_theme.id;
+                state.new_item.vh_theme_template_id = assets.default_template[0].id;
+
+                payload = {
+                    key: 'new_item',
+                    value: state.new_item
+                };
+
+                commit('updateState', payload);
+
 
                 payload = {
                     key: 'assets_reload',

@@ -41,8 +41,9 @@ class Field extends Model {
         if($value)
         {
             $this->attributes['meta'] = json_encode($value);
+        } else{
+            $this->attributes['meta'] = null;
         }
-        $this->attributes['meta'] = null;
     }
     //-------------------------------------------------
     public function getMetaAttribute($value)
