@@ -1,9 +1,11 @@
+import AsideMenu from "./partials/AsideMenu";
+
 export default {
     computed:{
         root() {return this.$store.getters['root/state']},
     },
     components:{
-
+        AsideMenu,
     },
     data()
     {

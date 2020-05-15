@@ -129,6 +129,8 @@ class Content extends Model {
         $fillable['name'] = $inputs['name'];
         $fillable['name'] = Str::slug($inputs['name']);
         $fillable['vh_cms_content_type_id'] = $request->content_type->id;
+        $fillable['vh_theme_id'] = $request->vh_theme_id;
+        $fillable['vh_theme_template_id'] = $request->vh_theme_template_id;
         $fillable['is_published_at'] = \Carbon::now();
         $fillable['status'] = 'published';
 
@@ -155,6 +157,24 @@ class Content extends Model {
 
         }
 
+        foreach ($inputs['template_groups'] as $group)
+        {
+
+            foreach ($group['fields'] as $field)
+            {
+                $content_field = [];
+                $content_field['vh_cms_content_id'] = $item->id;
+                $content_field['vh_template_id'] = $field['vh_template_id'];
+                $content_field['vh_template_field_id'] = $field['id'];
+                $content_field['content'] = $field['content'];
+
+                $store_field = new ContentField();
+                $store_field->fill($content_field);
+                $store_field->save();
+
+            }
+
+        }
 
         $response['status'] = 'success';
         $response['data']['item'] =$item;

@@ -10,8 +10,7 @@
 
                 <div class="label-left">
                     <h4 class="title is-5">Content Fields</h4>
-                    <h2 class="subtitle is-6">After a successful password update, you will be redirected to the login
-                        page where you can log in with your new password.</h2>
+                    <h2 class="subtitle is-6">Manage content fields created from Content Structure.</h2>
                 </div>
                 <div class="label-right is-hidden-mobile">
                     <b-button v-text="props.open ? 'Collapse' : 'Expand'">

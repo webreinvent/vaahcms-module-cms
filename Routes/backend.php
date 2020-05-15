@@ -22,6 +22,17 @@ Route::group(
         Route::get( '/', 'DashboardController@index' )
             ->name( 'vh.backend.cms' );
         //------------------------------------------------
+        Route::group(
+            [
+                'prefix'     => 'json',
+            ],
+            function () {
+                //------------------------------------------------
+                Route::post( '/assets', 'JsonController@getAssets' )
+                    ->name( 'vh.backend.cms.json' );
+                //------------------------------------------------
+            });
+        //------------------------------------------------
     });
 
 include('backend/content-types.php');

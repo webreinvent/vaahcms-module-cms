@@ -100,6 +100,7 @@ export default {
             let params = this.new_item;
 
             params.groups = this.assets.groups;
+            params.template_groups = this.page.active_template_groups;
 
             console.log('--->', params);
 

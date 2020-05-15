@@ -1,7 +1,19 @@
-<template>
+<script src="./BackendJs.js"></script>
 
-    <router-view></router-view>
+<template>
+    <div class="columns">
+        <div class="column is-2">
+            <AsideMenu/>
+        </div>
+
+        <div class="column is-10">
+            <div class="container">
+
+                <router-view></router-view>
+
+            </div>
+        </div>
+    </div>
 
 </template>
 
-<script src="./BackendJs.js"></script>

@@ -45,19 +45,14 @@ class ExtendController extends Controller
     public static function sidebarMenu()
     {
 
-        $list[0] = [
-            'link' => self::$link,
-            'icon' => 'tachometer-alt',
-            'label'=> 'Dashboard'
-        ];
 
-        $list[1] = [
+        $list[0] = [
             'link' => self::$link."content-types/",
             'icon' => 'file-alt',
-            'label'=> 'Contents'
+            'label'=> 'CMS'
         ];
 
-        $list[1]['child'][] =  [
+        /*$list[1]['child'][] =  [
             'link' => self::$link."content-types/",
             'label'=> 'Types'
         ];
@@ -73,7 +68,7 @@ class ExtendController extends Controller
                     'label'=> $content_type->name
                 ];
             }
-        }
+        }*/
 
 
         $response['status'] = 'success';

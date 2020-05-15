@@ -26,6 +26,8 @@ class ContentField extends Model {
         'vh_cms_content_id',
         'vh_cms_group_id',
         'vh_cms_group_field_id',
+        'vh_template_id',
+        'vh_template_field_id',
         'content',
         'meta',
         'created_by',

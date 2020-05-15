@@ -120,6 +120,10 @@ export default {
             this.getAssets();
         },
         //---------------------------------------------------------------------
+        async reloadRootAssets() {
+            await this.$store.dispatch('root/reloadAssets');
+        },
+        //---------------------------------------------------------------------
         async getAssets() {
             await this.$store.dispatch(namespace+'/getAssets');
         },
@@ -169,6 +173,8 @@ export default {
                     //this.$router.push({name: 'content.types.list'});
                     this.$root.$emit('eReloadItem');
                 }
+
+                this.reloadRootAssets();
 
             }
 
