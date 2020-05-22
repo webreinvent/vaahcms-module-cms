@@ -224,6 +224,8 @@
                     <div class="card-content" style="max-height: 600px; overflow: auto;"
                          v-if="assets && assets.field_types">
 
+
+
                         <div class="draggable" >
                             <draggable :list="assets.field_types"
                                        :clone="cloneField"

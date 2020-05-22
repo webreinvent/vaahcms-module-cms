@@ -299,7 +299,6 @@ class ContentType extends Model {
 
             $group['sort'] = $g_index;
             $group['slug'] = Str::slug($group['name']);
-            $group['vh_cms_content_type_id'] = $content_type->id;
 
             $stored_group = $content_type->groups()->where('slug', $group['slug'])->first();
 

@@ -23,10 +23,9 @@
             <div class="block has-margin-top-10 has-padding-10">
 
                 <div class="columns is-multiline">
-                    <div class="column">
+                    <div class="column is-12">
                         <div class="block has-padding-10">
 
-                            {{groups}}
                             <div v-if="groups.length > 0"
                                  v-for="(group,index) in groups"
                                  :key="'content-fields-group-'+index"
@@ -74,6 +73,8 @@
                 </div>
 
             </div>
+
+
         </b-collapse>
 
         <hr class="is-marginless"/>

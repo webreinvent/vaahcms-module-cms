@@ -73,6 +73,7 @@
                 </div>
 
             </div>
+
         </b-collapse>
 
         <hr class="is-marginless"/>

@@ -98,20 +98,23 @@ export default {
 
                 payload = {
                     key: 'active_template',
-                    value: assets.default_template[0]
-                };
-
-                commit('updateState', payload);
-
-                payload = {
-                    key: 'active_template_groups',
                     value: assets.default_template
                 };
 
                 commit('updateState', payload);
 
+                if(assets.default_template.groups)
+                {
+                    payload = {
+                        key: 'active_template_groups',
+                        value: assets.default_template.groups
+                    };
+                    commit('updateState', payload);
+                }
+
+
                 state.new_item.vh_theme_id = assets.default_theme.id;
-                state.new_item.vh_theme_template_id = assets.default_template[0].id;
+                state.new_item.vh_theme_template_id = assets.default_template.id;
 
                 payload = {
                     key: 'new_item',

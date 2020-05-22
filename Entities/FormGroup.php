@@ -164,6 +164,17 @@ class FormGroup extends Model {
                     $stored_field = new FormField();
                 }
 
+                if(isset($field['type']) && isset($field['type']['slug']) )
+                {
+                    $type = FieldType::where('slug', $field['type']['slug'])->first();
+                    if($type)
+                    {
+                        $field['vh_cms_field_type_id'] = $type->id;
+                    }
+
+                    unset($field['type']);
+                }
+
                 $stored_field->fill($field);
                 $stored_field->sort = $f_index;
                 $stored_field->slug = Str::slug($field['name']);
