@@ -2,16 +2,17 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 use WebReinvent\VaahCms\Entities\User;
 use WebReinvent\VaahCms\Traits\CrudWithUuidObservantTrait;
 
-class GroupField extends Model {
+class FormGroup extends Model {
 
     use SoftDeletes;
     use CrudWithUuidObservantTrait;
 
     //-------------------------------------------------
-    protected $table = 'vh_cms_group_fields';
+    protected $table = 'vh_cms_form_groups';
     //-------------------------------------------------
     protected $dates = [
         'created_at',
@@ -22,14 +23,14 @@ class GroupField extends Model {
     protected $dateFormat = 'Y-m-d H:i:s';
     //-------------------------------------------------
     protected $fillable = [
+        'parent_id',
         'uuid',
-        'vh_cms_group_id',
-        'vh_cms_field_id',
         'sort',
+        'groupable_id',
+        'groupable_type',
         'name',
         'slug',
         'excerpt',
-        'is_searchable',
         'is_repeatable',
         'meta',
         'created_by',
@@ -76,6 +77,11 @@ class GroupField extends Model {
         return $query->where( 'is_published', 1 );
     }
     //-------------------------------------------------
+    public function groupable()
+    {
+        return $this->morphTo();
+    }
+    //-------------------------------------------------
     public function createdByUser()
     {
         return $this->belongsTo(User::class,
@@ -99,10 +105,10 @@ class GroupField extends Model {
     }
     //-------------------------------------------------
     //-------------------------------------------------
-    public function type()
+    public function fields()
     {
-        return $this->belongsTo(Field::class,
-            'vh_cms_field_id', 'id'
+        return $this->hasMany(FormField::class,
+            'vh_cms_form_group_id', 'id'
         );
     }
     //-------------------------------------------------
@@ -110,7 +116,10 @@ class GroupField extends Model {
     {
 
         //delete content fields
-        ContentField::where('vh_cms_group_field_id', $id)->forceDelete();
+        ContentFormField::where('vh_cms_form_group_id', $id)->forceDelete();
+
+        //delete group fields
+        FormField::where('vh_cms_form_group_id', $id)->forceDelete();
 
         //delete group
         static::where('id', $id)->forceDelete();
@@ -125,6 +134,47 @@ class GroupField extends Model {
         }
 
     }
+    //-------------------------------------------------
+    public static function syncWithFormFields(FormGroup $group, $fields_array)
+    {
+
+        //delete form group fields which are just removed
+        $stored_group_fields = FormField::where('vh_cms_form_group_id', $group->id)
+            ->get()
+            ->pluck('id')
+            ->toArray();
+
+        $input_group_fields = collect($fields_array)->pluck('id')->toArray();
+        $fields_to_delete = array_diff($stored_group_fields, $input_group_fields);
+
+        if(count($fields_to_delete) > 0)
+        {
+            FormField::deleteItems($fields_to_delete);
+        }
+
+
+        if(count($fields_array) > 0 )
+        {
+            foreach ($fields_array as $f_index => $field)
+            {
+                if(isset($field['id']))
+                {
+                    $stored_field = FormField::find($field['id']);
+                } else{
+                    $stored_field = new FormField();
+                }
+
+                $stored_field->fill($field);
+                $stored_field->sort = $f_index;
+                $stored_field->slug = Str::slug($field['name']);
+                $stored_field->vh_cms_form_group_id = $group->id;
+                $stored_field->save();
+            }
+        }
+
+
+    }
+    //-------------------------------------------------
     //-------------------------------------------------
     //-------------------------------------------------
 

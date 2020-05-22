@@ -192,7 +192,7 @@ export default {
             item = {
                 name: null,
                 slug: null,
-                vh_cms_field_id: item.id,
+                vh_cms_field_type_id: item.id,
                 type: item
             };
 

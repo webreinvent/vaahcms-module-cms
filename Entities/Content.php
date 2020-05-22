@@ -106,7 +106,7 @@ class Content extends Model {
     //-------------------------------------------------
     public function fields()
     {
-        return $this->hasMany(ContentField::class,
+        return $this->hasMany(ContentFormField::class,
             'vh_cms_content_id', 'id'
         );
     }

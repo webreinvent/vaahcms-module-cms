@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller;
 use VaahCms\Modules\Cms\Entities\Content;
 use VaahCms\Modules\Cms\Entities\ContentType;
 use VaahCms\Modules\Cms\Entities\Field;
+use VaahCms\Modules\Cms\Entities\FieldType;
 use WebReinvent\VaahCms\Entities\Theme;
 
 class ContentsController extends Controller
@@ -25,21 +26,23 @@ class ContentsController extends Controller
     public function getAssets(Request $request, $content_slug)
     {
 
-        $data['fields'] = Field::select('id', 'name', 'slug')->get();
-        $data['content_type'] = $request->content_type;
+        //$data['fields'] = FieldType::select('id', 'name', 'slug')->get();
+
         $data['currency_codes'] = vh_get_currency_list();
         $data['themes'] = Theme::getActiveThemes();
 
         $default_theme_template = Theme::getDefaultThemesAndTemplateWithRelations($content_slug);
+
         $data['default_theme'] = $default_theme_template['theme'];
         $data['default_template'] = $default_theme_template['template'];
 
 
-        $groups = ContentType::getItemWithRelations($request->content_type->id);
+        $data['content_type'] = $request->content_type;
+        $form_groups = ContentType::getItemWithRelations($request->content_type->id);
 
-        if($groups['status'] == 'success')
+        if($form_groups['status'] == 'success')
         {
-            $data['groups'] = $groups['data']->groups;
+            $data['content_type']['form_groups'] = $form_groups['data']->groups;
         }
 
         $response['status'] = 'success';

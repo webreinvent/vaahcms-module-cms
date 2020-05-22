@@ -5,13 +5,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use WebReinvent\VaahCms\Entities\User;
 use WebReinvent\VaahCms\Traits\CrudWithUuidObservantTrait;
 
-class Group extends Model {
+class FormField extends Model {
 
     use SoftDeletes;
     use CrudWithUuidObservantTrait;
 
     //-------------------------------------------------
-    protected $table = 'vh_cms_groups';
+    protected $table = 'vh_cms_form_fields';
     //-------------------------------------------------
     protected $dates = [
         'created_at',
@@ -22,13 +22,14 @@ class Group extends Model {
     protected $dateFormat = 'Y-m-d H:i:s';
     //-------------------------------------------------
     protected $fillable = [
-        'parent_id',
         'uuid',
+        'vh_cms_form_group_id',
+        'vh_cms_field_type_id',
         'sort',
-        'vh_cms_content_type_id',
         'name',
         'slug',
         'excerpt',
+        'is_searchable',
         'is_repeatable',
         'meta',
         'created_by',
@@ -98,10 +99,10 @@ class Group extends Model {
     }
     //-------------------------------------------------
     //-------------------------------------------------
-    public function fields()
+    public function type()
     {
-        return $this->hasMany(GroupField::class,
-            'vh_cms_group_id', 'id'
+        return $this->belongsTo(FieldType::class,
+            'vh_cms_field_type_id', 'id'
         );
     }
     //-------------------------------------------------
@@ -109,10 +110,7 @@ class Group extends Model {
     {
 
         //delete content fields
-        ContentField::where('vh_cms_group_id', $id)->forceDelete();
-
-        //delete group fields
-        GroupField::where('vh_cms_group_id', $id)->forceDelete();
+        ContentFormField::where('vh_cms_form_field_id', $id)->forceDelete();
 
         //delete group
         static::where('id', $id)->forceDelete();
@@ -127,6 +125,8 @@ class Group extends Model {
         }
 
     }
+    //-------------------------------------------------
+
     //-------------------------------------------------
 
 }

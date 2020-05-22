@@ -5,13 +5,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use WebReinvent\VaahCms\Entities\User;
 use WebReinvent\VaahCms\Traits\CrudWithUuidObservantTrait;
 
-class ContentField extends Model {
+class FieldType extends Model {
 
     use SoftDeletes;
     use CrudWithUuidObservantTrait;
 
     //-------------------------------------------------
-    protected $table = 'vh_cms_content_fields';
+    protected $table = 'vh_cms_field_types';
     //-------------------------------------------------
     protected $dates = [
         'created_at',
@@ -22,13 +22,9 @@ class ContentField extends Model {
     protected $dateFormat = 'Y-m-d H:i:s';
     //-------------------------------------------------
     protected $fillable = [
-        'uuid',
-        'vh_cms_content_id',
-        'vh_cms_group_id',
-        'vh_cms_group_field_id',
-        'vh_template_id',
-        'vh_template_field_id',
-        'content',
+        'name',
+        'slug',
+        'excerpt',
         'meta',
         'created_by',
         'updated_by',
@@ -36,54 +32,18 @@ class ContentField extends Model {
     ];
 
     //-------------------------------------------------
-    public function setContentAttribute($value)
-    {
-        if(is_array($value) || is_object($value))
-        {
-            $this->attributes['content'] = json_encode($value);
-        } else{
-            $this->attributes['content'] = $value;
-        }
-    }
+    protected $appends  = [
+    ];
     //-------------------------------------------------
-    public function getContentAttribute($value)
-    {
-
-        if(!$value)
-        {
-            return null;
-        }
-
-        if($value)
-        {
-
-            if(vh_is_json($value))
-            {
-                return json_decode($value);
-            }
-
-
-            $slug = $this->field->type->slug;
-
-            if($slug == 'image' || $slug == 'media')
-            {
-                $value = asset($value);
-            }
-
-            return $value;
-        }
-
-
-        return null;
-    }
     //-------------------------------------------------
     public function setMetaAttribute($value)
     {
         if($value)
         {
             $this->attributes['meta'] = json_encode($value);
+        } else{
+            $this->attributes['meta'] = null;
         }
-        $this->attributes['meta'] = null;
     }
     //-------------------------------------------------
     public function getMetaAttribute($value)
@@ -94,9 +54,6 @@ class ContentField extends Model {
         }
         return null;
     }
-    //-------------------------------------------------
-
-    //-------------------------------------------------
     //-------------------------------------------------
     public function getTableColumns() {
         return $this->getConnection()->getSchemaBuilder()
@@ -135,19 +92,6 @@ class ContentField extends Model {
         )->select('id', 'uuid', 'first_name', 'last_name', 'email');
     }
     //-------------------------------------------------
-    public function group()
-    {
-        return $this->belongsTo(Group::class,
-            'vh_cms_group_id', 'id'
-        );
-    }
-    //-------------------------------------------------
-    public function field()
-    {
-        return $this->belongsTo(GroupField::class,
-            'vh_cms_group_field_id', 'id'
-        );
-    }
     //-------------------------------------------------
 
 }

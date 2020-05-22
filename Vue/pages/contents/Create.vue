@@ -34,7 +34,7 @@
                     </div>
 
                     <div class="card-content">
-                        <ContentFields :groups="assets.groups"></ContentFields>
+                        <ContentFields :groups="assets.content_type.form_groups"></ContentFields>
                         <TemplateFields :groups="page.active_template_groups"></TemplateFields>
                     </div>
 

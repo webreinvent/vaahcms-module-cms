@@ -82,7 +82,7 @@ class DatabaseTableSeeder extends Seeder
     public function seedFields()
     {
         $list = $this->getListFromJson("fields.json");
-        $this->storeSeedsWithUuid('vh_cms_fields', $list);
+        $this->storeSeedsWithUuid('vh_cms_field_types', $list);
     }
     //---------------------------------------------------------------
     //---------------------------------------------------------------

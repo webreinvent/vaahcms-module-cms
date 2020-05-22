@@ -5,7 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use VaahCms\Modules\Cms\Entities\ContentType;
-use VaahCms\Modules\Cms\Entities\Field;
+use VaahCms\Modules\Cms\Entities\FieldType;
 
 class ContentTypesController extends Controller
 {
@@ -21,7 +21,7 @@ class ContentTypesController extends Controller
     public function getAssets(Request $request)
     {
 
-        $data['fields'] = Field::select('id', 'name', 'slug')->get();
+        $data['field_types'] = FieldType::select('id', 'name', 'slug')->get();
 
         $response['status'] = 'success';
         $response['data'] = $data;

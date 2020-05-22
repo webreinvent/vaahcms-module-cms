@@ -99,7 +99,7 @@ export default {
             //this.$Progress.start();
             let params = this.new_item;
 
-            params.groups = this.assets.groups;
+            params.content_groups = this.assets.content_type.form_groups;
             params.template_groups = this.page.active_template_groups;
 
             console.log('--->', params);

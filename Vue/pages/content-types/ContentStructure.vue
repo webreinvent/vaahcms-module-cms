@@ -222,15 +222,15 @@
 
                     <!--content-->
                     <div class="card-content" style="max-height: 600px; overflow: auto;"
-                         v-if="assets && assets.fields">
+                         v-if="assets && assets.field_types">
 
                         <div class="draggable" >
-                            <draggable :list="assets.fields"
+                            <draggable :list="assets.field_types"
                                        :clone="cloneField"
                                        :group="{name:'fields', pull:'clone', put:false}"
                                        >
 
-                                <div v-for="(field, index) in assets.fields"
+                                <div v-for="(field, index) in assets.field_types"
                                      :key="index">
                                     <b-field class="has-margin-bottom-5" expanded>
                                         <p class="control drag">

@@ -146,9 +146,7 @@ class ContentType extends Model {
     //-------------------------------------------------
     public function groups()
     {
-        return $this->hasMany(Group::class,
-            'vh_cms_content_type_id', 'id'
-        );
+        return $this->morphMany(FormGroup::class, 'groupable');
     }
     //-------------------------------------------------
     public static function postCreate($request)
@@ -279,6 +277,48 @@ class ContentType extends Model {
 
     }
     //-------------------------------------------------
+    public static function syncWithFormGroups(ContentType $content_type, $groups_array)
+    {
+
+
+        $stored_groups = $content_type->groups()->get()->pluck('id')->toArray();
+
+        $input_groups = collect($groups_array)->pluck('id')->toArray();
+        $groups_to_delete = array_diff($stored_groups, $input_groups);
+
+
+        if(count($groups_to_delete) > 0)
+        {
+            FormGroup::deleteItems($groups_to_delete);
+        }
+
+
+
+        foreach($groups_array as $g_index => $group)
+        {
+
+            $group['sort'] = $g_index;
+            $group['slug'] = Str::slug($group['name']);
+            $group['vh_cms_content_type_id'] = $content_type->id;
+
+            $stored_group = $content_type->groups()->where('slug', $group['slug'])->first();
+
+            if($stored_group)
+            {
+                $stored_group->fill($group);
+                $stored_group =$content_type->groups()->save($stored_group);
+            } else{
+                $stored_group = $content_type->groups()->create($group);
+            }
+
+
+            FormGroup::syncWithFormFields($stored_group, $group['fields']);
+
+        }
+
+
+    }
+    //-------------------------------------------------
     public static function postStoreGroups($request,$id)
     {
 
@@ -297,69 +337,11 @@ class ContentType extends Model {
         }
 
 
+        $content_type = static::find($id);
 
         //find delete groups
-        $stored_groups = Group::where('vh_cms_content_type_id', $id)
-            ->get()->pluck('id')->toArray();
-        $input_groups = collect($request->all())->pluck('id')->toArray();
-        $groups_to_delete = array_diff($stored_groups, $input_groups);
-        if(count($groups_to_delete) > 0)
-        {
-            Group::deleteItems($groups_to_delete);
-        }
+        static::syncWithFormGroups($content_type, $request->all());
 
-
-        foreach($request->all() as $g_index => $group)
-        {
-
-
-            if(isset($group['id']) && !empty($group['id']))
-            {
-                $stored_group_fields = GroupField::where('vh_cms_group_id', $group['id'])
-                    ->get()
-                    ->pluck('id')
-                    ->toArray();
-
-                $input_group_fields = collect($group['fields'])->pluck('id')->toArray();
-                $fields_to_delete = array_diff($stored_group_fields, $input_group_fields);
-
-                if(count($fields_to_delete) > 0)
-                {
-                    GroupField::deleteItems($fields_to_delete);
-                }
-
-            }
-
-            if(isset($group['id']))
-            {
-                $stored_group = Group::find($group['id']);
-            } else{
-                $stored_group = new Group();
-            }
-
-            $stored_group->fill($group);
-            $stored_group->sort = $g_index;
-            $stored_group->slug = Str::slug($group['name']);
-            $stored_group->vh_cms_content_type_id = $id;
-            $stored_group->save();
-
-
-            foreach ($group['fields'] as $f_index => $field)
-            {
-                if(isset($field['id']))
-                {
-                    $stored_field = GroupField::find($field['id']);
-                } else{
-                    $stored_field = new GroupField();
-                }
-
-                $stored_field->fill($field);
-                $stored_field->sort = $f_index;
-                $stored_field->slug = Str::slug($field['name']);
-                $stored_field->vh_cms_group_id = $stored_group->id;
-                $stored_field->save();
-            }
-        }
 
         $response = [];
 

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class VhCmsGroupFields extends Migration
+class VhCmsFormFields extends Migration
 {
     /**
      * Run the migrations.
@@ -14,11 +14,11 @@ class VhCmsGroupFields extends Migration
     public function up()
     {
 
-        Schema::create('vh_cms_group_fields', function (Blueprint $table) {
+        Schema::create('vh_cms_form_fields', function (Blueprint $table) {
             $table->increments('id');
             $table->uuid('uuid')->nullable();
-            $table->integer('vh_cms_group_id')->nullable();
-            $table->integer('vh_cms_field_id')->nullable();
+            $table->integer('vh_cms_field_type_id')->nullable();
+            $table->integer('vh_cms_form_group_id')->nullable();
             $table->integer('sort')->nullable();
             $table->string('name', 100)->nullable();
             $table->string('slug', 100)->nullable();
@@ -32,7 +32,6 @@ class VhCmsGroupFields extends Migration
             $table->integer('deleted_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
-
         });
     }
 
@@ -43,6 +42,6 @@ class VhCmsGroupFields extends Migration
     */
     public function down()
     {
-        Schema::dropIfExists('vh_cms_group_fields');
+        Schema::dropIfExists('vh_cms_form_fields');
     }
 }
