@@ -92,8 +92,7 @@ export default {
 
             if(data)
             {
-                this.update('active_item', data.item);
-                this.groups = data.groups;
+                this.update('active_item', data);
             } else
             {
                 //if item does not exist or delete then redirect to list
@@ -105,15 +104,10 @@ export default {
         store: function () {
             this.$Progress.start();
 
-            let params = {
-                item: this.item,
-                groups: this.groups
-            };
-
-
+            let params = this.item;
             console.log('--->', params);
 
-            let url = this.ajax_url+'/store/'+this.item.id;
+            let url = this.ajax_url+'/item/'+this.item.id+'/store';
             this.$vaah.ajax(url, params, this.storeAfter);
         },
         //---------------------------------------------------------------------
@@ -161,6 +155,34 @@ export default {
             });
         },
         //---------------------------------------------------------------------
+        setActiveTheme: function () {
+            let theme = this.$vaah.findInArrayByKey(this.assets.themes, 'id', this.item.vh_theme_id);
+            this.update('active_theme', theme);
+        },
+
+        //---------------------------------------------------------------------
+        setActiveTemplate: function () {
+            this.$Progress.start();
+
+            let params = this.item;
+            console.log('--->', params);
+
+            let url = this.ajax_url+'/item/'+this.item.id+'/groups/template';
+            this.$vaah.ajax(url, params, this.setActiveTemplateAfter);
+        },
+        //---------------------------------------------------------------------
+        setActiveTemplateAfter: function (data, res) {
+
+            this.$Progress.finish();
+
+            if(data)
+            {
+                this.item.template_form_groups = data;
+                this.update('active_item', this.item);
+
+            }
+
+        },
         //---------------------------------------------------------------------
     }
 }

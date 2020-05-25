@@ -162,7 +162,7 @@ export default {
             this.update('active_template', template);
 
             let groups = [];
-            groups[0] = template;
+            groups = template.groups;
 
             console.log('--->', groups);
 

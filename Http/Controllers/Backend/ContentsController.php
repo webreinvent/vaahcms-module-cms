@@ -72,11 +72,13 @@ class ContentsController extends Controller
     //----------------------------------------------------------
     public function postStore(Request $request, $content_slug, $id)
     {
+
         $response = Content::postStore($request,$id);
         return response()->json($response);
     }
 
     //----------------------------------------------------------
+
     //----------------------------------------------------------
     public function postActions(Request $request, $content_slug, $action)
     {
@@ -134,6 +136,36 @@ class ContentsController extends Controller
     }
 
     //----------------------------------------------------------
+    public function getTemplateGroups(Request $request, $content_slug, $id)
+    {
+        $rules = array(
+            'vh_theme_template_id' => 'required',
+        );
+
+        $validator = \Validator::make( $request->all(), $rules);
+        if ( $validator->fails() ) {
+
+            $errors             = errorsToArray($validator->errors());
+            $response['status'] = 'failed';
+            $response['errors'] = $errors;
+            return response()->json($response);
+        }
+
+        $data = [];
+
+        $content = Content::find($id);
+
+        $content->vh_theme_template_id = $request->vh_theme_template_id;
+        $content->save();
+
+        $groups = Content::getFormGroups($content, 'template');
+
+        $response['status'] = 'success';
+        $response['data'] = $groups;
+
+        return response()->json($response);
+
+    }
     //----------------------------------------------------------
     //----------------------------------------------------------
 

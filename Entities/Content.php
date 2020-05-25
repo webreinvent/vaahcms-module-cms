@@ -3,6 +3,7 @@
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use WebReinvent\VaahCms\Entities\ThemeTemplate;
 use WebReinvent\VaahCms\Entities\User;
 use WebReinvent\VaahCms\Traits\CrudWithUuidObservantTrait;
 
@@ -104,6 +105,13 @@ class Content extends Model {
         );
     }
     //-------------------------------------------------
+    public function template()
+    {
+        return $this->belongsTo(ThemeTemplate::class,
+            'vh_theme_template_id', 'id'
+        );
+    }
+    //-------------------------------------------------
     public function fields()
     {
         return $this->hasMany(ContentFormField::class,
@@ -124,32 +132,38 @@ class Content extends Model {
 
         $inputs = $request->all();
 
+
         $item = new static();
 
         $fillable['name'] = $inputs['name'];
-        $fillable['name'] = Str::slug($inputs['name']);
+        $fillable['slug'] = Str::slug($inputs['name']);
         $fillable['vh_cms_content_type_id'] = $request->content_type->id;
         $fillable['vh_theme_id'] = $request->vh_theme_id;
         $fillable['vh_theme_template_id'] = $request->vh_theme_template_id;
         $fillable['is_published_at'] = \Carbon::now();
-        $fillable['status'] = 'published';
+        if(!$request->has('status'))
+        {
+            $fillable['status'] = 'published';
+        } else{
+            $fillable['status'] = $request->status;
+        }
 
         $item->fill($fillable);
         $item->save();
 
 
-        foreach ($inputs['groups'] as $group)
+        foreach ($inputs['content_groups'] as $group)
         {
 
             foreach ($group['fields'] as $field)
             {
                 $content_field = [];
                 $content_field['vh_cms_content_id'] = $item->id;
-                $content_field['vh_cms_group_id'] = $group['id'];
-                $content_field['vh_cms_group_field_id'] = $field['id'];
+                $content_field['vh_cms_form_group_id'] = $group['id'];
+                $content_field['vh_cms_form_field_id'] = $field['id'];
                 $content_field['content'] = $field['content'];
 
-                $store_field = new ContentField();
+                $store_field = new ContentFormField();
                 $store_field->fill($content_field);
                 $store_field->save();
 
@@ -164,11 +178,11 @@ class Content extends Model {
             {
                 $content_field = [];
                 $content_field['vh_cms_content_id'] = $item->id;
-                $content_field['vh_template_id'] = $field['vh_template_id'];
-                $content_field['vh_template_field_id'] = $field['id'];
+                $content_field['vh_cms_form_group_id'] = $group['id'];
+                $content_field['vh_cms_form_field_id'] = $field['id'];
                 $content_field['content'] = $field['content'];
 
-                $store_field = new ContentField();
+                $store_field = new ContentFormField();
                 $store_field->fill($content_field);
                 $store_field->save();
 
@@ -272,13 +286,32 @@ class Content extends Model {
             ->withTrashed()
             ->first();
 
+        $content_form_groups = static::getFormGroups($item, 'content');
+        $template_form_groups = static::getFormGroups($item, 'template');
+
+        $response['status'] = 'success';
+        $response['data'] = $item;
+        $response['data']['content_form_groups'] = $content_form_groups;
+        $response['data']['template_form_groups'] = $template_form_groups;
+
+        return $response;
+
+    }
+    //-------------------------------------------------
+    public static function getFormGroups(Content $content, $type)
+    {
         $groups = [];
 
-        $content_type = $item->contentType;
+        if($type=='content')
+        {
+            $groups = $content->contentType->groups;
+        } else{
+            $groups = $content->template->groups;
+        }
 
 
         $i = 0;
-        foreach ($content_type->groups as $group)
+        foreach ($groups as $group)
         {
 
             $groups[$i] = $group;
@@ -290,23 +323,25 @@ class Content extends Model {
                 $groups[$i]['fields'][$y]['type'] = $field->type;
 
 
-                $groups[$i]['fields'][$y]['vh_cms_content_field_id'] = null;
+                $groups[$i]['fields'][$y]['vh_cms_form_field_id'] = null;
                 $groups[$i]['fields'][$y]['content'] = null;
                 $groups[$i]['fields'][$y]['meta'] = null;
 
 
 
-                $content = ContentField::where('vh_cms_content_id', $item->id);
-                $content->where('vh_cms_group_id', $group->id);
-                $content->where('vh_cms_group_field_id', $field->id);
-                $content = $content->first();
+                $field_content = ContentFormField::where('vh_cms_content_id', $content->id);
+                $field_content->where('vh_cms_form_group_id', $group->id);
+                $field_content->where('vh_cms_form_field_id', $field->id);
+                $field_content = $field_content->first();
 
 
-                if($content)
+                if($field_content)
                 {
-                    $groups[$i]['fields'][$y]['vh_cms_content_field_id'] = $content->id;
-                    $groups[$i]['fields'][$y]['content'] = $content->content;
-                    $groups[$i]['fields'][$y]['meta'] = $content->meta;
+                    $groups[$i]['fields'][$y]['vh_cms_form_field_id'] = $field_content->id;
+                    $groups[$i]['fields'][$y]['content'] = $field_content->content;
+                    $groups[$i]['fields'][$y]['meta'] = $field_content->meta;
+                } else{
+
                 }
 
 
@@ -316,13 +351,9 @@ class Content extends Model {
             $i++;
         }
 
-        $response['status'] = 'success';
-        $response['data']['item'] = $item;
-        $response['data']['groups'] = $groups;
-
-        return $response;
-
+        return $groups;
     }
+    //-------------------------------------------------
     //-------------------------------------------------
     public static function postStore($request,$id)
     {
@@ -331,13 +362,27 @@ class Content extends Model {
 
         $item = static::where('id',$id)->withTrashed()->first();
 
-        $item->fill($inputs['item']);
-        $item->slug = Str::slug($inputs['item']['name']);
+        $item->fill($inputs);
+        $item->slug = Str::slug($inputs['name']);
         $item->save();
 
 
+        static::storeContentGroups($item, $inputs['content_form_groups']);
+        static::storeContentGroups($item, $inputs['template_form_groups']);
+
+
+        $response['status'] = 'success';
+        $response['data'] = [];
+        $response['messages'][] = 'Data updated.';
+
+        return $response;
+
+    }
+    //-------------------------------------------------
+    public static function storeContentGroups(Content $content, $groups)
+    {
         $i = 0;
-        foreach ($inputs['groups'] as $group)
+        foreach ($groups as $group)
         {
 
             $groups[$i] = $group;
@@ -346,17 +391,17 @@ class Content extends Model {
             foreach ($group['fields'] as $field)
             {
                 $stored_field = null;
-                if(isset($field['vh_cms_content_field_id']) && !empty($field['vh_cms_content_field_id']))
+                if(isset($field['vh_cms_form_field_id']) && !empty($field['vh_cms_form_field_id']))
                 {
-                    $stored_field = ContentField::find($field['vh_cms_content_field_id']);
+                    $stored_field = ContentFormField::find($field['vh_cms_form_field_id']);
                 }
 
                 if(!$stored_field)
                 {
-                    $stored_field = new ContentField();
-                    $stored_field->vh_cms_content_id = $item->id;
-                    $stored_field->vh_cms_group_id = $group['id'];
-                    $stored_field->vh_cms_group_field_id = $field['id'];
+                    $stored_field = new ContentFormField();
+                    $stored_field->vh_cms_content_id = $content->id;
+                    $stored_field->vh_cms_form_group_id = $group['id'];
+                    $stored_field->vh_cms_form_field_id = $field['id'];
                 }
 
                 if(is_array($field['content']) || is_object($field['content']))
@@ -373,7 +418,7 @@ class Content extends Model {
                     $response['status'] = 'failed';
                     $response['inputs'] = $field;
                     $response['errors'][] = $e->getMessage();
-                   return $response;
+                    return $response;
                 }
 
 
@@ -382,13 +427,6 @@ class Content extends Model {
 
             $i++;
         }
-
-
-        $response['status'] = 'success';
-        $response['data'] = [];
-        $response['messages'][] = 'Data updated.';
-
-        return $response;
 
     }
     //-------------------------------------------------

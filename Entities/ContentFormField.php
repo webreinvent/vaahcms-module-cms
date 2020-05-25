@@ -136,14 +136,14 @@ class ContentFormField extends Model {
     public function group()
     {
         return $this->belongsTo(FormGroup::class,
-            'vh_cms_group_id', 'id'
+            'vh_cms_form_group_id', 'id'
         );
     }
     //-------------------------------------------------
     public function field()
     {
         return $this->belongsTo(FormField::class,
-            'vh_cms_group_field_id', 'id'
+            'vh_cms_form_field_id', 'id'
         );
     }
     //-------------------------------------------------
