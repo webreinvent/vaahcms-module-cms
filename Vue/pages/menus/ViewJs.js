@@ -112,6 +112,7 @@ export default {
                     name: name
                 },
                 vh_menu_id: this.page.active_menu.id,
+                child: [],
             };
 
 
@@ -122,6 +123,8 @@ export default {
         store: function () {
             this.$Progress.start();
             let params = this.page.active_menu;
+            params.items = this.page.active_menu_items;
+
             let url = this.ajax_url+'/item/'+this.page.active_menu.id+'/store';
             this.$vaah.ajax(url, params, this.storeAfter);
         },
@@ -130,9 +133,13 @@ export default {
             this.$Progress.finish();
             if(data){
                 this.getAssets();
-                this.page.filters.vh_menu_id = data.item.id;
+                this.page.filters.vh_menu_id = data.menu.id;
                 this.update('filters', this.page.filters);
-                this.update('active_menu', data.item);
+                this.update('active_menu', data.menu);
+                this.update('active_menu_items', data.menu_items);
+
+                console.log('--->data.menu_items', data.menu_items);
+
             }
 
         },

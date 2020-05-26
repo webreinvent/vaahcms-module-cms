@@ -1,6 +1,6 @@
 <template>
-    <draggable class="dropzone" tag="ul" :list="items" :group="{ name: 'menu_items' }">
-        <div v-for="el in items" :key="el.id">
+    <draggable class="dropzone-nested" tag="ul" :list="items" :group="{ name: 'menu_items' }">
+        <li v-for="el in items" :key="el.id">
             <div class="dropzone-field">
 
                 <b-field class="is-marginless" >
@@ -19,8 +19,8 @@
 
             </div>
 
-            <nested-draggable :items="el.child" />
-        </div>
+            <nested-draggable v-if="el.child" :items="el.child" />
+        </li>
     </draggable>
 </template>
 <script>

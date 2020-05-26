@@ -146,43 +146,17 @@ class Menu extends Model
 
         if($request->has('items') && count($request->items) > 0)
         {
-
-            $stored_items = $menu->items()->get()->pluck('id')->toArray();
-
-            $input_items = collect($request->items)->pluck('id')->toArray();
-            $items_to_delete = array_diff($stored_items, $input_items);
-
-
-            if(count($items_to_delete) > 0)
-            {
-                MenuItem::deleteItems($items_to_delete);
-            }
-
-            foreach ($request->items as $item_index => $item){
-
-
-                $item['sort'] = $item_index;
-                $item['slug'] = Str::slug($item['name']);
-
-                if(isset($item['id']))
-                {
-                    $stored_item = MenuItem::find($item['id']);
-                } else{
-                    $stored_item = new MenuItem();
-                }
-
-                $stored_item->fill($item);
-                $stored_item->save();
-
-
-
-            }
+            MenuItem::storeItems($menu->id, null, $request->items);
         }
 
         $menu = static::getItem($menu->id);
+        $menu_items = Menu::getMenuItems($id);
+
+        $menu_items = $menu_items['data']['items'];
 
         $response['status'] = 'success';
-        $response['data']['item'] =$menu['data'];
+        $response['data']['menu'] =$menu['data'];
+        $response['data']['menu_items'] =$menu_items;
         $response['messages'][] = 'Saved';
 
 

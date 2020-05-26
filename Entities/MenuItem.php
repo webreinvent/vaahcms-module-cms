@@ -4,6 +4,7 @@ namespace VaahCms\Modules\Cms\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 use Nestable\NestableTrait;
 
 class MenuItem extends Model
@@ -151,5 +152,73 @@ class MenuItem extends Model
 
     }
 
+    //-------------------------------------------------
+    public static function storeItems($menu_id, $parent_id, $items)
+    {
+
+        if(count($items)>0)
+        {
+            static::syncChildItems($menu_id, $parent_id, $items);
+
+            foreach ($items as $index => $item)
+            {
+
+                if(empty($item))
+                {
+                    continue;
+                }
+
+                $item['sort'] = $index;
+                $item['parent_id'] = $parent_id;
+                $item['vh_menu_id'] = $menu_id;
+                $item['slug'] = Str::slug($item['name']);
+
+                if(isset($item['id']) && !empty($item['id']))
+                {
+                    $stored_item = MenuItem::find($item['id']);
+
+                }
+
+                if(!isset($stored_item) || !$stored_item){
+                    $stored_item = new MenuItem();
+
+                }
+
+                $stored_item->fill($item);
+                $stored_item->save();
+
+
+
+                if(isset($item['child']) && count($item['child']) > 0)
+                {
+                    static::storeItems($menu_id, $stored_item->id, $item['child']);
+                }
+
+
+            }
+        }
+
+    }
+    //-------------------------------------------------
+    public static function syncChildItems($menu_id,$parent_id, $items)
+    {
+        $existing_items = static::where('vh_menu_id', $menu_id);
+        if($parent_id)
+        {
+            $existing_items->where('parent_id', $parent_id);
+        }
+
+        $existing_items = $existing_items->get()->pluck('id')->toArray();
+
+        $input_items = collect($items)->pluck('id')->toArray();
+
+        $items_to_delete = array_diff($existing_items, $input_items);
+
+        if(count($items_to_delete) > 0)
+        {
+            MenuItem::deleteItems($items_to_delete);
+        }
+    }
+    //-------------------------------------------------
     //-------------------------------------------------
 }
