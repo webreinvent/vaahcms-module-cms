@@ -25,6 +25,9 @@ Route::group(
         Route::post('/item/{id}/store', 'MenusController@postStore')
             ->name('backend.cms.menus.store');
         //---------------------------------------------------------
+        Route::any('/item/{id}/items', 'MenusController@getMenuItems')
+            ->name('backend.cms.menus.items');
+        //---------------------------------------------------------
         Route::post('/actions/{action_name}', 'MenusController@postActions')
             ->name('backend.cms.menus.actions');
         //---------------------------------------------------------

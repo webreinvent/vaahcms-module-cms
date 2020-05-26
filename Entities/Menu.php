@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
+
 class Menu extends Model
 {
     use SoftDeletes;
@@ -83,11 +84,6 @@ class Menu extends Model
     {
 
         $item = static::where('id', $id)
-            ->with(['items' => function($i){
-                $i->with(['content' => function($c){
-                    $c->select('id', 'name', 'slug');
-                }]);
-            }])
             ->withTrashed()
             ->first();
 
@@ -361,6 +357,34 @@ class Menu extends Model
         return $response;
     }
     //-------------------------------------------------
+    public static function getMenuItems($id)
+    {
+
+        $items = MenuItem::where('vh_menu_id', $id)
+            ->with(['content' => function($c){
+                $c->select('id', 'name', 'slug');
+            }])
+            ->get()->toArray();
+
+
+        $body = [
+            'id','parent_id', 'name', 'slug',
+            'title', 'attr_id', 'attr_class',
+            'sort', 'is_home', 'vh_permission_slug',
+            'content'
+        ];
+
+        \Config::set('nestable.body', $body);
+
+        $data['items'] = \Nestable::make($items)
+            ->renderAsArray();
+
+        $response['status'] = 'success';
+        $response['data'] = $data;
+
+        return $response;
+
+    }
     //-------------------------------------------------
     //-------------------------------------------------
     //-------------------------------------------------

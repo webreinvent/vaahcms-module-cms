@@ -28,6 +28,7 @@ export default {
         active_theme: null,
         active_location: null,
         active_menu: null,
+        active_menu_items: null,
         new_item:{
             name: null,
             slug: null,

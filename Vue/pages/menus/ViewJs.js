@@ -1,5 +1,6 @@
 import GlobalComponents from '../../vaahvue/helpers/GlobalComponents';
 import draggable from 'vuedraggable';
+import NestedDraggable from "./partials/NestedDraggable";
 
 let namespace = 'menus';
 
@@ -14,6 +15,7 @@ export default {
     components:{
         ...GlobalComponents,
         draggable,
+        NestedDraggable,
 
     },
     data()

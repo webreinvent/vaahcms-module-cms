@@ -83,7 +83,9 @@
 
                         <!--menu-items-->
                         <div class="draggable" >
-                            <draggable class="dropzone" :list="page.active_menu.items"
+                            <nested-draggable :items="page.active_menu_items"></nested-draggable>
+
+                            <!--<draggable class="dropzone" :list="page.active_menu.items"
                                        :group="{name:'menu_items'}">
 
                                 <div v-if="page.active_menu.items"
@@ -107,7 +109,9 @@
                                     </div>
                                 </div>
 
-                            </draggable>
+                            </draggable>-->
+
+
                         </div>
                         <!--/menu-items-->
 

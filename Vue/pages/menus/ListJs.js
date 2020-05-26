@@ -104,7 +104,7 @@ export default {
 
             this.update('active_menu', item);
 
-            this.$router.push({name: 'menus.view', params:{id:item.id}})
+            this.getMenuItems();
 
         },
         //---------------------------------------------------------------------
@@ -128,6 +128,21 @@ export default {
 
         },
         //---------------------------------------------------------------------
+        getMenuItems: function () {
+            this.$Progress.start();
+            let params = {};
+            let url = this.ajax_url+'/item/'+this.page.active_menu.id+'/items';
+            this.$vaah.ajax(url, params, this.getMenuItemsAfter);
+        },
+        //---------------------------------------------------------------------
+        getMenuItemsAfter: function (data, res) {
+            this.$Progress.finish();
+            if(data){
+                this.update('active_menu_items', data.items);
+                this.$router.push({name: 'menus.view', params:{id:this.page.active_menu.id}})
+            }
+
+        },
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
     }
