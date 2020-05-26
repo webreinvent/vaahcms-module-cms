@@ -153,12 +153,14 @@ export default {
         },
         //---------------------------------------------------------------------
         setActiveTheme: function () {
-            let theme = this.$vaah.findInArrayByKey(this.assets.themes, 'id', this.new_item.vh_theme_id);
+            let theme = this.$vaah.findInArrayByKey(this.assets.themes,
+                'id', this.new_item.vh_theme_id);
             this.update('active_theme', theme);
         },
         //---------------------------------------------------------------------
         setActiveTemplate: function () {
-            let template = this.$vaah.findInArrayByKey(this.page.active_theme.templates, 'id', this.new_item.vh_theme_template_id);
+            let template = this.$vaah.findInArrayByKey(this.page.active_theme.templates,
+                'id', this.new_item.vh_theme_template_id);
             this.update('active_template', template);
 
             let groups = [];

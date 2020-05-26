@@ -1,6 +1,6 @@
 <script src="./EditJs.js"></script>
 <template>
-    <div class="column" v-if="assets && item">
+    <div class="column" v-if="assets && item && page">
 
         <div class="columns">
 

@@ -6,9 +6,11 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use VaahCms\Modules\Cms\Entities\Content;
 use VaahCms\Modules\Cms\Entities\ContentType;
+use VaahCms\Modules\Cms\Entities\Menu;
 use WebReinvent\VaahCms\Entities\Theme;
 
-class ContentsController extends Controller
+
+class MenusController extends Controller
 {
 
     public $theme;
@@ -21,27 +23,11 @@ class ContentsController extends Controller
 
     //----------------------------------------------------------
 
-    public function getAssets(Request $request, $content_slug)
+    public function getAssets(Request $request)
     {
 
-        //$data['fields'] = FieldType::select('id', 'name', 'slug')->get();
 
-        $data['currency_codes'] = vh_get_currency_list();
-        $data['themes'] = Theme::getActiveThemes();
-
-        $default_theme_template = Theme::getDefaultThemesAndTemplateWithRelations($content_slug);
-
-        $data['default_theme'] = $default_theme_template['theme'];
-        $data['default_template'] = $default_theme_template['template'];
-
-
-        $data['content_type'] = $request->content_type;
-        $form_groups = ContentType::getItemWithRelations($request->content_type->id);
-
-        if($form_groups['status'] == 'success')
-        {
-            $data['content_type']['form_groups'] = $form_groups['data']->groups;
-        }
+        $data['themes'] = Theme::getActiveThemesWithLocations();
 
         $response['status'] = 'success';
         $response['data'] = $data;
@@ -49,36 +35,36 @@ class ContentsController extends Controller
         return response()->json($response);
     }
     //----------------------------------------------------------
-    public function postCreate(Request $request, $content_slug)
+    public function postCreate(Request $request)
     {
-        $response = Content::postCreate($request);
+        $response = Menu::postCreate($request);
         return response()->json($response);
     }
     //----------------------------------------------------------
-    public function getList(Request $request, $content_slug)
+    public function getList(Request $request)
     {
-        $response = Content::getList($request);
+        $response = Menu::getList($request);
         return response()->json($response);
     }
     //----------------------------------------------------------
-    public function getItem(Request $request, $content_slug, $id)
+    public function getItem(Request $request, $id)
     {
-        $response = Content::getItem($id);
-        return response()->json($response);
-    }
-
-    //----------------------------------------------------------
-    public function postStore(Request $request, $content_slug, $id)
-    {
-
-        $response = Content::postStore($request,$id);
+        $response = Menu::getItem($id);
         return response()->json($response);
     }
 
     //----------------------------------------------------------
+    public function postStore(Request $request, $id)
+    {
+
+        $response = Menu::postStore($request,$id);
+        return response()->json($response);
+    }
 
     //----------------------------------------------------------
-    public function postActions(Request $request, $content_slug, $action)
+
+    //----------------------------------------------------------
+    public function postActions(Request $request, $action)
     {
         $rules = array(
             'inputs' => 'required',
@@ -104,25 +90,25 @@ class ContentsController extends Controller
 
             //------------------------------------
             case 'bulk-change-status':
-                $response = Content::bulkStatusChange($request);
+                $response = Menu::bulkStatusChange($request);
                 break;
             //------------------------------------
             case 'bulk-trash':
 
-                $response = Content::bulkTrash($request);
+                $response = Menu::bulkTrash($request);
 
                 break;
             //------------------------------------
             case 'bulk-restore':
 
-                $response = Content::bulkRestore($request);
+                $response = Menu::bulkRestore($request);
 
                 break;
 
             //------------------------------------
             case 'bulk-delete':
 
-                $response = Content::bulkDelete($request);
+                $response = Menu::bulkDelete($request);
 
                 break;
 
@@ -134,37 +120,22 @@ class ContentsController extends Controller
     }
 
     //----------------------------------------------------------
-    public function getTemplateGroups(Request $request, $content_slug, $id)
+    public function getContentList(Request $request)
     {
-        $rules = array(
-            'vh_theme_template_id' => 'required',
-        );
 
-        $validator = \Validator::make( $request->all(), $rules);
-        if ( $validator->fails() ) {
-
-            $errors             = errorsToArray($validator->errors());
-            $response['status'] = 'failed';
-            $response['errors'] = $errors;
-            return response()->json($response);
-        }
+        $list = Content::orderBy('created_at', 'desc');
+        $list = $list->take(10)->get();
 
         $data = [];
 
-        $content = Content::find($id);
-
-        $content->vh_theme_template_id = $request->vh_theme_template_id;
-        $content->save();
-
-        $groups = Content::getFormGroups($content, 'template');
+        $data['list'] = $list;
 
         $response['status'] = 'success';
-        $response['data'] = $groups;
+        $response['data'] = $data;
 
         return response()->json($response);
 
     }
-    //----------------------------------------------------------
     //----------------------------------------------------------
 
 

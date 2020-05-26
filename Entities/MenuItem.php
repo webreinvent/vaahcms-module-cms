@@ -26,7 +26,7 @@ class MenuItem extends Model
 
     protected $fillable = [
         'name', 'slug', 'title', 'parent_id', 'depth', 'sort',
-        'attr_id', 'attr_class', 'vh_menu_id', 'vh_page_id',
+        'attr_id', 'attr_class', 'vh_menu_id', 'vh_content_id',
         'order', 'is_home', 'uri', 'is_active', 'vh_permission_slug',
         'created_by', 'updated_by', 'deleted_by'
     ];
@@ -50,9 +50,9 @@ class MenuItem extends Model
         return $this->children()->with('childrens');
     }
     //-------------------------------------------------
-    public function page()
+    public function content()
     {
-        return $this->belongsTo(Page::class, 'vh_page_id');
+        return $this->belongsTo(Content::class, 'vh_content_id');
     }
     //-------------------------------------------------
     //-------------------------------------------------
@@ -136,6 +136,20 @@ class MenuItem extends Model
 
     }
     //-------------------------------------------------
+    public static function deleteItem($id)
+    {
+        //delete group
+        static::where('id', $id)->forceDelete();
+    }
+    //-------------------------------------------------
+    public static function deleteItems($ids_array){
+
+        foreach ($ids_array as $id)
+        {
+            static::deleteItem($id);
+        }
+
+    }
 
     //-------------------------------------------------
 }
