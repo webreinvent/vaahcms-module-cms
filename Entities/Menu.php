@@ -338,6 +338,7 @@ class Menu extends Model
             ->with(['content' => function($c){
                 $c->select('id', 'name', 'slug');
             }])
+            ->orderBy('sort')
             ->get()->toArray();
 
 

@@ -84,34 +84,6 @@
                         <!--menu-items-->
                         <div class="draggable" >
                             <nested-draggable :items="page.active_menu_items"></nested-draggable>
-
-                            <!--<draggable class="dropzone" :list="page.active_menu.items"
-                                       :group="{name:'menu_items'}">
-
-                                <div v-if="page.active_menu.items"
-                                     v-for="(item, f_index) in page.active_menu.items"
-                                     :key="f_index">
-                                    <div class="dropzone-field">
-                                        <b-field class="is-marginless" >
-
-                                            <p class="control drag">
-                                                <span class="button is-static">:::</span>
-                                            </p>
-
-                                            <p class="control" v-if="item.content">
-                                                <span class="button dropzone-field-label is-static">{{item.content.name}}</span>
-                                            </p>
-
-                                            <b-input v-model="item.name" expanded placeholder="Menu Name"></b-input>
-
-                                        </b-field>
-
-                                    </div>
-                                </div>
-
-                            </draggable>-->
-
-
                         </div>
                         <!--/menu-items-->
 
@@ -146,7 +118,10 @@
                     <!--content-->
                     <div class="card-content" v-if="page.content_list">
 
-                        <b-input expanded placeholder="Search content"></b-input>
+                        <b-input v-model="page.query_string.q"
+                                 expanded
+                                 @input="delayedSearch"
+                                 placeholder="Search content"></b-input>
 
                         <hr/>
 
@@ -166,7 +141,10 @@
                                         </p>
 
                                         <p class="control drag">
-                                            <span class="button is-static">{{content.name}}</span>
+                                            <span class="button is-static">
+                                                <b class="has-margin-right-5">#{{content.id}}</b>
+                                                {{content.name}}
+                                            </span>
                                         </p>
 
 

@@ -86,9 +86,20 @@ export default {
             this.getContentList();
         },
         //---------------------------------------------------------------------
+        delayedSearch: function()
+        {
+            let self = this;
+            clearTimeout(this.search_delay);
+            this.search_delay = setTimeout(function() {
+                self.getContentList();
+            }, this.search_delay_time);
+            this.update('query_string', this.query_string);
+
+        },
+        //---------------------------------------------------------------------
         getContentList: function () {
             this.$Progress.start();
-            let params = {};
+            let params = this.page.query_string;
             let url = this.ajax_url+'/content/list';
             this.$vaah.ajax(url, params, this.getContentAfter);
         },

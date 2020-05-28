@@ -129,6 +129,15 @@ class MenusController extends Controller
     {
 
         $list = Content::orderBy('created_at', 'desc');
+
+        if($request->has('q'))
+        {
+            $list->where(function ($s)use($request){
+                $s->where('name', 'LIKE', '%'.$request->q.'%')
+                    ->orWhere('id', $request->q );
+            });
+        }
+
         $list = $list->take(10)->get();
 
         $data = [];

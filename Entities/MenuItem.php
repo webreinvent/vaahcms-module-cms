@@ -163,6 +163,8 @@ class MenuItem extends Model
             foreach ($items as $index => $item)
             {
 
+                $stored_item = null;
+
                 if(empty($item))
                 {
                     continue;
@@ -181,13 +183,10 @@ class MenuItem extends Model
 
                 if(!isset($stored_item) || !$stored_item){
                     $stored_item = new MenuItem();
-
                 }
 
                 $stored_item->fill($item);
                 $stored_item->save();
-
-
 
                 if(isset($item['child']) && count($item['child']) > 0)
                 {
@@ -200,7 +199,7 @@ class MenuItem extends Model
 
     }
     //-------------------------------------------------
-    public static function syncChildItems($menu_id,$parent_id, $items)
+    public static function syncChildItems($menu_id, $parent_id, $items)
     {
         $existing_items = static::where('vh_menu_id', $menu_id);
         if($parent_id)

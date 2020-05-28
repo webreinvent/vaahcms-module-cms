@@ -161,11 +161,14 @@ class Content extends Model {
                 $content_field['vh_cms_content_id'] = $item->id;
                 $content_field['vh_cms_form_group_id'] = $group['id'];
                 $content_field['vh_cms_form_field_id'] = $field['id'];
-                $content_field['content'] = $field['content'];
 
-                $store_field = new ContentFormField();
-                $store_field->fill($content_field);
-                $store_field->save();
+                if(isset($field['content']))
+                {
+                    $content_field['content'] = $field['content'];
+                    $store_field = new ContentFormField();
+                    $store_field->fill($content_field);
+                    $store_field->save();
+                }
 
             }
 
@@ -180,11 +183,14 @@ class Content extends Model {
                 $content_field['vh_cms_content_id'] = $item->id;
                 $content_field['vh_cms_form_group_id'] = $group['id'];
                 $content_field['vh_cms_form_field_id'] = $field['id'];
-                $content_field['content'] = $field['content'];
 
-                $store_field = new ContentFormField();
-                $store_field->fill($content_field);
-                $store_field->save();
+                if(isset($field['content']))
+                {
+                    $content_field['content'] = $field['content'];
+                    $store_field = new ContentFormField();
+                    $store_field->fill($content_field);
+                    $store_field->save();
+                }
 
             }
 

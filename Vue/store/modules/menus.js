@@ -25,6 +25,11 @@ export default {
             vh_theme_location_id: "",
             vh_menu_id: "",
         },
+        query_string: {
+            q: null,
+            trashed: null,
+            status: null,
+        },
         active_theme: null,
         active_location: null,
         active_menu: null,
