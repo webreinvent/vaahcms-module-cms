@@ -38,6 +38,18 @@ export default {
             name: null,
             slug: null,
         },
+        menu_types:[
+            {
+                name: 'Internal Link',
+                uri: "",
+                type: 'internal-link',
+            },
+            {
+                name: 'External Link',
+                uri: "",
+                type: 'external-link',
+            }
+        ]
 
     },
     //=========================================================================

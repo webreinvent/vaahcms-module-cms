@@ -117,15 +117,38 @@ export default {
         cloneField: function({ id, name })
         {
             let item = {
+                type: 'content',
                 vh_content_id: id,
                 name: name,
                 content: {
                     name: name
                 },
                 vh_menu_id: this.page.active_menu.id,
+                attr_id: null,
+                attr_class: null,
+                attr_target_blank: null,
                 child: [],
             };
 
+
+
+            return item;
+        },
+        //---------------------------------------------------------------------
+        customCloneField: function({ id, name, type })
+        {
+            let item = {
+                type: type,
+                name: name,
+                uri: "",
+                attr_id: null,
+                attr_class: null,
+                attr_target_blank: null,
+                vh_menu_id: this.page.active_menu.id,
+                child: [],
+            };
+
+            console.log('--->', item);
 
 
             return item;
@@ -154,6 +177,34 @@ export default {
             }
 
         },
+        //---------------------------------------------------------------------
+        deleteItem: function () {
+            this.$Progress.start();
+            let params = {
+                inputs: [
+                    this.page.active_menu.id
+                ]
+            };
+            let url = this.ajax_url+'/actions/bulk-delete';
+            this.$vaah.ajax(url, params, this.deleteItemAfter);
+        },
+        //---------------------------------------------------------------------
+        deleteItemAfter: function (data, res) {
+            this.$Progress.finish();
+            if(data){
+                this.getAssets();
+                this.$router.push({name: 'menus.list'});
+            }
+
+        },
+        //---------------------------------------------------------------------
+        showMenuSettings: function () {
+
+            $('.menu-settings').toggle();
+
+        }
+        //---------------------------------------------------------------------
+        //---------------------------------------------------------------------
         //---------------------------------------------------------------------
     }
 }

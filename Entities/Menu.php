@@ -278,22 +278,7 @@ class Menu extends Model
     public static function bulkDelete($request)
     {
 
-        if(!\Auth::user()->hasPermission('can-update-roles') ||
-            !\Auth::user()->hasPermission('can-delete-roles'))
-        {
-            $response['status'] = 'failed';
-            $response['errors'][] = trans("vaahcms::messages.permission_denied");
 
-            return $response;
-        }
-
-        if(!\Auth::user()->hasPermission('can-update-roles'))
-        {
-            $response['status'] = 'failed';
-            $response['errors'][] = trans("vaahcms::messages.permission_denied");
-
-            return $response;
-        }
 
         if(!$request->has('inputs'))
         {
@@ -302,24 +287,17 @@ class Menu extends Model
             return $response;
         }
 
-        if(!$request->has('data'))
-        {
-            $response['status'] = 'failed';
-            $response['errors'][] = 'Select Status';
-            return $response;
-        }
+
 
         foreach($request->inputs as $id)
         {
-            $item = static::where('id', $id)->withTrashed()->first();
-            if($item)
+            $menu = static::where('id', $id)->withTrashed()->first();
+            if($menu)
             {
 
-                $item->permissions()->detach();
+                $menu->items()->forceDelete();
 
-                $item->users()->detach();
-
-                $item->forceDelete();
+                $menu->forceDelete();
 
             }
         }
@@ -343,9 +321,10 @@ class Menu extends Model
 
 
         $body = [
-            'id','parent_id', 'name', 'slug',
-            'title', 'attr_id', 'attr_class',
-            'sort', 'is_home', 'vh_permission_slug',
+            'id','parent_id', 'type', 'name', 'slug',
+            'title', 'attr_id', 'attr_class', 'attr_target_blank',
+            'meta', 'uri',
+            'sort', 'is_home', 'is_active', 'vh_permission_slug',
             'content'
         ];
 

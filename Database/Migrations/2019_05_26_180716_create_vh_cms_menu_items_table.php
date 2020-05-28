@@ -18,11 +18,13 @@ class CreateVhCmsMenuItemsTable extends Migration
 
             $table->integer('parent_id')->nullable();
 
+            $table->string('type')->nullable();
             $table->string('name')->nullable();
             $table->string('slug')->nullable();
             $table->string('title')->nullable();
             $table->string('attr_id')->nullable();
             $table->string('attr_class')->nullable();
+            $table->boolean('attr_target_blank')->nullable();
             $table->integer('vh_menu_id')->nullable();
             $table->integer('vh_content_id')->nullable();
             $table->integer('sort')->nullable();
@@ -30,6 +32,7 @@ class CreateVhCmsMenuItemsTable extends Migration
             $table->string('uri')->nullable();
             $table->boolean('is_active')->nullable();
             $table->string('vh_permission_slug')->nullable();
+            $table->json('meta')->nullable();
 
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
