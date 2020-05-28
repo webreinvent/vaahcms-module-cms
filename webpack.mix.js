@@ -23,19 +23,13 @@ if (mix.inProduction()) {
     console.log('IN PRODUCTION MODE');
     console.log('---------------------');
 
-    publish_folder = './Resources/assets/backend/';
-    output_theme_folder = "./vaahone/";
-    source_theme_folder = "Resources/assets/backend/vaahone";
-    source_vue_folder = __dirname+'/Resources/views/backend/vaahone/vue';
+    publish_folder = './../../../public/vaahcms/modules/';
+    output_theme_folder = "./cms/assets/";
+    source_vue_folder = __dirname+'/Vue';
 
     mix.setPublicPath(publish_folder);
 
-    mix.sass(source_theme_folder+'/scss/vaahcms.scss', output_theme_folder+'css/');
-    mix.sass(source_theme_folder+'/scss/backend.scss', output_theme_folder+'css/');
-
-
-    mix.js(source_vue_folder+"/ui/app.js",  output_theme_folder+'/builds/ui.js');
-    mix.js(source_vue_folder+"/app/app.js",  output_theme_folder+'/builds/app.js');
+    mix.js(source_vue_folder+"/app.js",  output_theme_folder+'/build/app.js');
 
 
 } else {
