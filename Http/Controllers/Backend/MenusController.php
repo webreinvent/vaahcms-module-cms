@@ -118,6 +118,12 @@ class MenusController extends Controller
                 break;
 
             //------------------------------------
+            case 'set-as-home-page':
+
+                $response = Menu::setAsHomePage($request);
+
+                break;
+            //------------------------------------
         }
 
         return response()->json($response);

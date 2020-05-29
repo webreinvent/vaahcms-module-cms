@@ -178,6 +178,22 @@ export default {
 
         },
         //---------------------------------------------------------------------
+        getMenuItems: function () {
+            this.$Progress.start();
+            let params = {};
+            let url = this.ajax_url+'/item/'+this.page.active_menu.id+'/items';
+            this.$vaah.ajax(url, params, this.getMenuItemsAfter);
+        },
+        //---------------------------------------------------------------------
+        getMenuItemsAfter: function (data, res) {
+            this.$Progress.finish();
+            if(data){
+                this.update('active_menu_items', data.items);
+                this.$router.push({name: 'menus.view', params:{id:this.page.active_menu.id}})
+            }
+
+        },
+        //---------------------------------------------------------------------
         deleteItem: function () {
             this.$Progress.start();
             let params = {
@@ -193,6 +209,7 @@ export default {
             this.$Progress.finish();
             if(data){
                 this.getAssets();
+
                 this.$router.push({name: 'menus.list'});
             }
 

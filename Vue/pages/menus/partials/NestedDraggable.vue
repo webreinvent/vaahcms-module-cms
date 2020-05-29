@@ -16,6 +16,20 @@
                     <b-input v-model="el.name" expanded placeholder="Menu Name"></b-input>
 
                     <p  class="control">
+                        <b-tooltip label="Set as Home Page" type="is-dark">
+                            <b-button v-if="el.is_home" type="is-success"
+                                      @click="setAsHomePage(el)"
+                                      icon-left="house-user">
+                            </b-button>
+
+                            <b-button v-else type="is-light"
+                                      @click="setAsHomePage(el)"
+                                      icon-left="house-user">
+                            </b-button>
+                        </b-tooltip>
+                    </p>
+
+                    <p  class="control">
                         <b-tooltip label="Settings" type="is-dark">
                             <b-button type="is-light"
                                       @click="toggleMenuItemSettings($event)"
@@ -81,54 +95,4 @@
         </li>
     </draggable>
 </template>
-<script>
-    import draggable from "vuedraggable";
-
-
-    export default {
-        name: "nested-draggable",
-        props: {
-            items: {
-                required: true,
-                type: Array
-            }
-        },
-        data()
-        {
-            return {
-                labelPosition: 'on-border',
-            }
-        },
-        components: {
-            draggable
-        },
-
-        methods: {
-            //--------------------------------------------------------
-            toggleMenuItemSettings: function (e) {
-
-                console.log('--->clicked');
-
-                let el = e.target;
-
-
-
-                let target = $(el).closest('.dropzone-field').find('.menu-item-settings');
-
-                $(target).toggle();
-
-                console.log('--->', target);
-
-
-
-            },
-            //--------------------------------------------------------
-            removeMenuItem: function (item) {
-                this.$vaah.removeFromArray(this.items, item);
-            }
-            //--------------------------------------------------------
-            //--------------------------------------------------------
-            //--------------------------------------------------------
-        }
-    };
-</script>
+<script src="./NestedDraggableJs.js"></script>

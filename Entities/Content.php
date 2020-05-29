@@ -3,6 +3,7 @@
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use WebReinvent\VaahCms\Entities\Theme;
 use WebReinvent\VaahCms\Entities\ThemeTemplate;
 use WebReinvent\VaahCms\Entities\User;
 use WebReinvent\VaahCms\Traits\CrudWithUuidObservantTrait;
@@ -102,6 +103,13 @@ class Content extends Model {
     {
         return $this->belongsTo(ContentType::class,
             'vh_cms_content_type_id', 'id'
+        );
+    }
+    //-------------------------------------------------
+    public function theme()
+    {
+        return $this->belongsTo(Theme::class,
+            'vh_theme_id', 'id'
         );
     }
     //-------------------------------------------------

@@ -220,5 +220,28 @@ class MenuItem extends Model
         }
     }
     //-------------------------------------------------
+    public static function getHomePage()
+    {
+        $menu_item = MenuItem::where('is_home', 1);
+        $menu_item->with(['content'=>function($c){
+            $c->with(['theme'=>function($theme){
+                $theme->select('id', 'name', 'slug', 'is_default', 'is_active');
+            }]);
+            $c->with(['template']);
+        }]);
+        $menu_item = $menu_item->first();
+
+        $content_form_groups = Content::getFormGroups($menu_item->content, 'content');
+        $template_form_groups = Content::getFormGroups($menu_item->content, 'template');
+
+
+
+        $menu_item->content->content_form_groups = $content_form_groups;
+        $menu_item->content->template_form_groups = $template_form_groups;
+
+
+        return $menu_item;
+
+    }
     //-------------------------------------------------
 }

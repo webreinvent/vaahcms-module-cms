@@ -144,6 +144,25 @@ export default {
 
         },
         //---------------------------------------------------------------------
+        deleteItem: function () {
+            this.$Progress.start();
+            let params = {
+                inputs: [
+                    this.page.active_menu.id
+                ]
+            };
+            let url = this.ajax_url+'/actions/bulk-delete';
+            this.$vaah.ajax(url, params, this.deleteItemAfter);
+        },
+        //---------------------------------------------------------------------
+        deleteItemAfter: function (data, res) {
+            this.$Progress.finish();
+            if(data){
+                this.getAssets();
+                this.$router.push({name: 'menus.list'});
+            }
+
+        },
         //---------------------------------------------------------------------
     }
 }

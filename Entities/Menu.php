@@ -340,6 +340,20 @@ class Menu extends Model
 
     }
     //-------------------------------------------------
+    public static function setAsHomePage($request)
+    {
+
+        MenuItem::where('is_home', '!=', null)->update(['is_home' => null]);
+
+        $menu_item = MenuItem::find($request->inputs);
+        $menu_item->is_home = 1;
+        $menu_item->save();
+
+        $response['status'] = 'success';
+        $response['data'] = [];
+
+        return $response;
+    }
     //-------------------------------------------------
     //-------------------------------------------------
     //-------------------------------------------------
