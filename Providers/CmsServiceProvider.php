@@ -8,6 +8,7 @@ use VaahCms\Modules\Cms\Http\Middleware\SetContent;
 use VaahCms\Modules\Cms\Http\Middleware\SetContentType;
 use VaahCms\Modules\Cms\Providers\RouteServiceProvider;
 use VaahCms\Modules\Cms\Providers\EventServiceProvider;
+use VaahCms\Modules\Cms\View\Components\Example;
 
 class CmsServiceProvider extends ServiceProvider
 {
@@ -36,6 +37,7 @@ class CmsServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
         $this->registerSeeders();
         $this->registerBladeDirectives();
+        $this->registerBladeComponents();
     }
 
 
@@ -222,6 +224,18 @@ class CmsServiceProvider extends ServiceProvider
 
 
 
+
+    }
+
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function registerBladeComponents()
+    {
+
+        \Blade::component('exp', Example::class);
 
     }
 }
