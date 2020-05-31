@@ -68,6 +68,10 @@ class DatabaseTableSeeder extends Seeder
                 ->where($primary_key, $item[$primary_key])
                 ->first();
 
+            if(isset($item['meta']))
+            {
+                $item['meta'] = json_encode($item['meta']);
+            }
 
             if(!$record)
             {

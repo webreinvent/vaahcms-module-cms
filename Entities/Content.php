@@ -312,7 +312,7 @@ class Content extends Model {
 
     }
     //-------------------------------------------------
-    public static function getFormGroups(Content $content, $type)
+    public static function getFormGroups(Content $content, $type, array $fields=null)
     {
         $groups = [];
 
@@ -339,7 +339,7 @@ class Content extends Model {
 
                 $groups[$i]['fields'][$y]['vh_cms_form_field_id'] = null;
                 $groups[$i]['fields'][$y]['content'] = null;
-                $groups[$i]['fields'][$y]['meta'] = null;
+                $groups[$i]['fields'][$y]['content_meta'] = null;
 
 
 
@@ -353,9 +353,7 @@ class Content extends Model {
                 {
                     $groups[$i]['fields'][$y]['vh_cms_form_field_id'] = $field_content->id;
                     $groups[$i]['fields'][$y]['content'] = $field_content->content;
-                    $groups[$i]['fields'][$y]['meta'] = $field_content->meta;
-                } else{
-
+                    $groups[$i]['fields'][$y]['content_meta'] = $field_content->meta;
                 }
 
 
@@ -381,8 +379,8 @@ class Content extends Model {
         $item->save();
 
 
-        static::storeContentGroups($item, $inputs['content_form_groups']);
-        static::storeContentGroups($item, $inputs['template_form_groups']);
+        static::storeFormGroups($item, $inputs['content_form_groups']);
+        static::storeFormGroups($item, $inputs['template_form_groups']);
 
 
         $response['status'] = 'success';
@@ -393,7 +391,7 @@ class Content extends Model {
 
     }
     //-------------------------------------------------
-    public static function storeContentGroups(Content $content, $groups)
+    public static function storeFormGroups(Content $content, $groups)
     {
         $i = 0;
         foreach ($groups as $group)
@@ -611,7 +609,94 @@ class Content extends Model {
         return $response;
     }
     //-------------------------------------------------
+    public static function getContents($content_type_slug, $args)
+    {
+
+        $content_type = ContentType::where('slug', $content_type_slug)->first();
+
+
+
+        $contents = static::where('vh_cms_content_type_id', $content_type->id);
+
+        /*if($args['content_groups']) {
+
+            $contents->whereHas('fields.group', function ($f) use ($args) {
+
+                $group_slugs = array_keys($args['content_groups']);
+                $f->whereIn('slug', $group_slugs);
+            });
+
+        }
+
+        $contents->with(['fields.group.groupable']);*/
+
+        /*if($args['content_groups'])
+        {
+            foreach($args['content_groups'] as $group)
+            {
+                $contents->whereHas('fields',  function ($g) use ($group){
+                    $g->where('slug', $group['slug']);
+                });
+            }
+            $contents->with('groups');
+        }*/
+
+
+        $contents = $contents->paginate(1);
+
+
+        return $contents;
+
+    }
     //-------------------------------------------------
+    public static function getContent($id, $args, $output)
+    {
+        $content = static::find($id);
+
+        $response = null;
+
+        $content_groups = static::getFormGroups($content, 'content');
+
+        switch ($output){
+
+            case 'html':
+                $response = static::getFormGroupsHtml($content_groups, 'get-the-content');
+                break;
+
+            default:
+                $response = $content_groups;
+                break;
+        }
+
+
+        return $response;
+    }
+    //-------------------------------------------------
+    public static function getTheContent($id, $args)
+    {
+        return static::getContent($id, $args, 'html');
+    }
+    //-------------------------------------------------
+    public static function getFormGroupsHtml($groups, $custom_class=null, $view=null)
+    {
+        $html = "";
+
+        if(!$custom_class)
+        {
+            $custom_class = 'get-the-content';
+        }
+
+        if(!$view)
+        {
+            $view = 'cms::frontend.templates.contents.get-the-content';
+        }
+
+        $html = \View::make($view)->with('groups', $groups)
+            ->with('custom_class', $custom_class)
+            ->render();
+
+        return $html;
+    }
     //-------------------------------------------------
 
 }

@@ -188,6 +188,15 @@ export default {
 
         },
         //-----------------------------------------------------------------
+        reloadAssets: function ({ state, commit, dispatch, getters }) {
+            let payload = {
+                key: 'assets_reload',
+                value: true
+            };
+            commit('updateState', payload);
+            dispatch('getAssets');
+        },
+        //-----------------------------------------------------------------
     },
     //=========================================================================
     getters:{

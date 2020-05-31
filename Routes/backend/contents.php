@@ -31,4 +31,7 @@ Route::group(
         Route::post('/actions/{action_name}', 'ContentsController@postActions')
             ->name('backend.cms.contents.actions');
         //---------------------------------------------------------
+        Route::post('/sync/seeds', 'ContentsController@syncSeeds')
+            ->name('backend.cms.contents.syncSeeds');
+        //---------------------------------------------------------
     });

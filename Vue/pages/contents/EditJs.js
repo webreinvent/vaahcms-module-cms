@@ -33,7 +33,8 @@ export default {
             params: {},
             local_action: null,
             title: null,
-            groups: null
+            groups: null,
+            theme_sync_loader: false
         }
     },
     watch: {
@@ -77,6 +78,10 @@ export default {
         //---------------------------------------------------------------------
         async getAssets() {
             await this.$store.dispatch(namespace+'/getAssets');
+        },
+        //---------------------------------------------------------------------
+        async reloadAssets() {
+            await this.$store.dispatch(namespace+'/reloadAssets');
         },
         //---------------------------------------------------------------------
         getItem: function () {
@@ -183,6 +188,26 @@ export default {
             }
 
         },
+        //---------------------------------------------------------------------
+        syncSeeds: function () {
+            this.$Progress.start();
+            this.theme_sync_loader = true;
+            let params = {
+                theme_id: this.item.vh_theme_id
+            };
+            let url = this.ajax_url+'/sync/seeds';
+            this.$vaah.ajax(url, params, this.syncSeedsAfter);
+        },
+        //---------------------------------------------------------------------
+        syncSeedsAfter: function (data, res) {
+            this.$Progress.finish();
+            this.theme_sync_loader = false;
+            this.reloadAssets();
+            this.setActiveTheme();
+
+        },
+        //---------------------------------------------------------------------
+        //---------------------------------------------------------------------
         //---------------------------------------------------------------------
     }
 }

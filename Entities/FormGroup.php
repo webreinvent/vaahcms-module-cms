@@ -109,7 +109,7 @@ class FormGroup extends Model {
     {
         return $this->hasMany(FormField::class,
             'vh_cms_form_group_id', 'id'
-        );
+        )->orderBy('sort', 'asc');
     }
     //-------------------------------------------------
     public static function deleteItem($id)

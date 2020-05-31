@@ -2,23 +2,48 @@
 
     {
         "name": "Text",
-        "excerpt": ""
+        "excerpt": "",
+        "meta": {
+            "container_start": "span",
+            "container_end": "short-text",
+            "is_hidden": false
+        }
     },
     {
         "name": "Textarea",
-        "excerpt": ""
+        "excerpt": "",
+        "meta": {
+            "container_tag": "span",
+            "container_attr_class": "long-text",
+            "is_hidden": false
+        }
     },
     {
         "name": "Title",
-        "excerpt": ""
+        "excerpt": "",
+        "meta": {
+            "container_tag": "h1",
+            "container_attr_class": "title",
+            "is_hidden": false
+        }
     },
     {
         "name": "Slug",
-        "excerpt": ""
+        "excerpt": "",
+        "meta": {
+            "container_start": "span",
+            "container_end": "slug",
+            "is_hidden": true
+        }
     },
     {
         "name": "Editor",
-        "excerpt": ""
+        "excerpt": "",
+        "meta": {
+            "container_tag": "div",
+            "container_attr_class": "editor",
+            "is_hidden": false
+        }
     },
     {
         "name": "Visual Editor",
@@ -26,95 +51,211 @@
     },
     {
         "name": "Image",
-        "excerpt": ""
+        "excerpt": "",
+        "meta": {
+            "container_tag": "div",
+            "container_attr_class": "image",
+            "is_hidden": false
+        }
     },
     {
         "name": "Media",
-        "excerpt": ""
+        "excerpt": "",
+        "meta": {
+            "container_tag": "div",
+            "container_attr_class": "media",
+            "is_hidden": false
+        }
     },
     {
         "name": "Markdown",
-        "excerpt": ""
+        "excerpt": "",
+        "meta": {
+            "container_tag": "div",
+            "container_attr_class": "markdown",
+            "is_hidden": false
+        }
     },
     {
         "name": "SEO Meta Tags",
-        "excerpt": ""
+        "excerpt": "",
+        "meta": {
+            "container_tag": "div",
+            "container_attr_class": "seo-meta-tag",
+            "is_hidden": true
+        }
     },
     {
         "name": "Number",
-        "excerpt": ""
+        "excerpt": "",
+        "meta": {
+            "container_tag": "span",
+            "container_attr_class": "number",
+            "is_hidden": false
+        }
     },
     {
         "name": "Boolean",
-        "excerpt": ""
+        "excerpt": "",
+        "meta": {
+            "container_tag": "span",
+            "container_attr_class": "boolean",
+            "is_hidden": false
+        }
     },
     {
         "name": "Date",
-        "excerpt": ""
+        "excerpt": "",
+        "meta": {
+            "container_tag": "span",
+            "container_attr_class": "date",
+            "is_hidden": false
+        }
     },
     {
         "name": "Time",
-        "excerpt": ""
+        "excerpt": "",
+        "meta": {
+            "container_tag": "span",
+            "container_attr_class": "time",
+            "is_hidden": false
+        }
     },
     {
         "name": "Date Time",
-        "excerpt": ""
+        "excerpt": "",
+        "meta": {
+            "container_tag": "span",
+            "container_attr_class": "date-time",
+            "is_hidden": false
+        }
     },
     {
         "name": "Email",
-        "excerpt": ""
+        "excerpt": "",
+        "meta": {
+            "container_tag": "span",
+            "container_attr_class": "email",
+            "is_hidden": false
+        }
     },
     {
         "name": "Password",
-        "excerpt": ""
+        "excerpt": "",
+        "meta": {
+            "container_tag": "span",
+            "container_attr_class": "password",
+            "is_hidden": false
+        }
     },
     {
         "name": "UUID",
-        "excerpt": ""
+        "excerpt": "",
+        "meta": {
+            "container_tag": "span",
+            "container_attr_class": "uuid",
+            "is_hidden": false
+        }
     },
     {
         "name": "Currency Code",
-        "excerpt": ""
+        "excerpt": "",
+        "meta": {
+            "container_tag": "span",
+            "container_attr_class": "currency-code",
+            "is_hidden": false
+        }
     },
     {
         "name": "Price",
-        "excerpt": ""
+        "excerpt": "",
+        "meta": {
+            "container_tag": "span",
+            "container_attr_class": "price",
+            "is_hidden": false
+        }
     },
     {
         "name": "List",
-        "excerpt": ""
+        "excerpt": "",
+        "meta": {
+            "container_tag": "div",
+            "container_attr_class": "list",
+            "is_hidden": false
+        }
     },
 
     {
         "name": "Image Group",
-        "excerpt": ""
+        "excerpt": "",
+        "meta": {
+            "container_tag": "div",
+            "container_attr_class": "image-group",
+            "is_hidden": false
+        }
     },
     {
         "name": "Phone Number",
-        "excerpt": ""
+        "excerpt": "",
+        "meta": {
+            "container_tag": "span",
+            "container_attr_class": "phone-number",
+            "is_hidden": false
+        }
     },
     {
         "name": "Address",
-        "excerpt": ""
+        "excerpt": "",
+        "meta": {
+            "container_tag": "span",
+            "container_attr_class": "address",
+            "is_hidden": false
+        }
     },
     {
         "name": "Relation",
-        "excerpt": ""
+        "excerpt": "",
+        "meta": {
+            "container_tag": "span",
+            "container_attr_class": "relation",
+            "is_hidden": true
+        }
     },
     {
         "name": "Tags",
-        "excerpt": ""
+        "excerpt": "",
+        "meta": {
+            "container_tag": "span",
+            "container_attr_class": "tags",
+            "is_hidden": false
+
+        }
     },
     {
         "name": "Json",
-        "excerpt": ""
+        "excerpt": "",
+        "meta": {
+            "container_tag": "div",
+            "container_attr_class": "json",
+            "is_hidden": false
+        }
     },
     {
         "name": "Twitter Card",
-        "excerpt": ""
+        "excerpt": "",
+        "meta": {
+            "container_tag": "div",
+            "container_attr_class": "json",
+            "is_hidden": true
+        }
     },
     {
         "name": "Facebook Card",
-        "excerpt": ""
+        "excerpt": "",
+        "meta": {
+            "container_tag": "div",
+            "container_attr_class": "json",
+            "is_hidden": true
+        }
     }
 ]

@@ -144,9 +144,16 @@ class ContentType extends Model {
         )->select('id', 'uuid', 'first_name', 'last_name', 'email');
     }
     //-------------------------------------------------
+    public function contents()
+    {
+        return $this->hasMany(Content::class,
+            'vh_cms_content_type_id', 'id');
+    }
+    //-------------------------------------------------
     public function groups()
     {
-        return $this->morphMany(FormGroup::class, 'groupable');
+        return $this->morphMany(FormGroup::class, 'groupable')
+            ->orderBy('sort', 'asc');
     }
     //-------------------------------------------------
     public static function postCreate($request)
@@ -266,7 +273,12 @@ class ContentType extends Model {
 
         $item = static::where('id', $id)
             ->with(['createdByUser', 'updatedByUser',
-                'deletedByUser', 'groups.fields.type'])
+                'deletedByUser',
+                'groups'=>function($g){
+                $g->orderBy('sort', 'asc')->with(['fields' => function($f){
+                    $f->orderBy('sort', 'asc')->with(['type']);
+                }]);
+                }])
             ->withTrashed()
             ->first();
 
@@ -302,12 +314,16 @@ class ContentType extends Model {
 
             $stored_group = $content_type->groups()->where('slug', $group['slug'])->first();
 
+            $group_fillable = $group;
+            unset($group_fillable['fields']);
+
+
             if($stored_group)
             {
-                $stored_group->fill($group);
+                $stored_group->fill($group_fillable);
                 $stored_group =$content_type->groups()->save($stored_group);
             } else{
-                $stored_group = $content_type->groups()->create($group);
+                $stored_group = $content_type->groups()->create($group_fillable);
             }
 
 

@@ -155,7 +155,15 @@
                                         :value="theme.id"
                                 >{{theme.name}}</option>
                             </b-select>
-
+                            <p class="control">
+                                <b-tooltip label="Sync Templates" type="is-dark">
+                                    <b-button type="is-light"
+                                              @click="syncSeeds"
+                                              :loading="theme_sync_loader"
+                                              icon-left="sync-alt">
+                                    </b-button>
+                                </b-tooltip>
+                            </p>
 
                         </b-field>
 
@@ -172,6 +180,7 @@
                                         :value="template.id"
                                 >{{template.name}}</option>
                             </b-select>
+
 
                         </b-field>
 

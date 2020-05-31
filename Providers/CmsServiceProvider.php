@@ -203,11 +203,25 @@ class CmsServiceProvider extends ServiceProvider
     public function registerBladeDirectives()
     {
 
-        /*
-        \Blade::directive('hello', function ($expression) {
+
+        \Blade::directive('contents', function ($expression) {
+            $params = explode(',', $expression);
+
+            echo "<pre>";
+            print_r($params);
+            echo "</pre>";
+
+            \Blade::directive('content', function ($expression) use ($params) {
+                return $params[0];
+            });
+
+
             return "<?php echo 'Hello ' . {$expression}; ?>";
         });
-        */
+
+
+
+
 
     }
 }

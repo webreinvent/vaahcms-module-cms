@@ -165,6 +165,20 @@ class ContentsController extends Controller
 
     }
     //----------------------------------------------------------
+    public function syncSeeds(Request $request)
+    {
+
+        $theme = Theme::find($request->theme_id);
+
+        $response = Theme::activateItem($theme->slug);
+
+        $response['messages'] = [];
+
+        $response['messages'][] = "Theme is synced";
+
+        return response()->json($response);
+
+    }
     //----------------------------------------------------------
 
 

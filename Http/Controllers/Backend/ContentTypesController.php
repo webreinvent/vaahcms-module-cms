@@ -21,7 +21,8 @@ class ContentTypesController extends Controller
     public function getAssets(Request $request)
     {
 
-        $data['field_types'] = FieldType::select('id', 'name', 'slug')->get();
+        $data['field_types'] = FieldType::select('id', 'name', 'slug', 'meta')
+            ->get();
 
         $response['status'] = 'success';
         $response['data'] = $data;
