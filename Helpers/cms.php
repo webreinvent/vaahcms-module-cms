@@ -16,6 +16,8 @@
 
 
 //-----------------------------------------------------------------------------------
+use VaahCms\Modules\Cms\Entities\Content;
+
 function get_content_types(array $args = null)
 {
 
@@ -60,43 +62,47 @@ function get_content_form_groups($id, $type=null, array $args = null, $output=nu
 
 }
 //-----------------------------------------------------------------------------------
-function get_content_form_group($id, $type='content', array $args = null)
+function get_content_group($id, $type='content', array $args = null)
 {
 
 }
 //-----------------------------------------------------------------------------------
-function get_content_form_fields($id, $type=null, array $args = null)
-{
-
-
-
-}
-//-----------------------------------------------------------------------------------
-function get_content_form_field($id, $type='content', array $args = null)
-{
-
-}
-//-----------------------------------------------------------------------------------
-function get_template_form_groups($id, $type=null, array $args = null)
+function get_content_fields($id, $type=null, array $args = null)
 {
 
 
 
 }
 //-----------------------------------------------------------------------------------
-function get_template_form_group($id, $type='content', array $args = null)
+function get_content_field(Content $content, $group_slug, $field_group)
+{
+
+    $output = Content::getContentField($content, $group_slug, $field_group);
+
+
+    return $output;
+}
+//-----------------------------------------------------------------------------------
+function get_template_groups($id, $type=null, array $args = null)
+{
+
+
+
+}
+//-----------------------------------------------------------------------------------
+function get_template_group($id, $type='content', array $args = null)
 {
 
 }
 //-----------------------------------------------------------------------------------
-function get_template_form_fields($id, $type=null, array $args = null)
+function get_template_fields($id, $type=null, array $args = null)
 {
 
 
 
 }
 //-----------------------------------------------------------------------------------
-function get_template_form_field($id, $type='content', array $args = null)
+function get_template_field($id, $type='content', array $args = null)
 {
 
 }

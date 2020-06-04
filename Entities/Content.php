@@ -698,5 +698,22 @@ class Content extends Model {
         return $html;
     }
     //-------------------------------------------------
+    public static function getContentField($item, $group_slug, $field_slug)
+    {
+
+        $group = FormGroup::where('slug', $group_slug)->whereHasMorph('groupable',
+            [ContentType::class], function ($c) use ($item){
+                //$c->where('id', $item->vh_cms_content_id);
+        })->first();
+
+        echo "<pre>";
+        print_r($group->toArray());
+        echo "</pre>";
+
+    }
+    //-------------------------------------------------
+    //-------------------------------------------------
+    //-------------------------------------------------
+    //-------------------------------------------------
 
 }
