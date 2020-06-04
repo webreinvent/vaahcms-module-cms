@@ -22,6 +22,7 @@ export default {
     data()
     {
         return {
+            namespace: namespace,
             is_btn_loading: false,
             is_content_loading: false,
         }
@@ -49,14 +50,14 @@ export default {
             let update = {
                 state_name: name,
                 state_value: value,
-                namespace: namespace,
+                namespace: this.namespace,
             };
             this.$vaah.updateState(update);
         },
         //---------------------------------------------------------------------
         updateView: function()
         {
-            this.$store.dispatch(namespace+'/updateView', this.$route);
+            this.$store.dispatch(this.namespace+'/updateView', this.$route);
         },
         //---------------------------------------------------------------------
         onLoad: function()

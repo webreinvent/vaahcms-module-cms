@@ -21,6 +21,7 @@ export default {
     data()
     {
         return {
+            namespace: namespace,
             is_content_loading: false,
             is_btn_loading: false,
             assets: null,
@@ -33,6 +34,9 @@ export default {
     },
     watch: {
         $route(to, from) {
+
+
+
             this.updateView();
             this.updateQueryString();
             this.updateActiveItem();
@@ -51,14 +55,14 @@ export default {
             let update = {
                 state_name: name,
                 state_value: value,
-                namespace: namespace,
+                namespace: this.namespace,
             };
             this.$vaah.updateState(update);
         },
         //---------------------------------------------------------------------
         updateView: function()
         {
-            this.$store.dispatch(namespace+'/updateView', this.$route);
+            this.$store.dispatch(this.namespace+'/updateView', this.$route);
         },
         //---------------------------------------------------------------------
         onLoad: function()
@@ -67,6 +71,12 @@ export default {
             this.updateQueryString();
             this.getAssets();
             this.setDateFilter();
+        },
+        //---------------------------------------------------------------------
+        toCreate: function()
+        {
+            this.update('active_item', null);
+            this.$router.push({name:'content.types.create'});
         },
         //---------------------------------------------------------------------
         updateQueryString: function()
@@ -84,9 +94,8 @@ export default {
         },
         //---------------------------------------------------------------------
         async getAssets() {
-            await this.$store.dispatch(namespace+'/getAssets');
+            await this.$store.dispatch(this.namespace+'/getAssets');
             this.getList();
-            this.getModuleSection();
         },
         //---------------------------------------------------------------------
         toggleFilters: function()
@@ -205,6 +214,9 @@ export default {
             this.update('is_list_loading', false);
 
             if(data){
+
+                console.log('--->data.list', data.list);
+
                 this.update('list', data.list);
 
 
@@ -281,16 +293,7 @@ export default {
             this.getList();
         },
         //---------------------------------------------------------------------
-        getModuleSection: function () {
 
-            let url = this.ajax_url+'/getModuleSections';
-            this.$vaah.ajaxGet(url, this.query_string, this.getModuleSectionAfter);
-        },
-        //---------------------------------------------------------------------
-        getModuleSectionAfter: function (data,res) {
-
-            this.moduleSection = data;
-        },
         //---------------------------------------------------------------------
         setFilter: function () {
 

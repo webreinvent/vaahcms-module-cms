@@ -6,11 +6,10 @@ let debug = document.getElementById('debug').getAttribute('content');
 //---------/Variables
 
 let json_url = base_url+"/backend/cms/json";
-let ajax_url = base_url+"/backend/cms/content-type";
+let ajax_url = base_url+"/backend/cms/content-types";
 
 export default {
     namespaced: true,
-    //=========================================================================
     state: {
         debug: debug,
         base_url: base_url,
@@ -19,6 +18,41 @@ export default {
         assets: null,
         assets_is_fetching: null,
         assets_reload: false,
+        list: null,
+        list_is_empty: false,
+        is_list_loading: false,
+        list_view: true,
+        active_item: null,
+        is_item_loading: false,
+        show_filters: false,
+        query_string: {
+            page: 1,
+            q: null,
+            trashed: null,
+            filter: null,
+        },
+        bulk_action:{
+            selected_items: [],
+            data: {},
+            action: null,
+        },
+        new_item:{
+            name: null,
+            slug: null,
+            plural: null,
+            plural_slug: null,
+            singular: null,
+            singular_slug: null,
+            excerpt: null,
+            is_published: null,
+            is_commentable: null,
+            content_statuses: [
+                'draft',
+                'published',
+                'protected',
+            ],
+            meta: null,
+        },
 
     },
     //=========================================================================
@@ -33,7 +67,7 @@ export default {
         //-----------------------------------------------------------------
         async getAssets({ state, commit, dispatch, getters }) {
 
-            if(state.assets_is_fetching === false && !state.assets)
+            if(!state.assets_is_fetching || !state.assets)
             {
                 let payload = {
                     key: 'assets_is_fetching',
@@ -42,6 +76,9 @@ export default {
                 commit('updateState', payload);
 
                 let url = state.ajax_url+'/assets';
+
+                console.log('--->assets url', url);
+
                 let params = {};
                 let data = await Vaah.ajaxGet(url, params);
                 payload = {
@@ -61,6 +98,16 @@ export default {
             {
                 list_view = 'large';
             }
+
+            if(payload.name == 'content.types.create')
+            {
+                list_view = 'medium';
+            };
+
+            if(payload.name == 'content.types.content.structure')
+            {
+                list_view = 'small';
+            };
 
             let view = {
                 key: 'list_view',

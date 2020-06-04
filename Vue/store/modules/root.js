@@ -11,7 +11,7 @@ let debug = document.getElementById('debug').getAttribute('content');
 let assets_path = base_url+"/vaahcms/backend/themes/vaahone/assets";
 let assets_image_path = assets_path+"/images";
 
-let json_url = base_url+"/backend/json";
+let json_url = base_url+"/backend/cms/json";
 let ajax_url = base_url+"/backend";
 
 export default {
@@ -53,14 +53,6 @@ export default {
 
                 let params = {};
 
-                params.get_server_details = true;
-
-                params.get_auth_user = true;
-
-                params.get_extended_views = true;
-
-                params.get_extended_views = true;
-
                 let url = state.json_url + '/assets';
                 let data = await Vaah.ajax(url, params);
 
@@ -97,41 +89,6 @@ export default {
             };
             commit('updateState', payload);
             dispatch('getAssets');
-        },
-        //-----------------------------------------------------------------
-        async getPermissions({ state, commit, dispatch, getters }) {
-
-            if(!state.permissions || state.permissions_reload == true)
-            {
-                let url = state.ajax_url+'/json/permissions';
-                let params = {};
-                let data = await Vaah.ajax(url, params);
-
-                let payload = {
-                    key: 'permissions',
-                    value: data.data.data.list
-                };
-
-                commit('updateState', payload);
-
-                payload = {
-                    key: 'permissions_reload',
-                    value: false
-                };
-
-                commit('updateState', payload);
-
-            }
-
-        },
-        //-----------------------------------------------------------------
-        reloadPermissions: function ({ state, commit, dispatch, getters }) {
-            let payload = {
-                key: 'permissions_reload',
-                value: true
-            };
-            commit('updateState', payload);
-            dispatch('getPermissions');
         },
         //-----------------------------------------------------------------
     },

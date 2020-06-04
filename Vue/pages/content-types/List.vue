@@ -7,53 +7,59 @@
             <div class="columns">
 
                 <!--left-->
-                <div class="column" :class="{'is-8': !page.list_view}">
-
-                    <div class="block" v-if="is_content_loading">
-                        <Loader/>
-                    </div>
+                <div class="column"
+                     :class="{'is-12': page.list_view == 'large',
+                     'is-8': page.list_view == 'medium',
+                     'is-4': page.list_view == 'small',
+                     }">
 
                     <!--card-->
-                    <div class="card" v-else-if="page.assets">
+                    <div class="card" v-if="page.assets && page.list">
 
                         <!--header-->
-                        <header class="card-header">
+                        <div class="card-header">
 
                             <div class="card-header-title">
-                                Permissions
+                                Content Types
                             </div>
 
                             <div class="card-header-buttons">
                                 <div class="field has-addons is-pulled-right">
-                                    <p class="control">
 
+                                    <p class="control">
+                                        <b-button type="is-light"
+                                                  @click="toCreate()"
+                                                  icon-left="plus">
+                                            Create
+                                        </b-button>
+                                    </p>
+                                    <div class="control">
                                         <b-button type="is-light"
                                                   @click="sync()"
                                                   :loading="is_btn_loading"
                                                   icon-left="redo-alt">
                                         </b-button>
-
-                                    </p>
+                                    </div>
                                 </div>
                             </div>
 
-                        </header>
+                        </div>
                         <!--/header-->
 
                         <!--content-->
                         <div class="card-content">
 
 
+                            <div class="block" >
 
-                            <div class="block" v-if="page.list">
 
 
                                 <!--actions-->
                                 <div class="level">
 
                                     <!--left-->
-                                    <div class="level-left" v-if="hasPermission('can-update-permissions')">
-                                        <div  class="level-item">
+                                    <div class="level-left" v-if="page.list_view !='small'">
+                                        <div  class="level-item" >
                                             <b-field >
 
                                                 <b-select placeholder="- Bulk Actions -"
@@ -83,7 +89,7 @@
 
 
                                     <!--right-->
-                                    <div class="level-right">
+                                    <div class="level-right" >
 
                                         <div class="level-item">
 
@@ -99,7 +105,7 @@
 
                                                 <p class="control">
                                                     <button class="button is-primary"
-                                                    @click="getList">
+                                                            @click="getList">
                                                         Filter
                                                     </button>
                                                 </p>
@@ -138,8 +144,7 @@
                                             <b-field label="">
                                                 <b-select placeholder="- Select a filter -"
                                                           v-model="query_string.filter"
-                                                          @input="setFilter()"
-                                                >
+                                                          @input="setFilter()">
                                                     <option value="">
                                                         - Select a filter -
                                                     </option>
@@ -154,9 +159,9 @@
 
                                                     <optgroup label="Module">
                                                         <option
-                                                                v-for="option in page.assets.module"
-                                                                :value="option.module"
-                                                                :key="option.module">
+                                                            v-for="option in page.assets.module"
+                                                            :value="option.module"
+                                                            :key="option.module">
                                                             {{  option.module.charAt(0).toUpperCase() + option.module.slice(1) }}
                                                         </option>
                                                     </optgroup>
@@ -170,9 +175,9 @@
                                                         - Select a section -
                                                     </option>
                                                     <option
-                                                            v-for="option in moduleSection"
-                                                            :value="option.section"
-                                                            :key="option.section">
+                                                        v-for="option in moduleSection"
+                                                        :value="option.section"
+                                                        :key="option.section">
                                                         {{  option.section.charAt(0).toUpperCase() + option.section.slice(1) }}
                                                     </option>
                                                 </b-select>
@@ -199,11 +204,11 @@
 
                                             <b-field>
                                                 <b-datepicker
-                                                        position="is-bottom-left"
-                                                        placeholder="- Select a dates -"
-                                                        v-model="selected_date"
-                                                        @input="setDateRange"
-                                                        range>
+                                                    position="is-bottom-left"
+                                                    placeholder="- Select a dates -"
+                                                    v-model="selected_date"
+                                                    @input="setDateRange"
+                                                    range>
                                                 </b-datepicker>
                                             </b-field>
 
@@ -222,12 +227,16 @@
 
                                     <div class="block" style="margin-bottom: 0px;" >
 
-                                        <div v-if="page.list_view">
+                                        <div v-if="page.list_view == 'small'">
+                                            <ListSmallView/>
+                                        </div>
+
+                                        <div v-else-if="page.list_view == 'medium'">
                                             <ListLargeView/>
                                         </div>
 
                                         <div v-else>
-                                            <ListSmallView/>
+                                            <ListLargeView/>
                                         </div>
 
                                     </div>
@@ -244,7 +253,10 @@
                                 <!--/list-->
 
 
+
                             </div>
+
+
                         </div>
                         <!--/content-->
 

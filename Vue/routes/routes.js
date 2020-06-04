@@ -55,6 +55,7 @@ routes.push(routes_list);
 import ContentTypeList from "./../pages/content-types/List";
 import ContentTypeCreate from "./../pages/content-types/Create";
 import ContentTypeView from "./../pages/content-types/View";
+import ContentTypeContentStructure from "./../pages/content-types/ContentStructure";
 import ContentTypeEdit from "./../pages/content-types/Edit";
 
 routes_list =     {
@@ -82,6 +83,17 @@ routes_list =     {
                     path: 'create',
                     name: 'content.types.create',
                     component: ContentTypeCreate,
+                    props: true,
+                    meta: {
+                        middleware: [
+                            GetBackendAssets
+                        ]
+                    },
+                },
+                {
+                    path: 'content-structure/:id',
+                    name: 'content.types.content.structure',
+                    component: ContentTypeContentStructure,
                     props: true,
                     meta: {
                         middleware: [
@@ -120,6 +132,80 @@ routes_list =     {
 
 routes.push(routes_list);
 
+/*
+|--------------------------------------------------------------------------
+| Contents Routes
+|--------------------------------------------------------------------------
+*/
 
+
+import ContentsList from "./../pages/contents/List";
+import ContentsCreate from "./../pages/contents/Create";
+import ContentsView from "./../pages/contents/View";
+import ContentsEdit from "./../pages/contents/Edit";
+
+routes_list =     {
+    path: '/contents/:slug/',
+    component: Backend,
+    name: 'contents',
+    props: true,
+    meta: {
+        middleware: [
+            GetBackendAssets
+        ]
+    },
+    children: [
+        {
+            path: 'list',
+            name: 'contents.list',
+            component: ContentsList,
+            props: true,
+            meta: {
+                middleware: [
+                    GetBackendAssets
+                ]
+            },
+            children: [
+                {
+                    path: 'create',
+                    name: 'contents.create',
+                    component: ContentsCreate,
+                    props: true,
+                    meta: {
+                        middleware: [
+                            GetBackendAssets
+                        ]
+                    },
+                },
+                {
+                    path: 'view/:id',
+                    name: 'contents.view',
+                    component: ContentsView,
+                    props: true,
+                    meta: {
+                        middleware: [
+                            GetBackendAssets
+                        ]
+                    },
+                },
+                {
+                    path: 'edit/:id',
+                    name: 'contents.edit',
+                    component: ContentsEdit,
+                    props: true,
+                    meta: {
+                        middleware: [
+                            GetBackendAssets
+                        ]
+                    },
+                }
+
+            ]
+        }
+
+    ]
+};
+
+routes.push(routes_list);
 
 export default routes;

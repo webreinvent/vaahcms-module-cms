@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use VaahCms\Modules\Cms\Entities\ContentType;
 
 class ExtendController extends Controller
 {
@@ -44,22 +45,30 @@ class ExtendController extends Controller
     public static function sidebarMenu()
     {
 
+
         $list[0] = [
-            'link' => self::$link,
-            'icon' => 'tachometer-alt',
-            'label'=> 'Dashboard'
-        ];
-
-        $list[1] = [
             'link' => self::$link."content-types/",
-            'icon' => 'tachometer-alt',
-            'label'=> 'Contents'
+            'icon' => 'file-alt',
+            'label'=> 'CMS'
         ];
 
-        $list[1]['child'][] =  [
+        /*$list[1]['child'][] =  [
             'link' => self::$link."content-types/",
             'label'=> 'Types'
         ];
+
+        $content_types = ContentType::isPublished()->get();
+
+        if($content_types->count() > 0)
+        {
+            foreach ($content_types as $content_type)
+            {
+                $list[1]['child'][] =  [
+                    'link' => self::$link."contents/".$content_type->slug."/list",
+                    'label'=> $content_type->name
+                ];
+            }
+        }*/
 
 
         $response['status'] = 'success';

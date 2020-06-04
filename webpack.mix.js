@@ -72,6 +72,7 @@ mix.webpackConfig({
             '/Traits/',
         ]
     },
+
     plugins: [
         new Visualizer()
     ],

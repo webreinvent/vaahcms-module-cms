@@ -1,6 +1,6 @@
-<script src="./EditJs.js"></script>
+<script src="./CreateJs.js"></script>
 <template>
-    <div class="column" v-if="page.assets && item">
+    <div class="column" v-if="page.assets">
 
         <div class="card">
 
@@ -8,24 +8,19 @@
             <header class="card-header">
 
                 <div class="card-header-title">
-                    <span>{{$vaah.limitString(title, 15)}}</span>
+                    <span>Create New Content Type</span>
                 </div>
 
 
                 <div class="card-header-buttons">
 
                     <div class="field has-addons is-pulled-right">
-                        <p class="control">
-                            <b-button @click="$vaah.copy(item.id)"  type="is-light">
-                                <small><b>#{{item.id}}</b></small>
-                            </b-button>
-                        </p>
 
                         <p class="control">
                             <b-button icon-left="save"
                                       type="is-light"
                                       :loading="is_btn_loading"
-                                      @click="store()">
+                                      @click="create()">
                                 Save
                             </b-button>
                         </p>
@@ -33,19 +28,7 @@
                         <p class="control">
 
 
-                            <b-dropdown aria-role="list" position="is-bottom-left">
-                                <button class="button is-light"
-                                        slot="trigger">
-                                    <b-icon icon="caret-down"></b-icon>
-                                </button>
 
-                                <b-dropdown-item aria-role="listitem"
-                                                 @click="setLocalAction('save-and-close')">
-                                    <b-icon icon="check"></b-icon>
-                                    Save & Close
-                                </b-dropdown-item>
-
-                            </b-dropdown>
 
 
                         </p>
@@ -53,7 +36,7 @@
                         <p class="control">
                             <b-button tag="router-link"
                                       type="is-light"
-                                      :to="{name: 'perm.view', params:{id:item.id}}"
+                                      :to="{name: 'content.types.list'}"
                                       icon-left="times">
                             </b-button>
                         </p>
@@ -73,27 +56,113 @@
                 <div class="block">
 
                     <b-field label="Name" :label-position="labelPosition">
-                        <b-input name="permission-name" dusk="permission-name" v-model="item.name"></b-input>
+                        <b-input v-model="new_item.name"></b-input>
                     </b-field>
 
-                    <b-field label="Detail" :label-position="labelPosition">
-                        <b-input name="permission-detail" dusk="permission-detail" type="textarea" v-model="item.details"></b-input>
+                    <b-field label="Slug" :label-position="labelPosition">
+                        <b-input v-model="new_item.slug"></b-input>
                     </b-field>
 
-                    <b-field label="Is Active" :label-position="labelPosition">
-                        <b-radio-button name="permission-is_active" dusk="permission-is_active"
-                                        v-model="item.is_active"
+                    <b-field label="Content Plural Name" :label-position="labelPosition">
+                        <b-input v-model="new_item.plural"></b-input>
+                    </b-field>
+
+                    <b-field label="Content Plural Slug" :label-position="labelPosition">
+                        <b-input v-model="new_item.plural_slug"></b-input>
+                    </b-field>
+
+                    <b-field label="Content Singular Name" :label-position="labelPosition">
+                        <b-input v-model="new_item.singular"></b-input>
+                    </b-field>
+
+                    <b-field label="Content Singular Slug" :label-position="labelPosition">
+                        <b-input v-model="new_item.singular_slug"></b-input>
+                    </b-field>
+
+                    <b-field label="Excerpt" :label-position="labelPosition">
+                        <b-input type="textarea"
+                                 maxlength="200"
+                                 v-model="new_item.excerpt"></b-input>
+                    </b-field>
+
+                    <b-field label="Is Published" :label-position="labelPosition">
+                        <b-radio-button v-model="new_item.is_published"
                                         :native-value=1>
                             <span>Yes</span>
                         </b-radio-button>
 
-                        <b-radio-button type="is-danger" name="permission-is_active" dusk="permission-is_active"
-                                        v-model="item.is_active"
+                        <b-radio-button type="is-danger"
+                                        v-model="new_item.is_published"
                                         :native-value=0>
                             <span>No</span>
                         </b-radio-button>
                     </b-field>
 
+                    <b-field label="Is Comments Allowed" :label-position="labelPosition">
+                        <b-radio-button v-model="new_item.is_commentable"
+                                        :native-value=1>
+                            <span>Yes</span>
+                        </b-radio-button>
+
+                        <b-radio-button type="is-danger"
+                                        v-model="new_item.is_commentable"
+                                        :native-value=0>
+                            <span>No</span>
+                        </b-radio-button>
+                    </b-field>
+
+
+                    <b-field label="List Statuses" :label-position="labelPosition">
+
+                        <div class="draggable">
+                            <draggable v-model="new_item.content_statuses"
+                                       group="content_statuses"
+                                       >
+
+                                    <div v-for="(status, index) in new_item.content_statuses"
+                                         :key="index">
+
+
+                                        <b-field class="has-margin-bottom-5" expanded>
+                                            <p class="control drag">
+                                                <span class="button is-static">:::</span>
+                                            </p>
+
+                                            <b-input v-model="new_item.content_statuses[index]"
+                                                     v-if="index == edit_status_index && !disable_status_editing"
+                                                     expanded></b-input>
+
+                                            <b-input v-model="new_item.content_statuses[index]"
+                                                     v-else
+                                                     disabled
+                                                     expanded></b-input>
+
+
+                                            <p class="control">
+                                                <b-button
+                                                          @click="toggleEditStatus(index)"
+                                                          icon-left="edit">
+                                                </b-button>
+                                            </p>
+                                        </b-field>
+
+
+
+                                    </div>
+
+                            </draggable>
+                        </div>
+
+
+
+
+                    </b-field>
+
+                    <b-field label="New Status" :label-position="labelPosition">
+                        <b-input type="text" v-model="new_status"
+                                 placeholder="Type new status and press enter"
+                                 @keyup.enter.native="addStatus()"></b-input>
+                    </b-field>
 
                 </div>
             </div>
@@ -110,5 +179,3 @@
 
     </div>
 </template>
-
-

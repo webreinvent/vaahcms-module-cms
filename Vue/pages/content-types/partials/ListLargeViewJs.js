@@ -14,6 +14,7 @@ export default {
     data()
     {
         let obj = {
+            namespace: namespace,
             icon_copy: "<b-icon icon='envelope' size='is-small'></b-icon>"
         };
 
@@ -35,10 +36,12 @@ export default {
             let update = {
                 state_name: name,
                 state_value: value,
-                namespace: namespace,
+                namespace: this.namespace,
             };
             this.$vaah.updateState(update);
         },
+        //---------------------------------------------------------------------
+
         //---------------------------------------------------------------------
         setRowClass: function(row, index)
         {
@@ -77,10 +80,7 @@ export default {
 
         },
         //---------------------------------------------------------------------
-        getRole: function (item) {
-            this.update('active_item', item);
-            this.$router.push({name: 'perm.role', params:{id:item.id}})
-        },
+
         //---------------------------------------------------------------------
         copiedData: function (data) {
 
@@ -97,6 +97,11 @@ export default {
             return this.$vaah.hasPermission(this.permissions, slug);
         },
         //---------------------------------------------------------------------
+        toContentStructure: function (item) {
+            this.update('active_item', item);
+            this.$router.push({name:'content.types.content.structure', params:{id:item.id}});
+
+        }
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------

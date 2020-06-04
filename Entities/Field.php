@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use WebReinvent\VaahCms\Entities\User;
 use WebReinvent\VaahCms\Traits\CrudWithUuidObservantTrait;
 
 class Field extends Model {
@@ -33,6 +34,64 @@ class Field extends Model {
     //-------------------------------------------------
     protected $appends  = [
     ];
+    //-------------------------------------------------
+    //-------------------------------------------------
+    public function setMetaAttribute($value)
+    {
+        if($value)
+        {
+            $this->attributes['meta'] = json_encode($value);
+        } else{
+            $this->attributes['meta'] = null;
+        }
+    }
+    //-------------------------------------------------
+    public function getMetaAttribute($value)
+    {
+        if($value)
+        {
+            return json_decode($value);
+        }
+        return null;
+    }
+    //-------------------------------------------------
+    public function getTableColumns() {
+        return $this->getConnection()->getSchemaBuilder()
+            ->getColumnListing($this->getTable());
+    }
+    //-------------------------------------------------
+    public function scopeExclude($query, $columns)
+    {
+        return $query->select( array_diff( $this->getTableColumns(),$columns) );
+    }
+    //-------------------------------------------------
+    public function scopeIsPublished($query)
+    {
+        return $query->where( 'is_published', 1 );
+    }
+    //-------------------------------------------------
+    public function createdByUser()
+    {
+        return $this->belongsTo(User::class,
+            'created_by', 'id'
+        )->select('id', 'uuid', 'first_name', 'last_name', 'email');
+    }
+
+    //-------------------------------------------------
+    public function updatedByUser()
+    {
+        return $this->belongsTo(User::class,
+            'updated_by', 'id'
+        )->select('id', 'uuid', 'first_name', 'last_name', 'email');
+    }
+    //-------------------------------------------------
+    public function deletedByUser()
+    {
+        return $this->belongsTo(User::class,
+            'deleted_by', 'id'
+        )->select('id', 'uuid', 'first_name', 'last_name', 'email');
+    }
+    //-------------------------------------------------
     //-------------------------------------------------
 
 }
