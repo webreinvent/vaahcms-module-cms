@@ -4,10 +4,13 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use VaahCms\Modules\Cms\Entities\Content;
 use VaahCms\Modules\Cms\Entities\ContentType;
-use VaahCms\Modules\Cms\Entities\FieldType;
+use VaahCms\Modules\Cms\Entities\Menu;
+use WebReinvent\VaahCms\Entities\Theme;
 
-class ContentTypesController extends Controller
+
+class MenusController extends Controller
 {
 
     public $theme;
@@ -18,11 +21,13 @@ class ContentTypesController extends Controller
         $this->theme = vh_get_backend_theme();
     }
 
+    //----------------------------------------------------------
+
     public function getAssets(Request $request)
     {
 
-        $data['field_types'] = FieldType::select('id', 'name', 'slug', 'meta')
-            ->get();
+
+        $data['themes'] = Theme::getActiveThemesWithLocations();
 
         $response['status'] = 'success';
         $response['data'] = $data;
@@ -32,45 +37,37 @@ class ContentTypesController extends Controller
     //----------------------------------------------------------
     public function postCreate(Request $request)
     {
-        $response = ContentType::postCreate($request);
+        $response = Menu::postCreate($request);
         return response()->json($response);
     }
     //----------------------------------------------------------
     public function getList(Request $request)
     {
-        $response = ContentType::getList($request);
+        $response = Menu::getList($request);
         return response()->json($response);
     }
     //----------------------------------------------------------
     public function getItem(Request $request, $id)
     {
-
-        $response = ContentType::getItem($id);
+        $response = Menu::getItem($id);
         return response()->json($response);
-
     }
+
     //----------------------------------------------------------
-    public function getItemRelations(Request $request, $id)
+    public function getMenuItems(Request $request, $id)
     {
-
-        $response = ContentType::getItemWithRelations($id);
+        $response = Menu::getMenuItems($id);
         return response()->json($response);
-
     }
     //----------------------------------------------------------
-    public function postStoreGroups(Request $request, $id)
+    public function postStore(Request $request, $id)
     {
-        $response = ContentType::postStoreGroups($request, $id);
-        return response()->json($response);
-    }
-    //----------------------------------------------------------
-    public function postStore(Request $request,$id)
-    {
-        $response = ContentType::postStore($request,$id);
+        $response = Menu::postStore($request,$id);
         return response()->json($response);
     }
 
     //----------------------------------------------------------
+
     //----------------------------------------------------------
     public function postActions(Request $request, $action)
     {
@@ -98,28 +95,34 @@ class ContentTypesController extends Controller
 
             //------------------------------------
             case 'bulk-change-status':
-                $response = ContentType::bulkStatusChange($request);
+                $response = Menu::bulkStatusChange($request);
                 break;
             //------------------------------------
             case 'bulk-trash':
 
-                $response = ContentType::bulkTrash($request);
+                $response = Menu::bulkTrash($request);
 
                 break;
             //------------------------------------
             case 'bulk-restore':
 
-                $response = ContentType::bulkRestore($request);
+                $response = Menu::bulkRestore($request);
 
                 break;
 
             //------------------------------------
             case 'bulk-delete':
 
-                $response = ContentType::bulkDelete($request);
+                $response = Menu::bulkDelete($request);
 
                 break;
 
+            //------------------------------------
+            case 'set-as-home-page':
+
+                $response = Menu::setAsHomePage($request);
+
+                break;
             //------------------------------------
         }
 
@@ -128,7 +131,31 @@ class ContentTypesController extends Controller
     }
 
     //----------------------------------------------------------
-    //----------------------------------------------------------
+    public function getContentList(Request $request)
+    {
+
+        $list = Content::orderBy('created_at', 'desc');
+
+        if($request->has('q'))
+        {
+            $list->where(function ($s)use($request){
+                $s->where('name', 'LIKE', '%'.$request->q.'%')
+                    ->orWhere('id', $request->q );
+            });
+        }
+
+        $list = $list->take(10)->get();
+
+        $data = [];
+
+        $data['list'] = $list;
+
+        $response['status'] = 'success';
+        $response['data'] = $data;
+
+        return response()->json($response);
+
+    }
     //----------------------------------------------------------
 
 

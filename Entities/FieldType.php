@@ -5,13 +5,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use WebReinvent\VaahCms\Entities\User;
 use WebReinvent\VaahCms\Traits\CrudWithUuidObservantTrait;
 
-class GroupField extends Model {
+class FieldType extends Model {
 
     use SoftDeletes;
     use CrudWithUuidObservantTrait;
 
     //-------------------------------------------------
-    protected $table = 'vh_cms_group_fields';
+    protected $table = 'vh_cms_field_types';
     //-------------------------------------------------
     protected $dates = [
         'created_at',
@@ -22,15 +22,9 @@ class GroupField extends Model {
     protected $dateFormat = 'Y-m-d H:i:s';
     //-------------------------------------------------
     protected $fillable = [
-        'uuid',
-        'vh_cms_group_id',
-        'vh_cms_field_id',
-        'sort',
         'name',
         'slug',
         'excerpt',
-        'is_searchable',
-        'is_repeatable',
         'meta',
         'created_by',
         'updated_by',
@@ -96,34 +90,6 @@ class GroupField extends Model {
         return $this->belongsTo(User::class,
             'deleted_by', 'id'
         )->select('id', 'uuid', 'first_name', 'last_name', 'email');
-    }
-    //-------------------------------------------------
-    //-------------------------------------------------
-    public function type()
-    {
-        return $this->belongsTo(Field::class,
-            'vh_cms_field_id', 'id'
-        );
-    }
-    //-------------------------------------------------
-    public static function deleteItem($id)
-    {
-
-        //delete content fields
-        ContentField::where('vh_cms_group_field_id', $id)->forceDelete();
-
-        //delete group
-        static::where('id', $id)->forceDelete();
-
-    }
-    //-------------------------------------------------
-    public static function deleteItems($ids_array){
-
-        foreach ($ids_array as $id)
-        {
-            static::deleteItem($id);
-        }
-
     }
     //-------------------------------------------------
     //-------------------------------------------------

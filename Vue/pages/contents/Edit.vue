@@ -1,6 +1,6 @@
 <script src="./EditJs.js"></script>
 <template>
-    <div class="column" v-if="assets && item && groups">
+    <div class="column" v-if="assets && item && page">
 
         <div class="columns">
 
@@ -35,9 +35,8 @@
                     </div>
 
                     <div class="card-content">
-                        <ContentFields :groups="groups"></ContentFields>
-                        <TemplateFields></TemplateFields>
-                        <CustomFields></CustomFields>
+                        <ContentFields :groups="item.content_form_groups"></ContentFields>
+                        <TemplateFields :groups="item.template_form_groups"></TemplateFields>
                     </div>
 
 
@@ -133,6 +132,56 @@
 
                         <b-field label="Name" :label-position="labelPosition">
                             <b-input v-model="item.name"></b-input>
+                        </b-field>
+
+                        <b-field label="Status"
+                                 v-if="assets.content_type.content_statuses
+                                 && assets.content_type.content_statuses.length>0"
+                                 :label-position="labelPosition">
+                            <b-select v-model="item.status">
+                                <option value="">Select a Status</option>
+                                <option v-for="(status, index) in assets.content_type.content_statuses"
+                                        :value="status"
+                                >{{status}}</option>
+                            </b-select>
+                        </b-field>
+
+                        <b-field label="Themes"
+                                 :label-position="labelPosition">
+
+                            <b-select v-model="item.vh_theme_id" @input="setActiveTheme">
+                                <option value="">Select a Theme</option>
+                                <option v-for="(theme, index) in assets.themes"
+                                        :value="theme.id"
+                                >{{theme.name}}</option>
+                            </b-select>
+                            <p class="control">
+                                <b-tooltip label="Sync Templates" type="is-dark">
+                                    <b-button type="is-light"
+                                              @click="syncSeeds"
+                                              :loading="theme_sync_loader"
+                                              icon-left="sync-alt">
+                                    </b-button>
+                                </b-tooltip>
+                            </p>
+
+                        </b-field>
+
+
+
+                        <b-field label="Templates"
+                                 :label-position="labelPosition">
+
+
+                            <b-select v-model="item.vh_theme_template_id" @input="setActiveTemplate">
+                                <option value="">Select a Template</option>
+                                <option v-if="page.active_theme.templates"
+                                        v-for="(template, index) in page.active_theme.templates"
+                                        :value="template.id"
+                                >{{template.name}}</option>
+                            </b-select>
+
+
                         </b-field>
 
 

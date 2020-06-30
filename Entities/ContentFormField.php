@@ -5,13 +5,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use WebReinvent\VaahCms\Entities\User;
 use WebReinvent\VaahCms\Traits\CrudWithUuidObservantTrait;
 
-class Group extends Model {
+class ContentFormField extends Model {
 
     use SoftDeletes;
     use CrudWithUuidObservantTrait;
 
     //-------------------------------------------------
-    protected $table = 'vh_cms_groups';
+    protected $table = 'vh_cms_content_form_fields';
     //-------------------------------------------------
     protected $dates = [
         'created_at',
@@ -22,14 +22,11 @@ class Group extends Model {
     protected $dateFormat = 'Y-m-d H:i:s';
     //-------------------------------------------------
     protected $fillable = [
-        'parent_id',
         'uuid',
-        'sort',
-        'vh_cms_content_type_id',
-        'name',
-        'slug',
-        'excerpt',
-        'is_repeatable',
+        'vh_cms_content_id',
+        'vh_cms_form_group_id',
+        'vh_cms_form_field_id',
+        'content',
         'meta',
         'created_by',
         'updated_by',
@@ -37,18 +34,54 @@ class Group extends Model {
     ];
 
     //-------------------------------------------------
-    protected $appends  = [
-    ];
+    public function setContentAttribute($value)
+    {
+        if(is_array($value) || is_object($value))
+        {
+            $this->attributes['content'] = json_encode($value);
+        } else{
+            $this->attributes['content'] = $value;
+        }
+    }
     //-------------------------------------------------
+    public function getContentAttribute($value)
+    {
+
+        if(!$value)
+        {
+            return null;
+        }
+
+        if($value)
+        {
+
+            if(vh_is_json($value))
+            {
+                return json_decode($value);
+            }
+
+
+            $slug = $this->field->type->slug;
+
+            if($slug == 'image' || $slug == 'media')
+            {
+                $value = asset($value);
+            }
+
+            return $value;
+        }
+
+
+        return null;
+    }
     //-------------------------------------------------
     public function setMetaAttribute($value)
     {
         if($value)
         {
             $this->attributes['meta'] = json_encode($value);
-        } else{
-            $this->attributes['meta'] = null;
         }
+        $this->attributes['meta'] = null;
     }
     //-------------------------------------------------
     public function getMetaAttribute($value)
@@ -59,6 +92,9 @@ class Group extends Model {
         }
         return null;
     }
+    //-------------------------------------------------
+
+    //-------------------------------------------------
     //-------------------------------------------------
     public function getTableColumns() {
         return $this->getConnection()->getSchemaBuilder()
@@ -97,35 +133,18 @@ class Group extends Model {
         )->select('id', 'uuid', 'first_name', 'last_name', 'email');
     }
     //-------------------------------------------------
-    //-------------------------------------------------
-    public function fields()
+    public function group()
     {
-        return $this->hasMany(GroupField::class,
-            'vh_cms_group_id', 'id'
+        return $this->belongsTo(FormGroup::class,
+            'vh_cms_form_group_id', 'id'
         );
     }
     //-------------------------------------------------
-    public static function deleteItem($id)
+    public function field()
     {
-
-        //delete content fields
-        ContentField::where('vh_cms_group_id', $id)->forceDelete();
-
-        //delete group fields
-        GroupField::where('vh_cms_group_id', $id)->forceDelete();
-
-        //delete group
-        static::where('id', $id)->forceDelete();
-
-    }
-    //-------------------------------------------------
-    public static function deleteItems($ids_array){
-
-        foreach ($ids_array as $id)
-        {
-            static::deleteItem($id);
-        }
-
+        return $this->belongsTo(FormField::class,
+            'vh_cms_form_field_id', 'id'
+        );
     }
     //-------------------------------------------------
 

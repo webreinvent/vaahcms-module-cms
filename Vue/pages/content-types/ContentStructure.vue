@@ -78,11 +78,18 @@
                                 <div class="card-header-buttons">
                                     <b-field>
                                         <p class="control">
+                                            <b-tooltip label="Copy Slug" type="is-dark">
+                                                <b-button @click="$vaah.copy(group.slug)"
+                                                >#{{group.id}}</b-button>
+                                            </b-tooltip>
+                                        </p>
+                                        <p class="control">
                                             <b-button>Edit</b-button>
                                         </p>
                                         <p class="control">
                                             <b-tooltip label="Delete Group" type="is-dark">
-                                                <b-button @click="deleteGroup(group, index)" icon-left="trash"></b-button>
+                                                <b-button @click="deleteGroup(group, index)" icon-left="trash">
+                                                </b-button>
                                             </b-tooltip>
                                         </p>
 
@@ -108,12 +115,23 @@
                                                     </p>
 
                                                     <p class="control " v-if="field.type">
-                                                        <span class="button dropzone-field-label is-static">{{field.type.name}}</span>
+                                                        <span class="button dropzone-field-label is-static">
+                                                            {{field.type.name}}
+                                                        </span>
                                                     </p>
-                                                    <b-input v-model="field.name" expanded placeholder="Field Name"></b-input>
+                                                    <b-input v-model="field.name" expanded placeholder="Field Name">
+                                                    </b-input>
+                                                    <p class="control">
+                                                        <b-tooltip label="Copy Slug" type="is-dark">
+                                                            <b-button @click="$vaah.copy(field.slug)"
+                                                            >#{{field.id}}</b-button>
+                                                        </b-tooltip>
+                                                    </p>
+
                                                     <p class="control">
                                                         <b-tooltip label="Field Option" type="is-dark">
-                                                            <b-button icon-left="cog" @click="toggleFieldOptions($event)"></b-button>
+                                                            <b-button icon-left="cog"
+                                                                      @click="toggleFieldOptions($event)"></b-button>
                                                         </b-tooltip>
                                                     </p>
 
@@ -155,9 +173,27 @@
                                                                 Excerpt
                                                             </td>
                                                             <td>
-                                                                <b-input maxlength="200" v-model="field.excerpt" type="textarea"></b-input>
+                                                                <b-input maxlength="200" v-model="field.excerpt"
+                                                                         type="textarea"></b-input>
                                                             </td>
                                                         </tr>
+
+                                                        <template v-if="field.meta">
+                                                            <tr v-for="(meta_item, meta_index) in field.meta">
+                                                                <td v-html="$vaah.toLabel(meta_index)">
+                                                                </td>
+                                                                <td>
+                                                                    <div v-if="meta_index == 'is_hidden'">
+                                                                        <b-checkbox v-model="field.meta[meta_index]">Is Hidden</b-checkbox>
+                                                                    </div>
+                                                                    <div v-else>
+                                                                        <b-input v-model="field.meta[meta_index]"
+                                                                                 type="text"></b-input>
+                                                                    </div>
+
+                                                                </td>
+                                                            </tr>
+                                                        </template>
 
                                                     </table>
 
@@ -222,15 +258,17 @@
 
                     <!--content-->
                     <div class="card-content" style="max-height: 600px; overflow: auto;"
-                         v-if="assets && assets.fields">
+                         v-if="assets && assets.field_types">
+
+
 
                         <div class="draggable" >
-                            <draggable :list="assets.fields"
+                            <draggable :list="assets.field_types"
                                        :clone="cloneField"
                                        :group="{name:'fields', pull:'clone', put:false}"
                                        >
 
-                                <div v-for="(field, index) in assets.fields"
+                                <div v-for="(field, index) in assets.field_types"
                                      :key="index">
                                     <b-field class="has-margin-bottom-5" expanded>
                                         <p class="control drag">

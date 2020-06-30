@@ -1,6 +1,7 @@
 {
     "name": "vaahcms/cms",
     "description": "Cms",
+    "version": "0.1.0",
     "authors": [
         {
             "name": "vaah",
@@ -21,7 +22,7 @@
     },
     "autoload": {
         "psr-4": {
-            "VaahCms\\Modules\\Cms\\": ""
+            "VaahCms\\Modules\\Cms\\": "/"
         }
     }
 }

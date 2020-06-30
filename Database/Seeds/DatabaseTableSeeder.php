@@ -68,6 +68,10 @@ class DatabaseTableSeeder extends Seeder
                 ->where($primary_key, $item[$primary_key])
                 ->first();
 
+            if(isset($item['meta']))
+            {
+                $item['meta'] = json_encode($item['meta']);
+            }
 
             if(!$record)
             {
@@ -82,7 +86,7 @@ class DatabaseTableSeeder extends Seeder
     public function seedFields()
     {
         $list = $this->getListFromJson("fields.json");
-        $this->storeSeedsWithUuid('vh_cms_fields', $list);
+        $this->storeSeedsWithUuid('vh_cms_field_types', $list);
     }
     //---------------------------------------------------------------
     //---------------------------------------------------------------

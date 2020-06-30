@@ -99,7 +99,7 @@ export default {
             //this.$Progress.start();
             let params = this.new_item;
 
-            params.groups = this.assets.groups;
+            params.content_groups = this.assets.content_type.form_groups;
             params.template_groups = this.page.active_template_groups;
 
             console.log('--->', params);
@@ -153,16 +153,18 @@ export default {
         },
         //---------------------------------------------------------------------
         setActiveTheme: function () {
-            let theme = this.$vaah.findInArrayByKey(this.assets.themes, 'id', this.new_item.vh_theme_id);
+            let theme = this.$vaah.findInArrayByKey(this.assets.themes,
+                'id', this.new_item.vh_theme_id);
             this.update('active_theme', theme);
         },
         //---------------------------------------------------------------------
         setActiveTemplate: function () {
-            let template = this.$vaah.findInArrayByKey(this.page.active_theme.templates, 'id', this.new_item.vh_theme_template_id);
+            let template = this.$vaah.findInArrayByKey(this.page.active_theme.templates,
+                'id', this.new_item.vh_theme_template_id);
             this.update('active_template', template);
 
             let groups = [];
-            groups[0] = template;
+            groups = template.groups;
 
             console.log('--->', groups);
 

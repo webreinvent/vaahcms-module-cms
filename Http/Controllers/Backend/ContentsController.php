@@ -6,7 +6,6 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use VaahCms\Modules\Cms\Entities\Content;
 use VaahCms\Modules\Cms\Entities\ContentType;
-use VaahCms\Modules\Cms\Entities\Field;
 use WebReinvent\VaahCms\Entities\Theme;
 
 class ContentsController extends Controller
@@ -25,21 +24,23 @@ class ContentsController extends Controller
     public function getAssets(Request $request, $content_slug)
     {
 
-        $data['fields'] = Field::select('id', 'name', 'slug')->get();
-        $data['content_type'] = $request->content_type;
+        //$data['fields'] = FieldType::select('id', 'name', 'slug')->get();
+
         $data['currency_codes'] = vh_get_currency_list();
         $data['themes'] = Theme::getActiveThemes();
 
         $default_theme_template = Theme::getDefaultThemesAndTemplateWithRelations($content_slug);
+
         $data['default_theme'] = $default_theme_template['theme'];
         $data['default_template'] = $default_theme_template['template'];
 
 
-        $groups = ContentType::getItemWithRelations($request->content_type->id);
+        $data['content_type'] = $request->content_type;
+        $form_groups = ContentType::getItemWithRelations($request->content_type->id);
 
-        if($groups['status'] == 'success')
+        if($form_groups['status'] == 'success')
         {
-            $data['groups'] = $groups['data']->groups;
+            $data['content_type']['form_groups'] = $form_groups['data']->groups;
         }
 
         $response['status'] = 'success';
@@ -69,11 +70,13 @@ class ContentsController extends Controller
     //----------------------------------------------------------
     public function postStore(Request $request, $content_slug, $id)
     {
+
         $response = Content::postStore($request,$id);
         return response()->json($response);
     }
 
     //----------------------------------------------------------
+
     //----------------------------------------------------------
     public function postActions(Request $request, $content_slug, $action)
     {
@@ -131,7 +134,51 @@ class ContentsController extends Controller
     }
 
     //----------------------------------------------------------
+    public function getTemplateGroups(Request $request, $content_slug, $id)
+    {
+        $rules = array(
+            'vh_theme_template_id' => 'required',
+        );
+
+        $validator = \Validator::make( $request->all(), $rules);
+        if ( $validator->fails() ) {
+
+            $errors             = errorsToArray($validator->errors());
+            $response['status'] = 'failed';
+            $response['errors'] = $errors;
+            return response()->json($response);
+        }
+
+        $data = [];
+
+        $content = Content::find($id);
+
+        $content->vh_theme_template_id = $request->vh_theme_template_id;
+        $content->save();
+
+        $groups = Content::getFormGroups($content, 'template');
+
+        $response['status'] = 'success';
+        $response['data'] = $groups;
+
+        return response()->json($response);
+
+    }
     //----------------------------------------------------------
+    public function syncSeeds(Request $request)
+    {
+
+        $theme = Theme::find($request->theme_id);
+
+        $response = Theme::activateItem($theme->slug);
+
+        $response['messages'] = [];
+
+        $response['messages'][] = "Theme is synced";
+
+        return response()->json($response);
+
+    }
     //----------------------------------------------------------
 
 

@@ -171,35 +171,32 @@ export default {
 
         },
         //---------------------------------------------------------------------
-        cloneField: function({ id, name, slug })
+        cloneField: function({ id, name, slug, meta })
         {
+
             let item = {
-                id: id,
-                name: name,
-                slug: slug,
-            };
-
-            let to_be_cloned = this.toBeClonedFields(item);
-
-            console.log('--->to_be_cloned', to_be_cloned);
-
-            return to_be_cloned;
-        },
-
-        //---------------------------------------------------------------------
-        toBeClonedFields: function (item) {
-
-            item = {
                 name: null,
                 slug: null,
-                vh_cms_field_id: item.id,
-                type: item
+                vh_cms_field_type_id: id,
+                meta: meta,
+                type: {
+                    id: id,
+                    name: name,
+                    slug: slug,
+                    meta: meta,
+                }
             };
+
+            console.log('--->cloned item', item);
 
 
             return item;
 
+
         },
+
+        //---------------------------------------------------------------------
+
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------

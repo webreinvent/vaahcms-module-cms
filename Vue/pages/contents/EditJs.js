@@ -33,7 +33,8 @@ export default {
             params: {},
             local_action: null,
             title: null,
-            groups: null
+            groups: null,
+            theme_sync_loader: false
         }
     },
     watch: {
@@ -79,6 +80,10 @@ export default {
             await this.$store.dispatch(namespace+'/getAssets');
         },
         //---------------------------------------------------------------------
+        async reloadAssets() {
+            await this.$store.dispatch(namespace+'/reloadAssets');
+        },
+        //---------------------------------------------------------------------
         getItem: function () {
             this.$Progress.start();
             this.params = {};
@@ -92,8 +97,7 @@ export default {
 
             if(data)
             {
-                this.update('active_item', data.item);
-                this.groups = data.groups;
+                this.update('active_item', data);
             } else
             {
                 //if item does not exist or delete then redirect to list
@@ -105,15 +109,10 @@ export default {
         store: function () {
             this.$Progress.start();
 
-            let params = {
-                item: this.item,
-                groups: this.groups
-            };
-
-
+            let params = this.item;
             console.log('--->', params);
 
-            let url = this.ajax_url+'/store/'+this.item.id;
+            let url = this.ajax_url+'/item/'+this.item.id+'/store';
             this.$vaah.ajax(url, params, this.storeAfter);
         },
         //---------------------------------------------------------------------
@@ -160,6 +159,54 @@ export default {
                 $(item).slideUp();
             });
         },
+        //---------------------------------------------------------------------
+        setActiveTheme: function () {
+            let theme = this.$vaah.findInArrayByKey(this.assets.themes, 'id', this.item.vh_theme_id);
+            this.update('active_theme', theme);
+        },
+
+        //---------------------------------------------------------------------
+        setActiveTemplate: function () {
+            this.$Progress.start();
+
+            let params = this.item;
+            console.log('--->', params);
+
+            let url = this.ajax_url+'/item/'+this.item.id+'/groups/template';
+            this.$vaah.ajax(url, params, this.setActiveTemplateAfter);
+        },
+        //---------------------------------------------------------------------
+        setActiveTemplateAfter: function (data, res) {
+
+            this.$Progress.finish();
+
+            if(data)
+            {
+                this.item.template_form_groups = data;
+                this.update('active_item', this.item);
+
+            }
+
+        },
+        //---------------------------------------------------------------------
+        syncSeeds: function () {
+            this.$Progress.start();
+            this.theme_sync_loader = true;
+            let params = {
+                theme_id: this.item.vh_theme_id
+            };
+            let url = this.ajax_url+'/sync/seeds';
+            this.$vaah.ajax(url, params, this.syncSeedsAfter);
+        },
+        //---------------------------------------------------------------------
+        syncSeedsAfter: function (data, res) {
+            this.$Progress.finish();
+            this.theme_sync_loader = false;
+            this.reloadAssets();
+            this.setActiveTheme();
+
+        },
+        //---------------------------------------------------------------------
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
     }

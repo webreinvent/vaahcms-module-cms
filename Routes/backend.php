@@ -37,3 +37,4 @@ Route::group(
 
 include('backend/content-types.php');
 include('backend/contents.php');
+include('backend/menus.php');

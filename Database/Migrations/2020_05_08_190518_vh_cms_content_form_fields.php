@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class VhCmsContentFields extends Migration
+class VhCmsContentFormFields extends Migration
 {
     /**
      * Run the migrations.
@@ -14,13 +14,13 @@ class VhCmsContentFields extends Migration
     public function up()
     {
 
-        Schema::create('vh_cms_content_fields', function (Blueprint $table) {
+        Schema::create('vh_cms_content_form_fields', function (Blueprint $table) {
             $table->increments('id');
             $table->uuid('uuid')->nullable();
 
             $table->integer('vh_cms_content_id')->nullable();
-            $table->integer('vh_cms_group_id')->nullable();
-            $table->integer('vh_cms_group_field_id')->nullable();
+            $table->integer('vh_cms_form_group_id')->nullable();
+            $table->integer('vh_cms_form_field_id')->nullable();
             $table->text('content')->nullable();
 
             $table->text('meta')->nullable();
@@ -40,6 +40,6 @@ class VhCmsContentFields extends Migration
     */
     public function down()
     {
-        Schema::dropIfExists('vh_cms_content_fields');
+        Schema::dropIfExists('vh_cms_content_form_fields');
     }
 }

@@ -5,13 +5,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use WebReinvent\VaahCms\Entities\User;
 use WebReinvent\VaahCms\Traits\CrudWithUuidObservantTrait;
 
-class Field extends Model {
+class FormField extends Model {
 
     use SoftDeletes;
     use CrudWithUuidObservantTrait;
 
     //-------------------------------------------------
-    protected $table = 'vh_cms_fields';
+    protected $table = 'vh_cms_form_fields';
     //-------------------------------------------------
     protected $dates = [
         'created_at',
@@ -22,9 +22,15 @@ class Field extends Model {
     protected $dateFormat = 'Y-m-d H:i:s';
     //-------------------------------------------------
     protected $fillable = [
+        'uuid',
+        'vh_cms_form_group_id',
+        'vh_cms_field_type_id',
+        'sort',
         'name',
         'slug',
         'excerpt',
+        'is_searchable',
+        'is_repeatable',
         'meta',
         'created_by',
         'updated_by',
@@ -92,6 +98,35 @@ class Field extends Model {
         )->select('id', 'uuid', 'first_name', 'last_name', 'email');
     }
     //-------------------------------------------------
+    //-------------------------------------------------
+    public function type()
+    {
+        return $this->belongsTo(FieldType::class,
+            'vh_cms_field_type_id', 'id'
+        );
+    }
+    //-------------------------------------------------
+    public static function deleteItem($id)
+    {
+
+        //delete content fields
+        ContentFormField::where('vh_cms_form_field_id', $id)->forceDelete();
+
+        //delete group
+        static::where('id', $id)->forceDelete();
+
+    }
+    //-------------------------------------------------
+    public static function deleteItems($ids_array){
+
+        foreach ($ids_array as $id)
+        {
+            static::deleteItem($id);
+        }
+
+    }
+    //-------------------------------------------------
+
     //-------------------------------------------------
 
 }

@@ -22,10 +22,16 @@ Route::group(
         Route::any('/item/{id}', 'ContentsController@getItem')
             ->name('backend.cms.contents.item');
         //---------------------------------------------------------
-        Route::post('/store/{id}', 'ContentsController@postStore')
+        Route::post('/item/{id}/store', 'ContentsController@postStore')
             ->name('backend.cms.contents.store');
+        //---------------------------------------------------------
+        Route::post('/item/{id}/groups/template', 'ContentsController@getTemplateGroups')
+            ->name('backend.cms.contents.groups.template');
         //---------------------------------------------------------
         Route::post('/actions/{action_name}', 'ContentsController@postActions')
             ->name('backend.cms.contents.actions');
+        //---------------------------------------------------------
+        Route::post('/sync/seeds', 'ContentsController@syncSeeds')
+            ->name('backend.cms.contents.syncSeeds');
         //---------------------------------------------------------
     });

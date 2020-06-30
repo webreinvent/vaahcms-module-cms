@@ -32,17 +32,26 @@ class JsonController extends Controller
 
 
         $data['aside_menu'][0] = [
-            "label" => "Content Management",
+            "label" => "Manage",
             "child" => [
                 [
                     "label"=>'Content Types',
                     "icon"=>'cog',
                     "link"=> self::$link."content-types",
                     'path' => "/content-types",
-                ]
+                ],
+
+                [
+                    "label"=>'Menus',
+                    "icon"=>'link',
+                    "link"=> self::$link."menus",
+                    'path' => "/menus",
+                ],
+
             ],
 
         ];
+
 
         $contents = ContentType::isPublished()->get();
 
@@ -61,6 +70,8 @@ class JsonController extends Controller
                 ];
             }
         }
+
+
 
 
         $response['status'] = 'success';

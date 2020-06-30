@@ -8,6 +8,7 @@ use VaahCms\Modules\Cms\Http\Middleware\SetContent;
 use VaahCms\Modules\Cms\Http\Middleware\SetContentType;
 use VaahCms\Modules\Cms\Providers\RouteServiceProvider;
 use VaahCms\Modules\Cms\Providers\EventServiceProvider;
+use VaahCms\Modules\Cms\View\Components\Example;
 
 class CmsServiceProvider extends ServiceProvider
 {
@@ -36,6 +37,7 @@ class CmsServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
         $this->registerSeeders();
         $this->registerBladeDirectives();
+        $this->registerBladeComponents();
     }
 
 
@@ -47,6 +49,7 @@ class CmsServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->register(RouteServiceProvider::class);
+        $this->app->register(EventServiceProvider::class);
         $this->app->register(EventServiceProvider::class);
         $loader = \Illuminate\Foundation\AliasLoader::getInstance();
         $this->registerHelpers();
@@ -202,11 +205,37 @@ class CmsServiceProvider extends ServiceProvider
     public function registerBladeDirectives()
     {
 
-        /*
-        \Blade::directive('hello', function ($expression) {
+
+        \Blade::directive('contents', function ($expression) {
+            $params = explode(',', $expression);
+
+            echo "<pre>";
+            print_r($params);
+            echo "</pre>";
+
+            \Blade::directive('content', function ($expression) use ($params) {
+                return $params[0];
+            });
+
+
             return "<?php echo 'Hello ' . {$expression}; ?>";
         });
-        */
+
+
+
+
+
+    }
+
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function registerBladeComponents()
+    {
+
+        \Blade::component('exp', Example::class);
 
     }
 }

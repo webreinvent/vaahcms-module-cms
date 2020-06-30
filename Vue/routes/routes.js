@@ -208,4 +208,58 @@ routes_list =     {
 
 routes.push(routes_list);
 
+
+/*
+|--------------------------------------------------------------------------
+| Menus Routes
+|--------------------------------------------------------------------------
+*/
+
+
+import MenusList from "./../pages/menus/List";
+import MenusView from "./../pages/menus/View";
+
+routes_list =     {
+    path: '/menus',
+    component: Backend,
+    props: true,
+    meta: {
+        middleware: [
+            GetBackendAssets
+        ]
+    },
+    children: [
+        {
+            path: '/',
+            name: 'menus.list',
+            component: MenusList,
+            props: true,
+            meta: {
+                middleware: [
+                    GetBackendAssets
+                ]
+            },
+            children: [
+                {
+                    path: 'view/:id',
+                    name: 'menus.view',
+                    component: MenusView,
+                    props: true,
+                    meta: {
+                        middleware: [
+                            GetBackendAssets
+                        ]
+                    },
+                },
+
+
+            ]
+        }
+
+    ]
+};
+
+routes.push(routes_list);
+
+
 export default routes;

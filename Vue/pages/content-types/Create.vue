@@ -25,13 +25,7 @@
                             </b-button>
                         </p>
 
-                        <p class="control">
 
-
-
-
-
-                        </p>
 
                         <p class="control">
                             <b-button tag="router-link"

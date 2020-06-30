@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class VhCmsGroups extends Migration
+class VhCmsFieldTypes extends Migration
 {
     /**
      * Run the migrations.
@@ -14,18 +14,12 @@ class VhCmsGroups extends Migration
     public function up()
     {
 
-        Schema::create('vh_cms_groups', function (Blueprint $table) {
+        Schema::create('vh_cms_field_types', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('parent_id')->nullable();
             $table->uuid('uuid')->nullable();
-
-            $table->integer('sort')->nullable();
-            $table->integer('vh_cms_content_type_id')->nullable();
             $table->string('name', 100)->nullable();
             $table->string('slug', 100)->nullable();
             $table->string('excerpt')->nullable();
-            $table->boolean('is_repeatable')->nullable();
-
             $table->text('meta')->nullable();
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
@@ -43,6 +37,6 @@ class VhCmsGroups extends Migration
     */
     public function down()
     {
-        Schema::dropIfExists('vh_cms_groups');
+        Schema::dropIfExists('vh_cms_field_types');
     }
 }
