@@ -1,6 +1,7 @@
 {
     "name": "vaahcms/cms",
     "description": "Cms",
+    "version": "0.1.0",
     "authors": [
         {
             "name": "vaah",
