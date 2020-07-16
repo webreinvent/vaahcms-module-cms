@@ -112,6 +112,7 @@ class CmsServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../Config/config.php' => config_path('cms.php'),
         ], 'config');
+
         $this->mergeConfigFrom(
             __DIR__.'/../Config/config.php', 'cms'
         );
