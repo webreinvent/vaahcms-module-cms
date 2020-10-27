@@ -23,7 +23,7 @@
                                 <small><b>#{{item.id}}</b></small>
                             </b-button>
                         </p>
-                        <p v-if="hasPermission('can-update-permissions')" class="control">
+                        <p class="control">
                             <b-button icon-left="edit"
                                       type="is-light"
                                       tag="router-link"
@@ -31,44 +31,6 @@
                                 Edit
                             </b-button>
                         </p>
-
-                       <!-- <p class="control">
-
-
-                            <b-dropdown aria-role="list" position="is-bottom-left">
-                                <button class="button is-light" slot="trigger">
-                                    <b-icon icon="caret-down"></b-icon>
-                                </button>
-
-                                <b-dropdown-item aria-role="listitem"
-                                                 v-if="!item.deleted_at"
-                                                 @click="actions('bulk-trash')"
-                                >
-                                    <b-icon icon="trash"></b-icon>
-                                    Trash
-                                </b-dropdown-item>
-
-                                <b-dropdown-item aria-role="listitem"
-                                                 v-if="item.deleted_at"
-                                                 @click="actions('bulk-restore')"
-                                >
-                                    <b-icon icon="trash-restore"></b-icon>
-                                    Restore
-                                </b-dropdown-item>
-                                <b-dropdown-item aria-role="listitem"
-                                                 @click="confirmDelete()"
-                                >
-                                    <b-icon icon="eraser"></b-icon>
-                                    Delete
-                                </b-dropdown-item>
-
-                            </b-dropdown>
-
-
-                        </p>-->
-
-
-
                         <p class="control">
                             <b-button type="is-light"
                                       @click="resetActiveItem()"
@@ -112,34 +74,30 @@
 
 
 
-                                    <template v-if="label == 'is_active'">
+                                    <template v-if="label == 'is_published' || label == 'is_commentable'">
                                         <TableTrStatus :value="value"
-                                                       :label="label"/>
-                                    </template>
-
-                                    <template v-else-if="label == 'count_users'">
-                                        <TableTrStatus :value="value"
-                                                       :label="label"/>
-                                    </template>
-
-                                    <template v-else-if="label == 'count_roles'">
-                                        <TableTrStatus :value="value"
-                                                       :label="label"/>
+                                                       :label="label">
+                                        </TableTrStatus>
                                     </template>
 
                                     <template v-else-if="label == 'created_by'">
                                         <TableTrActedBy :value="item['created_by_user']"
-                                                       :label="label"/>
+                                                       :label="label">
+                                        </TableTrActedBy>
                                     </template>
 
                                     <template v-else-if="label == 'updated_by'">
                                         <TableTrActedBy :value="item['updated_by_user']"
-                                                        :label="label"/>
+                                                        :label="label">
+
+                                        </TableTrActedBy>
                                     </template>
 
                                     <template v-else-if="label == 'deleted_by'">
                                         <TableTrActedBy :value="item['deleted_by_user']"
-                                                        :label="label"/>
+                                                        :label="label">
+
+                                        </TableTrActedBy>
                                     </template>
 
                                     <template v-else-if="label == 'created_by_user'
@@ -151,8 +109,9 @@
                                         <TableTrView :value="value"
                                                      :label="label"
                                                      :is_copiable="isCopiable(label)"
-                                                     :is_upper_case="isUpperCase(label)"
-                                        />
+                                                     :is_upper_case="isUpperCase(label)">
+
+                                        </TableTrView>
                                     </template>
 
                                 </template>

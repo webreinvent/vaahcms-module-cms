@@ -37,7 +37,8 @@ export default {
     },
     watch: {
         $route(to, from) {
-            this.updateView()
+            this.updateView();
+            this.getItem();
         },
 
 

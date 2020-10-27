@@ -142,44 +142,19 @@
                                         <div class="level-item">
 
                                             <b-field label="">
-                                                <b-select placeholder="- Select a filter -"
+                                                <b-select placeholder="- Select a status -"
                                                           v-model="query_string.filter"
                                                           @input="setFilter()">
                                                     <option value="">
-                                                        - Select a filter -
+                                                        - Select a status -
                                                     </option>
-                                                    <optgroup label="Status">
-                                                        <option value=01>
-                                                            Active
-                                                        </option>
-                                                        <option value=10>
-                                                            Inactive
-                                                        </option>
-                                                    </optgroup>
+                                                    <option value=01>
+                                                        Active
+                                                    </option>
+                                                    <option value=10>
+                                                        Inactive
+                                                    </option>
 
-                                                    <optgroup label="Module">
-                                                        <option
-                                                            v-for="option in page.assets.module"
-                                                            :value="option.module"
-                                                            :key="option.module">
-                                                            {{  option.module.charAt(0).toUpperCase() + option.module.slice(1) }}
-                                                        </option>
-                                                    </optgroup>
-                                                </b-select>
-
-                                                <b-select placeholder="- Select a section -"
-                                                          v-if="page.assets.module.some(item => item.module === query_string.filter)"
-                                                          v-model="query_string.section"
-                                                          @input="getList()">
-                                                    <option value="">
-                                                        - Select a section -
-                                                    </option>
-                                                    <option
-                                                        v-for="option in moduleSection"
-                                                        :value="option.section"
-                                                        :key="option.section">
-                                                        {{  option.section.charAt(0).toUpperCase() + option.section.slice(1) }}
-                                                    </option>
                                                 </b-select>
                                             </b-field>
 

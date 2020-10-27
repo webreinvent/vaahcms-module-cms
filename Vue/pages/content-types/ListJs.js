@@ -297,14 +297,10 @@ export default {
         //---------------------------------------------------------------------
         setFilter: function () {
 
-            this.query_string.section = '';
-
-            this.getModuleSection();
-
-            this.getList();
-
             this.query_string.page = 1;
             this.update('query_string', this.query_string);
+
+            this.getList();
 
         },
         //---------------------------------------------------------------------

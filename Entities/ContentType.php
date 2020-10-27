@@ -196,10 +196,10 @@ class ContentType extends Model {
         if($request['filter'] && $request['filter'] == '1')
         {
 
-            $list->where('is_active',$request['filter']);
+            $list->where('is_published',$request['filter']);
         }elseif($request['filter'] == '10'){
 
-            $list->whereNull('is_active')->orWhere('is_active',0);
+            $list->whereNull('is_published')->orWhere('is_published',0);
         }
 
         if(isset($request->q))
