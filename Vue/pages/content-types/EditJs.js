@@ -1,4 +1,5 @@
 import GlobalComponents from '../../vaahvue/helpers/GlobalComponents'
+import draggable from 'vuedraggable';
 
 let namespace = 'content_types';
 
@@ -12,6 +13,7 @@ export default {
     },
     components:{
         ...GlobalComponents,
+        draggable
 
     },
     data()
@@ -24,6 +26,8 @@ export default {
             params: {},
             local_action: null,
             title: null,
+            edit_status_index: null,
+            disable_status_editing: true,
         }
     },
     watch: {
@@ -73,7 +77,7 @@ export default {
             this.$Progress.start();
             this.params = {};
             let url = this.ajax_url+'/item/'+this.$route.params.id;
-            this.$vaah.ajax(url, this.params, this.getItemAfter);
+            this.$vaah.ajaxGet(url, this.params, this.getItemAfter);
         },
         //---------------------------------------------------------------------
         getItemAfter: function (data, res) {
@@ -88,16 +92,14 @@ export default {
             {
                 //if item does not exist or delete then redirect to list
                 this.update('active_item', null);
-                this.$router.push({name: 'perm.list'});
+                this.$router.push({name: 'content.types.list'});
             }
         },
         //---------------------------------------------------------------------
         store: function () {
             this.$Progress.start();
 
-            let params = {
-                item: this.item,
-            };
+            let params =  this.item;
 
             let url = this.ajax_url+'/store/'+this.item.id;
             this.$vaah.ajax(url, params, this.storeAfter);
@@ -115,7 +117,7 @@ export default {
                 {
                     this.saveAndClose()
                 }else{
-                    this.$router.push({name: 'perm.view', params:{id:this.id}});
+                    this.$router.push({name: 'content.types.view', params:{id:this.id}});
                     this.$root.$emit('eReloadItem');
                 }
 
@@ -130,8 +132,21 @@ export default {
         //---------------------------------------------------------------------
         saveAndClose: function () {
             this.update('active_item', null);
-            this.$router.push({name:'perm.list'});
+            this.$router.push({name:'content.types.list'});
         },
         //---------------------------------------------------------------------
+
+        //---------------------------------------------------------------------
+        toggleEditStatus: function(status_index)
+        {
+            this.edit_status_index = status_index;
+            if(this.disable_status_editing)
+            {
+                this.disable_status_editing = false;
+            } else
+            {
+                this.disable_status_editing = true;
+            }
+        },
     }
 }

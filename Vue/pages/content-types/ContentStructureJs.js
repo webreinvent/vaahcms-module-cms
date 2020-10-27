@@ -195,6 +195,11 @@ export default {
 
 
         },
+        //---------------------------------------------------------------------
+        resetActiveItem: function () {
+            this.update('active_item', null);
+            this.$router.push({name:'content.types.list'});
+        },
 
         //---------------------------------------------------------------------
 

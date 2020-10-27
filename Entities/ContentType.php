@@ -252,6 +252,34 @@ class ContentType extends Model {
 
     }
     //-------------------------------------------------
+    public static function storeValidation($request)
+    {
+        $rules = array(
+            'name' => 'required',
+            'slug' => 'required',
+            'plural' => 'required',
+            'plural_slug' => 'required',
+            'singular' => 'required',
+            'singular_slug' => 'required',
+        );
+
+        $validator = \Validator::make( $request->all(), $rules);
+        if ( $validator->fails() ) {
+
+            $errors             = errorsToArray($validator->errors());
+            $response['status'] = 'failed';
+            $response['errors'] = $errors;
+            return $response;
+        }
+
+        $data = [];
+
+        $response['status'] = 'success';
+
+        return $response;
+
+    }
+    //-------------------------------------------------
 
     //-------------------------------------------------
     public static function getItem($id)
@@ -375,12 +403,10 @@ class ContentType extends Model {
     public static function postStore($request,$id)
     {
 
-
-
         $input = $request->item;
 
 
-        $validation = static::validation($input);
+        $validation = static::storeValidation($request);
         if(isset($validation['status']) && $validation['status'] == 'failed')
         {
             return $validation;
@@ -409,11 +435,7 @@ class ContentType extends Model {
 
         $update = static::where('id',$id)->withTrashed()->first();
 
-        $update->name = $input['name'];
-        $update->slug = Str::slug($input['slug']);
-        $update->details = $input['details'];
-        $update->is_active = $input['is_active'];
-
+        $update->fill($request->all());
         $update->save();
 
 
