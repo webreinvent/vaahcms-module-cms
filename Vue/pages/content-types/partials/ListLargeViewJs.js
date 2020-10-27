@@ -75,8 +75,13 @@ export default {
         //---------------------------------------------------------------------
         changeStatusAfter: function (data,res) {
             this.$emit('eReloadList');
+            this.reloadRootAssets();
             this.update('is_list_loading', false);
 
+        },
+        //---------------------------------------------------------------------
+        async reloadRootAssets() {
+            await this.$store.dispatch('root/reloadAssets');
         },
         //---------------------------------------------------------------------
 

@@ -168,9 +168,11 @@ export default {
 
                 if(this.local_action === 'save-and-close')
                 {
-                    this.saveAndClose()
+                    this.saveAndClose();
                 }else{
                     //this.$router.push({name: 'content.types.list'});
+                    this.saveAndNew();
+
                     this.$root.$emit('eReloadItem');
                 }
 
@@ -187,7 +189,40 @@ export default {
         //---------------------------------------------------------------------
         saveAndClose: function () {
             this.update('active_item', null);
-            this.$router.push({name:'perm.list'});
+            this.$router.push({name:'content.types.list'});
+        },
+        //---------------------------------------------------------------------
+        saveAndNew: function () {
+            this.update('active_item', null);
+            this.resetNewItem();
+        },
+        //---------------------------------------------------------------------
+        resetNewItem: function()
+        {
+            let new_item = this.getNewItem();
+            this.update('new_item', new_item);
+        },
+        //---------------------------------------------------------------------
+        getNewItem: function()
+        {
+            let new_item = {
+                name: null,
+                slug: null,
+                plural: null,
+                plural_slug: null,
+                singular: null,
+                singular_slug: null,
+                excerpt: null,
+                is_published: null,
+                is_commentable: null,
+                content_statuses: [
+                    'draft',
+                    'published',
+                    'protected',
+                ],
+                meta: null,
+            };
+            return new_item;
         },
         //---------------------------------------------------------------------
     }

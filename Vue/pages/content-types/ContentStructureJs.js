@@ -103,6 +103,16 @@ export default {
         getItemAfter: function (data, res) {
             this.$Progress.finish();
             if(data){
+
+                if(data.groups.length == 0){
+                    data.groups[0] = {
+                        'name' : 'Default',
+                        'fields' : [],
+                    };
+                }
+
+                console.log(123,data);
+
                 this.update('active_item', data);
             }
 
