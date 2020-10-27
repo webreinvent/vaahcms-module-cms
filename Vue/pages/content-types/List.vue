@@ -228,15 +228,15 @@
                                     <div class="block" style="margin-bottom: 0px;" >
 
                                         <div v-if="page.list_view == 'small'">
-                                            <ListSmallView/>
+                                            <ListSmallView @eReloadList="getList"/>
                                         </div>
 
                                         <div v-else-if="page.list_view == 'medium'">
-                                            <ListLargeView/>
+                                            <ListLargeView @eReloadList="getList"/>
                                         </div>
 
                                         <div v-else>
-                                            <ListLargeView/>
+                                            <ListLargeView @eReloadList="getList"/>
                                         </div>
 
                                     </div>

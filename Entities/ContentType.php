@@ -450,12 +450,12 @@ class ContentType extends Model {
             }
 
             if($request['data']){
-                $role->is_active = $request['data']['status'];
+                $role->is_published = $request['data']['status'];
             }else{
-                if($role->is_active == 1){
-                    $role->is_active = 0;
+                if($role->is_published == 1){
+                    $role->is_published = 0;
                 }else{
-                    $role->is_active = 1;
+                    $role->is_published = 1;
                 }
             }
             $role->save();
