@@ -82,10 +82,10 @@
                                                         - Select Status -
                                                     </option>
                                                     <option value=1>
-                                                        Active
+                                                        Published
                                                     </option>
                                                     <option value=0>
-                                                        Inactive
+                                                        UnPublished
                                                     </option>
                                                 </b-select>
 
@@ -183,25 +183,6 @@
                                                     Include Trashed
                                                 </b-checkbox>
                                             </div>
-                                        </div>
-
-                                    </div>
-
-                                    <div class="level-right">
-
-                                        <div class="level-item">
-
-                                            <b-field>
-                                                <b-datepicker
-                                                    position="is-bottom-left"
-                                                    placeholder="- Select a dates -"
-                                                    v-model="selected_date"
-                                                    @input="setDateRange"
-                                                    range>
-                                                </b-datepicker>
-                                            </b-field>
-
-
                                         </div>
 
                                     </div>

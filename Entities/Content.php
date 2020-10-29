@@ -230,13 +230,9 @@ class Content extends Model {
             $list->whereBetween('updated_at',[$request->from." 00:00:00",$request->to." 23:59:59"]);
         }
 
-        if($request['filter'] && $request['filter'] == '1')
+        if($request['filter'])
         {
-
-            $list->where('is_active',$request['filter']);
-        }elseif($request['filter'] == '10'){
-
-            $list->whereNull('is_active')->orWhere('is_active',0);
+            $list->where('status',$request['filter']);
         }
 
         if(isset($request->q))
@@ -252,9 +248,21 @@ class Content extends Model {
         $data['list'] = $list->paginate(config('vaahcms.per_page'));
 
 
+        $status = static::distinct('status');
+
+        if($request['trashed'] == 'true')
+        {
+
+            $status->withTrashed();
+        }
+
+        $status_list = $status->select('status')->get();
+
+
 
         $response['status'] = 'success';
         $response['data'] = $data;
+        $response['status'] = $status_list;
 
         return $response;
 
@@ -503,8 +511,6 @@ class Content extends Model {
             $item = static::withTrashed()->where('id', $id)->first();
             if($item)
             {
-                $item->is_active = 0;
-                $item->save();
                 $item->delete();
             }
         }
@@ -529,13 +535,6 @@ class Content extends Model {
             return $response;
         }
 
-        if(!$request->has('data'))
-        {
-            $response['status'] = 'failed';
-            $response['errors'][] = 'Select Status';
-            return $response;
-        }
-
         foreach($request->inputs as $id)
         {
             $item = static::withTrashed()->where('id', $id)->first();
@@ -556,23 +555,6 @@ class Content extends Model {
     public static function bulkDelete($request)
     {
 
-        if(!\Auth::user()->hasPermission('can-update-roles') ||
-            !\Auth::user()->hasPermission('can-delete-roles'))
-        {
-            $response['status'] = 'failed';
-            $response['errors'][] = trans("vaahcms::messages.permission_denied");
-
-            return $response;
-        }
-
-        if(!\Auth::user()->hasPermission('can-update-roles'))
-        {
-            $response['status'] = 'failed';
-            $response['errors'][] = trans("vaahcms::messages.permission_denied");
-
-            return $response;
-        }
-
         if(!$request->has('inputs'))
         {
             $response['status'] = 'failed';
@@ -592,10 +574,6 @@ class Content extends Model {
             $item = static::where('id', $id)->withTrashed()->first();
             if($item)
             {
-
-                $item->permissions()->detach();
-
-                $item->users()->detach();
 
                 $item->forceDelete();
 

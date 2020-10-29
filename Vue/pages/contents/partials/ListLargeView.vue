@@ -2,6 +2,7 @@
 <template>
     <div>
         <b-table :data="page.list_is_empty ? [] : page.list.data"
+                 :checkable="true"
                  :checked-rows.sync="page.bulk_action.selected_items"
                  checkbox-position="left"
                  :hoverable="true"
@@ -14,6 +15,14 @@
 
                 <b-table-column field="name" label="Name">
                     {{ props.row.name }}
+                </b-table-column>
+
+                <b-table-column field="status" label="Status">
+                    <b-button disabled rounded size="is-small"
+                              type="is-primary">
+                        {{ props.row.status }}
+                    </b-button>
+
                 </b-table-column>
 
                 <b-table-column field="actions" label=""

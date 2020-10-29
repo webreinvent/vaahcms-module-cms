@@ -28,6 +28,7 @@ export default {
             search_delay: null,
             search_delay_time: 800,
             ids: [],
+            status_list: [],
             moduleSection: null,
         }
     },
@@ -216,10 +217,9 @@ export default {
 
             if(data){
 
-
                 this.update('list', data.list);
-                this.update('total_roles', data.totalRole);
-                this.update('total_users', data.totalUser);
+
+                this.status_list = res.data.status;
 
                 if(data.list.total === 0)
                 {
@@ -242,9 +242,8 @@ export default {
         //---------------------------------------------------------------------
         actions: function () {
 
-            this.page.bulk_action.action = 'bulk-change-status';
-
-            if(!this.page.bulk_action.data.status){
+            if(!this.page.bulk_action.action)
+            {
                 this.$vaah.toastErrors(['Select an action']);
                 return false;
             }
@@ -274,8 +273,6 @@ export default {
                 this.$root.$emit('eReloadItem');
                 this.resetBulkAction();
                 this.getList();
-
-                this.$store.dispatch('root/reloadPermissions');
             } else
             {
                 this.$Progress.finish();
@@ -296,8 +293,6 @@ export default {
         setFilter: function () {
 
             this.query_string.section = '';
-
-            this.getModuleSection();
 
             this.getList();
 
