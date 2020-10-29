@@ -165,7 +165,7 @@ export default {
         isCopiable: function (label) {
 
             if(
-                label == 'id' || label == 'uuid' || label == 'slug'
+                label == 'id' || label == 'uuid' || label == 'slug' || label == 'plural_slug' || label == 'singular_slug'
             )
             {
                 return true;

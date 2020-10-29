@@ -32,6 +32,40 @@
                             </b-button>
                         </p>
                         <p class="control">
+
+
+                            <b-dropdown aria-role="list" position="is-bottom-left">
+                                <button class="button is-light" slot="trigger">
+                                    <b-icon icon="caret-down"></b-icon>
+                                </button>
+
+                                <b-dropdown-item aria-role="listitem"
+                                                 v-if="!item.deleted_at"
+                                                 @click="actions('bulk-trash')"
+                                >
+                                    <b-icon icon="trash"></b-icon>
+                                    Trash
+                                </b-dropdown-item>
+
+                                <b-dropdown-item aria-role="listitem"
+                                                 v-if="item.deleted_at"
+                                                 @click="actions('bulk-restore')"
+                                >
+                                    <b-icon icon="trash-restore"></b-icon>
+                                    Restore
+                                </b-dropdown-item>
+                                <b-dropdown-item aria-role="listitem"
+                                                 @click="confirmDelete()"
+                                >
+                                    <b-icon icon="eraser"></b-icon>
+                                    Delete
+                                </b-dropdown-item>
+
+                            </b-dropdown>
+
+
+                        </p>
+                        <p class="control">
                             <b-button type="is-light"
                                       @click="resetActiveItem()"
                                       icon-left="times">

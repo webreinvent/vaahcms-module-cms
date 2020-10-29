@@ -83,9 +83,6 @@
                                             </b-tooltip>
                                         </p>
                                         <p class="control">
-                                            <b-button>Edit</b-button>
-                                        </p>
-                                        <p class="control">
                                             <b-tooltip label="Delete Group" type="is-dark">
                                                 <b-button @click="deleteGroup(group, index)" icon-left="trash">
                                                 </b-button>

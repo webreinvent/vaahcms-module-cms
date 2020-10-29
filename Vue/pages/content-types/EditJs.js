@@ -27,6 +27,7 @@ export default {
             local_action: null,
             title: null,
             edit_status_index: null,
+            status: null,
             disable_status_editing: true,
         }
     },
@@ -121,8 +122,14 @@ export default {
                     this.$root.$emit('eReloadItem');
                 }
 
+                this.reloadRootAssets();
+
             }
 
+        },
+        //---------------------------------------------------------------------
+        async reloadRootAssets() {
+            await this.$store.dispatch('root/reloadAssets');
         },
         //---------------------------------------------------------------------
         setLocalAction: function (action) {
@@ -147,6 +154,14 @@ export default {
             {
                 this.disable_status_editing = true;
             }
+        },
+        //---------------------------------------------------------------------
+
+        addStatus: function()
+        {
+            this.item.content_statuses.push(this.status);
+            this.status = null;
+            this.update('item', this.item);
         },
     }
 }

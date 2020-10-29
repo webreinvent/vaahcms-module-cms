@@ -176,7 +176,7 @@
                     </b-field>
 
                     <b-field label="New Status" :label-position="labelPosition">
-                        <b-input type="text" v-model="new_status"
+                        <b-input type="text" v-model="status"
                                  placeholder="Type new status and press enter"
                                  @keyup.enter.native="addStatus()"></b-input>
                     </b-field>
