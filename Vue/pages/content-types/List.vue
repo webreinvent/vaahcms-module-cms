@@ -63,9 +63,23 @@
                                             <b-field >
 
                                                 <b-select placeholder="- Bulk Actions -"
-                                                          v-model="page.bulk_action.data.status">
+                                                          v-model="page.bulk_action.action">
                                                     <option value="">
                                                         - Bulk Actions -
+                                                    </option>
+                                                    <option
+                                                            v-for="option in page.assets.bulk_actions"
+                                                            :value="option.slug"
+                                                            :key="option.slug">
+                                                        {{ option.name }}
+                                                    </option>
+                                                </b-select>
+
+                                                <b-select placeholder="- Select Status -"
+                                                          v-if="page.bulk_action.action == 'bulk-change-status'"
+                                                          v-model="page.bulk_action.data.status">
+                                                    <option value="">
+                                                        - Select Status -
                                                     </option>
                                                     <option value=1>
                                                         Active

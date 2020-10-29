@@ -124,7 +124,7 @@ export default {
 
                 if(action == 'bulk-delete')
                 {
-                    this.$router.push({name: 'perm.list'});
+                    this.$router.push({name: 'content.types.list'});
                 } else
                 {
                     this.getItem();
@@ -134,6 +134,8 @@ export default {
             {
                 this.$Progress.finish();
             }
+
+            this.reloadRootAssets();
         },
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
@@ -196,6 +198,10 @@ export default {
         hasPermission: function(slug)
         {
             return this.$vaah.hasPermission(this.permissions, slug);
+        },
+        //---------------------------------------------------------------------
+        async reloadRootAssets() {
+            await this.$store.dispatch('root/reloadAssets');
         },
         //---------------------------------------------------------------------
 

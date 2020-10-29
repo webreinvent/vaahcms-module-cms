@@ -508,7 +508,7 @@ class ContentType extends Model {
             $item = static::withTrashed()->where('id', $id)->first();
             if($item)
             {
-                $item->is_active = 0;
+                $item->is_published = 0;
                 $item->save();
                 $item->delete();
             }
@@ -561,23 +561,6 @@ class ContentType extends Model {
     public static function bulkDelete($request)
     {
 
-        if(!\Auth::user()->hasPermission('can-update-roles') ||
-            !\Auth::user()->hasPermission('can-delete-roles'))
-        {
-            $response['status'] = 'failed';
-            $response['errors'][] = trans("vaahcms::messages.permission_denied");
-
-            return $response;
-        }
-
-        if(!\Auth::user()->hasPermission('can-update-roles'))
-        {
-            $response['status'] = 'failed';
-            $response['errors'][] = trans("vaahcms::messages.permission_denied");
-
-            return $response;
-        }
-
         if(!$request->has('inputs'))
         {
             $response['status'] = 'failed';
@@ -585,12 +568,6 @@ class ContentType extends Model {
             return $response;
         }
 
-        if(!$request->has('data'))
-        {
-            $response['status'] = 'failed';
-            $response['errors'][] = 'Select Status';
-            return $response;
-        }
 
         foreach($request->inputs as $id)
         {
@@ -598,9 +575,7 @@ class ContentType extends Model {
             if($item)
             {
 
-                $item->permissions()->detach();
-
-                $item->users()->detach();
+                $item->contents()->forceDelete();
 
                 $item->forceDelete();
 
