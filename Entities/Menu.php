@@ -5,6 +5,7 @@ namespace VaahCms\Modules\Cms\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use VaahCms\Modules\Cms\Http\Controllers\Backend\MenusController;
 
 
 class Menu extends Model
@@ -57,8 +58,11 @@ class Menu extends Model
 
         $item = static::getItem($item->id);
 
+        $menu = new MenusController();
+
         $response['status'] = 'success';
         $response['data']['item'] =$item['data'];
+        $response['data']['assets'] = $menu->getAssets($request);
         $response['messages'][] = 'Saved';
 
         return $response;

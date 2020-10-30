@@ -51,7 +51,7 @@
                             </b-field>
 
                             <b-field label="Menus"
-                                     v-if="page.active_location && page.active_location.menus.length > 0"
+                                     v-if="page.filters.vh_theme_id && page.active_location && page.active_location.menus.length > 0"
                                      :label-position="labelPosition">
                                 <b-select v-model="page.filters.vh_menu_id"
                                           expanded

@@ -26,7 +26,6 @@ class MenusController extends Controller
     public function getAssets(Request $request)
     {
 
-
         $data['themes'] = Theme::getActiveThemesWithLocations();
 
         $response['status'] = 'success';

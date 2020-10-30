@@ -99,12 +99,17 @@ export default {
         },
         //---------------------------------------------------------------------
         setActiveMenu: function () {
-            let item = this.$vaah.findInArrayByKey(this.page.active_location.menus,
-                'id', this.page.filters.vh_menu_id);
 
-            this.update('active_menu', item);
+            this.update('active_menu', null);
 
-            this.getMenuItems();
+            if(this.page.filters.vh_menu_id){
+                let item = this.$vaah.findInArrayByKey(this.page.active_location.menus,
+                    'id', this.page.filters.vh_menu_id);
+
+                this.update('active_menu', item);
+
+                this.getMenuItems();
+            }
 
         },
         //---------------------------------------------------------------------
@@ -119,12 +124,38 @@ export default {
         //---------------------------------------------------------------------
         createAfter: function (data, res) {
 
+            // this.update('assets', null);
+
             if(data){
                 this.getAssets();
+
                 this.page.filters.vh_menu_id = data.item.id;
                 this.update('filters', this.page.filters);
+
                 this.update('active_menu', data.item);
+                this.update('active_menu_items', []);
+
+                this.page.new_item.name = null;
+
+                this.update('new_item', this.page.new_item);
+
+                let self = this;
+
+                data.assets.original.data.themes.forEach(function (item) {
+
+                    if(item.id === self.page.filters.vh_theme_id){
+                        let location = self.$vaah.findInArrayByKey(item.locations,
+                            'id', self.page.filters.vh_theme_location_id);
+
+                        self.update('active_location', location);
+                    }
+                })
+
+
             }
+
+
+            this.$Progress.finish();
 
         },
         //---------------------------------------------------------------------
