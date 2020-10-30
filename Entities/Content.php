@@ -130,11 +130,11 @@ class Content extends Model {
     public static function postCreate($request)
     {
 
-        /*$validation = static::validation($request);
+        $validation = static::validation($request);
         if(isset($validation['status']) && $validation['status'] == 'failed')
         {
             return $validation;
-        }*/
+        }
 
 
 
@@ -273,11 +273,9 @@ class Content extends Model {
     {
         $rules = array(
             'name' => 'required',
-            'slug' => 'required|unique:vh_cms_content_types',
-            'plural' => 'required',
-            'plural_slug' => 'required|unique:vh_cms_content_types',
-            'singular' => 'required',
-            'singular_slug' => 'required|unique:vh_cms_content_types',
+            'status' => 'required',
+            'vh_theme_id' => 'required',
+            'vh_theme_template_id' => 'required'
         );
 
         $validator = \Validator::make( $request->all(), $rules);
@@ -377,6 +375,12 @@ class Content extends Model {
     //-------------------------------------------------
     public static function postStore($request,$id)
     {
+
+        $validation = static::validation($request);
+        if(isset($validation['status']) && $validation['status'] == 'failed')
+        {
+            return $validation;
+        }
 
         $inputs = $request->all();
 

@@ -60,7 +60,7 @@ export default {
         //---------------------------------------------------------------------
         setActiveItem: function (item) {
             this.update('active_item', item);
-            this.$router.push({name: 'perm.view', params:{id:item.id}})
+            this.$router.push({name: 'contents.view', params:{id:item.id}})
         },
         //---------------------------------------------------------------------
         changeStatus: function (id) {

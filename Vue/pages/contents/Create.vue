@@ -142,7 +142,7 @@
                         <b-field label="Themes"
                                  :label-position="labelPosition">
 
-                            <b-select v-model="new_item.vh_theme_id" @input="setActiveTheme">
+                            <b-select v-model="new_item.vh_theme_id">
                                 <option value="">Select a Theme</option>
                                 <option v-for="(theme, index) in assets.themes"
                                         :value="theme.id"

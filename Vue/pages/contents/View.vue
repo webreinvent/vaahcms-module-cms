@@ -23,14 +23,15 @@
                                 <small><b>#{{item.id}}</b></small>
                             </b-button>
                         </p>
-                        <p v-if="hasPermission('can-update-permissions')" class="control">
+
+                       <!-- <p class="control">
                             <b-button icon-left="edit"
                                       type="is-light"
                                       tag="router-link"
-                                      :to="{name:'perm.edit', params:{id: item.id}}">
+                                      :to="{name:'contents.edit', params:{id: item.id}}">
                                 Edit
                             </b-button>
-                        </p>
+                        </p>-->
 
                        <!-- <p class="control">
 
@@ -110,24 +111,7 @@
 
                                 <template v-for="(value, label) in item">
 
-
-
-                                    <template v-if="label == 'is_active'">
-                                        <TableTrStatus :value="value"
-                                                       :label="label"/>
-                                    </template>
-
-                                    <template v-else-if="label == 'count_users'">
-                                        <TableTrStatus :value="value"
-                                                       :label="label"/>
-                                    </template>
-
-                                    <template v-else-if="label == 'count_roles'">
-                                        <TableTrStatus :value="value"
-                                                       :label="label"/>
-                                    </template>
-
-                                    <template v-else-if="label == 'created_by'">
+                                    <template v-if="label == 'created_by'">
                                         <TableTrActedBy :value="item['created_by_user']"
                                                        :label="label"/>
                                     </template>
@@ -143,7 +127,12 @@
                                     </template>
 
                                     <template v-else-if="label == 'created_by_user'
-                                      || label == 'updated_by_user' || label == 'deleted_by_user'">
+                                      || label == 'updated_by_user' || label == 'deleted_by_user'
+                                       || label == 'content_type' || label == 'template'
+                                       || label == 'vh_cms_content_type_id' || label == 'vh_theme_id'
+                                       || label == 'vh_theme_template_id' || label == 'is_active'
+                                       || label == 'content_form_groups' || label == 'template_form_groups'
+                                       || label == 'fields'">
 
                                     </template>
 

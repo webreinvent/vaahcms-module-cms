@@ -110,9 +110,8 @@
                                 </p>
 
                                 <p class="control">
-                                    <b-button tag="router-link"
-                                              type="is-light"
-                                              :to="{name: 'contents.list', params:{slug: page.content_slug}}"
+                                    <b-button type="is-light"
+                                              @click="resetActiveItem()"
                                               icon-left="times">
                                     </b-button>
                                 </p>
