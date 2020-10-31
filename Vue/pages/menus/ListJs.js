@@ -149,7 +149,7 @@ export default {
 
                         self.update('active_location', location);
                     }
-                })
+                });
 
 
             }

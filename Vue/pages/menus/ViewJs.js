@@ -98,14 +98,14 @@ export default {
         },
         //---------------------------------------------------------------------
         getContentList: function () {
-            this.$Progress.start();
+            // this.$Progress.start();
             let params = this.page.query_string;
             let url = this.ajax_url+'/content/list';
             this.$vaah.ajax(url, params, this.getContentAfter);
         },
         //---------------------------------------------------------------------
         getContentAfter: function (data, res) {
-            this.$Progress.finish();
+            // this.$Progress.finish();
             if(data){
                 this.update('content_list', data.list);
 
@@ -188,7 +188,7 @@ export default {
         getMenuItemsAfter: function (data, res) {
             this.$Progress.finish();
             if(data){
-                this.update('active_menu_items', data.items);
+                this.update('active_menu_items', data.deleteItem);
                 this.$router.push({name: 'menus.view', params:{id:this.page.active_menu.id}})
             }
 
@@ -208,7 +208,22 @@ export default {
         deleteItemAfter: function (data, res) {
             this.$Progress.finish();
             if(data){
-                this.getAssets();
+
+                this.page.filters.vh_menu_id = '';
+
+                this.update('filters', this.page.filters);
+
+                let self = this;
+
+                data.assets.original.data.themes.forEach(function (item) {
+
+                    if(item.id === self.page.filters.vh_theme_id){
+                        let location = self.$vaah.findInArrayByKey(item.locations,
+                            'id', self.page.filters.vh_theme_location_id);
+
+                        self.update('active_location', location);
+                    }
+                });
 
                 this.$router.push({name: 'menus.list'});
             }

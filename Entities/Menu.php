@@ -306,8 +306,12 @@ class Menu extends Model
             }
         }
 
+        $menu = new MenusController();
+
+
+
         $response['status'] = 'success';
-        $response['data'] = [];
+        $response['data']['assets'] = $menu->getAssets($request);
         $response['messages'][] = 'Action was successful';
 
         return $response;
