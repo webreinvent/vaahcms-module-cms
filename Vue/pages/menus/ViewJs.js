@@ -209,21 +209,11 @@ export default {
             this.$Progress.finish();
             if(data){
 
+                this.getMenuList();
+
                 this.page.filters.vh_menu_id = '';
 
                 this.update('filters', this.page.filters);
-
-                let self = this;
-
-                data.assets.original.data.themes.forEach(function (item) {
-
-                    if(item.id === self.page.filters.vh_theme_id){
-                        let location = self.$vaah.findInArrayByKey(item.locations,
-                            'id', self.page.filters.vh_theme_location_id);
-
-                        self.update('active_location', location);
-                    }
-                });
 
                 this.$router.push({name: 'menus.list'});
             }
@@ -234,7 +224,33 @@ export default {
 
             $('.menu-settings').toggle();
 
-        }
+        },
+        //---------------------------------------------------------------------
+        getMenuList: function () {
+            let params = {};
+            let url = this.ajax_url+'/assets';
+            this.$vaah.ajaxGet( url, params, this.getMenuListAfter);
+        },
+        //---------------------------------------------------------------------
+        getMenuListAfter: function (data, res) {
+            if(data && data.themes){
+
+                this.update('assets', data);
+
+                let theme = this.$vaah.findInArrayByKey(data.themes,
+                    'id', this.page.filters.vh_theme_id);
+
+                this.update('active_theme', theme);
+
+                let item = this.$vaah.findInArrayByKey(theme.locations,
+                    'id', this.page.filters.vh_theme_location_id);
+
+                this.update('active_location', item);
+
+
+            }
+
+        },
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------

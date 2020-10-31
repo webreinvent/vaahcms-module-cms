@@ -50,6 +50,29 @@ class Menu extends Model
             return $response;
         }
 
+        $user = static::where('vh_theme_location_id',$request['vh_theme_location_id'])->where('name', $request['name'])
+            ->first();
+
+        if($user)
+        {
+            $response['status'] = 'failed';
+            $response['errors'][] = "This name is already exist.";
+            return $response;
+        }
+
+
+        // check if slug exist
+        $user = static::where('vh_theme_location_id',$request['vh_theme_location_id'])->where('slug',$request['slug'])->first();
+
+        if($user)
+        {
+            $response['status'] = 'failed';
+            $response['errors'][] = "This slug is already exist.";
+            return $response;
+        }
+
+
+
         $item = new static();
         $item->fill($request->all());
         $item->slug = Str::slug($request->name);
@@ -119,9 +142,8 @@ class Menu extends Model
             return response()->json($response);
         }
 
-
         // check if name exist
-        $user = static::where('id','!=',$input['id'])->where('name', $input['name'])
+        $user = static::where('id','!=',$input['id'])->where('vh_theme_location_id',$input['vh_theme_location_id'])->where('name', $input['name'])
             ->first();
 
         if($user)
@@ -133,7 +155,7 @@ class Menu extends Model
 
 
         // check if slug exist
-        $user = static::where('id','!=',$input['id'])->where('slug',$input['slug'])->first();
+        $user = static::where('id','!=',$input['id'])->where('vh_theme_location_id',$input['vh_theme_location_id'])->where('slug',$input['slug'])->first();
 
         if($user)
         {

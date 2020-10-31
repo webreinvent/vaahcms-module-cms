@@ -64,6 +64,8 @@ export default {
         //-----------------------------------------------------------------
         async getAssets({ state, commit, dispatch, getters }) {
 
+            if(!state.assets_is_fetching || !state.assets)
+            {
                 let payload = {
                     key: 'assets_is_fetching',
                     value: true
@@ -84,6 +86,7 @@ export default {
                 console.log('--->data.data.data', data.data.data);
 
                 commit('updateState', payload);
+            }
 
 
         },
