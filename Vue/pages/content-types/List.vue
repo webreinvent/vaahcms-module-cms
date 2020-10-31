@@ -163,10 +163,10 @@
                                                         - Select a status -
                                                     </option>
                                                     <option value=01>
-                                                        Active
+                                                        Published
                                                     </option>
                                                     <option value=10>
-                                                        Inactive
+                                                        UnPublished
                                                     </option>
 
                                                 </b-select>
