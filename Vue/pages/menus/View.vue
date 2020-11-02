@@ -83,8 +83,9 @@
 
                         <hr/>
 
+
                         <!--menu-items-->
-                        <div class="draggable" >
+                        <div v-if="Array.isArray(page.active_menu_items)" class="draggable" >
                             <nested-draggable :items="page.active_menu_items"></nested-draggable>
                         </div>
                         <!--/menu-items-->

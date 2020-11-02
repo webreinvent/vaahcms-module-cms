@@ -32,11 +32,22 @@ export default {
     },
     watch: {
         $route(to, from) {
+            this.updateQueryString();
+
+            //----------------------------------------------------
+            this.getMenuList();
         }
     },
     mounted() {
         //----------------------------------------------------
         this.onLoad();
+        this.updateQueryString();
+
+        //----------------------------------------------------
+        this.getMenuList();
+        //----------------------------------------------------
+        //----------------------------------------------------
+        //----------------------------------------------------
         //----------------------------------------------------
         //----------------------------------------------------
     },
@@ -84,27 +95,66 @@ export default {
         },
         //---------------------------------------------------------------------
         setActiveTheme: function () {
-            let theme = this.$vaah.findInArrayByKey(this.assets.themes,
-                'id', this.page.filters.vh_theme_id);
 
-            this.update('active_theme', theme);
+            this.update('active_menu', null);
+
+
+            this.query_string.vh_theme_location_id = '';
+            this.query_string.vh_menu_id = '';
+            this.update('query_string', this.query_string);
+
+            this.update('active_theme', null);
+            this.update('active_location', null);
+
+
+            if(this.page.query_string.vh_theme_id){
+                let theme = this.$vaah.findInArrayByKey(this.assets.themes,
+                    'id', this.page.query_string.vh_theme_id);
+
+                this.update('active_theme', theme);
+            }
+
+            this.$vaah.updateCurrentURL(this.query_string, this.$router);
+
+
         },
         //---------------------------------------------------------------------
         setActiveLocation: function () {
-            let item = this.$vaah.findInArrayByKey(this.page.active_theme.locations,
-                'id', this.page.filters.vh_theme_location_id);
 
-            this.update('active_location', item);
+
+            this.query_string.vh_menu_id = '';
+            this.update('query_string', this.query_string);
+
+            this.update('active_location', null);
+
+            this.update('active_menu', null);
+
+            if(this.page.query_string.vh_theme_location_id){
+
+                let item = this.$vaah.findInArrayByKey(this.page.active_theme.locations,
+                    'id', this.page.query_string.vh_theme_location_id);
+
+                this.update('active_location', item);
+            }
+
+            this.$vaah.updateCurrentURL(this.query_string, this.$router);
+
+
+
+
+
 
         },
         //---------------------------------------------------------------------
         setActiveMenu: function () {
 
+            this.$vaah.updateCurrentURL(this.query_string, this.$router);
+
             this.update('active_menu', null);
 
-            if(this.page.filters.vh_menu_id){
+            if(this.page.query_string.vh_menu_id){
                 let item = this.$vaah.findInArrayByKey(this.page.active_location.menus,
-                    'id', this.page.filters.vh_menu_id);
+                    'id', this.page.query_string.vh_menu_id);
 
                 this.update('active_menu', item);
 
@@ -128,8 +178,8 @@ export default {
 
                 this.getMenuList();
 
-                this.page.filters.vh_menu_id = data.item.id;
-                this.update('filters', this.page.filters);
+                this.page.query_string.vh_menu_id = data.item.id;
+                this.update('query_string', this.page.query_string);
 
                 this.update('active_menu', data.item);
                 this.update('active_menu_items', []);
@@ -156,6 +206,8 @@ export default {
             this.$Progress.finish();
             if(data){
                 this.update('active_menu_items', data.items);
+
+                console.log('chek',this.page.active_menu.id);
                 this.$router.push({name: 'menus.view', params:{id:this.page.active_menu.id}})
             }
 
@@ -193,14 +245,19 @@ export default {
                 this.update('assets', data);
 
                 let theme = this.$vaah.findInArrayByKey(data.themes,
-                    'id', this.page.filters.vh_theme_id);
+                    'id', this.page.query_string.vh_theme_id);
 
                 this.update('active_theme', theme);
 
-                let item = this.$vaah.findInArrayByKey(theme.locations,
-                    'id', this.page.filters.vh_theme_location_id);
 
-                this.update('active_location', item);
+                if(theme){
+                    let item = this.$vaah.findInArrayByKey(theme.locations,
+                        'id', this.page.query_string.vh_theme_location_id);
+
+                    this.update('active_location', item);
+                }
+
+
 
 
             }

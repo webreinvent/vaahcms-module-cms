@@ -26,7 +26,7 @@
 
                             <b-field label="Themes"
                                      :label-position="labelPosition">
-                                <b-select v-model="page.filters.vh_theme_id"
+                                <b-select v-model="page.query_string.vh_theme_id"
                                           expanded
                                           @input="setActiveTheme">
                                     <option value="">Select a Theme</option>
@@ -40,7 +40,7 @@
                             <b-field label="Locations"
                                      v-if="page.active_theme"
                                      :label-position="labelPosition">
-                                <b-select v-model="page.filters.vh_theme_location_id"
+                                <b-select v-model="page.query_string.vh_theme_location_id"
                                           expanded
                                           @input="setActiveLocation">
                                     <option value="">Select a Location</option>
@@ -51,9 +51,9 @@
                             </b-field>
 
                             <b-field label="Menus"
-                                     v-if="page.filters.vh_theme_id && page.active_location && page.active_location.menus.length > 0"
+                                     v-if="page.query_string.vh_theme_id && page.active_location && page.active_location.menus.length > 0"
                                      :label-position="labelPosition">
-                                <b-select v-model="page.filters.vh_menu_id"
+                                <b-select v-model="page.query_string.vh_menu_id"
                                           expanded
                                           @input="setActiveMenu">
                                     <option value="">Select a Menu</option>
