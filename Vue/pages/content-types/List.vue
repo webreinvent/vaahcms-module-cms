@@ -85,7 +85,7 @@
                                                         Published
                                                     </option>
                                                     <option value=0>
-                                                        UnPublished
+                                                        Unpublished
                                                     </option>
                                                 </b-select>
 
@@ -166,7 +166,7 @@
                                                         Published
                                                     </option>
                                                     <option value=10>
-                                                        UnPublished
+                                                        Unpublished
                                                     </option>
 
                                                 </b-select>
