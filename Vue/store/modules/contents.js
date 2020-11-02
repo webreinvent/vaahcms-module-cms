@@ -19,6 +19,7 @@ export default {
         assets_is_fetching: null,
         assets_reload: false,
         list: null,
+        status_list: null,
         list_is_empty: false,
         is_list_loading: false,
         list_view: true,

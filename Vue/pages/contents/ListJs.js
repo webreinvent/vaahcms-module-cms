@@ -28,7 +28,6 @@ export default {
             search_delay: null,
             search_delay_time: 800,
             ids: [],
-            status_list: [],
             moduleSection: null,
         }
     },
@@ -219,7 +218,7 @@ export default {
 
                 this.update('list', data.list);
 
-                this.status_list = res.data.status;
+                this.update('status_list', res.data.status);
 
                 if(data.list.total === 0)
                 {

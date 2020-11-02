@@ -15,6 +15,7 @@ export default {
     {
         let obj = {
             namespace: namespace,
+            selected_id: null,
             icon_copy: "<b-icon icon='envelope' size='is-small'></b-icon>"
         };
 

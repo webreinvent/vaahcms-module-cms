@@ -147,7 +147,7 @@
                                                         - Select a filter -
                                                     </option>
 
-                                                    <option v-for="item in status_list" :value=item.status>
+                                                    <option v-for="item in page.status_list" :value=item.status>
                                                         {{item.status}}
                                                     </option>
 

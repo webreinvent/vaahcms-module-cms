@@ -18,10 +18,31 @@
                 </b-table-column>
 
                 <b-table-column field="status" label="Status">
-                    <b-button disabled rounded size="is-small"
-                              type="is-primary">
+                    <span v-if="selected_id !== props.row.id">
+                        <b-button v-if="props.row.status === 'published'" rounded size="is-small"
+                                  @click="selected_id = props.row.id"
+                                  type="is-success">
                         {{ props.row.status }}
                     </b-button>
+                    <b-button v-else rounded size="is-small"
+                              @click="selected_id = props.row.id"
+                              type="is-dark">
+                        {{ props.row.status }}
+                    </b-button>
+                    </span>
+
+                    <b-select placeholder="- Select a filter -"
+                              v-if="selected_id === props.row.id"
+                              v-model="props.row.status">
+                        <option value="">
+                            - Select status -
+                        </option>
+
+                        <option v-for="item in page.status_list" :value=item.status>
+                            {{item.status}}
+                        </option>
+
+                    </b-select>
 
                 </b-table-column>
 
