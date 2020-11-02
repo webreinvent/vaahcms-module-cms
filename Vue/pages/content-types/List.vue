@@ -202,7 +202,7 @@
                                         </div>
 
                                         <div v-else-if="page.list_view == 'medium'">
-                                            <ListLargeView @eReloadList="getList"/>
+                                            <ListMediumView @eReloadList="getList"/>
                                         </div>
 
                                         <div v-else>

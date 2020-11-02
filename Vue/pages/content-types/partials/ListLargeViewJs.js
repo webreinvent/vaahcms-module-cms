@@ -86,7 +86,7 @@ export default {
         //---------------------------------------------------------------------
 
         //---------------------------------------------------------------------
-        copiedData: function (data) {
+     copiedData: function (data) {
 
             this.$vaah.toastSuccess(['copied']);
 

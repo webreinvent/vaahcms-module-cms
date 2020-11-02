@@ -25,6 +25,12 @@
 
                 </b-table-column>
 
+                <b-table-column field="updated_at" label="Last Updated At">
+                    <span>
+                        {{$vaah.fromNow(props.row.updated_at)}}
+                    </span>
+                </b-table-column>
+
                 <b-table-column field="actions" label=""
                                 width="80">
 

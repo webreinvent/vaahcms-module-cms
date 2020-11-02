@@ -99,7 +99,7 @@ export default {
                 list_view = 'large';
             }
 
-            if(payload.name == 'content.types.create')
+            if(payload.name == 'content.types.create' || payload.name == 'content.types.view' || payload.name == 'content.types.edit')
             {
                 list_view = 'medium';
             };

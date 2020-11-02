@@ -14,7 +14,16 @@
                 </b-table-column>
 
                 <b-table-column field="name" label="Name">
-                    {{ props.row.name }}
+                    <b-tooltip label="Copy Slug" type="is-dark">
+                        <vh-copy class="text-copyable"
+                                 :data="props.row.slug"
+                                 :label="props.row.name"
+                                 @copied="copiedData"
+                        >
+                            <b-icon icon="copy"></b-icon>
+                        </vh-copy>
+
+                    </b-tooltip>
                 </b-table-column>
 
                 <b-table-column v-if="props.row.deleted_at" field="is_published" label="Is Published">

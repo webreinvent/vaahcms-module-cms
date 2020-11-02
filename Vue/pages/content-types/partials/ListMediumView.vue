@@ -1,6 +1,9 @@
-<script src="./ListSmallViewJs.js"></script>
+<script src="./ListMediumViewJs.js"></script>
 <template>
+
+
     <div>
+
         <b-table :data="page.list_is_empty ? [] : page.list.data"
                  :checkable="true"
                  :checked-rows.sync="page.bulk_action.selected_items"
@@ -14,7 +17,42 @@
                 </b-table-column>
 
                 <b-table-column field="name" label="Name">
-                    {{ props.row.name }}
+                    <b-tooltip label="Copy Slug" type="is-dark">
+                        <vh-copy class="text-copyable"
+                                 :data="props.row.slug"
+                                 :label="props.row.name"
+                                 @copied="copiedData"
+                        >
+                            <b-icon icon="copy"></b-icon>
+                        </vh-copy>
+
+                    </b-tooltip>
+                </b-table-column>
+                <b-table-column field="plural" label="Plural">
+
+                    <b-tooltip label="Copy Plural Slug" type="is-dark">
+                        <vh-copy class="text-copyable"
+                                 :data="props.row.plural_slug"
+                                 :label="props.row.plural"
+                                 @copied="copiedData"
+                        >
+                            <b-icon icon="copy"></b-icon>
+                        </vh-copy>
+
+                    </b-tooltip>
+                </b-table-column>
+
+                <b-table-column field="singular" label="Singular">
+                    <b-tooltip label="Copy Singular Slug" type="is-dark">
+                        <vh-copy class="text-copyable"
+                                 :data="props.row.singular_slug"
+                                 :label="props.row.singular"
+                                 @copied="copiedData"
+                        >
+                            <b-icon icon="copy"></b-icon>
+                        </vh-copy>
+
+                    </b-tooltip>
                 </b-table-column>
 
                 <b-table-column v-if="props.row.deleted_at" field="is_published" label="Is Published">
