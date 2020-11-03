@@ -27,6 +27,8 @@ class VhCmsFieldTypes extends Migration
             $table->timestamps();
             $table->softDeletes();
 
+            $table->index(['name', 'slug']);
+
         });
     }
 
