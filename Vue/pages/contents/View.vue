@@ -136,6 +136,14 @@
 
                                     </template>
 
+                                    <template v-else-if="label == 'is_published_at'">
+                                        <TableTrView v-if="item.status == 'published'" :value="value"
+                                                     :label="label"
+                                                     :is_copiable="isCopiable(label)"
+                                                     :is_upper_case="isUpperCase(label)"
+                                        />
+                                    </template>
+
                                     <template v-else>
                                         <TableTrView :value="value"
                                                      :label="label"
