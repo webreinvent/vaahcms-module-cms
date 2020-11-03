@@ -218,7 +218,7 @@ export default {
 
                 this.update('list', data.list);
 
-                this.update('status_list', res.data.status);
+                this.update('status_list', res.data.status.content_statuses);
 
                 if(data.list.total === 0)
                 {

@@ -34,7 +34,7 @@ export default {
         },
         bulk_action:{
             selected_items: [],
-            data: {},
+            data: '',
             action: null,
         },
         active_theme: null,

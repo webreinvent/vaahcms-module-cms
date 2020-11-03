@@ -13,7 +13,7 @@
                     {{ props.row.id }}
                 </b-table-column>
 
-                <b-table-column field="name" label="Name">
+                <b-table-column width="80" field="name" label="Name">
                     {{ props.row.name }}
                 </b-table-column>
 

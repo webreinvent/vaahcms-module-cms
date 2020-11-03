@@ -252,15 +252,9 @@ class Content extends Model {
         $data['list'] = $list->paginate(config('vaahcms.per_page'));
 
 
-        $status = static::distinct('status');
+        $status = ContentType::where('id', $request->content_type->id);
 
-        if($request['trashed'] == 'true')
-        {
-
-            $status->withTrashed();
-        }
-
-        $status_list = $status->select('status')->get();
+        $status_list = $status->select('content_statuses')->first();
 
 
 
@@ -483,12 +477,12 @@ class Content extends Model {
             }
 
             if($request['data']){
-                $role->is_active = $request['data']['status'];
+                $role->status = $request['data'];
             }else{
-                if($role->is_active == 1){
-                    $role->is_active = 0;
+                if($role->status == 1){
+                    $role->status = 0;
                 }else{
-                    $role->is_active = 1;
+                    $role->status = 1;
                 }
             }
             $role->save();

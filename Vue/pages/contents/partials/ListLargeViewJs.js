@@ -64,20 +64,21 @@ export default {
             this.$router.push({name: 'contents.view', params:{id:item.id}})
         },
         //---------------------------------------------------------------------
-        changeStatus: function (id) {
+        changeStatus: function (id,status) {
             this.$Progress.start();
             let url = this.ajax_url+'/actions/bulk-change-status';
             let params = {
                 inputs: [id],
-                data: null
+                data: status
             };
             this.$vaah.ajax(url, params, this.changeStatusAfter);
         },
         //---------------------------------------------------------------------
         changeStatusAfter: function (data,res) {
+            this.selected_id = null;
             this.$emit('eReloadList');
             this.update('is_list_loading', false);
-            this.$store.dispatch('root/reloadPermissions');
+            this.$Progress.finish();
 
         },
         //---------------------------------------------------------------------

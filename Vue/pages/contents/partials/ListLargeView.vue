@@ -33,13 +33,10 @@
 
                     <b-select placeholder="- Select a filter -"
                               v-if="selected_id === props.row.id"
-                              v-model="props.row.status">
-                        <option value="">
-                            - Select status -
-                        </option>
+                              v-model="props.row.status" @input="changeStatus(props.row.id,props.row.status)">
 
-                        <option v-for="item in page.status_list" :value=item.status>
-                            {{item.status}}
+                        <option v-for="item in page.status_list" :value=item>
+                            {{item}}
                         </option>
 
                     </b-select>

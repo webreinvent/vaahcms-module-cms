@@ -66,11 +66,21 @@
                                                     <option value="">
                                                         - Bulk Actions -
                                                     </option>
-                                                    <option v-if="option.slug != 'bulk-change-status'"
-                                                            v-for="option in page.assets.bulk_actions"
+                                                    <option v-for="option in page.assets.bulk_actions"
                                                             :value="option.slug"
                                                             :key="option.slug">
                                                         {{ option.name }}
+                                                    </option>
+                                                </b-select>
+
+                                                <b-select placeholder="- Select Status -"
+                                                          v-if="page.bulk_action.action == 'bulk-change-status'"
+                                                          v-model="page.bulk_action.data">
+                                                    <option value="">
+                                                        - Select Status -
+                                                    </option>
+                                                    <option v-for="item in page.status_list" :value=item>
+                                                        {{item}}
                                                     </option>
                                                 </b-select>
 
@@ -147,8 +157,8 @@
                                                         - Select a filter -
                                                     </option>
 
-                                                    <option v-for="item in page.status_list" :value=item.status>
-                                                        {{item.status}}
+                                                    <option v-for="item in page.status_list" :value=item>
+                                                        {{item}}
                                                     </option>
 
                                                 </b-select>
@@ -199,15 +209,15 @@
                                     <div class="block" style="margin-bottom: 0px;" >
 
                                         <div v-if="page.list_view == 'small'">
-                                            <ListSmallView/>
+                                            <ListSmallView @eReloadList="getList"/>
                                         </div>
 
                                         <div v-else-if="page.list_view == 'medium'">
-                                            <ListLargeView/>
+                                            <ListLargeView @eReloadList="getList"/>
                                         </div>
 
                                         <div v-else>
-                                            <ListLargeView/>
+                                            <ListLargeView @eReloadList="getList"/>
                                         </div>
 
                                     </div>
