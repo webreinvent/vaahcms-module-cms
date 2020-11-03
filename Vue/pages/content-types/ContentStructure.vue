@@ -63,7 +63,7 @@
 
                                     <b-field>
 
-                                        <b-switch >
+                                        <b-switch v-model="group.is_repeatable" true-value=1>
                                             Is repeatable
                                         </b-switch>
 
@@ -147,7 +147,7 @@
                                                                 Is repeatable
                                                             </td>
                                                             <td>
-                                                                <b-switch v-model="field.is_repeatable"
+                                                                <b-switch v-model="field.is_repeatable" true-value=1
                                                                           type="is-success">
                                                                 </b-switch>
                                                             </td>
@@ -158,7 +158,7 @@
                                                                 Is searchable
                                                             </td>
                                                             <td>
-                                                                <b-switch v-model="field.is_searchable"
+                                                                <b-switch v-model="field.is_searchable" true-value=1
                                                                           type="is-success">
                                                                 </b-switch>
                                                             </td>
