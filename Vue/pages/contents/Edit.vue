@@ -92,7 +92,7 @@
                                             Save & New
                                         </b-dropdown-item>
 
-                                        <b-dropdown-item aria-role="listitem"
+                                        <!--<b-dropdown-item aria-role="listitem"
                                                          @click="setLocalAction('save-and-clone')">
                                             <b-icon icon="copy"></b-icon>
                                             Save & Clone
@@ -102,7 +102,7 @@
                                                          @click="setLocalAction('trash')">
                                             <b-icon icon="trash"></b-icon>
                                             Trash
-                                        </b-dropdown-item>
+                                        </b-dropdown-item>-->
 
                                     </b-dropdown>
 

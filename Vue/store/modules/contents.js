@@ -44,8 +44,8 @@ export default {
         new_item:{
             parent_id: null,
             vh_cms_content_type_id: null,
-            vh_theme_id: null,
-            vh_theme_template_id: null,
+            vh_theme_id: '',
+            vh_theme_template_id: '',
             name: null,
             slug: null,
             is_published_at: null,
@@ -161,6 +161,11 @@ export default {
             if(payload.name == 'contents.create')
             {
                 list_view = 'small';
+            };
+
+            if(payload.name == 'contents.view')
+            {
+                list_view = 'medium';
             };
 
             update = {

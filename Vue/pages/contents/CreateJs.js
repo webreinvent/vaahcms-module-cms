@@ -116,13 +116,7 @@ export default {
             {
                 this.$emit('eReloadList');
 
-                if(this.local_action === 'save-and-close')
-                {
-                    this.saveAndClose()
-                }else{
-                    //this.$router.push({name: 'content.types.list'});
-                    this.$root.$emit('eReloadItem');
-                }
+                this.saveAndNew();
 
             }
 
@@ -130,12 +124,36 @@ export default {
         //---------------------------------------------------------------------
         setLocalAction: function (action) {
             this.local_action = action;
-            this.store();
+            this.create();
+        },//---------------------------------------------------------------------
+        saveAndNew: function () {
+            this.update('active_item', null);
+            this.resetNewItem();
         },
         //---------------------------------------------------------------------
-        saveAndClose: function () {
-            this.update('active_item', null);
-            this.$router.push({name:'perm.list'});
+        resetNewItem: function()
+        {
+            let new_item = this.getNewItem();
+            this.update('new_item', new_item);
+        },
+        //---------------------------------------------------------------------
+        getNewItem: function()
+        {
+            let new_item = {
+                parent_id: null,
+                vh_cms_content_type_id: null,
+                vh_theme_id: this.page.assets.default_theme.id,
+                vh_theme_template_id: this.page.assets.default_template.id,
+                name: null,
+                slug: null,
+                is_published_at: null,
+                status: "",
+                total_comments: null,
+                meta: null,
+                fields: [
+                ],
+            };
+            return new_item;
         },
         //---------------------------------------------------------------------
         expandAll: function () {

@@ -23,7 +23,6 @@
                                  :label="props.row.name"
                                  @copied="copiedData"
                         >
-                            <b-icon icon="copy"></b-icon>
                         </vh-copy>
 
                     </b-tooltip>
@@ -36,7 +35,6 @@
                                  :label="props.row.plural"
                                  @copied="copiedData"
                         >
-                            <b-icon icon="copy"></b-icon>
                         </vh-copy>
 
                     </b-tooltip>
@@ -49,7 +47,6 @@
                                  :label="props.row.singular"
                                  @copied="copiedData"
                         >
-                            <b-icon icon="copy"></b-icon>
                         </vh-copy>
 
                     </b-tooltip>

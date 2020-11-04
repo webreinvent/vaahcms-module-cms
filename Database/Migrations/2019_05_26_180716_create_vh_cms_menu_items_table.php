@@ -40,7 +40,8 @@ class CreateVhCmsMenuItemsTable extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->index(['type', 'name', 'slug', 'title', 'is_active', 'vh_permission_slug', 'is_home']);
+            $table->index(['type', 'name', 'slug', 'title', 'is_active',
+                'vh_permission_slug', 'is_home']);
         });
     }
 

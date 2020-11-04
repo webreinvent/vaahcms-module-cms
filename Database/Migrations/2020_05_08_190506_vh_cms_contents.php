@@ -35,7 +35,7 @@ class VhCmsContents extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->index(['is_published_at', 'name', 'slug', 'status']);
+            $table->index(['name', 'slug', 'status','is_published_at']);
 
         });
     }

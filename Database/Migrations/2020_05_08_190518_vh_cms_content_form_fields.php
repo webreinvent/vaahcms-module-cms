@@ -30,6 +30,8 @@ class VhCmsContentFormFields extends Migration
             $table->timestamps();
             $table->softDeletes();
 
+            $table->index(['vh_cms_content_id', 'vh_cms_form_group_id', 'vh_cms_form_field_id']);
+
         });
     }
 

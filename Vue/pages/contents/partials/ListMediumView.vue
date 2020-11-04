@@ -1,4 +1,4 @@
-<script src="./ListSmallViewJs.js"></script>
+<script src="./ListMediumViewJs.js"></script>
 <template>
     <div>
         <b-table :data="page.list_is_empty ? [] : page.list.data"
@@ -13,8 +13,14 @@
                     {{ props.row.id }}
                 </b-table-column>
 
-                <b-table-column width="80" field="name" label="Name">
-                    {{$vaah.limitString(props.row.name, 15)}}
+                <b-table-column field="name" label="Name">
+                    {{ props.row.name }}
+                </b-table-column>
+
+                <b-table-column width="100px" field="updated_at" label="Updated At">
+                    <span>
+                        {{$vaah.fromNow(props.row.updated_at)}}
+                    </span>
                 </b-table-column>
 
                 <b-table-column field="actions" label=""

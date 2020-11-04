@@ -17,7 +17,7 @@
                     {{ props.row.name }}
                 </b-table-column>
 
-                <b-table-column field="status" label="Status">
+                <b-table-column width="150px" field="status" label="Status">
                     <span v-if="selected_id !== props.row.id">
                         <b-button v-if="props.row.status === 'published'" rounded size="is-small"
                                   @click="selected_id = props.row.id"
@@ -43,7 +43,7 @@
 
                 </b-table-column>
 
-                <b-table-column field="updated_at" label="Last Updated At">
+                <b-table-column width="150px" field="updated_at" label="Updated At">
                     <span>
                         {{$vaah.fromNow(props.row.updated_at)}}
                     </span>

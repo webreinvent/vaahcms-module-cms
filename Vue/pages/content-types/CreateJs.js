@@ -173,7 +173,7 @@ export default {
                     //this.$router.push({name: 'content.types.list'});
                     this.saveAndNew();
 
-                    this.$root.$emit('eReloadItem');
+                    // this.$root.$emit('eReloadItem');
                 }
 
                 this.reloadRootAssets();

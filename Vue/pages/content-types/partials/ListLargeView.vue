@@ -20,7 +20,6 @@
                                  :label="props.row.name"
                                  @copied="copiedData"
                         >
-                            <b-icon icon="copy"></b-icon>
                         </vh-copy>
 
                     </b-tooltip>
@@ -34,7 +33,6 @@
                                  :label="props.row.plural"
                                  @copied="copiedData"
                         >
-                            <b-icon icon="copy"></b-icon>
                         </vh-copy>
 
                     </b-tooltip>
@@ -47,13 +45,12 @@
                                  :label="props.row.singular"
                                  @copied="copiedData"
                         >
-                            <b-icon icon="copy"></b-icon>
                         </vh-copy>
 
                     </b-tooltip>
                 </b-table-column>
 
-                <b-table-column v-if="props.row.deleted_at" field="is_published" label="Is Published">
+                <b-table-column width="100" v-if="props.row.deleted_at" field="is_published" label="Is Published">
 
                     <b-button v-if="props.row.is_published === 1" disabled rounded size="is-small"
                               type="is-success">
@@ -65,7 +62,7 @@
 
                 </b-table-column>
 
-                <b-table-column v-else field="is_published" label="Is Published">
+                <b-table-column width="100" v-else field="is_published" label="Is Published">
                     <b-tooltip label="Change Status" type="is-dark">
                         <b-button v-if="props.row.is_published === 1" rounded size="is-small"
                                   type="is-success" @click="changeStatus(props.row.id)">

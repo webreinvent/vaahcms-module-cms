@@ -68,39 +68,6 @@
                                 </p>
 
                                 <p class="control">
-
-
-                                    <b-dropdown aria-role="list" position="is-bottom-left">
-                                        <button class="button is-light"
-                                                slot="trigger">
-                                            <b-icon icon="caret-down"></b-icon>
-                                        </button>
-
-                                        <b-dropdown-item aria-role="listitem"
-                                                         @click="setLocalAction('save-and-close')">
-                                            <b-icon icon="check"></b-icon>
-                                            Save & Close
-                                        </b-dropdown-item>
-
-                                        <b-dropdown-item aria-role="listitem"
-                                                         @click="setLocalAction('save-and-new')">
-                                            <b-icon icon="plus"></b-icon>
-                                            Save & New
-                                        </b-dropdown-item>
-
-                                        <b-dropdown-item aria-role="listitem"
-                                                         @click="setLocalAction('save-and-clone')">
-                                            <b-icon icon="copy"></b-icon>
-                                            Save & Clone
-                                        </b-dropdown-item>
-
-
-                                    </b-dropdown>
-
-
-                                </p>
-
-                                <p class="control">
                                     <b-button tag="router-link"
                                               type="is-light"
                                               :to="{name: 'contents.list', params:{slug: page.content_slug}}"
