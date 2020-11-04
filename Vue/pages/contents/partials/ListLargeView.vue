@@ -18,21 +18,23 @@
                 </b-table-column>
 
                 <b-table-column width="150px" field="status" label="Status">
-                    <span v-if="selected_id !== props.row.id">
+                    <b-tooltip label="Change Status" type="is-dark">
+                    <span v-if="page.selected_id !== props.row.id">
                         <b-button v-if="props.row.status === 'published'" rounded size="is-small"
-                                  @click="selected_id = props.row.id"
+                                  @click="page.selected_id = props.row.id"
                                   type="is-success">
                         {{ props.row.status }}
                     </b-button>
                     <b-button v-else rounded size="is-small"
-                              @click="selected_id = props.row.id"
+                              @click="page.selected_id = props.row.id"
                               type="is-dark">
                         {{ props.row.status }}
                     </b-button>
                     </span>
+                    </b-tooltip>
 
                     <b-select placeholder="- Select a filter -"
-                              v-if="selected_id === props.row.id"
+                              v-if="page.selected_id === props.row.id"
                               v-model="props.row.status" @input="changeStatus(props.row.id,props.row.status)">
 
                         <option v-for="item in page.status_list" :value=item>

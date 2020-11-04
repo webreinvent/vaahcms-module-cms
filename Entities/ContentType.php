@@ -179,8 +179,13 @@ class ContentType extends Model {
     //-------------------------------------------------
     public static function getList($request)
     {
+        if($request['sort_by'])
+        {
 
-        $list = static::orderBy('id', 'desc');
+            $list = static::orderBy($request['sort_by'], $request['sort_order']);
+        }else{
+            $list = static::orderBy('id', $request['sort_order']);
+        }
 
         if($request['trashed'] == 'true')
         {

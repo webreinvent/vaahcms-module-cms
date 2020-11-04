@@ -165,6 +165,9 @@ export default {
                 if(key == 'page')
                 {
                     this.query_string[key] = 1;
+                } else if(key == 'sort_order')
+                {
+                    this.query_string[key] = 'desc';
                 } else
                 {
                     this.query_string[key] = null;

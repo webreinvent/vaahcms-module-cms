@@ -174,6 +174,55 @@
 
 
                                         </div>
+                                        <div class="level-item">
+
+                                            <b-field label="">
+                                                <b-select placeholder="- Sort by -"
+                                                          v-model="query_string.sort_by"
+                                                          @input="setFilter()">
+                                                    <option value="">
+                                                        -  Sort by -
+                                                    </option>
+                                                    <option value=id>
+                                                        Id
+                                                    </option>
+                                                    <option value=name>
+                                                        Name
+                                                    </option>
+                                                    <option value=plural>
+                                                        Plural Name
+                                                    </option>
+                                                    <option value=singular>
+                                                        Singular Name
+                                                    </option>
+                                                    <option value=is_published>
+                                                        Is Published
+                                                    </option>
+
+                                                </b-select>
+                                            </b-field>
+
+
+                                        </div>
+                                        <div class="level-item">
+
+                                            <b-field label="">
+                                                <b-dropdown aria-role="list" @input="setFilter()" v-model="query_string.sort_order">
+                                                    <button class="button is-primary" type="button" slot="trigger">
+                                                        <span>{{query_string.sort_order.charAt(0).toUpperCase() + query_string.sort_order.slice(1)}}</span>
+                                                    </button>
+
+                                                    <b-dropdown-item  value="desc">
+                                                        <span>Desc</span>
+                                                    </b-dropdown-item>
+                                                    <b-dropdown-item  value="asc">
+                                                        <span>Asc</span>
+                                                    </b-dropdown-item>
+                                                </b-dropdown>
+                                            </b-field>
+
+
+                                        </div>
 
                                         <div class="level-item">
                                             <div class="field">

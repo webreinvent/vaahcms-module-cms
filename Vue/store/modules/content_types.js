@@ -30,6 +30,8 @@ export default {
             q: null,
             trashed: null,
             filter: null,
+            sort_by: null,
+            sort_order: 'desc',
         },
         bulk_action:{
             selected_items: [],

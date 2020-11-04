@@ -182,7 +182,10 @@ export default {
                 data: {},
                 action: null,
             };
+
+            this.page.selected_id = null;
             this.update('bulk_action', this.page.bulk_action);
+            this.update('selected_id', this.page.selected_id);
         },
         //---------------------------------------------------------------------
         paginate: function(page=1)
