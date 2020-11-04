@@ -2,7 +2,7 @@
 <template>
     <div class="block is-marginless">
 
-        <b-collapse :open="false" aria-id="site_settings">
+        <b-collapse :open="true" aria-id="site_settings">
 
             <div class="level has-padding-top-10 has-padding-bottom-10" slot="trigger"
                  slot-scope="props"

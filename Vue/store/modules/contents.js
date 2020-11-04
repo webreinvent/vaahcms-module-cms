@@ -154,6 +154,13 @@ export default {
 
                 commit('updateState', update);
 
+                update = {
+                    key: 'active_item',
+                    value: null
+                };
+
+                commit('updateState', update);
+
             }
 
             if(payload.name == 'contents.edit')
