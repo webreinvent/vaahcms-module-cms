@@ -219,7 +219,12 @@ class Content extends Model {
     public static function getList($request)
     {
 
-        $list = static::orderBy('id', 'desc');
+        if($request['sort_by'])
+        {
+            $list = static::orderBy($request['sort_by'], $request['sort_order']);
+        }else{
+            $list = static::orderBy('id', $request['sort_order']);
+        }
 
         $list->where('vh_cms_content_type_id', $request->content_type->id);
 
