@@ -34,7 +34,47 @@ export default {
     watch: {
         $route(to, from) {
             this.updateView()
-        }
+        },
+
+        'item.name': {
+            deep: true,
+            handler(new_val, old_val) {
+
+                if(new_val)
+                {
+                    this.item.slug = this.$vaah.strToSlug(new_val);
+                    this.updateNewItem();
+                }
+
+            }
+        },
+
+        'item.plural': {
+            deep: true,
+            handler(new_val, old_val) {
+
+                if(new_val)
+                {
+                    this.item.plural_slug = this.$vaah.strToSlug(new_val);
+                    this.updateNewItem();
+                }
+
+            }
+        },
+
+        'item.singular': {
+            deep: true,
+            handler(new_val, old_val) {
+
+                if(new_val)
+                {
+                    this.item.singular_slug = this.$vaah.strToSlug(new_val);
+                    this.updateNewItem();
+                }
+
+            }
+        },
+
     },
     mounted() {
         //----------------------------------------------------
@@ -59,6 +99,16 @@ export default {
         updateView: function()
         {
             this.$store.dispatch(this.namespace+'/updateView', this.$route);
+        },
+        //---------------------------------------------------------------------
+        updateNewItem: function()
+        {
+            let update = {
+                state_name: 'item',
+                state_value: this.item,
+                namespace: this.namespace,
+            };
+            this.$vaah.updateState(update);
         },
         //---------------------------------------------------------------------
         onLoad: function()

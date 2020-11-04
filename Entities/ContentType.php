@@ -231,7 +231,7 @@ class ContentType extends Model {
     public static function validation($request)
     {
         $rules = array(
-            'name' => 'required',
+            'name' => 'required|unique:vh_cms_content_types',
             'slug' => 'required|unique:vh_cms_content_types',
             'plural' => 'required',
             'plural_slug' => 'required|unique:vh_cms_content_types',
@@ -407,9 +407,6 @@ class ContentType extends Model {
     public static function postStore($request,$id)
     {
 
-        $input = $request->item;
-
-
         $validation = static::storeValidation($request);
         if(isset($validation['status']) && $validation['status'] == 'failed')
         {
@@ -417,9 +414,9 @@ class ContentType extends Model {
         }
 
         // check if name exist
-        $user = static::where('id','!=',$input['id'])->where('name',$input['name'])->first();
+        $name_exist = static::where('id','!=',$request['id'])->where('name',$request['name'])->first();
 
-        if($user)
+        if($name_exist)
         {
             $response['status'] = 'failed';
             $response['errors'][] = "This name is already exist.";
@@ -428,9 +425,9 @@ class ContentType extends Model {
 
 
         // check if slug exist
-        $user = static::where('id','!=',$input['id'])->where('slug',$input['slug'])->first();
+        $slug_exist = static::where('id','!=',$request['id'])->where('slug',$request['slug'])->first();
 
-        if($user)
+        if($slug_exist)
         {
             $response['status'] = 'failed';
             $response['errors'][] = "This slug is already exist.";

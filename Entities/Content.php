@@ -385,6 +385,15 @@ class Content extends Model {
             return $validation;
         }
 
+        $name_exist = static::where('id','!=',$request['id'])->where('name',$request['name'])->first();
+
+        if($name_exist)
+        {
+            $response['status'] = 'failed';
+            $response['errors'][] = "This name is already exist.";
+            return $response;
+        }
+
         $inputs = $request->all();
 
         $item = static::where('id',$id)->withTrashed()->first();
