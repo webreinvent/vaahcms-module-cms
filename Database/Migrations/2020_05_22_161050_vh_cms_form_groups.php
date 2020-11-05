@@ -22,10 +22,10 @@ class VhCmsFormGroups extends Migration
             $table->integer('sort')->nullable();
             $table->integer('groupable_id')->nullable();
             $table->string('groupable_type')->nullable();
-            $table->string('name', 100)->nullable();
-            $table->string('slug', 100)->nullable();
+            $table->string('name', 100)->nullable()->index();
+            $table->string('slug', 100)->nullable()->index();
             $table->string('excerpt')->nullable();
-            $table->boolean('is_repeatable')->nullable();
+            $table->boolean('is_repeatable')->nullable()->index();
 
             $table->text('meta')->nullable();
             $table->integer('created_by')->nullable();
@@ -33,8 +33,6 @@ class VhCmsFormGroups extends Migration
             $table->integer('deleted_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
-
-            $table->index(['name', 'slug', 'is_repeatable']);
 
         });
     }

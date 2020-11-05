@@ -20,11 +20,11 @@ class VhCmsFormFields extends Migration
             $table->integer('vh_cms_field_type_id')->nullable();
             $table->integer('vh_cms_form_group_id')->nullable();
             $table->integer('sort')->nullable();
-            $table->string('name', 100)->nullable();
-            $table->string('slug', 100)->nullable();
+            $table->string('name', 100)->nullable()->index();
+            $table->string('slug', 100)->nullable()->index();
             $table->string('excerpt')->nullable();
-            $table->boolean('is_searchable')->nullable();
-            $table->boolean('is_repeatable')->nullable();
+            $table->boolean('is_searchable')->nullable()->index();
+            $table->boolean('is_repeatable')->nullable()->index();
 
             $table->text('meta')->nullable();
             $table->integer('created_by')->nullable();
@@ -32,8 +32,6 @@ class VhCmsFormFields extends Migration
             $table->integer('deleted_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
-
-            $table->index(['name', 'slug', 'is_repeatable', 'is_searchable']);
         });
     }
 
