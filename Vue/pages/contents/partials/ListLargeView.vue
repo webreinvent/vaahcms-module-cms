@@ -17,31 +17,64 @@
                     {{ props.row.name }}
                 </b-table-column>
 
-                <b-table-column width="150px" field="status" label="Status">
+                <b-table-column v-if="props.row.deleted_at" width="150px" field="status" label="Status">
+
+                    <b-dropdown aria-role="list" disabled size="is-small" v-model="props.row.status"
+                                    @input="changeStatus(props.row.id,props.row.status)">
+
+                            <p v-if="props.row.status === 'published'"
+                                class="tag is-success"
+                                slot="trigger"
+                                role="button" slot-scope="{ active }">
+                                <span>{{ props.row.status }}</span>
+
+                            </p>
+
+                            <p v-else
+                                class="tag is-dark"
+                                slot="trigger"
+                                role="button" slot-scope="{ active }">
+                                <span>{{ props.row.status }}</span>
+
+                            </p>
+
+                            <span v-for="item in page.status_list">
+                                <b-dropdown-item :value="item" aria-role="listitem">{{item}}</b-dropdown-item>
+                            </span >
+
+                        </b-dropdown>
+
+                </b-table-column>
+
+
+                <b-table-column v-else width="150px" field="status" label="Status">
                     <b-tooltip label="Change Status" type="is-dark">
-                    <span v-if="page.selected_id !== props.row.id">
-                        <b-button v-if="props.row.status === 'published'" rounded size="is-small"
-                                  @click="page.selected_id = props.row.id"
-                                  type="is-success">
-                        {{ props.row.status }}
-                    </b-button>
-                    <b-button v-else rounded size="is-small"
-                              @click="page.selected_id = props.row.id"
-                              type="is-dark">
-                        {{ props.row.status }}
-                    </b-button>
-                    </span>
+
+                        <b-dropdown aria-role="list" size="is-small" v-model="props.row.status"
+                                    @input="changeStatus(props.row.id,props.row.status)">
+
+                            <p v-if="props.row.status === 'published'"
+                                class="tag is-success"
+                                slot="trigger"
+                                role="button" slot-scope="{ active }">
+                                <span>{{ props.row.status }}</span>
+                                <b-icon icon="ellipsis-v"></b-icon>
+                            </p>
+
+                            <p v-else
+                                class="tag is-dark"
+                                slot="trigger"
+                                role="button" slot-scope="{ active }">
+                                <span>{{ props.row.status }}</span>
+                                <b-icon icon="ellipsis-v"></b-icon>
+                            </p>
+
+                            <span v-for="item in page.status_list">
+                                <b-dropdown-item :value="item" aria-role="listitem">{{item}}</b-dropdown-item>
+                            </span >
+
+                        </b-dropdown>
                     </b-tooltip>
-
-                    <b-select placeholder="- Select a filter -"
-                              v-if="page.selected_id === props.row.id"
-                              v-model="props.row.status" @input="changeStatus(props.row.id,props.row.status)">
-
-                        <option v-for="item in page.status_list" :value=item>
-                            {{item}}
-                        </option>
-
-                    </b-select>
 
                 </b-table-column>
 
@@ -57,7 +90,7 @@
                     <b-tooltip label="Edit" type="is-dark">
                         <b-button size="is-small"
                                   @click="toEdit(props.row)"
-                                  icon-left="align-left">
+                                  icon-left="pencil-alt">
                         </b-button>
                     </b-tooltip>
 
