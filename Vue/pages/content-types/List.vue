@@ -209,14 +209,15 @@
                                             <b-field label="">
                                                 <b-dropdown aria-role="list" @input="setFilter()" v-model="query_string.sort_order">
                                                     <button class="button is-primary" type="button" slot="trigger">
-                                                        <span>{{query_string.sort_order.charAt(0).toUpperCase() + query_string.sort_order.slice(1)}}</span>
+                                                        <span v-if="query_string.sort_order === 'desc'">Descending</span>
+                                                        <span v-else>Ascending</span>
                                                     </button>
 
                                                     <b-dropdown-item  value="desc">
-                                                        <span>Desc</span>
+                                                        <span>Descending</span>
                                                     </b-dropdown-item>
                                                     <b-dropdown-item  value="asc">
-                                                        <span>Asc</span>
+                                                        <span>Ascending</span>
                                                     </b-dropdown-item>
                                                 </b-dropdown>
                                             </b-field>

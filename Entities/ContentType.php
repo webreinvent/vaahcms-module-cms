@@ -211,6 +211,7 @@ class ContentType extends Model {
 
             $list->where(function ($q) use ($request){
                 $q->where('name', 'LIKE', '%'.$request->q.'%')
+                    ->orWhere('id', 'LIKE', $request->q.'%')
                     ->orWhere('slug', 'LIKE', '%'.$request->q.'%');
             });
         }
