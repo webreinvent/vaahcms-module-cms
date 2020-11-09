@@ -31,9 +31,16 @@ Route::group(
                 Route::post( '/assets', 'JsonController@getAssets' )
                     ->name( 'vh.backend.cms.json' );
                 //------------------------------------------------
+                //------------------------------------------------
+
+                //------------------------------------------------
             });
         //------------------------------------------------
     });
+
+
+Route::get( '/backend/json/getUserById/{id}', 'Backend\ContentsController@getUserById' )
+    ->name( 'vh.backend.cms.getUserById' );
 
 include('backend/content-types.php');
 include('backend/contents.php');

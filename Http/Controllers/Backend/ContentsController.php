@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller;
 use VaahCms\Modules\Cms\Entities\Content;
 use VaahCms\Modules\Cms\Entities\ContentType;
 use WebReinvent\VaahCms\Entities\Theme;
+use WebReinvent\VaahCms\Entities\User;
 
 class ContentsController extends Controller
 {
@@ -179,6 +180,11 @@ class ContentsController extends Controller
 
         return response()->json($response);
 
+    }
+    //----------------------------------------------------------
+    public function getUserById(Request $request,$id)
+    {
+        return User::find($id);
     }
     //----------------------------------------------------------
 

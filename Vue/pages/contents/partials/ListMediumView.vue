@@ -29,7 +29,7 @@
                     <b-tooltip label="Edit" type="is-dark">
                         <b-button size="is-small"
                                   @click="toEdit(props.row)"
-                                  icon-left="align-left">
+                                  icon-left="pencil-alt">
                         </b-button>
                     </b-tooltip>
 

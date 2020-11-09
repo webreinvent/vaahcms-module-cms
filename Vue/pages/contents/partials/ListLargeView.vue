@@ -58,7 +58,7 @@
                                 slot="trigger"
                                 role="button" slot-scope="{ active }">
                                 <span>{{ props.row.status }}</span>
-                                <b-icon icon="ellipsis-v"></b-icon>
+                                <b-icon :icon="active? 'chevron-up' : 'chevron-down'"></b-icon>
                             </p>
 
                             <p v-else
@@ -66,7 +66,7 @@
                                 slot="trigger"
                                 role="button" slot-scope="{ active }">
                                 <span>{{ props.row.status }}</span>
-                                <b-icon icon="ellipsis-v"></b-icon>
+                                <b-icon :icon="active? 'chevron-up' : 'chevron-down'"></b-icon>
                             </p>
 
                             <span v-for="item in page.status_list">

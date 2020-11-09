@@ -446,7 +446,15 @@ class Content extends Model {
                     $field['content'] = json_encode($field['content']);
                 }
 
-                $stored_field->content = $field['content'];
+                if($field['type']['slug'] == 'user' && $field['content']){
+
+                    $user_id = User::where('email',$field['content'])->first()->id;
+                    $stored_field->content = $user_id;
+
+                }else{
+                    $stored_field->content = $field['content'];
+                }
+
                 $stored_field->meta = $field['meta'];
                 try{
                     $stored_field->save();
