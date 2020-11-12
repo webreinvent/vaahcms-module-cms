@@ -6,11 +6,10 @@ let Visualizer = require('webpack-visualizer-plugin');
 
 
 let publish_folder;
-let output_theme_folder;
-let source_theme_folder;
+let output_folder;
 let source_vue_folder;
 
-
+source_vue_folder = __dirname+'/Vue';
 
 
 if (mix.inProduction()) {
@@ -23,24 +22,20 @@ if (mix.inProduction()) {
     console.log('IN PRODUCTION MODE');
     console.log('---------------------');
 
-    publish_folder = './../../../public/vaahcms/modules/';
-    output_theme_folder = "./cms/assets/";
-    source_vue_folder = __dirname+'/Vue';
+    publish_folder = './Resources/assets/';
+    output_folder = "./";
 
     mix.setPublicPath(publish_folder);
-
-    mix.js(source_vue_folder+"/app.js",  output_theme_folder+'/build/app.js');
-
+    mix.js(source_vue_folder+"/app.js",  output_folder+'/build/app.js');
 
 } else {
 
     publish_folder = './../../../public/vaahcms/modules/';
-    output_theme_folder = "./cms/assets/";
-    source_vue_folder = __dirname+'/Vue';
+    output_folder = "./cms/assets/";
 
     mix.setPublicPath(publish_folder);
 
-    mix.js(source_vue_folder+"/app.js",  output_theme_folder+'/build/app.js');
+    mix.js(source_vue_folder+"/app.js",  output_folder+'/build/app.js');
 
 }
 
@@ -68,6 +63,6 @@ mix.webpackConfig({
     },
 
     plugins: [
-        new Visualizer()
+        //new Visualizer()
     ],
 });
