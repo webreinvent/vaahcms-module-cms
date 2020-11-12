@@ -30,6 +30,8 @@ export default {
             q: null,
             trashed: null,
             filter: null,
+            sort_by: null,
+            sort_order: 'desc',
         },
         bulk_action:{
             selected_items: [],
@@ -93,13 +95,22 @@ export default {
         //-----------------------------------------------------------------
         updateView({ state, commit, dispatch, getters }, payload) {
             let list_view;
+            let update;
 
             if(payload && payload.name && payload.name == 'content.types.list')
             {
                 list_view = 'large';
+
+                update = {
+                    key: 'active_item',
+                    value: null
+                };
+
+                commit('updateState', update);
+
             }
 
-            if(payload.name == 'content.types.create')
+            if(payload.name == 'content.types.create' || payload.name == 'content.types.view' || payload.name == 'content.types.edit')
             {
                 list_view = 'medium';
             };

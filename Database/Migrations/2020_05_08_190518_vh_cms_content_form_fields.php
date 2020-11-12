@@ -18,9 +18,9 @@ class VhCmsContentFormFields extends Migration
             $table->increments('id');
             $table->uuid('uuid')->nullable();
 
-            $table->integer('vh_cms_content_id')->nullable();
-            $table->integer('vh_cms_form_group_id')->nullable();
-            $table->integer('vh_cms_form_field_id')->nullable();
+            $table->integer('vh_cms_content_id')->nullable()->index();
+            $table->integer('vh_cms_form_group_id')->nullable()->index();
+            $table->integer('vh_cms_form_field_id')->nullable()->index();
             $table->text('content')->nullable();
 
             $table->text('meta')->nullable();

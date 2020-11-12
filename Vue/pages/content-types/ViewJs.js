@@ -124,7 +124,7 @@ export default {
 
                 if(action == 'bulk-delete')
                 {
-                    this.$router.push({name: 'perm.list'});
+                    this.$router.push({name: 'content.types.list'});
                 } else
                 {
                     this.getItem();
@@ -134,6 +134,8 @@ export default {
             {
                 this.$Progress.finish();
             }
+
+            this.reloadRootAssets();
         },
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
@@ -165,7 +167,7 @@ export default {
         isCopiable: function (label) {
 
             if(
-                label == 'id' || label == 'uuid' || label == 'slug'
+                label == 'id' || label == 'uuid' || label == 'slug' || label == 'plural_slug' || label == 'singular_slug'
             )
             {
                 return true;
@@ -190,12 +192,16 @@ export default {
         //---------------------------------------------------------------------
         resetActiveItem: function () {
             this.update('active_item', null);
-            this.$router.push({name:'perm.list'});
+            this.$router.push({name:'content.types.list'});
         },
         //---------------------------------------------------------------------
         hasPermission: function(slug)
         {
             return this.$vaah.hasPermission(this.permissions, slug);
+        },
+        //---------------------------------------------------------------------
+        async reloadRootAssets() {
+            await this.$store.dispatch('root/reloadAssets');
         },
         //---------------------------------------------------------------------
 

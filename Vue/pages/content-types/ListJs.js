@@ -1,5 +1,6 @@
 import GlobalComponents from '../../vaahvue/helpers/GlobalComponents';
 import ListLargeView from './partials/ListLargeView';
+import ListMediumView from './partials/ListMediumView';
 import ListSmallView from './partials/ListSmallView';
 
 let namespace = 'content_types';
@@ -15,6 +16,7 @@ export default {
     components:{
         ...GlobalComponents,
         ListLargeView,
+        ListMediumView,
         ListSmallView,
 
     },
@@ -163,6 +165,9 @@ export default {
                 if(key == 'page')
                 {
                     this.query_string[key] = 1;
+                } else if(key == 'sort_order')
+                {
+                    this.query_string[key] = 'desc';
                 } else
                 {
                     this.query_string[key] = null;
@@ -244,11 +249,17 @@ export default {
         //---------------------------------------------------------------------
         actions: function () {
 
-            this.page.bulk_action.action = 'bulk-change-status';
-
-            if(!this.page.bulk_action.data.status){
+            if(!this.page.bulk_action.action)
+            {
                 this.$vaah.toastErrors(['Select an action']);
                 return false;
+            }
+
+            if(this.page.bulk_action.action == 'bulk-change-status'){
+                if(!this.page.bulk_action.data.status){
+                    this.$vaah.toastErrors(['Select a status']);
+                    return false;
+                }
             }
 
             if(this.page.bulk_action.selected_items.length < 1)
@@ -282,7 +293,13 @@ export default {
             {
                 this.$Progress.finish();
             }
-        }, //---------------------------------------------------------------------
+            this.reloadRootAssets();
+        },
+        //---------------------------------------------------------------------
+        async reloadRootAssets() {
+            await this.$store.dispatch('root/reloadAssets');
+        },
+        //---------------------------------------------------------------------
         sync: function () {
 
             this.page.query_string.recount = true;
@@ -297,14 +314,10 @@ export default {
         //---------------------------------------------------------------------
         setFilter: function () {
 
-            this.query_string.section = '';
-
-            this.getModuleSection();
-
-            this.getList();
-
             this.query_string.page = 1;
             this.update('query_string', this.query_string);
+
+            this.getList();
 
         },
         //---------------------------------------------------------------------

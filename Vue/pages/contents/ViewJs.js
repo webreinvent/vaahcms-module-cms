@@ -95,7 +95,7 @@ export default {
             {
                 //if item does not exist or delete then redirect to list
                 this.update('active_item', null);
-                this.$router.push({name: 'perm.list'});
+                this.$router.push({name: 'contents.list'});
             }
         },
         //---------------------------------------------------------------------
@@ -189,7 +189,7 @@ export default {
         //---------------------------------------------------------------------
         resetActiveItem: function () {
             this.update('active_item', null);
-            this.$router.push({name:'perm.list'});
+            this.$router.push({name:'contents.list'});
         },
         //---------------------------------------------------------------------
         hasPermission: function(slug)

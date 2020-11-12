@@ -126,10 +126,9 @@ export default {
 
                 if(this.local_action === 'save-and-close')
                 {
-                    this.saveAndClose()
-                }else{
-                    //this.$router.push({name: 'perm.view', params:{id:this.id}});
-                    this.$root.$emit('eReloadItem');
+                    this.saveAndClose();
+                }else if(this.local_action === 'save-and-new'){
+                    this.saveAndNew();
                 }
 
             }
@@ -146,12 +145,22 @@ export default {
             this.$router.push({name:'contents.list'});
         },
         //---------------------------------------------------------------------
+        saveAndNew: function () {
+            this.update('active_item', null);
+            this.$router.push({name:'contents.create'});
+        },
+        //---------------------------------------------------------------------
         expandAll: function () {
 
             $('.collapse-content').each(function (index, item) {
                 $(item).slideDown();
             });
 
+        },
+        //---------------------------------------------------------------------
+        resetActiveItem: function () {
+            this.update('active_item', null);
+            this.$router.push({name:'contents.list'});
         },
         //---------------------------------------------------------------------
         collapseAll: function () {

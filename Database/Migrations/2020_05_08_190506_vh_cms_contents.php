@@ -22,10 +22,10 @@ class VhCmsContents extends Migration
             $table->integer('vh_cms_content_type_id')->nullable();
             $table->integer('vh_theme_id')->nullable();
             $table->integer('vh_theme_template_id')->nullable();
-            $table->string('name')->nullable();
-            $table->string('slug')->nullable();
-            $table->dateTime('is_published_at')->nullable();
-            $table->string('status')->nullable();
+            $table->string('name')->nullable()->index();
+            $table->string('slug')->nullable()->index();
+            $table->dateTime('is_published_at')->nullable()->index();
+            $table->string('status')->nullable()->index();
             $table->integer('total_comments')->nullable();
 
             $table->text('meta')->nullable();

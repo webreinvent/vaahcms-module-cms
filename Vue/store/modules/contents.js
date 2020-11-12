@@ -19,6 +19,8 @@ export default {
         assets_is_fetching: null,
         assets_reload: false,
         list: null,
+        selected_id: null,
+        status_list: null,
         list_is_empty: false,
         is_list_loading: false,
         list_view: true,
@@ -30,10 +32,12 @@ export default {
             q: null,
             trashed: null,
             filter: null,
+            sort_by: null,
+            sort_order: 'desc',
         },
         bulk_action:{
             selected_items: [],
-            data: {},
+            data: '',
             action: null,
         },
         active_theme: null,
@@ -43,8 +47,8 @@ export default {
         new_item:{
             parent_id: null,
             vh_cms_content_type_id: null,
-            vh_theme_id: null,
-            vh_theme_template_id: null,
+            vh_theme_id: '',
+            vh_theme_template_id: '',
             name: null,
             slug: null,
             is_published_at: null,
@@ -150,6 +154,13 @@ export default {
 
                 commit('updateState', update);
 
+                update = {
+                    key: 'active_item',
+                    value: null
+                };
+
+                commit('updateState', update);
+
             }
 
             if(payload.name == 'contents.edit')
@@ -160,6 +171,11 @@ export default {
             if(payload.name == 'contents.create')
             {
                 list_view = 'small';
+            };
+
+            if(payload.name == 'contents.view')
+            {
+                list_view = 'medium';
             };
 
             update = {

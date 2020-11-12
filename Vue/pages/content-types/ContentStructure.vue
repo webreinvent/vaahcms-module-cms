@@ -30,9 +30,8 @@
                                 </p>
 
                                 <p class="control">
-                                    <b-button tag="router-link"
-                                              type="is-light"
-                                              :to="{name: 'content.types.list'}"
+                                    <b-button type="is-light"
+                                              @click="resetActiveItem()"
                                               icon-left="times">
                                     </b-button>
                                 </p>
@@ -64,7 +63,7 @@
 
                                     <b-field>
 
-                                        <b-switch >
+                                        <b-switch v-model="group.is_repeatable" true-value=1>
                                             Is repeatable
                                         </b-switch>
 
@@ -82,9 +81,6 @@
                                                 <b-button @click="$vaah.copy(group.slug)"
                                                 >#{{group.id}}</b-button>
                                             </b-tooltip>
-                                        </p>
-                                        <p class="control">
-                                            <b-button>Edit</b-button>
                                         </p>
                                         <p class="control">
                                             <b-tooltip label="Delete Group" type="is-dark">
@@ -151,7 +147,7 @@
                                                                 Is repeatable
                                                             </td>
                                                             <td>
-                                                                <b-switch v-model="field.is_repeatable"
+                                                                <b-switch v-model="field.is_repeatable" true-value=1
                                                                           type="is-success">
                                                                 </b-switch>
                                                             </td>
@@ -162,7 +158,7 @@
                                                                 Is searchable
                                                             </td>
                                                             <td>
-                                                                <b-switch v-model="field.is_searchable"
+                                                                <b-switch v-model="field.is_searchable" true-value=1
                                                                           type="is-success">
                                                                 </b-switch>
                                                             </td>

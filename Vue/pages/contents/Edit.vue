@@ -46,7 +46,7 @@
             </div>
 
 
-            <div class="column is-3">
+            <div class="column is-4">
 
                 <div class="card">
 
@@ -92,7 +92,7 @@
                                             Save & New
                                         </b-dropdown-item>
 
-                                        <b-dropdown-item aria-role="listitem"
+                                        <!--<b-dropdown-item aria-role="listitem"
                                                          @click="setLocalAction('save-and-clone')">
                                             <b-icon icon="copy"></b-icon>
                                             Save & Clone
@@ -102,7 +102,7 @@
                                                          @click="setLocalAction('trash')">
                                             <b-icon icon="trash"></b-icon>
                                             Trash
-                                        </b-dropdown-item>
+                                        </b-dropdown-item>-->
 
                                     </b-dropdown>
 
@@ -110,9 +110,8 @@
                                 </p>
 
                                 <p class="control">
-                                    <b-button tag="router-link"
-                                              type="is-light"
-                                              :to="{name: 'contents.list', params:{slug: page.content_slug}}"
+                                    <b-button type="is-light"
+                                              @click="resetActiveItem()"
                                               icon-left="times">
                                     </b-button>
                                 </p>

@@ -179,8 +179,12 @@ class ContentType extends Model {
     //-------------------------------------------------
     public static function getList($request)
     {
-
-        $list = static::orderBy('id', 'desc');
+        if($request['sort_by'])
+        {
+            $list = static::orderBy($request['sort_by'], $request['sort_order']);
+        }else{
+            $list = static::orderBy('id', $request['sort_order']);
+        }
 
         if($request['trashed'] == 'true')
         {
@@ -196,10 +200,10 @@ class ContentType extends Model {
         if($request['filter'] && $request['filter'] == '1')
         {
 
-            $list->where('is_active',$request['filter']);
+            $list->where('is_published',$request['filter']);
         }elseif($request['filter'] == '10'){
 
-            $list->whereNull('is_active')->orWhere('is_active',0);
+            $list->whereNull('is_published')->orWhere('is_published',0);
         }
 
         if(isset($request->q))
@@ -207,6 +211,7 @@ class ContentType extends Model {
 
             $list->where(function ($q) use ($request){
                 $q->where('name', 'LIKE', '%'.$request->q.'%')
+                    ->orWhere('id', 'LIKE', $request->q.'%')
                     ->orWhere('slug', 'LIKE', '%'.$request->q.'%');
             });
         }
@@ -227,12 +232,40 @@ class ContentType extends Model {
     public static function validation($request)
     {
         $rules = array(
-            'name' => 'required',
+            'name' => 'required|unique:vh_cms_content_types',
             'slug' => 'required|unique:vh_cms_content_types',
             'plural' => 'required',
             'plural_slug' => 'required|unique:vh_cms_content_types',
             'singular' => 'required',
             'singular_slug' => 'required|unique:vh_cms_content_types',
+        );
+
+        $validator = \Validator::make( $request->all(), $rules);
+        if ( $validator->fails() ) {
+
+            $errors             = errorsToArray($validator->errors());
+            $response['status'] = 'failed';
+            $response['errors'] = $errors;
+            return $response;
+        }
+
+        $data = [];
+
+        $response['status'] = 'success';
+
+        return $response;
+
+    }
+    //-------------------------------------------------
+    public static function storeValidation($request)
+    {
+        $rules = array(
+            'name' => 'required',
+            'slug' => 'required',
+            'plural' => 'required',
+            'plural_slug' => 'required',
+            'singular' => 'required',
+            'singular_slug' => 'required',
         );
 
         $validator = \Validator::make( $request->all(), $rules);
@@ -375,21 +408,16 @@ class ContentType extends Model {
     public static function postStore($request,$id)
     {
 
-
-
-        $input = $request->item;
-
-
-        $validation = static::validation($input);
+        $validation = static::storeValidation($request);
         if(isset($validation['status']) && $validation['status'] == 'failed')
         {
             return $validation;
         }
 
         // check if name exist
-        $user = static::where('id','!=',$input['id'])->where('name',$input['name'])->first();
+        $name_exist = static::where('id','!=',$request['id'])->where('name',$request['name'])->first();
 
-        if($user)
+        if($name_exist)
         {
             $response['status'] = 'failed';
             $response['errors'][] = "This name is already exist.";
@@ -398,9 +426,9 @@ class ContentType extends Model {
 
 
         // check if slug exist
-        $user = static::where('id','!=',$input['id'])->where('slug',$input['slug'])->first();
+        $slug_exist = static::where('id','!=',$request['id'])->where('slug',$request['slug'])->first();
 
-        if($user)
+        if($slug_exist)
         {
             $response['status'] = 'failed';
             $response['errors'][] = "This slug is already exist.";
@@ -409,11 +437,7 @@ class ContentType extends Model {
 
         $update = static::where('id',$id)->withTrashed()->first();
 
-        $update->name = $input['name'];
-        $update->slug = Str::slug($input['slug']);
-        $update->details = $input['details'];
-        $update->is_active = $input['is_active'];
-
+        $update->fill($request->all());
         $update->save();
 
 
@@ -450,12 +474,12 @@ class ContentType extends Model {
             }
 
             if($request['data']){
-                $role->is_active = $request['data']['status'];
+                $role->is_published = $request['data']['status'];
             }else{
-                if($role->is_active == 1){
-                    $role->is_active = 0;
+                if($role->is_published == 1){
+                    $role->is_published = 0;
                 }else{
-                    $role->is_active = 1;
+                    $role->is_published = 1;
                 }
             }
             $role->save();
@@ -486,7 +510,7 @@ class ContentType extends Model {
             $item = static::withTrashed()->where('id', $id)->first();
             if($item)
             {
-                $item->is_active = 0;
+                $item->is_published = 0;
                 $item->save();
                 $item->delete();
             }
@@ -539,23 +563,6 @@ class ContentType extends Model {
     public static function bulkDelete($request)
     {
 
-        if(!\Auth::user()->hasPermission('can-update-roles') ||
-            !\Auth::user()->hasPermission('can-delete-roles'))
-        {
-            $response['status'] = 'failed';
-            $response['errors'][] = trans("vaahcms::messages.permission_denied");
-
-            return $response;
-        }
-
-        if(!\Auth::user()->hasPermission('can-update-roles'))
-        {
-            $response['status'] = 'failed';
-            $response['errors'][] = trans("vaahcms::messages.permission_denied");
-
-            return $response;
-        }
-
         if(!$request->has('inputs'))
         {
             $response['status'] = 'failed';
@@ -563,12 +570,6 @@ class ContentType extends Model {
             return $response;
         }
 
-        if(!$request->has('data'))
-        {
-            $response['status'] = 'failed';
-            $response['errors'][] = 'Select Status';
-            return $response;
-        }
 
         foreach($request->inputs as $id)
         {
@@ -576,9 +577,7 @@ class ContentType extends Model {
             if($item)
             {
 
-                $item->permissions()->detach();
-
-                $item->users()->detach();
+                $item->contents()->forceDelete();
 
                 $item->forceDelete();
 

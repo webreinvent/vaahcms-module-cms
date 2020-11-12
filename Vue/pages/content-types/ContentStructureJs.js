@@ -37,7 +37,8 @@ export default {
     },
     watch: {
         $route(to, from) {
-            this.updateView()
+            this.updateView();
+            this.getItem();
         },
 
 
@@ -102,6 +103,15 @@ export default {
         getItemAfter: function (data, res) {
             this.$Progress.finish();
             if(data){
+
+                if(data.groups.length == 0){
+                    data.groups[0] = {
+                        'name' : 'Default',
+                        'slug' : 'default',
+                        'fields' : [],
+                    };
+                }
+
                 this.update('active_item', data);
             }
 
@@ -109,10 +119,15 @@ export default {
         //---------------------------------------------------------------------
         addNewGroup: function () {
 
+            if(this.new_group.name){
+                this.item.groups.push(this.new_group);
+                this.update('item', this.item);
+                this.resetNewGroup();
+            }else{
+                this.$vaah.toastErrors(['Group Field is required.']);
+            }
 
-            this.item.groups.push(this.new_group);
-            this.update('item', this.item);
-            this.resetNewGroup();
+
 
         },
         //---------------------------------------------------------------------
@@ -193,6 +208,11 @@ export default {
             return item;
 
 
+        },
+        //---------------------------------------------------------------------
+        resetActiveItem: function () {
+            this.update('active_item', null);
+            this.$router.push({name:'content.types.list'});
         },
 
         //---------------------------------------------------------------------

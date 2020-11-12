@@ -1,4 +1,4 @@
-<script src="./ListSmallViewJs.js"></script>
+<script src="./ListMediumViewJs.js"></script>
 <template>
     <div>
         <b-table :data="page.list_is_empty ? [] : page.list.data"
@@ -14,24 +14,22 @@
                 </b-table-column>
 
                 <b-table-column field="name" label="Name">
-                    <b-tooltip label="Copy Slug" type="is-dark">
-                        <vh-copy class="text-copyable"
-                                 :data="props.row.slug"
-                                 :label="props.row.name"
-                                 @copied="copiedData"
-                        >
-                        </vh-copy>
+                    {{ props.row.name }}
+                </b-table-column>
 
-                    </b-tooltip>
+                <b-table-column width="100px" field="updated_at" label="Updated At">
+                    <span>
+                        {{$vaah.fromNow(props.row.updated_at)}}
+                    </span>
                 </b-table-column>
 
                 <b-table-column field="actions" label=""
                                 width="80">
 
-                    <b-tooltip label="Content Structure" type="is-dark">
+                    <b-tooltip label="Edit" type="is-dark">
                         <b-button size="is-small"
-                                  @click="toContentStructure(props.row)"
-                                  icon-left="align-left">
+                                  @click="toEdit(props.row)"
+                                  icon-left="pencil-alt">
                         </b-button>
                     </b-tooltip>
 

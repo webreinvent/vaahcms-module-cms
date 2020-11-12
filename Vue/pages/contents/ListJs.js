@@ -1,5 +1,6 @@
 import GlobalComponents from '../../vaahvue/helpers/GlobalComponents';
 import ListLargeView from './partials/ListLargeView';
+import ListMediumView from './partials/ListMediumView';
 import ListSmallView from './partials/ListSmallView';
 
 let namespace = 'contents';
@@ -15,6 +16,7 @@ export default {
     components:{
         ...GlobalComponents,
         ListLargeView,
+        ListMediumView,
         ListSmallView,
     },
     data()
@@ -164,6 +166,9 @@ export default {
                 if(key == 'page')
                 {
                     this.query_string[key] = 1;
+                } else if(key == 'sort_order')
+                {
+                    this.query_string[key] = 'desc';
                 } else
                 {
                     this.query_string[key] = null;
@@ -180,7 +185,10 @@ export default {
                 data: {},
                 action: null,
             };
+
+            this.page.selected_id = null;
             this.update('bulk_action', this.page.bulk_action);
+            this.update('selected_id', this.page.selected_id);
         },
         //---------------------------------------------------------------------
         paginate: function(page=1)
@@ -216,10 +224,9 @@ export default {
 
             if(data){
 
-
                 this.update('list', data.list);
-                this.update('total_roles', data.totalRole);
-                this.update('total_users', data.totalUser);
+
+                this.update('status_list', res.data.status.content_statuses);
 
                 if(data.list.total === 0)
                 {
@@ -242,9 +249,8 @@ export default {
         //---------------------------------------------------------------------
         actions: function () {
 
-            this.page.bulk_action.action = 'bulk-change-status';
-
-            if(!this.page.bulk_action.data.status){
+            if(!this.page.bulk_action.action)
+            {
                 this.$vaah.toastErrors(['Select an action']);
                 return false;
             }
@@ -274,8 +280,6 @@ export default {
                 this.$root.$emit('eReloadItem');
                 this.resetBulkAction();
                 this.getList();
-
-                this.$store.dispatch('root/reloadPermissions');
             } else
             {
                 this.$Progress.finish();
@@ -296,8 +300,6 @@ export default {
         setFilter: function () {
 
             this.query_string.section = '';
-
-            this.getModuleSection();
 
             this.getList();
 

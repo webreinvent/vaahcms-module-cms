@@ -16,8 +16,8 @@ class CreateVhCmsMenusTable extends Migration
         Schema::create('vh_cms_menus', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->string('name')->nullable();
-            $table->string('slug')->nullable();
+            $table->string('name')->nullable()->index();
+            $table->string('slug')->nullable()->index();
             $table->string('attr_id')->nullable();
             $table->string('attr_class')->nullable();
             $table->integer('vh_theme_location_id')->nullable();

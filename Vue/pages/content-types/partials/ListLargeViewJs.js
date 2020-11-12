@@ -60,7 +60,7 @@ export default {
         //---------------------------------------------------------------------
         setActiveItem: function (item) {
             this.update('active_item', item);
-            this.$router.push({name: 'perm.view', params:{id:item.id}})
+            this.$router.push({name: 'content.types.view', params:{id:item.id}})
         },
         //---------------------------------------------------------------------
         changeStatus: function (id) {
@@ -75,14 +75,18 @@ export default {
         //---------------------------------------------------------------------
         changeStatusAfter: function (data,res) {
             this.$emit('eReloadList');
+            this.reloadRootAssets();
             this.update('is_list_loading', false);
-            this.$store.dispatch('root/reloadPermissions');
 
+        },
+        //---------------------------------------------------------------------
+        async reloadRootAssets() {
+            await this.$store.dispatch('root/reloadAssets');
         },
         //---------------------------------------------------------------------
 
         //---------------------------------------------------------------------
-        copiedData: function (data) {
+     copiedData: function (data) {
 
             this.$vaah.toastSuccess(['copied']);
 

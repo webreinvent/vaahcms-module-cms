@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller;
 use VaahCms\Modules\Cms\Entities\Content;
 use VaahCms\Modules\Cms\Entities\ContentType;
 use WebReinvent\VaahCms\Entities\Theme;
+use WebReinvent\VaahCms\Entities\User;
 
 class ContentsController extends Controller
 {
@@ -33,6 +34,7 @@ class ContentsController extends Controller
 
         $data['default_theme'] = $default_theme_template['theme'];
         $data['default_template'] = $default_theme_template['template'];
+        $data['bulk_actions'] = vh_general_bulk_actions();
 
 
         $data['content_type'] = $request->content_type;
@@ -178,6 +180,11 @@ class ContentsController extends Controller
 
         return response()->json($response);
 
+    }
+    //----------------------------------------------------------
+    public function getUserById(Request $request,$id)
+    {
+        return User::find($id);
     }
     //----------------------------------------------------------
 

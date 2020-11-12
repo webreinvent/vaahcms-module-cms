@@ -29,6 +29,9 @@ export default {
             q: null,
             trashed: null,
             status: null,
+            vh_theme_id: "",
+            vh_theme_location_id: "",
+            vh_menu_id: "",
         },
         active_theme: null,
         active_location: null,
@@ -87,6 +90,7 @@ export default {
 
                 commit('updateState', payload);
             }
+
 
         },
         //-----------------------------------------------------------------

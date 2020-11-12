@@ -43,6 +43,10 @@ class Content extends Model {
     ];
 
     //-------------------------------------------------
+
+    //-------------------------------------------------
+
+    //-------------------------------------------------
     public function setMetaAttribute($value)
     {
         if($value)
@@ -130,11 +134,11 @@ class Content extends Model {
     public static function postCreate($request)
     {
 
-        /*$validation = static::validation($request);
+        $validation = static::validation($request);
         if(isset($validation['status']) && $validation['status'] == 'failed')
         {
             return $validation;
-        }*/
+        }
 
 
 
@@ -215,7 +219,12 @@ class Content extends Model {
     public static function getList($request)
     {
 
-        $list = static::orderBy('id', 'desc');
+        if($request['sort_by'])
+        {
+            $list = static::orderBy($request['sort_by'], $request['sort_order']);
+        }else{
+            $list = static::orderBy('id', $request['sort_order']);
+        }
 
         $list->where('vh_cms_content_type_id', $request->content_type->id);
 
@@ -230,13 +239,9 @@ class Content extends Model {
             $list->whereBetween('updated_at',[$request->from." 00:00:00",$request->to." 23:59:59"]);
         }
 
-        if($request['filter'] && $request['filter'] == '1')
+        if($request['filter'])
         {
-
-            $list->where('is_active',$request['filter']);
-        }elseif($request['filter'] == '10'){
-
-            $list->whereNull('is_active')->orWhere('is_active',0);
+            $list->where('status',$request['filter']);
         }
 
         if(isset($request->q))
@@ -244,6 +249,7 @@ class Content extends Model {
 
             $list->where(function ($q) use ($request){
                 $q->where('name', 'LIKE', '%'.$request->q.'%')
+                    ->orWhere('id', 'LIKE', $request->q.'%')
                     ->orWhere('slug', 'LIKE', '%'.$request->q.'%');
             });
         }
@@ -252,9 +258,15 @@ class Content extends Model {
         $data['list'] = $list->paginate(config('vaahcms.per_page'));
 
 
+        $status = ContentType::where('id', $request->content_type->id);
+
+        $status_list = $status->select('content_statuses')->first();
+
+
 
         $response['status'] = 'success';
         $response['data'] = $data;
+        $response['status'] = $status_list;
 
         return $response;
 
@@ -265,11 +277,9 @@ class Content extends Model {
     {
         $rules = array(
             'name' => 'required',
-            'slug' => 'required|unique:vh_cms_content_types',
-            'plural' => 'required',
-            'plural_slug' => 'required|unique:vh_cms_content_types',
-            'singular' => 'required',
-            'singular_slug' => 'required|unique:vh_cms_content_types',
+            'status' => 'required',
+            'vh_theme_id' => 'required',
+            'vh_theme_template_id' => 'required'
         );
 
         $validator = \Validator::make( $request->all(), $rules);
@@ -370,6 +380,21 @@ class Content extends Model {
     public static function postStore($request,$id)
     {
 
+        $validation = static::validation($request);
+        if(isset($validation['status']) && $validation['status'] == 'failed')
+        {
+            return $validation;
+        }
+
+        $name_exist = static::where('id','!=',$request['id'])->where('name',$request['name'])->first();
+
+        if($name_exist)
+        {
+            $response['status'] = 'failed';
+            $response['errors'][] = "This name is already exist.";
+            return $response;
+        }
+
         $inputs = $request->all();
 
         $item = static::where('id',$id)->withTrashed()->first();
@@ -421,7 +446,15 @@ class Content extends Model {
                     $field['content'] = json_encode($field['content']);
                 }
 
-                $stored_field->content = $field['content'];
+                if($field['type']['slug'] == 'user' && $field['content']){
+
+                    $user_id = User::where('email',$field['content'])->first()->id;
+                    $stored_field->content = $user_id;
+
+                }else{
+                    $stored_field->content = $field['content'];
+                }
+
                 $stored_field->meta = $field['meta'];
                 try{
                     $stored_field->save();
@@ -467,12 +500,12 @@ class Content extends Model {
             }
 
             if($request['data']){
-                $role->is_active = $request['data']['status'];
+                $role->status = $request['data'];
             }else{
-                if($role->is_active == 1){
-                    $role->is_active = 0;
+                if($role->status == 1){
+                    $role->status = 0;
                 }else{
-                    $role->is_active = 1;
+                    $role->status = 1;
                 }
             }
             $role->save();
@@ -503,8 +536,6 @@ class Content extends Model {
             $item = static::withTrashed()->where('id', $id)->first();
             if($item)
             {
-                $item->is_active = 0;
-                $item->save();
                 $item->delete();
             }
         }
@@ -529,13 +560,6 @@ class Content extends Model {
             return $response;
         }
 
-        if(!$request->has('data'))
-        {
-            $response['status'] = 'failed';
-            $response['errors'][] = 'Select Status';
-            return $response;
-        }
-
         foreach($request->inputs as $id)
         {
             $item = static::withTrashed()->where('id', $id)->first();
@@ -556,23 +580,6 @@ class Content extends Model {
     public static function bulkDelete($request)
     {
 
-        if(!\Auth::user()->hasPermission('can-update-roles') ||
-            !\Auth::user()->hasPermission('can-delete-roles'))
-        {
-            $response['status'] = 'failed';
-            $response['errors'][] = trans("vaahcms::messages.permission_denied");
-
-            return $response;
-        }
-
-        if(!\Auth::user()->hasPermission('can-update-roles'))
-        {
-            $response['status'] = 'failed';
-            $response['errors'][] = trans("vaahcms::messages.permission_denied");
-
-            return $response;
-        }
-
         if(!$request->has('inputs'))
         {
             $response['status'] = 'failed';
@@ -592,10 +599,6 @@ class Content extends Model {
             $item = static::where('id', $id)->withTrashed()->first();
             if($item)
             {
-
-                $item->permissions()->detach();
-
-                $item->users()->detach();
 
                 $item->forceDelete();
 

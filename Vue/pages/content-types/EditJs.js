@@ -1,4 +1,5 @@
 import GlobalComponents from '../../vaahvue/helpers/GlobalComponents'
+import draggable from 'vuedraggable';
 
 let namespace = 'content_types';
 
@@ -12,6 +13,7 @@ export default {
     },
     components:{
         ...GlobalComponents,
+        draggable
 
     },
     data()
@@ -24,12 +26,55 @@ export default {
             params: {},
             local_action: null,
             title: null,
+            edit_status_index: null,
+            status: null,
+            disable_status_editing: true,
         }
     },
     watch: {
         $route(to, from) {
             this.updateView()
-        }
+        },
+
+        'item.name': {
+            deep: true,
+            handler(new_val, old_val) {
+
+                if(new_val)
+                {
+                    this.item.slug = this.$vaah.strToSlug(new_val);
+                    this.updateNewItem();
+                }
+
+            }
+        },
+
+        'item.plural': {
+            deep: true,
+            handler(new_val, old_val) {
+
+                if(new_val)
+                {
+                    this.item.plural_slug = this.$vaah.strToSlug(new_val);
+                    this.updateNewItem();
+                }
+
+            }
+        },
+
+        'item.singular': {
+            deep: true,
+            handler(new_val, old_val) {
+
+                if(new_val)
+                {
+                    this.item.singular_slug = this.$vaah.strToSlug(new_val);
+                    this.updateNewItem();
+                }
+
+            }
+        },
+
     },
     mounted() {
         //----------------------------------------------------
@@ -56,6 +101,16 @@ export default {
             this.$store.dispatch(this.namespace+'/updateView', this.$route);
         },
         //---------------------------------------------------------------------
+        updateNewItem: function()
+        {
+            let update = {
+                state_name: 'item',
+                state_value: this.item,
+                namespace: this.namespace,
+            };
+            this.$vaah.updateState(update);
+        },
+        //---------------------------------------------------------------------
         onLoad: function()
         {
             this.is_content_loading = true;
@@ -73,7 +128,7 @@ export default {
             this.$Progress.start();
             this.params = {};
             let url = this.ajax_url+'/item/'+this.$route.params.id;
-            this.$vaah.ajax(url, this.params, this.getItemAfter);
+            this.$vaah.ajaxGet(url, this.params, this.getItemAfter);
         },
         //---------------------------------------------------------------------
         getItemAfter: function (data, res) {
@@ -88,16 +143,14 @@ export default {
             {
                 //if item does not exist or delete then redirect to list
                 this.update('active_item', null);
-                this.$router.push({name: 'perm.list'});
+                this.$router.push({name: 'content.types.list'});
             }
         },
         //---------------------------------------------------------------------
         store: function () {
             this.$Progress.start();
 
-            let params = {
-                item: this.item,
-            };
+            let params =  this.item;
 
             let url = this.ajax_url+'/store/'+this.item.id;
             this.$vaah.ajax(url, params, this.storeAfter);
@@ -115,12 +168,18 @@ export default {
                 {
                     this.saveAndClose()
                 }else{
-                    this.$router.push({name: 'perm.view', params:{id:this.id}});
+                    this.$router.push({name: 'content.types.view', params:{id:this.id}});
                     this.$root.$emit('eReloadItem');
                 }
 
+                this.reloadRootAssets();
+
             }
 
+        },
+        //---------------------------------------------------------------------
+        async reloadRootAssets() {
+            await this.$store.dispatch('root/reloadAssets');
         },
         //---------------------------------------------------------------------
         setLocalAction: function (action) {
@@ -130,8 +189,29 @@ export default {
         //---------------------------------------------------------------------
         saveAndClose: function () {
             this.update('active_item', null);
-            this.$router.push({name:'perm.list'});
+            this.$router.push({name:'content.types.list'});
         },
         //---------------------------------------------------------------------
+
+        //---------------------------------------------------------------------
+        toggleEditStatus: function(status_index)
+        {
+            this.edit_status_index = status_index;
+            if(this.disable_status_editing)
+            {
+                this.disable_status_editing = false;
+            } else
+            {
+                this.disable_status_editing = true;
+            }
+        },
+        //---------------------------------------------------------------------
+
+        addStatus: function()
+        {
+            this.item.content_statuses.push(this.status);
+            this.status = null;
+            this.update('item', this.item);
+        },
     }
 }

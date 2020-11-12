@@ -17,8 +17,8 @@ class VhCmsFieldTypes extends Migration
         Schema::create('vh_cms_field_types', function (Blueprint $table) {
             $table->increments('id');
             $table->uuid('uuid')->nullable();
-            $table->string('name', 100)->nullable();
-            $table->string('slug', 100)->nullable();
+            $table->string('name', 100)->nullable()->index();
+            $table->string('slug', 100)->nullable()->index();
             $table->string('excerpt')->nullable();
             $table->text('meta')->nullable();
             $table->integer('created_by')->nullable();

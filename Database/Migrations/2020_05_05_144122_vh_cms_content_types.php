@@ -18,14 +18,14 @@ class VhCmsContentTypes extends Migration
             $table->increments('id');
             $table->uuid('uuid')->nullable();
 
-            $table->string('name', 60)->nullable();
-            $table->string('slug', 60)->nullable();
-            $table->string('plural', 60)->nullable();
-            $table->string('plural_slug', 60)->nullable();
-            $table->string('singular', 60)->nullable();
-            $table->string('singular_slug', 60)->nullable();
+            $table->string('name', 60)->nullable()->index();
+            $table->string('slug', 60)->nullable()->index();
+            $table->string('plural', 60)->nullable()->index();
+            $table->string('plural_slug', 60)->nullable()->index();
+            $table->string('singular', 60)->nullable()->index();
+            $table->string('singular_slug', 60)->nullable()->index();
             $table->string('excerpt')->nullable();
-            $table->boolean('is_published')->nullable();
+            $table->boolean('is_published')->nullable()->index();
             $table->boolean('is_commentable')->nullable();
             $table->json('content_statuses')->nullable();
             $table->integer('total_records')->nullable();
@@ -38,6 +38,7 @@ class VhCmsContentTypes extends Migration
             $table->integer('deleted_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
+
 
         });
     }

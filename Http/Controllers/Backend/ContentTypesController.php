@@ -24,6 +24,8 @@ class ContentTypesController extends Controller
         $data['field_types'] = FieldType::select('id', 'name', 'slug', 'meta')
             ->get();
 
+        $data['bulk_actions'] = vh_general_bulk_actions();
+
         $response['status'] = 'success';
         $response['data'] = $data;
 

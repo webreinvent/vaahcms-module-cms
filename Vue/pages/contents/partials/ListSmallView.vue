@@ -2,39 +2,26 @@
 <template>
     <div>
         <b-table :data="page.list_is_empty ? [] : page.list.data"
+                 :checkable="true"
                  :checked-rows.sync="page.bulk_action.selected_items"
                  checkbox-position="left"
                  :hoverable="true"
                  :row-class="setRowClass">
 
             <template  slot-scope="props">
-                <b-table-column field="id" label="ID" width="40" numeric>
+                <b-table-column field="id" label="ID" width="5px">
                     {{ props.row.id }}
                 </b-table-column>
 
                 <b-table-column field="name" label="Name">
-                    {{ props.row.name }}
-                </b-table-column>
-
-                <b-table-column field="actions" label=""
-                                width="80">
-
                     <b-tooltip label="Edit" type="is-dark">
-                        <b-button size="is-small"
-                                  @click="toEdit(props.row)"
-                                  icon-left="align-left">
-                        </b-button>
+                        <a @click="toEdit(props.row)">
+                            {{$vaah.limitString(props.row.name, 15)}}
+                        </a>
                     </b-tooltip>
-
-                    <b-tooltip label="View" type="is-dark">
-                        <b-button size="is-small"
-                                  @click="setActiveItem(props.row)"
-                                  icon-left="chevron-right">
-                        </b-button>
-                    </b-tooltip>
-
 
                 </b-table-column>
+
             </template>
 
             <template slot="empty">

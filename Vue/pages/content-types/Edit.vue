@@ -53,7 +53,7 @@
                         <p class="control">
                             <b-button tag="router-link"
                                       type="is-light"
-                                      :to="{name: 'perm.view', params:{id:item.id}}"
+                                      :to="{name: 'content.types.view', params:{id:item.id}}"
                                       icon-left="times">
                             </b-button>
                         </p>
@@ -73,25 +73,112 @@
                 <div class="block">
 
                     <b-field label="Name" :label-position="labelPosition">
-                        <b-input name="permission-name" dusk="permission-name" v-model="item.name"></b-input>
+                        <b-input v-model="item.name"></b-input>
                     </b-field>
 
-                    <b-field label="Detail" :label-position="labelPosition">
-                        <b-input name="permission-detail" dusk="permission-detail" type="textarea" v-model="item.details"></b-input>
+                    <b-field label="Slug" :label-position="labelPosition">
+                        <b-input v-model="item.slug"></b-input>
                     </b-field>
 
-                    <b-field label="Is Active" :label-position="labelPosition">
-                        <b-radio-button name="permission-is_active" dusk="permission-is_active"
-                                        v-model="item.is_active"
+                    <b-field label="Content Plural Name" :label-position="labelPosition">
+                        <b-input v-model="item.plural"></b-input>
+                    </b-field>
+
+                    <b-field label="Content Plural Slug" :label-position="labelPosition">
+                        <b-input v-model="item.plural_slug"></b-input>
+                    </b-field>
+
+                    <b-field label="Content Singular Name" :label-position="labelPosition">
+                        <b-input v-model="item.singular"></b-input>
+                    </b-field>
+
+                    <b-field label="Content Singular Slug" :label-position="labelPosition">
+                        <b-input v-model="item.singular_slug"></b-input>
+                    </b-field>
+
+                    <b-field label="Excerpt" :label-position="labelPosition">
+                        <b-input type="textarea"
+                                 maxlength="200"
+                                 v-model="item.excerpt"></b-input>
+                    </b-field>
+
+                    <b-field label="Is Published" :label-position="labelPosition">
+                        <b-radio-button v-model="item.is_published"
                                         :native-value=1>
                             <span>Yes</span>
                         </b-radio-button>
 
-                        <b-radio-button type="is-danger" name="permission-is_active" dusk="permission-is_active"
-                                        v-model="item.is_active"
+                        <b-radio-button type="is-danger"
+                                        v-model="item.is_published"
                                         :native-value=0>
                             <span>No</span>
                         </b-radio-button>
+                    </b-field>
+
+                    <b-field label="Is Comments Allowed" :label-position="labelPosition">
+                        <b-radio-button v-model="item.is_commentable"
+                                        :native-value=1>
+                            <span>Yes</span>
+                        </b-radio-button>
+
+                        <b-radio-button type="is-danger"
+                                        v-model="item.is_commentable"
+                                        :native-value=0>
+                            <span>No</span>
+                        </b-radio-button>
+                    </b-field>
+
+
+                    <b-field label="List Statuses" :label-position="labelPosition">
+
+                        <div class="draggable">
+                            <draggable v-model="item.content_statuses"
+                                       group="content_statuses"
+                            >
+
+                                <div v-for="(status, index) in item.content_statuses"
+                                     :key="index">
+
+
+                                    <b-field class="has-margin-bottom-5" expanded>
+                                        <p class="control drag">
+                                            <span class="button is-static">:::</span>
+                                        </p>
+
+                                        <b-input v-model="item.content_statuses[index]"
+                                                 v-if="index == edit_status_index && !disable_status_editing"
+                                                 expanded></b-input>
+
+                                        <b-input v-model="item.content_statuses[index]"
+                                                 v-else
+                                                 disabled
+                                                 expanded></b-input>
+
+
+                                        <p class="control">
+                                            <b-button
+                                                    @click="toggleEditStatus(index)"
+                                                    icon-left="edit">
+                                            </b-button>
+                                        </p>
+                                    </b-field>
+
+
+
+                                </div>
+
+                            </draggable>
+                        </div>
+
+
+
+
+                    </b-field>
+
+                    <b-field label="New Status" :label-position="labelPosition">
+                        <b-input type="text" v-model="status"
+                                 placeholder="Type new status and press enter"
+                                 @keyup.enter.native="addStatus()"></b-input>
                     </b-field>
 
 
