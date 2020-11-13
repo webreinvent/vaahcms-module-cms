@@ -1,6 +1,9 @@
 # vaahcms-module-cms
 Cms Module for VaahCMS
 
+#### New Version Release
+- Version should be updated in `composer.json` and `Config/config.php` file
+
 
 #### For Hot Reload add following:
 ```dotenv
