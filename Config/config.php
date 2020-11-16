@@ -23,5 +23,4 @@ $settings = [
 ];
 
 
-
 return $settings;
