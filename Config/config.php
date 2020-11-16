@@ -3,8 +3,9 @@
 $composer_data = json_decode(file_get_contents(__DIR__ . '/../composer.json'), true);
 
 $settings = [
-    "title"=> "Cms",
+    "name"=> 'Cms',
     "slug"=> "cms",
+    "title"=> "Cms",
     "thumbnail"=> "https://placehold.jp/300x160.png",
     "excerpt"=> "Cms",
     "description"=> "Cms",
@@ -21,7 +22,6 @@ $settings = [
     "aside-menu-order"=> null
 ];
 
-$config_data = array_merge($composer_data, $settings);
 
 
-return $config_data;
+return $settings;
