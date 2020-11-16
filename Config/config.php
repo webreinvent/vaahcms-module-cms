@@ -1,7 +1,8 @@
 <?php
 
-return  [
-    "name"=> "Cms",
+$composer_data = json_decode(file_get_contents(__DIR__ . '/../composer.json'), true);
+
+$settings = [
     "title"=> "Cms",
     "slug"=> "cms",
     "thumbnail"=> "https://placehold.jp/300x160.png",
@@ -10,7 +11,7 @@ return  [
     "download_link"=> "",
     "author_name"=> "cms",
     "author_website"=> "https://vaah.dev",
-    "version"=> "v0.1.2",
+    "version"=> $composer_data['version'],
     "is_migratable"=> true,
     "is_sample_data_available"=> false,
     "db_table_prefix"=> "vh_cms_",
@@ -19,3 +20,8 @@ return  [
     ],
     "aside-menu-order"=> null
 ];
+
+$config_data = array_merge($composer_data, $settings);
+
+
+return $config_data;
