@@ -12,7 +12,7 @@
                     <header class="card-header">
 
                         <div class="card-header-title">
-                            <span>{{page.active_menu.name}}</span>
+                            <span>{{$vaah.limitString(page.active_menu.name, 25)}}</span>
                         </div>
 
                         <div class="card-header-buttons">
@@ -166,7 +166,7 @@
                                                 <p class="control drag">
                                             <span class="button is-static">
                                                 <b class="has-margin-right-5">#{{content.id}}</b>
-                                                {{content.name}}
+                                                {{$vaah.limitString(content.name, 15)}}
                                             </span>
                                                 </p>
 

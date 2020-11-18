@@ -10,7 +10,7 @@
                     </p>
 
                     <p class="control" v-if="el.content">
-                        <span class="button dropzone-field-label is-static">{{el.content.name}}</span>
+                        <span class="button dropzone-field-label is-static">{{$vaah.limitString(el.content.name, 15)}}</span>
                     </p>
 
                     <b-input v-model="el.name" expanded placeholder="Menu Name"></b-input>

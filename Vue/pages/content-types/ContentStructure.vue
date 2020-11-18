@@ -56,7 +56,7 @@
                             <div class="card-header">
 
                                 <div class="card-header-title">
-                                    <span>{{group.name}}</span>
+                                    <span>{{$vaah.limitString(group.name, 20)}}</span>
                                 </div>
 
                                 <div class="card-header-buttons">
