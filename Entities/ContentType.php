@@ -208,12 +208,15 @@ class ContentType extends Model {
 
         if(isset($request->q))
         {
+            $search_array = explode(" ",$request->q);
 
-            $list->where(function ($q) use ($request){
-                $q->where('name', 'LIKE', '%'.$request->q.'%')
-                    ->orWhere('id', 'LIKE', $request->q.'%')
-                    ->orWhere('slug', 'LIKE', '%'.$request->q.'%');
-            });
+            foreach ($search_array as $item){
+                $list->where(function ($q) use ($item){
+                    $q->where('name', 'LIKE', '%'.$item.'%')
+                        ->orWhere('id', 'LIKE', $item.'%')
+                        ->orWhere('slug', 'LIKE', '%'.$item.'%');
+                });
+            }
         }
 
 

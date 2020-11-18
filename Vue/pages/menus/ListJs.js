@@ -188,6 +188,7 @@ export default {
 
                 this.update('new_item', this.page.new_item);
 
+                this.getMenuItems();
             }
 
 
