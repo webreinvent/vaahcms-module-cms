@@ -235,12 +235,12 @@ class ContentType extends Model {
     public static function validation($request)
     {
         $rules = array(
-            'name' => 'required|unique:vh_cms_content_types',
-            'slug' => 'required|unique:vh_cms_content_types',
-            'plural' => 'required',
-            'plural_slug' => 'required|unique:vh_cms_content_types',
-            'singular' => 'required',
-            'singular_slug' => 'required|unique:vh_cms_content_types',
+            'name' => 'required|unique:vh_cms_content_types|max:60',
+            'slug' => 'required|unique:vh_cms_content_types|max:60',
+            'plural' => 'required|max:60',
+            'plural_slug' => 'required|unique:vh_cms_content_types|max:60',
+            'singular' => 'required|max:60',
+            'singular_slug' => 'required|unique:vh_cms_content_types|max:60',
         );
 
         $validator = \Validator::make( $request->all(), $rules);
@@ -263,12 +263,12 @@ class ContentType extends Model {
     public static function storeValidation($request)
     {
         $rules = array(
-            'name' => 'required',
-            'slug' => 'required',
-            'plural' => 'required',
-            'plural_slug' => 'required',
-            'singular' => 'required',
-            'singular_slug' => 'required',
+            'name' => 'required|max:60',
+            'slug' => 'required|max:60',
+            'plural' => 'required|max:60',
+            'plural_slug' => 'required|max:60',
+            'singular' => 'required|max:60',
+            'singular_slug' => 'required|max:60',
         );
 
         $validator = \Validator::make( $request->all(), $rules);
@@ -375,7 +375,7 @@ class ContentType extends Model {
 
         $rules = array(
             '*.fields' => 'array',
-            '*.fields.*.name' => 'required',
+            '*.fields.*.name' => 'required|max:100',
         );
 
         $validator = \Validator::make( $request->all(), $rules);

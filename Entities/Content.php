@@ -279,7 +279,7 @@ class Content extends Model {
     public static function validation($request)
     {
         $rules = array(
-            'name' => 'required',
+            'name' => 'required|max:255',
             'status' => 'required',
             'vh_theme_id' => 'required',
             'vh_theme_template_id' => 'required'
