@@ -33,7 +33,7 @@ class CmsServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->registerAssets();
-        $this->registerFactories();
+        //$this->registerFactories();
         $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
         $this->registerSeeders();
         $this->registerBladeDirectives();
