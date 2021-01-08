@@ -55,10 +55,10 @@
 
 
                                 <!--actions-->
-                                <div class="level">
+                                <div class="level" v-if="page.list_view !='small'">
 
                                     <!--left-->
-                                    <div class="level-left" v-if="page.list_view !='small'">
+                                    <div class="level-left" >
                                         <div  class="level-item" >
                                             <b-field >
 
@@ -143,15 +143,25 @@
                                     </div>
                                     <!--/right-->
 
-                                </div>
+                                </div >
                                 <!--/actions-->
+
+                                <b-field v-else>
+                                    <b-input placeholder="Search"
+                                             expanded
+                                             type="text"
+                                             icon="search"
+                                             @input="delayedSearch"
+                                             @keyup.enter.prevent="delayedSearch"
+                                             v-model="query_string.q">
+                                    </b-input>
+                                </b-field>
+
 
                                 <!--filters-->
                                 <div class="level" v-if="page.show_filters">
 
                                     <div class="level-left">
-
-
 
                                         <div class="level-item">
 
@@ -282,9 +292,13 @@
                                     <hr style="margin-top: 0;"/>
 
                                     <div class="block" v-if="page.list">
-                                        <vh-pagination  :limit="1" :data="page.list"
-                                                        @onPageChange="paginate">
-                                        </vh-pagination>
+                                        <b-pagination  :total="page.list.total"
+                                               :current.sync="page.list.current_page"
+                                               :per-page="page.list.per_page"
+                                               range-before=3
+                                               range-after=3
+                                               @change="paginate">
+                                        </b-pagination>
                                     </div>
 
                                 </div>

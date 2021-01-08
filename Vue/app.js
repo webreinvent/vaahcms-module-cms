@@ -56,6 +56,22 @@ Vue.use(vaah);
 //---------/Helpers
 
 
+// Clear console after hot reload
+window.addEventListener('message', e => {
+    if ('production' !== process.env.NODE_ENV) {
+
+        if(
+            e.data.type === 'webpackInvalid'
+            || e.data.type === 'webpackOk'
+            || e.data.type === 'webpackStillOk'
+        )
+        {
+            console.clear();
+        }
+
+    }
+});
+
 
 
 //--------Progress

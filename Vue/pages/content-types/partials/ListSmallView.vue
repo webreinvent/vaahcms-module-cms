@@ -1,6 +1,7 @@
 <script src="./ListSmallViewJs.js"></script>
 <template>
     <div>
+
         <b-table :data="page.list_is_empty ? [] : page.list.data"
                  :checkable="true"
                  :checked-rows.sync="page.bulk_action.selected_items"
@@ -8,12 +9,13 @@
                  :hoverable="true"
                  :row-class="setRowClass">
 
-            <template  slot-scope="props">
-                <b-table-column field="id" label="ID" width="40" numeric>
+            <template  >
+                <b-table-column v-slot="props" field="id"
+                                label="ID"  >
                     {{ props.row.id }}
                 </b-table-column>
 
-                <b-table-column field="name" label="Name">
+                <b-table-column v-slot="props" field="name" label="Name">
                     <b-tooltip label="Copy Slug" type="is-dark">
                         <vh-copy class="text-copyable"
                                  :data="props.row.slug"
@@ -25,7 +27,7 @@
                     </b-tooltip>
                 </b-table-column>
 
-                <b-table-column field="actions" label=""
+                <b-table-column v-slot="props" field="actions" label=""
                                 width="80">
 
                     <b-tooltip label="Content Structure" type="is-dark">
@@ -44,6 +46,7 @@
 
 
                 </b-table-column>
+
             </template>
 
             <template slot="empty">
