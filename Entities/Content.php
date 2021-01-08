@@ -451,8 +451,12 @@ class Content extends Model {
 
                 if($field['type']['slug'] == 'user' && $field['content']){
 
-                    $user_id = User::where('email',$field['content'])->first()->id;
-                    $stored_field->content = $user_id;
+                    $user = $user_id = User::where('email',$field['content'])->first();
+
+                    if($user)
+                    {
+                        $stored_field->content = $user->id;
+                    }
 
                 }else{
                     $stored_field->content = $field['content'];
