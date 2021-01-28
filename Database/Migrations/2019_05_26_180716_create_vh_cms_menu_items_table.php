@@ -16,7 +16,7 @@ class CreateVhCmsMenuItemsTable extends Migration
         Schema::create('vh_cms_menu_items', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->integer('parent_id')->nullable();
+            $table->integer('parent_id')->nullable()->index();
 
             $table->string('type')->nullable()->index();
             $table->string('name')->nullable()->index();
@@ -25,20 +25,21 @@ class CreateVhCmsMenuItemsTable extends Migration
             $table->string('attr_id')->nullable();
             $table->string('attr_class')->nullable();
             $table->boolean('attr_target_blank')->nullable();
-            $table->integer('vh_menu_id')->nullable();
-            $table->integer('vh_content_id')->nullable();
-            $table->integer('sort')->nullable();
+            $table->integer('vh_menu_id')->nullable()->index();
+            $table->integer('vh_content_id')->nullable()->index();
+            $table->integer('sort')->nullable()->index();
             $table->boolean('is_home')->nullable()->index();
-            $table->string('uri')->nullable();
+            $table->string('uri')->nullable()->index();
             $table->boolean('is_active')->nullable()->index();
             $table->string('vh_permission_slug')->nullable()->index();
             $table->json('meta')->nullable();
 
-            $table->integer('created_by')->nullable();
-            $table->integer('updated_by')->nullable();
-            $table->integer('deleted_by')->nullable();
+            $table->integer('created_by')->nullable()->index();
+            $table->integer('updated_by')->nullable()->index();
+            $table->integer('deleted_by')->nullable()->index();
             $table->timestamps();
             $table->softDeletes();
+            $table->index(['created_at', 'updated_at', 'deleted_at']);
 
         });
     }

@@ -10,7 +10,7 @@
                 <div class="column"
                      :class="{'is-12': page.list_view == 'large',
                      'is-8': page.list_view == 'medium',
-                     'is-4': page.list_view == 'small',
+                     'is-3': page.list_view == 'small',
                      }">
 
                     <!--card-->

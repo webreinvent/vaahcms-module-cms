@@ -63,6 +63,7 @@ class CmsServiceProvider extends ServiceProvider
 
         //register middleware
         $router->aliasMiddleware('set.content.type', SetContentType::class);
+        $router->aliasMiddleware('set.content', SetContent::class);
 
     }
 

@@ -2,21 +2,15 @@
 <template>
     <div>
         <b-table :data="page.list_is_empty ? [] : page.list.data"
-                 :checkable="true"
-                 :checked-rows.sync="page.bulk_action.selected_items"
-                 checkbox-position="left"
                  :hoverable="true"
                  :row-class="setRowClass">
 
-            <template  slot-scope="props">
-                <b-table-column field="id" label="ID" width="5px">
-                    {{ props.row.id }}
-                </b-table-column>
+            <template  >
 
-                <b-table-column field="name" label="Name">
-                    <b-tooltip label="Edit" type="is-dark">
+                <b-table-column v-slot="props" field="name" label="Name">
+                    <b-tooltip :label="props.row.name" type="is-dark">
                         <a @click="toEdit(props.row)">
-                            {{$vaah.limitString(props.row.name, 15)}}
+                            {{$vaah.limitString(props.row.name, 22)}}
                         </a>
                     </b-tooltip>
 

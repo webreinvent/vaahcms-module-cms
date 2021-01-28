@@ -27,7 +27,8 @@ class MenuItem extends Model
 
     protected $fillable = [
         'type', 'name', 'slug', 'title', 'parent_id', 'depth', 'sort',
-        'attr_id', 'attr_class', 'attr_target_blank', 'vh_menu_id', 'vh_content_id',
+        'attr_id', 'attr_class', 'attr_target_blank', 'vh_menu_id',
+        'vh_content_id',
         'order', 'is_home', 'uri', 'is_active', 'vh_permission_slug',
         'meta',
         'created_by', 'updated_by', 'deleted_by'
@@ -230,6 +231,11 @@ class MenuItem extends Model
             $c->with(['template']);
         }]);
         $menu_item = $menu_item->first();
+
+        if(!$menu_item)
+        {
+            return false;
+        }
 
         $content_form_groups = Content::getFormGroups($menu_item->content, 'content');
         $template_form_groups = Content::getFormGroups($menu_item->content, 'template');

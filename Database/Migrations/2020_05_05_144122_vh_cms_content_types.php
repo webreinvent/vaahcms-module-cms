@@ -16,7 +16,7 @@ class VhCmsContentTypes extends Migration
 
         Schema::create('vh_cms_content_types', function (Blueprint $table) {
             $table->increments('id');
-            $table->uuid('uuid')->nullable();
+            $table->uuid('uuid')->nullable()->index();
 
             $table->string('name', 60)->nullable()->index();
             $table->string('slug', 60)->nullable()->index();
@@ -26,18 +26,20 @@ class VhCmsContentTypes extends Migration
             $table->string('singular_slug', 60)->nullable()->index();
             $table->string('excerpt')->nullable();
             $table->boolean('is_published')->nullable()->index();
-            $table->boolean('is_commentable')->nullable();
+            $table->boolean('is_commentable')->nullable()->index();
             $table->json('content_statuses')->nullable();
             $table->integer('total_records')->nullable();
             $table->integer('published_records')->nullable();
             $table->integer('total_comments')->nullable();
 
             $table->text('meta')->nullable();
-            $table->integer('created_by')->nullable();
-            $table->integer('updated_by')->nullable();
-            $table->integer('deleted_by')->nullable();
+
+            $table->integer('created_by')->nullable()->index();
+            $table->integer('updated_by')->nullable()->index();
+            $table->integer('deleted_by')->nullable()->index();
             $table->timestamps();
             $table->softDeletes();
+            $table->index(['created_at', 'updated_at', 'deleted_at']);
 
 
         });

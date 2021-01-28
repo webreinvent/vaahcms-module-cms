@@ -1,6 +1,8 @@
 
 import GlobalComponents from '../../vaahvue/helpers/GlobalComponents'
 import ContentFieldAll from '../../vaahvue/reusable/content-fields/All'
+import AutoCompleteUsers from '../../vaahvue/reusable/AutoCompleteUsers'
+
 import ContentFields from './partials/ContentFields'
 import TemplateFields from './partials/TemplateFields'
 import CustomFields from './partials/CustomFields'
@@ -19,6 +21,7 @@ export default {
     components:{
         ...GlobalComponents,
         ContentFieldAll,
+        AutoCompleteUsers,
         ContentFields,
         TemplateFields,
         CustomFields,
@@ -126,6 +129,12 @@ export default {
             this.local_action = action;
             this.create();
         },//---------------------------------------------------------------------
+        setAuthor: function (user)
+        {
+            this.new_item.author = user.id;
+            this.updateNewItem();
+        },
+        //---------------------------------------------------------------------
         saveAndNew: function () {
             this.update('active_item', null);
             this.resetNewItem();

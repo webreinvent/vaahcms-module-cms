@@ -35,6 +35,35 @@
                     </div>
 
                     <div class="card-content">
+
+                        <b-field labelPosition='on-border'
+                                 label="Permalink">
+                            <b-input placeholder="Permalink"
+                                     v-model="item.permalink"
+                                     maxlength="100"
+                                     expanded></b-input>
+
+                            <p class="control">
+                                <b-button tag="a"
+                                          target="_blank"
+                                          :href="item.link_prefix+item.permalink"
+                                          icon-left="external-link-alt">
+                                </b-button>
+                            </p>
+                        </b-field>
+
+                        <b-field labelPosition='on-border'
+                                 label="Author">
+                            <AutoCompleteUsers v-if="item.author_user"
+                                               @onSelect="setAuthor"
+                            :selected_value="item.author_user.name">
+                            </AutoCompleteUsers>
+
+                            <AutoCompleteUsers v-else @onSelect="setAuthor">
+                            </AutoCompleteUsers>
+
+                        </b-field>
+
                         <ContentFields :groups="item.content_form_groups"></ContentFields>
                         <TemplateFields :groups="item.template_form_groups"></TemplateFields>
                     </div>

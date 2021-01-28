@@ -236,7 +236,7 @@
                 </div>
 
             </div>
-            <div class="column is-3" >
+            <div class="column is-4" >
 
                 <div class="card">
 

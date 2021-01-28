@@ -99,7 +99,13 @@ export default {
         //---------------------------------------------------------------------
         toEdit: function (item) {
             this.update('active_item', item);
-            this.$router.push({name:'contents.edit', params:{id:item.id}});
+
+            let params = this.$route.params;
+            let query = this.$route.query;
+
+            params.id = item.id;
+
+            this.$router.push({name:'contents.edit', params:params, query:query});
 
         }
         //---------------------------------------------------------------------

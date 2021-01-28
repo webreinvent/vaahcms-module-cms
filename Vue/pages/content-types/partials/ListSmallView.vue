@@ -3,17 +3,10 @@
     <div>
 
         <b-table :data="page.list_is_empty ? [] : page.list.data"
-                 :checkable="true"
-                 :checked-rows.sync="page.bulk_action.selected_items"
-                 checkbox-position="left"
                  :hoverable="true"
                  :row-class="setRowClass">
 
             <template  >
-                <b-table-column v-slot="props" field="id"
-                                label="ID"  >
-                    {{ props.row.id }}
-                </b-table-column>
 
                 <b-table-column v-slot="props" field="name" label="Name">
                     <b-tooltip label="Copy Slug" type="is-dark">

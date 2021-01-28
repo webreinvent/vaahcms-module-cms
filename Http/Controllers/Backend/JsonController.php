@@ -28,6 +28,10 @@ class JsonController extends Controller
             ];
         }
 
+        $data['urls'] = [
+            'base' => url('/')
+        ];
+
         $data['permissions'] = \Auth::user()->permissions(true);
 
 

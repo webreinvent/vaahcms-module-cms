@@ -55,56 +55,85 @@ function get_the_content($id, array $args = null, $output='html')
     return $output;
 }
 //-----------------------------------------------------------------------------------
-function get_content_form_groups($id, $type=null, array $args = null, $output=null)
+
+//-----------------------------------------------------------------------------------
+function get_field(Content $content, $field_slug, $group_slug='default', $type='content' )
 {
-
-
-
+    if($type=='content')
+    {
+        return get_content_field($content, $field_slug, $group_slug);
+    } else {
+        return get_template_field($content, $field_slug, $group_slug);
+    }
 }
 //-----------------------------------------------------------------------------------
-function get_content_group($id, $type='content', array $args = null)
+function get_content_field(Content $content, $field_slug, $group_slug='default')
 {
+
+    if(!isset($content->content_form_groups)
+    || $content->content_form_groups->count() < 1
+    )
+    {
+        return null;
+    }
+
+    $group = $content->content_form_groups->where('slug', $group_slug)->first();
+
+    if(!$group)
+    {
+        return null;
+    }
+
+
+    $field = $group->fields->where('slug', $field_slug)->first();
+
+    if(!$field)
+    {
+        return null;
+    }
+
+    $value = $field->content;
+
+    if($field_slug=='seo-meta-tags')
+    {
+        $value = '<title>'.$field->content->seo_title->content.'</title>'."\n";
+        $value .= '<meta name="description" content="'.$field->content->seo_description->content.'">'."\n";
+        $value .= '<meta name="keywords" content="'.$field->content->seo_keywords->content.'">'."\n";
+    }
+
+
+    return $value;
 
 }
+
+
 //-----------------------------------------------------------------------------------
-function get_content_fields($id, $type=null, array $args = null)
+function get_template_field(Content $content, $field_slug, $group_slug='default')
 {
 
+    if(!isset($content->template_form_groups)
+        || $content->template_form_groups->count() < 1
+    )
+    {
+        return null;
+    }
+
+    $group = $content->template_form_groups->where('slug', $group_slug)->first();
+
+    if(!$group)
+    {
+        return null;
+    }
 
 
-}
-//-----------------------------------------------------------------------------------
-function get_content_field(Content $content, $group_slug, $field_group)
-{
+    $field = $group->fields->where('slug', $field_slug)->first();
 
-    $output = Content::getContentField($content, $group_slug, $field_group);
+    if(!$field)
+    {
+        return null;
+    }
 
-
-    return $output;
-}
-//-----------------------------------------------------------------------------------
-function get_template_groups($id, $type=null, array $args = null)
-{
-
-
-
-}
-//-----------------------------------------------------------------------------------
-function get_template_group($id, $type='content', array $args = null)
-{
-
-}
-//-----------------------------------------------------------------------------------
-function get_template_fields($id, $type=null, array $args = null)
-{
-
-
-
-}
-//-----------------------------------------------------------------------------------
-function get_template_field($id, $type='content', array $args = null)
-{
-
+    return $field->content;
 }
 //-----------------------------------------------------------------------------------
 
