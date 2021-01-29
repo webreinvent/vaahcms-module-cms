@@ -1,7 +1,7 @@
 {
     "name": "vaahcms/cms",
     "description": "Cms",
-    "version": "0.1.4",
+    "version": "0.1.5",
     "authors": [
         {
             "name": "vaah",
@@ -9,7 +9,7 @@
         }
     ],
     "require": {
-        "php": "^7.0"
+        "php": "^7.3"
     },
     "extra": {
         "laravel": {
