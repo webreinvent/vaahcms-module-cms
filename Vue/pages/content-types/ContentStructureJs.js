@@ -118,17 +118,17 @@ export default {
         },
         //---------------------------------------------------------------------
         addNewGroup: function () {
-
             if(this.new_group.name){
-                this.item.groups.push(this.new_group);
-                this.update('item', this.item);
-                this.resetNewGroup();
+                if(this.new_group.name.length > 100){
+                    this.$vaah.toastErrors(['Group may not be greater than 100 characters.']);
+                }else{
+                    this.item.groups.push(this.new_group);
+                    this.update('item', this.item);
+                    this.resetNewGroup();
+                }
             }else{
                 this.$vaah.toastErrors(['Group Field is required.']);
             }
-
-
-
         },
         //---------------------------------------------------------------------
         resetNewGroup: function () {

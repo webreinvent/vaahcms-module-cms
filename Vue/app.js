@@ -12,6 +12,7 @@ import VueRouter from 'vue-router';
 import Vuex from 'vuex';
 import VueFuse from 'vue-fuse'
 import VueProgressBar from 'vue-progressbar'
+import CKEditor from '@ckeditor/ckeditor5-vue2'
 
 
 
@@ -52,9 +53,26 @@ Vue.use(VueAxios, axios);
 Vue.use(VueRouter);
 Vue.use(Vuex);
 Vue.use(VueFuse);
+Vue.use( CKEditor );
 Vue.use(vaah);
 //---------/Helpers
 
+
+// Clear console after hot reload
+window.addEventListener('message', e => {
+    if ('production' !== process.env.NODE_ENV) {
+
+        if(
+            e.data.type === 'webpackInvalid'
+            || e.data.type === 'webpackOk'
+            || e.data.type === 'webpackStillOk'
+        )
+        {
+            console.clear();
+        }
+
+    }
+});
 
 
 

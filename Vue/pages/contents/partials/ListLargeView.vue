@@ -8,16 +8,19 @@
                  :hoverable="true"
                  :row-class="setRowClass">
 
-            <template  slot-scope="props">
-                <b-table-column field="id" label="ID" width="40" numeric>
+            <template>
+                <b-table-column v-slot="props" width="85" field="id" label="ID"   >
                     {{ props.row.id }}
                 </b-table-column>
 
-                <b-table-column field="name" label="Name">
+                <b-table-column v-slot="props" field="name" label="Name">
                     {{ props.row.name }}
                 </b-table-column>
 
-                <b-table-column v-if="props.row.deleted_at" width="150px" field="status" label="Status">
+                <b-table-column v-slot="props" width="150px" field="status" label="Status">
+
+
+                    <div v-if="props.row.deleted_at">
 
                     <b-dropdown aria-role="list" disabled size="is-small" v-model="props.row.status"
                                     @input="changeStatus(props.row.id,props.row.status)">
@@ -44,48 +47,50 @@
 
                         </b-dropdown>
 
-                </b-table-column>
+                    </div>
+                    <div v-else>
+                        <b-tooltip label="Change Status" type="is-dark">
 
+                            <b-dropdown aria-role="list" size="is-small" v-model="props.row.status"
+                                        @input="changeStatus(props.row.id,props.row.status)">
 
-                <b-table-column v-else width="150px" field="status" label="Status">
-                    <b-tooltip label="Change Status" type="is-dark">
+                                <p v-if="props.row.status === 'published'"
+                                   class="tag is-success"
+                                   slot="trigger"
+                                   role="button" slot-scope="{ active }">
+                                    <span>{{ props.row.status }}</span>
+                                    <b-icon :icon="active? 'chevron-up' : 'chevron-down'"></b-icon>
+                                </p>
 
-                        <b-dropdown aria-role="list" size="is-small" v-model="props.row.status"
-                                    @input="changeStatus(props.row.id,props.row.status)">
+                                <p v-else
+                                   class="tag is-dark"
+                                   slot="trigger"
+                                   role="button" slot-scope="{ active }">
+                                    <span>{{ props.row.status }}</span>
+                                    <b-icon :icon="active? 'chevron-up' : 'chevron-down'"></b-icon>
+                                </p>
 
-                            <p v-if="props.row.status === 'published'"
-                                class="tag is-success"
-                                slot="trigger"
-                                role="button" slot-scope="{ active }">
-                                <span>{{ props.row.status }}</span>
-                                <b-icon :icon="active? 'chevron-up' : 'chevron-down'"></b-icon>
-                            </p>
-
-                            <p v-else
-                                class="tag is-dark"
-                                slot="trigger"
-                                role="button" slot-scope="{ active }">
-                                <span>{{ props.row.status }}</span>
-                                <b-icon :icon="active? 'chevron-up' : 'chevron-down'"></b-icon>
-                            </p>
-
-                            <span v-for="item in page.status_list">
+                                <span v-for="item in page.status_list">
                                 <b-dropdown-item :value="item" aria-role="listitem">{{item}}</b-dropdown-item>
                             </span >
 
-                        </b-dropdown>
-                    </b-tooltip>
+                            </b-dropdown>
+                        </b-tooltip>
+                    </div>
+
+
 
                 </b-table-column>
 
-                <b-table-column width="150px" field="updated_at" label="Updated At">
+
+                <b-table-column v-slot="props" width="150px" field="updated_at" label="Updated At">
                     <span>
                         {{$vaah.fromNow(props.row.updated_at)}}
                     </span>
                 </b-table-column>
 
-                <b-table-column field="actions" label=""
-                                width="80">
+                <b-table-column v-slot="props" field="actions" label=""
+                                width="120">
 
                     <b-tooltip label="Edit" type="is-dark">
                         <b-button size="is-small"
@@ -94,13 +99,21 @@
                         </b-button>
                     </b-tooltip>
 
-                    <b-tooltip label="View" type="is-dark">
+                    <b-tooltip label="Details" type="is-dark">
                         <b-button size="is-small"
                                   @click="setActiveItem(props.row)"
                                   icon-left="chevron-right">
                         </b-button>
                     </b-tooltip>
 
+                    <b-tooltip label="View" type="is-dark">
+                        <b-button size="is-small"
+                                  tag="a"
+                                  target="_blank"
+                                  :href="props.row.link_prefix+props.row.permalink"
+                                  icon-left="external-link-alt">
+                        </b-button>
+                    </b-tooltip>
 
                 </b-table-column>
             </template>

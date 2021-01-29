@@ -11,6 +11,13 @@ APP_MODULE_CMS_ENV=develop
 ```
 
 
+
+#### Theme Locations
+```blade
+{!! vh_location('top', true) !!}
+```
+
+
 #### To Run Modules Dusk Test:
 - Change path of dusk in `phpunit.dusk.xml` to following:
 ```xml

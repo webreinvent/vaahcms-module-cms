@@ -4,7 +4,6 @@ import draggable from 'vuedraggable';
 let namespace = 'content_types';
 
 export default {
-    props: ['id'],
     computed:{
         root() {return this.$store.getters['root/state']},
         page() {return this.$store.getters[namespace+'/state']},
@@ -14,7 +13,6 @@ export default {
     components:{
         ...GlobalComponents,
         draggable,
-
     },
     data()
     {

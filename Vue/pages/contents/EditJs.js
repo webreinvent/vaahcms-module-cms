@@ -1,5 +1,7 @@
+let slugify = require('slugify');
 import GlobalComponents from '../../vaahvue/helpers/GlobalComponents'
 import ContentFieldAll from '../../vaahvue/reusable/content-fields/All'
+import AutoCompleteUsers from '../../vaahvue/reusable/AutoCompleteUsers'
 
 import ContentFields from './partials/ContentFields'
 import TemplateFields from './partials/TemplateFields'
@@ -14,11 +16,12 @@ export default {
         page() {return this.$store.getters[namespace+'/state']},
         assets() {return this.$store.getters[namespace+'/state'].assets},
         ajax_url() {return this.$store.getters[namespace+'/state'].ajax_url},
-        item() {return this.$store.getters[namespace+'/state'].active_item},
+        active_item() {return this.$store.getters[namespace+'/state'].active_item},
     },
     components:{
         ...GlobalComponents,
         ContentFieldAll,
+        AutoCompleteUsers,
         ContentFields,
         TemplateFields,
         CustomFields,
@@ -34,14 +37,26 @@ export default {
             local_action: null,
             title: null,
             groups: null,
-            theme_sync_loader: false
+            theme_sync_loader: false,
+            item: null,
         }
     },
     watch: {
         $route(to, from) {
             this.updateStore();
             this.getItem();
-        }
+        },
+        'item.permalink': {
+            deep: true,
+            handler(new_val, old_val) {
+                if(new_val)
+                {
+                    new_val.trim();
+                    this.item.permalink = slugify(new_val);
+                    this.updateItem();
+                }
+            }
+        },
     },
     mounted() {
         //----------------------------------------------------
@@ -58,6 +73,16 @@ export default {
             let update = {
                 state_name: name,
                 state_value: value,
+                namespace: this.namespace,
+            };
+            this.$vaah.updateState(update);
+        },
+        //---------------------------------------------------------------------
+        updateItem: function()
+        {
+            let update = {
+                state_name: 'active_item',
+                state_value: this.item,
                 namespace: this.namespace,
             };
             this.$vaah.updateState(update);
@@ -97,7 +122,9 @@ export default {
 
             if(data)
             {
+                this.item = data;
                 this.update('active_item', data);
+
             } else
             {
                 //if item does not exist or delete then redirect to list
@@ -109,9 +136,11 @@ export default {
         store: function () {
             this.$Progress.start();
 
-            let params = this.item;
-            console.log('--->', params);
+           this.updateItem();
 
+            console.log('--->', this.item.permalink);
+
+            let params = this.item;
             let url = this.ajax_url+'/item/'+this.item.id+'/store';
             this.$vaah.ajax(url, params, this.storeAfter);
         },
@@ -138,6 +167,12 @@ export default {
         setLocalAction: function (action) {
             this.local_action = action;
             this.store();
+        },
+        //---------------------------------------------------------------------
+        setAuthor: function (user)
+        {
+            this.item.author = user.id;
+            this.updateItem();
         },
         //---------------------------------------------------------------------
         saveAndClose: function () {

@@ -1,35 +1,52 @@
 /*!
-    * tiptap v1.27.0
-    * (c) 2020 Scrumpy UG (limited liability)
+    * tiptap v1.30.0
+    * (c) 2021 überdosis GbR (limited liability)
     * @license MIT
     */
 
 /*!
-    * tiptap-commands v1.13.0
-    * (c) 2020 Scrumpy UG (limited liability)
+    * tiptap v1.31.0
+    * (c) 2021 überdosis GbR (limited liability)
     * @license MIT
     */
 
 /*!
-    * tiptap-extensions v1.29.0
-    * (c) 2020 Scrumpy UG (limited liability)
+    * tiptap-commands v1.15.0
+    * (c) 2021 überdosis GbR (limited liability)
     * @license MIT
     */
 
 /*!
-    * tiptap-utils v1.9.0
-    * (c) 2020 Scrumpy UG (limited liability)
+    * tiptap-commands v1.16.0
+    * (c) 2021 überdosis GbR (limited liability)
     * @license MIT
     */
 
 /*!
- * FilePond 4.13.5
+    * tiptap-extensions v1.34.0
+    * (c) 2021 überdosis GbR (limited liability)
+    * @license MIT
+    */
+
+/*!
+    * tiptap-utils v1.11.0
+    * (c) 2021 überdosis GbR (limited liability)
+    * @license MIT
+    */
+
+/*!
+ * @license Copyright (c) 2003-2021, CKSource - Frederico Knabben. All rights reserved.
+ * For licensing, see LICENSE.md.
+ */
+
+/*!
+ * FilePond 4.25.1
  * Licensed under MIT, https://opensource.org/licenses/MIT/
  * Please visit https://pqina.nl/filepond/ for details.
  */
 
 /*!
- * FilePondPluginFileRename 1.1.4
+ * FilePondPluginFileRename 1.1.6
  * Licensed under MIT, https://opensource.org/licenses/MIT/
  * Please visit https://pqina.nl/filepond/ for details.
  */
@@ -47,34 +64,30 @@
  */
 
 /*!
- * FilePondPluginImageCrop 2.0.3
+ * FilePondPluginImageCrop 2.0.4
  * Licensed under MIT, https://opensource.org/licenses/MIT/
  * Please visit https://pqina.nl/filepond/ for details.
  */
 
 /*!
- * FilePondPluginImageEdit 1.6.0
+ * FilePondPluginImageEdit 1.6.1
  * Licensed under MIT, https://opensource.org/licenses/MIT/
  * Please visit https://pqina.nl/filepond/ for details.
  */
 
 /*!
- * FilePondPluginImagePreview 4.6.2
+ * FilePondPluginImagePreview 4.6.4
  * Licensed under MIT, https://opensource.org/licenses/MIT/
  * Please visit https://pqina.nl/filepond/ for details.
+ */
+
+/*!
+ * Font Awesome Free 5.15.1 by @fontawesome - https://fontawesome.com
+ * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
  */
 
 /*!
  * Fuse.js v3.4.6 - Lightweight fuzzy-search (http://fusejs.io)
- * 
- * Copyright (c) 2012-2017 Kirollos Risk (http://kiro.me)
- * All Rights Reserved. Apache Software License 2.0
- * 
- * http://www.apache.org/licenses/LICENSE-2.0
- */
-
-/*!
- * Fuse.js v3.6.1 - Lightweight fuzzy-search (http://fusejs.io)
  * 
  * Copyright (c) 2012-2017 Kirollos Risk (http://kiro.me)
  * All Rights Reserved. Apache Software License 2.0
@@ -94,8 +107,8 @@
  */
 
 /*!
- * Vue.js v2.6.11
- * (c) 2014-2019 Evan You
+ * Vue.js v2.6.12
+ * (c) 2014-2020 Evan You
  * Released under the MIT License.
  */
 
@@ -139,12 +152,12 @@
  * Copyright (c) 2011-2020 Jos de Jong, http://jsoneditoronline.org
  *
  * @author  Jos de Jong, <wjosdejong@gmail.com>
- * @version 8.6.4
- * @date    2020-03-29
+ * @version 9.1.1
+ * @date    2020-09-23
  */
 
 /*!
- * vue-filepond v6.0.2
+ * vue-filepond v6.0.3
  * A handy FilePond adapter component for Vue
  * 
  * Copyright (c) 2020 PQINA
@@ -153,13 +166,13 @@
  * Licensed under the MIT license.
  */
 
-/**
- * vuex v3.3.0
+/*!
+ * vuex v3.6.0
  * (c) 2020 Evan You
  * @license MIT
  */
 
-/** @license URI.js v4.2.1 (c) 2011 Gary Court. License: http://github.com/garycourt/uri-js */
+/** @license URI.js v4.4.0 (c) 2011 Gary Court. License: http://github.com/garycourt/uri-js */
 
 /**!
  * Sortable 1.10.2
@@ -169,7 +182,5 @@
  */
 
 //! moment.js
-
-//! moment.js language configuration
 
 //! moment.js locale configuration

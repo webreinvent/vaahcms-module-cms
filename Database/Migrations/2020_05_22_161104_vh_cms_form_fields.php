@@ -16,10 +16,10 @@ class VhCmsFormFields extends Migration
 
         Schema::create('vh_cms_form_fields', function (Blueprint $table) {
             $table->increments('id');
-            $table->uuid('uuid')->nullable();
-            $table->integer('vh_cms_field_type_id')->nullable();
-            $table->integer('vh_cms_form_group_id')->nullable();
-            $table->integer('sort')->nullable();
+            $table->uuid('uuid')->nullable()->index();
+            $table->integer('vh_cms_field_type_id')->nullable()->index();
+            $table->integer('vh_cms_form_group_id')->nullable()->index();
+            $table->integer('sort')->nullable()->index();
             $table->string('name', 100)->nullable()->index();
             $table->string('slug', 100)->nullable()->index();
             $table->string('excerpt')->nullable();
@@ -27,11 +27,13 @@ class VhCmsFormFields extends Migration
             $table->boolean('is_repeatable')->nullable()->index();
 
             $table->text('meta')->nullable();
-            $table->integer('created_by')->nullable();
-            $table->integer('updated_by')->nullable();
-            $table->integer('deleted_by')->nullable();
+
+            $table->integer('created_by')->nullable()->index();
+            $table->integer('updated_by')->nullable()->index();
+            $table->integer('deleted_by')->nullable()->index();
             $table->timestamps();
             $table->softDeletes();
+            $table->index(['created_at', 'updated_at', 'deleted_at']);
         });
     }
 

@@ -8,22 +8,22 @@
                  :hoverable="true"
                  :row-class="setRowClass">
 
-            <template  slot-scope="props">
-                <b-table-column field="id" label="ID" width="40" numeric>
+            <template  >
+                <b-table-column v-slot="props" width="85" field="id" label="ID" >
                     {{ props.row.id }}
                 </b-table-column>
 
-                <b-table-column field="name" label="Name">
+                <b-table-column v-slot="props" field="name" label="Name">
                     {{ props.row.name }}
                 </b-table-column>
 
-                <b-table-column width="100px" field="updated_at" label="Updated At">
+                <b-table-column v-slot="props" width="100px" field="updated_at" label="Updated At">
                     <span>
                         {{$vaah.fromNow(props.row.updated_at)}}
                     </span>
                 </b-table-column>
 
-                <b-table-column field="actions" label=""
+                <b-table-column v-slot="props" field="actions" label=""
                                 width="80">
 
                     <b-tooltip label="Edit" type="is-dark">

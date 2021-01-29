@@ -9,7 +9,7 @@
                     <div class="card-header">
 
                         <div class="card-header-title">
-                            <span>Content Structure</span>
+                            <span>Content</span>
                         </div>
 
                         <div class="card-header-buttons">
@@ -34,6 +34,21 @@
                     </div>
 
                     <div class="card-content">
+
+                        <b-field labelPosition='on-border'
+                                 label="Permalink">
+                            <b-input placeholder="Permalink"
+                                     v-model="new_item.permalink"
+                                     maxlength="100"
+                                     expanded></b-input>
+                        </b-field>
+
+                        <b-field labelPosition='on-border'
+                                 label="Author">
+                            <AutoCompleteUsers @onSelect="setAuthor" >
+                            </AutoCompleteUsers>
+                        </b-field>
+
                         <ContentFields :groups="assets.content_type.form_groups"></ContentFields>
                         <TemplateFields :groups="page.active_template_groups"></TemplateFields>
                     </div>
@@ -43,7 +58,7 @@
 
 
             </div>
-            <div class="column is-3">
+            <div class="column is-4">
 
                 <div class="card">
 
@@ -58,6 +73,7 @@
 
                             <div class="field has-addons is-pulled-right">
 
+
                                 <p class="control">
                                     <b-button icon-left="save"
                                               type="is-light"
@@ -66,6 +82,7 @@
                                         Save
                                     </b-button>
                                 </p>
+
 
                                 <p class="control">
                                     <b-button tag="router-link"

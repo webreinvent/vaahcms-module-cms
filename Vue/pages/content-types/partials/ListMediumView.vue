@@ -11,12 +11,12 @@
                  :hoverable="true"
                  :row-class="setRowClass">
 
-            <template  slot-scope="props">
-                <b-table-column field="id" label="ID" width="40" numeric>
+            <template  >
+                <b-table-column v-slot="props" field="id" label="ID" width="85" >
                     {{ props.row.id }}
                 </b-table-column>
 
-                <b-table-column field="name" label="Name">
+                <b-table-column v-slot="props" field="name" label="Name">
                     <b-tooltip label="Copy Slug" type="is-dark">
                         <vh-copy class="text-copyable"
                                  :data="props.row.slug"
@@ -27,7 +27,7 @@
 
                     </b-tooltip>
                 </b-table-column>
-                <b-table-column field="plural" label="Plural">
+                <b-table-column v-slot="props" field="plural" label="Plural">
 
                     <b-tooltip label="Copy Plural Slug" type="is-dark">
                         <vh-copy class="text-copyable"
@@ -40,7 +40,7 @@
                     </b-tooltip>
                 </b-table-column>
 
-                <b-table-column field="singular" label="Singular">
+                <b-table-column v-slot="props" field="singular" label="Singular">
                     <b-tooltip label="Copy Singular Slug" type="is-dark">
                         <vh-copy class="text-copyable"
                                  :data="props.row.singular_slug"
@@ -52,20 +52,24 @@
                     </b-tooltip>
                 </b-table-column>
 
-                <b-table-column v-if="props.row.deleted_at" field="is_published" label="Is Published">
+                <b-table-column v-slot="props" width="100"
+                                field="is_published" label="Is Published">
 
-                    <b-button v-if="props.row.is_published === 1" disabled rounded size="is-small"
-                              type="is-success">
-                        Yes
-                    </b-button>
-                    <b-button v-else rounded size="is-small" disabled type="is-danger">
-                        No
-                    </b-button>
+                    <div v-if="props.row.deleted_at">
 
-                </b-table-column>
+                        <b-button v-if="props.row.is_published === 1"
+                                  disabled rounded size="is-small"
+                                  type="is-success">
+                            Yes
+                        </b-button>
+                        <b-button v-else rounded size="is-small" disabled type="is-danger">
+                            No
+                        </b-button>
 
-                <b-table-column v-else field="is_published" label="Is Published">
-                    <b-tooltip label="Change Status" type="is-dark">
+                    </div>
+
+                    <div v-else>
+                        <b-tooltip label="Change Status" type="is-dark">
                         <b-button v-if="props.row.is_published === 1" rounded size="is-small"
                                   type="is-success" @click="changeStatus(props.row.id)">
                             Yes
@@ -75,9 +79,12 @@
                             No
                         </b-button>
                     </b-tooltip>
+                    </div>
+
+
                 </b-table-column>
 
-                <b-table-column field="actions" label=""
+                <b-table-column v-slot="props" field="actions" label=""
                                 width="80">
 
                     <b-tooltip label="Content Structure" type="is-dark">

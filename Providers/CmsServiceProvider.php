@@ -33,7 +33,7 @@ class CmsServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->registerAssets();
-        $this->registerFactories();
+        //$this->registerFactories();
         $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
         $this->registerSeeders();
         $this->registerBladeDirectives();
@@ -63,6 +63,7 @@ class CmsServiceProvider extends ServiceProvider
 
         //register middleware
         $router->aliasMiddleware('set.content.type', SetContentType::class);
+        $router->aliasMiddleware('set.content', SetContent::class);
 
     }
 

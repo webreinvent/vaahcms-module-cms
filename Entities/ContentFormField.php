@@ -61,12 +61,16 @@ class ContentFormField extends Model {
             }
 
 
-            $slug = $this->field->type->slug;
-
-            if($slug == 'image' || $slug == 'media')
+            if(isset($this->field->type) && isset($this->field->type->slug))
             {
-                $value = asset($value);
+                $slug = $this->field->type->slug;
+
+                if($slug == 'image' || $slug == 'media')
+                {
+                    $value = asset($value);
+                }
             }
+
 
             return $value;
         }

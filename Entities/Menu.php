@@ -38,7 +38,7 @@ class Menu extends Model
     {
 
         $rules = array(
-            'name' => 'required',
+            'name' => 'required|max:255',
         );
 
         $validator = \Validator::make( $request->all(), $rules);

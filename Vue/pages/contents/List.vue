@@ -54,10 +54,10 @@
 
 
                                 <!--actions-->
-                                <div class="level">
+                                <div class="level" v-if="page.list_view !='small'">
 
                                     <!--left-->
-                                    <div class="level-left" v-if="page.list_view !='small'">
+                                    <div class="level-left" >
                                         <div  class="level-item" >
                                             <b-field >
 
@@ -112,19 +112,19 @@
                                                          v-model="query_string.q">
                                                 </b-input>
 
-                                                <p class="control" v-if="page.list_view !='small'">
+                                                <p class="control">
                                                     <button class="button is-primary"
                                                             @click="getList">
                                                         Filter
                                                     </button>
                                                 </p>
-                                                <p class="control" v-if="page.list_view !='small'">
+                                                <p class="control" >
                                                     <button class="button is-primary"
                                                             @click="resetPage">
                                                         Reset
                                                     </button>
                                                 </p>
-                                                <p class="control" v-if="page.list_view !='small'">
+                                                <p class="control" >
                                                     <button class="button is-primary"
                                                             @click="toggleFilters()"
                                                             slot="trigger">
@@ -140,6 +140,18 @@
 
                                 </div>
                                 <!--/actions-->
+
+                                <!--list-view-small-->
+                                <div v-else class="level">
+                                    <b-input placeholder="Search"
+                                             type="text"
+                                             icon="search"
+                                             @input="delayedSearch"
+                                             @keyup.enter.prevent="delayedSearch"
+                                             v-model="query_string.q">
+                                    </b-input>
+                                </div>
+                                <!--/list-view-small-->
 
                                 <!--filters-->
                                 <div class="level" v-if="page.show_filters">
@@ -273,9 +285,13 @@
                                     <hr style="margin-top: 0;"/>
 
                                     <div class="block" v-if="page.list">
-                                        <vh-pagination  :limit="1" :data="page.list"
-                                                        @onPageChange="paginate">
-                                        </vh-pagination>
+                                        <b-pagination  :total="page.list.total"
+                                                       :current.sync="page.list.current_page"
+                                                       :per-page="page.list.per_page"
+                                                       range-before=3
+                                                       range-after=3
+                                                       @change="paginate">
+                                        </b-pagination>
                                     </div>
 
                                 </div>

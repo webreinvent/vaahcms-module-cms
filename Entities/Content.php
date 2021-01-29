@@ -33,6 +33,8 @@ class Content extends Model {
         'vh_theme_template_id',
         'name',
         'slug',
+        'permalink',
+        'author',
         'is_published_at',
         'status',
         'total_comments',
@@ -43,9 +45,31 @@ class Content extends Model {
     ];
 
     //-------------------------------------------------
-
+    protected $appends  = [
+        'link_prefix', 'link'
+    ];
     //-------------------------------------------------
 
+    //-------------------------------------------------
+    public function setSlugAttribute($value)
+    {
+        if($value)
+        {
+            $this->attributes['slug'] = Str::slug($value);
+        } else{
+            $this->attributes['slug'] = null;
+        }
+    }
+    //-------------------------------------------------
+    public function setPermalinkAttribute($value)
+    {
+        if($value)
+        {
+            $this->attributes['permalink'] = Str::slug($value);
+        } else{
+            $this->attributes['permalink'] = null;
+        }
+    }
     //-------------------------------------------------
     public function setMetaAttribute($value)
     {
@@ -55,6 +79,40 @@ class Content extends Model {
         } else{
             $this->attributes['meta'] = null;
         }
+    }
+
+    //-------------------------------------------------
+    public function getLinkPrefixAttribute()
+    {
+        if(!$this->permalink)
+        {
+            return null;
+        }
+
+        $link = url('/').'/';
+
+        $type = $this->contentType;
+
+        if($type && $type->slug != 'pages')
+        {
+            $link .= $type->slug."/";
+        }
+
+        return $link;
+    }
+    //-------------------------------------------------
+    public function getLinkAttribute()
+    {
+        if(!$this->permalink)
+        {
+            return null;
+        }
+
+        $perfix = $this->getLinkPrefixAttribute();
+
+        $link = $perfix.$this->permalink;
+
+        return $link;
     }
     //-------------------------------------------------
     public function getMetaAttribute($value)
@@ -103,6 +161,16 @@ class Content extends Model {
         )->select('id', 'uuid', 'first_name', 'last_name', 'email');
     }
     //-------------------------------------------------
+    public function authorUser()
+    {
+        return $this->belongsTo(User::class,
+            'author', 'id'
+        )->select(
+            'id', 'uuid', 'first_name', 'last_name', 'email',
+            'username', 'display_name', 'title', 'bio', 'website',
+        );
+    }
+    //-------------------------------------------------
     public function contentType()
     {
         return $this->belongsTo(ContentType::class,
@@ -140,15 +208,13 @@ class Content extends Model {
             return $validation;
         }
 
-
-
         $inputs = $request->all();
-
 
         $item = new static();
 
         $fillable['name'] = $inputs['name'];
-        $fillable['slug'] = Str::slug($inputs['name']);
+        $fillable['slug'] = $inputs['name'];
+        $fillable['permalink'] = $inputs['permalink'];
         $fillable['vh_cms_content_type_id'] = $request->content_type->id;
         $fillable['vh_theme_id'] = $request->vh_theme_id;
         $fillable['vh_theme_template_id'] = $request->vh_theme_template_id;
@@ -246,12 +312,15 @@ class Content extends Model {
 
         if(isset($request->q))
         {
+            $search_array = explode(" ",$request->q);
 
-            $list->where(function ($q) use ($request){
-                $q->where('name', 'LIKE', '%'.$request->q.'%')
-                    ->orWhere('id', 'LIKE', $request->q.'%')
-                    ->orWhere('slug', 'LIKE', '%'.$request->q.'%');
-            });
+            foreach ($search_array as $item){
+                $list->where(function ($q) use ($item){
+                    $q->where('name', 'LIKE', '%'.$item.'%')
+                        ->orWhere('id', 'LIKE', $item.'%')
+                        ->orWhere('slug', 'LIKE', '%'.$item.'%');
+                });
+            }
         }
 
 
@@ -276,11 +345,18 @@ class Content extends Model {
     public static function validation($request)
     {
         $rules = array(
-            'name' => 'required',
+            'name' => 'required|max:255',
             'status' => 'required',
             'vh_theme_id' => 'required',
             'vh_theme_template_id' => 'required'
         );
+
+        if($request->has('id'))
+        {
+            $rules['permalink'] = 'required|unique:vh_cms_contents,permalink,'.$request->id.'|max:100';
+        } else {
+            $rules['permalink'] = 'required|unique:vh_cms_contents|max:100';
+        }
 
         $validator = \Validator::make( $request->all(), $rules);
         if ( $validator->fails() ) {
@@ -303,7 +379,7 @@ class Content extends Model {
     {
 
         $item = static::where('id', $id)
-            ->with(['createdByUser', 'updatedByUser', 'deletedByUser'])
+            ->with(['authorUser', 'createdByUser', 'updatedByUser', 'deletedByUser'])
             ->with(['fields' => function($f){
                 $f->with(['group', 'field']);
             }])
@@ -448,8 +524,12 @@ class Content extends Model {
 
                 if($field['type']['slug'] == 'user' && $field['content']){
 
-                    $user_id = User::where('email',$field['content'])->first()->id;
-                    $stored_field->content = $user_id;
+                    $user = $user_id = User::where('email',$field['content'])->first();
+
+                    if($user)
+                    {
+                        $stored_field->content = $user->id;
+                    }
 
                 }else{
                     $stored_field->content = $field['content'];
