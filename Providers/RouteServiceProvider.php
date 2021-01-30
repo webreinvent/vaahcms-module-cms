@@ -37,7 +37,6 @@ class RouteServiceProvider extends ServiceProvider
         $this->mapApiRoutes();
         $this->mapBackendRoutes();
         $this->mapFrontendRoutes();
-        $this->mapFrontendCmsRoutes();
     }
 
     /**
@@ -53,22 +52,6 @@ class RouteServiceProvider extends ServiceProvider
             ->namespace($this->namespace)
             ->group(__DIR__ . '/../Routes/backend.php');
     }
-
-    /**
-     * Define the "web" routes for the application.
-     *
-     * These routes all receive session state, CSRF protection, etc.
-     *
-     * @return void
-     */
-    protected function mapFrontendCmsRoutes()
-    {
-        Route::middleware('web')
-            ->namespace($this->namespace)
-            ->group(__DIR__ . '/../Routes/frontend/routes-cms.php');
-    }
-
-
 
     /**
      * Define the "web" routes for the application.
