@@ -379,10 +379,14 @@ class Content extends Model {
     {
 
         $item = static::where('id', $id)
-            ->with(['authorUser', 'createdByUser', 'updatedByUser', 'deletedByUser'])
-            ->with(['fields' => function($f){
-                $f->with(['group', 'field']);
-            }])
+            ->with([
+                'contentType', 'theme', 'template',
+                'authorUser', 'createdByUser', 'updatedByUser',
+                'deletedByUser',
+                'fields' => function($f){
+                    $f->with(['group', 'field']);
+                }
+            ])
             ->withTrashed()
             ->first();
 
@@ -390,9 +394,11 @@ class Content extends Model {
         $template_form_groups = static::getFormGroups($item, 'template');
 
         $response['status'] = 'success';
+
+        $item->content_form_groups = $content_form_groups;
+        $item->template_form_groups = $template_form_groups;
+
         $response['data'] = $item;
-        $response['data']['content_form_groups'] = $content_form_groups;
-        $response['data']['template_form_groups'] = $template_form_groups;
 
         return $response;
 
@@ -426,8 +432,6 @@ class Content extends Model {
                 $groups[$i]['fields'][$y]['vh_cms_form_field_id'] = null;
                 $groups[$i]['fields'][$y]['content'] = null;
                 $groups[$i]['fields'][$y]['content_meta'] = null;
-
-
 
                 $field_content = ContentFormField::where('vh_cms_content_id', $content->id);
                 $field_content->where('vh_cms_form_group_id', $group->id);
@@ -503,11 +507,21 @@ class Content extends Model {
             $y = 0;
             foreach ($group['fields'] as $field)
             {
+
                 $stored_field = null;
-                if(isset($field['vh_cms_form_field_id']) && !empty($field['vh_cms_form_field_id']))
+                if(
+                    isset($field['vh_cms_form_group_id'])
+                    && isset($field['id'])
+                )
                 {
-                    $stored_field = ContentFormField::find($field['vh_cms_form_field_id']);
+
+                    $stored_field = ContentFormField::where('vh_cms_form_group_id', $field['vh_cms_form_group_id'])
+                    ->where('vh_cms_form_field_id', $field['id'])
+                    ->where('vh_cms_content_id', $content->id)
+                    ->first();
+
                 }
+
 
                 if(!$stored_field)
                 {

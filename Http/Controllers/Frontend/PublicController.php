@@ -23,7 +23,6 @@ class PublicController extends Controller
 
     public function page(Request $request, $permalink)
     {
-
         $theme_slug = $request->data->theme->slug;
 
         if(!is_null($request->data->template->file_path))

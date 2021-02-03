@@ -42,7 +42,6 @@ class SetContent
 
         $content = Content::where('permalink', $permalink)
             ->where('vh_cms_content_type_id', $content_type->id)
-            ->with(['contentType', 'theme', 'template', 'fields'])
             ->first();
 
         if(!$content)
@@ -50,11 +49,18 @@ class SetContent
             abort(404);
         }
 
+        $content = Content::getItem($content->id);
+
+        if($content['status'] != 'success')
+        {
+            abort(404);
+        }
+
         //for controller
-        $request->data = $content;
+        $request->data = $content['data'];
 
         //for view
-        \View::share('data', $content);
+        \View::share('data', $content['data']);
 
         return $next($request);
     }
