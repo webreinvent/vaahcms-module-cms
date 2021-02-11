@@ -183,15 +183,17 @@
                                         :value="theme.id"
                                 >{{theme.name}}</option>
                             </b-select>
+                            <b-tooltip label="Sync Templates" type="is-dark">
                             <p class="control">
-                                <b-tooltip label="Sync Templates" type="is-dark">
+
                                     <b-button type="is-light"
                                               @click="syncSeeds"
                                               :loading="theme_sync_loader"
                                               icon-left="sync-alt">
                                     </b-button>
-                                </b-tooltip>
+
                             </p>
+                            </b-tooltip>
 
                         </b-field>
 

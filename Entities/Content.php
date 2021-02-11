@@ -498,6 +498,7 @@ class Content extends Model {
     //-------------------------------------------------
     public static function storeFormGroups(Content $content, $groups)
     {
+
         $i = 0;
         foreach ($groups as $group)
         {
@@ -521,6 +522,7 @@ class Content extends Model {
                     ->first();
 
                 }
+
 
 
                 if(!$stored_field)
@@ -809,6 +811,7 @@ class Content extends Model {
 
     }
     //-------------------------------------------------
+
     //-------------------------------------------------
     //-------------------------------------------------
     //-------------------------------------------------
