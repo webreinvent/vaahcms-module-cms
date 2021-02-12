@@ -330,6 +330,14 @@ class CmsSeeder{
                             $field['content'] = Str::slug($faker->text(50));
                             break;
 
+                        case 'uuid':
+                            $field['content'] = Str::uuid()->toString();
+                            break;
+
+                        case 'email':
+                            $field['content'] = $faker->email;
+                            break;
+
                         case 'editor':
                         case 'textarea':
                             $field['content'] = $faker->realText(300, 3);
@@ -364,72 +372,58 @@ class CmsSeeder{
                             $field['content'] = $faker->boolean;
                             break;
 
-                        case 'uuid':
-                            $field['content'] = Str::uuid()->toString();
-                            break;
-
-                        case 'email':
-                            $field['content'] = $faker->email;
-                            break;
-
-                        case 'currency-code':
+                       /* case 'currency-code':
                             $field['content'] = $faker->currencyCode;
-                            break;
+                            break;*/
 
                         case 'json':
                             $field['content'] = json_encode(['name' => $faker->name]);
                             break;
 
                         case 'seo-meta-tags':
+                            $field['content'] = self::setMetaTagContent();
+                            break;
 
-                            $data['seo_description'] = self::fillFieldContent(
-                                $faker->realText(200, 3),200,
-                                'SEO Meta Description','textarea',
-                                'Description of content (maximum 200 characters)');
+                        case 'address':
+                            $field['content'] = self::setAddressContent();
+                            break;
 
-                            $data['seo_keywords'] = self::fillFieldContent(
-                                $faker->realText(200, 3),200,
-                                'SEO Meta Keywords','textarea');
+                        case 'twitter-card':
+                            $field['content'] = self::setTwitterContent();
+                            break;
 
-                            $data['seo_title'] = self::fillFieldContent(
-                                $faker->text(70),70,
-                                'SEO Title');
+                        case 'facebook-card':
+                            $field['content'] = self::setFacebookContent();
+                            break;
 
+                        case 'image-group':
+
+                            $data = [
+                                'https://via.placeholder.com/150',
+                                'https://via.placeholder.com/150'
+                            ];
 
                             $field['content'] = $data;
                             break;
 
-                        case 'address':
+                        case 'tags':
 
-                            $data['address_line_1'] = self::fillFieldContent(
-                                $faker->text(50),50,
-                                'Address Line 1');
+                            $field['content'] = $faker->text(50);
+                            break;
 
-                            $data['address_line_2'] = self::fillFieldContent(
-                                $faker->text(50),50,
-                                'Address Line 2');
+                        case 'password':
 
-                            $data['city'] = self::fillFieldContent(
-                                $faker->text(50),50,
-                                'City');
+                            $field['content'] = 'password';
+                            break;
 
-                            $data['country'] = self::fillFieldContent(
-                                $faker->text(50),20,
-                                'Country');
+                        case 'price':
 
-                            $data['landmark'] = self::fillFieldContent(
-                                $faker->text(50),50,
-                                'Landmark');
+                            $field['content'] = $faker->randomNumber(2);
+                            break;
 
-                            $data['state'] = self::fillFieldContent(
-                                $faker->text(50),50,
-                                'State');
+                        case 'list':
 
-                            $data['zip_code'] = self::fillFieldContent(
-                                $faker->text(50),20,
-                                'Zip Code');
-
-                            $field['content'] = $data;
+                            $field['content'] = [$faker->firstName , $faker->firstName];
                             break;
 
                         default:
@@ -449,6 +443,122 @@ class CmsSeeder{
 
 
         return $groups;
+
+
+    }
+    //-------------------------------------------------------
+    public static function setMetaTagContent()
+    {
+        $faker = \Faker\Factory::create();
+
+        $data['seo_description'] = self::fillFieldContent(
+            $faker->realText(200, 3),200,
+            'SEO Meta Description','textarea',
+            'Description of content (maximum 200 characters)');
+
+        $data['seo_keywords'] = self::fillFieldContent(
+            $faker->realText(200, 3),200,
+            'SEO Meta Keywords','textarea');
+
+        $data['seo_title'] = self::fillFieldContent(
+            $faker->text(70),70,
+            'SEO Title');
+
+        return $data;
+
+
+    }
+    //-------------------------------------------------------
+    public static function setAddressContent()
+    {
+        $faker = \Faker\Factory::create();
+
+        $data['address_line_1'] = self::fillFieldContent(
+            $faker->buildingNumber.' '.$faker->streetName,
+            50, 'Address Line 1');
+
+        $data['address_line_2'] = self::fillFieldContent(
+            $faker->secondaryAddress,50,
+            'Address Line 2');
+
+        $data['city'] = self::fillFieldContent(
+            $faker->city,50,
+            'City');
+
+        $data['country'] = self::fillFieldContent(
+            $faker->country,20,
+            'Country');
+
+        $data['landmark'] = self::fillFieldContent(
+            $faker->streetName,50,
+            'Landmark');
+
+        $data['state'] = self::fillFieldContent(
+            $faker->state,50,
+            'State');
+
+        $data['zip_code'] = self::fillFieldContent(
+            $faker->postcode,20,
+            'Zip Code');
+
+        return $data;
+
+
+    }
+    //-------------------------------------------------------
+    public static function setTwitterContent()
+    {
+        $faker = \Faker\Factory::create();
+
+        $data['twitter_description'] = self::fillFieldContent(
+            $faker->realText(200, 3),200,
+            'twitter:description','textarea',
+            'Description of content (maximum 200 characters)');
+
+        $data['twitter_imaage'] = self::fillFieldContent(
+            'https://via.placeholder.com/150',200,
+            'twitter:image','text',
+            'URL of image to use in the card. 
+                                Images must be less than 5MB in size. 
+                                JPG, PNG, WEBP and GIF formats are supported.');
+
+        $data['twitter_site'] = self::fillFieldContent(
+            $faker->randomNumber(8),50,
+            'twitter:site','test',
+            '@username of website. Either twitter:site or twitter:site:id is required.');
+
+        $data['twitter_title'] = self::fillFieldContent(
+            $faker->text(50),70,
+            'twitter:title','text',
+            'Title of content (max 70 characters).');
+
+        return $data;
+
+
+    }
+    //-------------------------------------------------------
+    public static function setFacebookContent()
+    {
+        $faker = \Faker\Factory::create();
+
+        $data['og_description'] = self::fillFieldContent(
+            $faker->realText(200, 3),200,
+            'og:description','textarea',
+            'Description of content (maximum 200 characters)');
+
+        $data['og_image'] = self::fillFieldContent(
+            'https://via.placeholder.com/150',200,
+            'og:image','text',
+            'URL of image to use in the card. 
+                                Images must be less than 5MB in size. 
+                                JPG, PNG, WEBP and GIF formats are supported.');
+
+        $data['og_title'] = self::fillFieldContent(
+            $faker->text(50),70,
+            'og:title','text',
+            'Title of content (max 70 characters).');
+
+        return $data;
 
 
     }
