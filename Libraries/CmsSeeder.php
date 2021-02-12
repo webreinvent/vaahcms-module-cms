@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use VaahCms\Modules\Cms\Entities\Content;
 use VaahCms\Modules\Cms\Entities\ContentType;
 use WebReinvent\VaahCms\Entities\ThemeTemplate;
 
@@ -208,7 +209,269 @@ class CmsSeeder{
         }
     }
     //-------------------------------------------------------
+    public static function pages($theme_slug, $file_path)
+    {
+
+        $theme = self::getTheme($theme_slug);
+
+        if(is_array($theme)
+            && isset($theme['status'])
+            && $theme['status'] == 'failed'
+        )
+        {
+            return $theme;
+        }
+
+        $list = self::getJsonData($file_path);
+
+        if(count($list) < 1)
+        {
+            return false;
+        }
+
+        $content_type = ContentType::where('slug', 'pages')
+            ->with(['groups.fields.type'])
+            ->first()->toArray();
+
+        if(!$content_type)
+        {
+            return false;
+        }
+
+
+        foreach($list as $item)
+        {
+            $template = ThemeTemplate::where('vh_theme_id', $theme->id)
+                ->where('slug', $item['template_slug'])
+                ->with(['groups.fields.type'])
+                ->first()->toArray();
+
+            if(!$template)
+            {
+                continue;
+            }
+
+            $page = Content::where('slug', $item['slug'])
+                ->where('vh_cms_content_type_id', $content_type['id'])
+                ->where('vh_theme_id', $theme->id)
+                ->where('vh_theme_template_id', $template['id'])
+                ->first();
+
+            if(!$page)
+            {
+                $page = new Content();
+            }
+
+            $fillable = [
+                'vh_cms_content_type_id' => $content_type['id'],
+                'vh_theme_id' => $theme->id,
+                'vh_theme_template_id' => $template['id'],
+                'name' => $item['name'],
+                'slug' => $item['slug'],
+                'permalink' => $item['permalink'],
+                'status' => 'published',
+                'is_published_at' => \Carbon::now(),
+            ];
+
+
+            $page->fill($fillable);
+            $page->save();
+
+
+            $content_groups = self::fillFields($content_type['groups']);
+            $template_groups = self::fillFields($template['groups']);
+
+            Content::storeFormGroups($page, $content_groups);
+            Content::storeFormGroups($page, $template_groups);
+
+        }
+
+    }
     //-------------------------------------------------------
+    public static function fillFields($groups)
+    {
+
+        $faker = \Faker\Factory::create();
+
+        if(count($groups) < 1)
+        {
+            return $groups;
+        }
+
+        foreach ($groups as $g_key => $group)
+        {
+
+            if(count($group['fields']) < 1)
+            {
+                continue;
+            }
+
+            foreach ($group['fields'] as $key => $field)
+            {
+
+
+                if(
+                    isset($field['meta'])
+                    && is_object($field['meta'])
+                    && isset($field['meta']->default)
+                )
+                {
+                    $field['content'] = $field['meta']->default;
+                } else{
+
+                    switch($field['type']['slug']){
+
+                        case 'title':
+                        case 'text':
+                            $field['content'] = $faker->text(50);
+                            break;
+
+                        case 'slug':
+                            $field['content'] = Str::slug($faker->text(50));
+                            break;
+
+                        case 'editor':
+                        case 'textarea':
+                            $field['content'] = $faker->realText(300, 3);
+                            break;
+
+                        case 'image':
+                        case 'media':
+                            $field['content'] = 'https://via.placeholder.com/150';
+                            break;
+
+                        case 'phone-number':
+                            $field['content'] = $faker->randomNumber(9);
+                            break;
+
+                        case 'time':
+                            $field['content'] = $faker->time();
+                            break;
+
+                        case 'date':
+                            $field['content'] = $faker->date();
+                            break;
+
+                        case 'date-time':
+                            $field['content'] = $faker->iso8601();
+                            break;
+
+                        case 'number':
+                            $field['content'] = $faker->randomNumber();
+                            break;
+
+                        case 'boolean':
+                            $field['content'] = $faker->boolean;
+                            break;
+
+                        case 'uuid':
+                            $field['content'] = Str::uuid()->toString();
+                            break;
+
+                        case 'email':
+                            $field['content'] = $faker->email;
+                            break;
+
+                        case 'currency-code':
+                            $field['content'] = $faker->currencyCode;
+                            break;
+
+                        case 'json':
+                            $field['content'] = json_encode(['name' => $faker->name]);
+                            break;
+
+                        case 'seo-meta-tags':
+
+                            $data['seo_description'] = self::fillFieldContent(
+                                $faker->realText(200, 3),200,
+                                'SEO Meta Description','textarea',
+                                'Description of content (maximum 200 characters)');
+
+                            $data['seo_keywords'] = self::fillFieldContent(
+                                $faker->realText(200, 3),200,
+                                'SEO Meta Keywords','textarea');
+
+                            $data['seo_title'] = self::fillFieldContent(
+                                $faker->text(70),70,
+                                'SEO Title');
+
+
+                            $field['content'] = $data;
+                            break;
+
+                        case 'address':
+
+                            $data['address_line_1'] = self::fillFieldContent(
+                                $faker->text(50),50,
+                                'Address Line 1');
+
+                            $data['address_line_2'] = self::fillFieldContent(
+                                $faker->text(50),50,
+                                'Address Line 2');
+
+                            $data['city'] = self::fillFieldContent(
+                                $faker->text(50),50,
+                                'City');
+
+                            $data['country'] = self::fillFieldContent(
+                                $faker->text(50),20,
+                                'Country');
+
+                            $data['landmark'] = self::fillFieldContent(
+                                $faker->text(50),50,
+                                'Landmark');
+
+                            $data['state'] = self::fillFieldContent(
+                                $faker->text(50),50,
+                                'State');
+
+                            $data['zip_code'] = self::fillFieldContent(
+                                $faker->text(50),20,
+                                'Zip Code');
+
+                            $field['content'] = $data;
+                            break;
+
+                        default:
+
+//                            dd($field['type']['slug']);
+
+                            $field['content'] = null;
+                            break;
+                    }
+                }
+
+                $groups[$g_key]['fields'][$key] = $field;
+
+            }
+
+        }
+
+
+        return $groups;
+
+
+    }
+    //-------------------------------------------------------
+    public static function fillFieldContent($content,$maxlength,
+                                            $name, $type = 'text',
+                                            $message = null)
+    {
+
+        $response = [
+            'content' => $content,
+            'maxlength' => $maxlength,
+            'name' => $name,
+            'type' => $type,
+        ];
+
+        if($message){
+            $response['message'] = $message;
+        }
+        return $response;
+
+
+    }
     //-------------------------------------------------------
 
 
