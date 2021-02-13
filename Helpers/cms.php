@@ -101,6 +101,9 @@ function get_content_field(Content $content, $field_slug, $group_slug='default')
         $value .= '<meta name="keywords" content="'.$field->content->seo_keywords->content.'">'."\n";
     }
 
+    if(is_object($value) || is_array($value)){
+        return json_encode($value);
+    }
 
     return $value;
 
