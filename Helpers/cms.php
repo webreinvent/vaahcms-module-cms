@@ -136,7 +136,20 @@ function get_template_field(Content $content, $field_slug, $group_slug='default'
         return null;
     }
 
-    return $field->content;
+    $value = $field->content;
+
+    if($field_slug=='seo-meta-tags')
+    {
+        $value = '<title>'.$field->content->seo_title->content.'</title>'."\n";
+        $value .= '<meta name="description" content="'.$field->content->seo_description->content.'">'."\n";
+        $value .= '<meta name="keywords" content="'.$field->content->seo_keywords->content.'">'."\n";
+    }
+
+    if(is_object($value) || is_array($value)){
+        return json_encode($value);
+    }
+
+    return $value;
 }
 //-----------------------------------------------------------------------------------
 
