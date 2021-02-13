@@ -516,7 +516,7 @@ class CmsSeeder{
                                 JPG, PNG, WEBP and GIF formats are supported.');
 
         $data['twitter_site'] = self::fillFieldContent(
-            $faker->url,50,
+            'https://twitter.com/',50,
             'twitter:site','test',
             '@username of website. Either twitter:site or twitter:site:id is required.');
 
