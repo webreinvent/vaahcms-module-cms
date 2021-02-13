@@ -372,9 +372,9 @@ class CmsSeeder{
                             $field['content'] = $faker->boolean;
                             break;
 
-                       /* case 'currency-code':
+                        case 'currency-code':
                             $field['content'] = $faker->currencyCode;
-                            break;*/
+                            break;
 
                         case 'json':
                             $field['content'] = json_encode(['name' => $faker->name]);
@@ -407,29 +407,22 @@ class CmsSeeder{
                             break;
 
                         case 'tags':
-
                             $field['content'] = $faker->text(50);
                             break;
 
                         case 'password':
-
                             $field['content'] = 'password';
                             break;
 
                         case 'price':
-
                             $field['content'] = $faker->randomNumber(2);
                             break;
 
                         case 'list':
-
                             $field['content'] = [$faker->firstName , $faker->firstName];
                             break;
 
                         default:
-
-//                            dd($field['type']['slug']);
-
                             $field['content'] = null;
                             break;
                     }
@@ -523,7 +516,7 @@ class CmsSeeder{
                                 JPG, PNG, WEBP and GIF formats are supported.');
 
         $data['twitter_site'] = self::fillFieldContent(
-            $faker->randomNumber(8),50,
+            $faker->url,50,
             'twitter:site','test',
             '@username of website. Either twitter:site or twitter:site:id is required.');
 
