@@ -93,71 +93,7 @@ function get_content_field(Content $content, $field_slug, $group_slug='default',
         return null;
     }
 
-    $value = $field->content;
-
-    if(!$return_html){
-        return $value;
-    }
-
-    switch($field_slug){
-
-        case 'seo-meta-tags':
-            $value = '<title>'.$field->content->seo_title->content.'</title>'."\n";
-            $value .= '<meta name="description" content="'.$field->content->seo_description->content.'">'."\n";
-            $value .= '<meta name="keywords" content="'.$field->content->seo_keywords->content.'">'."\n";
-            break;
-
-        case 't-crad':
-            $value = '<meta name="twitter:card" content="summary" />'."\n";
-            $value .= '<meta name="twitter:site" content="'.$field->content->twitter_site->content.'">'."\n";
-            $value .= '<meta name="twitter:title" content="'.$field->content->twitter_title->content.'">'."\n";
-            $value .= '<meta name="twitter:description" content="'.$field->content->twitter_description->content.'">'."\n";
-            $value .= '<meta name="twitter:image" content="'.$field->content->twitter_imaage->content.'">'."\n";
-            break;
-
-        case 'f-card':
-            $value = '<meta name="og:title" content="'.$field->content->og_title->content.'">'."\n";
-            $value .= '<meta name="og:description" content="'.$field->content->og_description->content.'">'."\n";
-            $value .= '<meta name="og:image" content="'.$field->content->og_image->content.'">'."\n";
-            break;
-
-        case 'address':
-            $value = '<address>'."\n";
-
-            $value .= $field->content->address_line_1->content.', '.$field->content->address_line_2->content."</br>";
-            $value .= $field->content->city->content.', '.$field->content->state->content."</br>";
-            $value .= $field->content->landmark->content."</br>";
-            $value .= $field->content->country->content.', '.$field->content->zip_code->content;
-
-            $value .= '</address>';
-            break;
-
-        case 'json':
-            $value = json_encode($field->content,JSON_PRETTY_PRINT);
-            break;
-
-        case 'image-group':
-            $value = '<div class="columns is-multiline is-flex-mobile is-vcentered">'."\n";
-
-            foreach ($field->content as $item){
-                $value .= '<div class="column">'."\n";
-                $value .= '<img src='.$item.'/>'."\n";
-                $value .= '</div>'."\n";
-            }
-
-            $value .= '</div>'."\n";
-            break;
-
-        case 'list':
-            $value = '<ul>'."\n";
-
-            foreach ($field->content as $item){
-                $value .= '<li>'.$item.'</li>'."\n";
-            }
-            $value .= '</ul>';
-            break;
-    }
-    return $value;
+    return setReturnValue($field,$field_slug,$return_html);
 
 }
 
@@ -187,6 +123,14 @@ function get_template_field(Content $content, $field_slug, $group_slug='default'
     {
         return null;
     }
+
+    return setReturnValue($field,$field_slug,$return_html);
+}
+
+
+//-----------------------------------------------------------------------------------
+function setReturnValue($field,$field_slug,$return_html=true)
+{
 
     $value = $field->content;
 
