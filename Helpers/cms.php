@@ -99,74 +99,64 @@ function get_content_field(Content $content, $field_slug, $group_slug='default',
         return $value;
     }
 
-    if($field_slug=='seo-meta-tags')
-    {
-        $value = '<title>'.$field->content->seo_title->content.'</title>'."\n";
-        $value .= '<meta name="description" content="'.$field->content->seo_description->content.'">'."\n";
-        $value .= '<meta name="keywords" content="'.$field->content->seo_keywords->content.'">'."\n";
-    }
+    switch($field_slug){
 
-    if($field_slug=='list')
-    {
+        case 'seo-meta-tags':
+            $value = '<title>'.$field->content->seo_title->content.'</title>'."\n";
+            $value .= '<meta name="description" content="'.$field->content->seo_description->content.'">'."\n";
+            $value .= '<meta name="keywords" content="'.$field->content->seo_keywords->content.'">'."\n";
+            break;
 
-        $value = '<ul>'."\n";
+        case 't-crad':
+            $value = '<meta name="twitter:card" content="summary" />'."\n";
+            $value .= '<meta name="twitter:site" content="'.$field->content->twitter_site->content.'">'."\n";
+            $value .= '<meta name="twitter:title" content="'.$field->content->twitter_title->content.'">'."\n";
+            $value .= '<meta name="twitter:description" content="'.$field->content->twitter_description->content.'">'."\n";
+            $value .= '<meta name="twitter:image" content="'.$field->content->twitter_imaage->content.'">'."\n";
+            break;
 
-        foreach ($field->content as $item){
-            $value .= '<li>'.$item.'</li>'."\n";
-        }
-        $value .= '</ul>';
-    }
+        case 'f-card':
+            $value = '<meta name="og:title" content="'.$field->content->og_title->content.'">'."\n";
+            $value .= '<meta name="og:description" content="'.$field->content->og_description->content.'">'."\n";
+            $value .= '<meta name="og:image" content="'.$field->content->og_image->content.'">'."\n";
+            break;
 
-    if($field_slug=='t-crad')
-    {
+        case 'address':
+            $value = '<address>'."\n";
 
-        $value = '<meta name="twitter:card" content="summary" />'."\n";
-        $value .= '<meta name="twitter:site" content="'.$field->content->twitter_site->content.'">'."\n";
-        $value .= '<meta name="twitter:title" content="'.$field->content->twitter_title->content.'">'."\n";
-        $value .= '<meta name="twitter:description" content="'.$field->content->twitter_description->content.'">'."\n";
-        $value .= '<meta name="twitter:image" content="'.$field->content->twitter_imaage->content.'">'."\n";
-    }
+            $value .= $field->content->address_line_1->content.', '.$field->content->address_line_2->content."</br>";
+            $value .= $field->content->city->content.', '.$field->content->state->content."</br>";
+            $value .= $field->content->landmark->content."</br>";
+            $value .= $field->content->country->content.', '.$field->content->zip_code->content;
 
-    if($field_slug=='f-card')
-    {
+            $value .= '</address>';
+            break;
 
-        $value = '<meta name="og:title" content="'.$field->content->og_title->content.'">'."\n";
-        $value .= '<meta name="og:description" content="'.$field->content->og_description->content.'">'."\n";
-        $value .= '<meta name="og:image" content="'.$field->content->og_image->content.'">'."\n";
-    }
+        case 'json':
+            $value = json_encode($field->content,JSON_PRETTY_PRINT);
+            break;
 
-    if($field_slug=='address')
-    {
-        $value = '<address>'."\n";
+        case 'image-group':
+            $value = '<div class="columns is-multiline is-flex-mobile is-vcentered">'."\n";
 
-        $value .= $field->content->address_line_1->content.' '.$field->content->address_line_2->content."</br>";
-        $value .= $field->content->city->content.' '.$field->content->state->content."</br>";
-        $value .= $field->content->landmark->content."</br>";
-        $value .= $field->content->country->content.' '.$field->content->zip_code->content;
+            foreach ($field->content as $item){
+                $value .= '<div class="column">'."\n";
+                $value .= '<img src='.$item.'/>'."\n";
+                $value .= '</div>'."\n";
+            }
 
-        $value .= '</address>';
-    }
-
-    if($field_slug=='image-group')
-    {
-
-        $value = '<div class="columns is-multiline is-flex-mobile is-vcentered">'."\n";
-
-        foreach ($field->content as $item){
-            $value .= '<div class="column">'."\n";
-            $value .= '<img src='.$item.'/>'."\n";
             $value .= '</div>'."\n";
-        }
+            break;
 
-        $value .= '</div>'."\n";
+        case 'list':
+            $value = '<ul>'."\n";
 
+            foreach ($field->content as $item){
+                $value .= '<li>'.$item.'</li>'."\n";
+            }
+            $value .= '</ul>';
+            break;
     }
-
-    if($field_slug=='json')
-    {
-        $value = json_encode($field->content,JSON_PRETTY_PRINT);
-    }
-
     return $value;
 
 }
@@ -204,72 +194,64 @@ function get_template_field(Content $content, $field_slug, $group_slug='default'
         return $value;
     }
 
-    if($field_slug=='seo-meta-tags')
-    {
-        $value = '<title>'.$field->content->seo_title->content.'</title>'."\n";
-        $value .= '<meta name="description" content="'.$field->content->seo_description->content.'">'."\n";
-        $value .= '<meta name="keywords" content="'.$field->content->seo_keywords->content.'">'."\n";
-    }
 
-    if($field_slug=='list')
-    {
+    switch($field_slug){
 
-        $value = '<ul>'."\n";
+        case 'seo-meta-tags':
+            $value = '<title>'.$field->content->seo_title->content.'</title>'."\n";
+            $value .= '<meta name="description" content="'.$field->content->seo_description->content.'">'."\n";
+            $value .= '<meta name="keywords" content="'.$field->content->seo_keywords->content.'">'."\n";
+            break;
 
-        foreach ($field->content as $item){
-            $value .= '<li>'.$item.'</li>'."\n";
-        }
-        $value .= '</ul>';
-    }
+        case 't-crad':
+            $value = '<meta name="twitter:card" content="summary" />'."\n";
+            $value .= '<meta name="twitter:site" content="'.$field->content->twitter_site->content.'">'."\n";
+            $value .= '<meta name="twitter:title" content="'.$field->content->twitter_title->content.'">'."\n";
+            $value .= '<meta name="twitter:description" content="'.$field->content->twitter_description->content.'">'."\n";
+            $value .= '<meta name="twitter:image" content="'.$field->content->twitter_imaage->content.'">'."\n";
+            break;
 
-    if($field_slug=='t-crad')
-    {
+        case 'f-card':
+            $value = '<meta name="og:title" content="'.$field->content->og_title->content.'">'."\n";
+            $value .= '<meta name="og:description" content="'.$field->content->og_description->content.'">'."\n";
+            $value .= '<meta name="og:image" content="'.$field->content->og_image->content.'">'."\n";
+            break;
 
-        $value = '<meta name="twitter:card" content="summary" />'."\n";
-        $value .= '<meta name="twitter:site" content="'.$field->content->twitter_site->content.'">'."\n";
-        $value .= '<meta name="twitter:title" content="'.$field->content->twitter_title->content.'">'."\n";
-        $value .= '<meta name="twitter:description" content="'.$field->content->twitter_description->content.'">'."\n";
-        $value .= '<meta name="twitter:image" content="'.$field->content->twitter_imaage->content.'">'."\n";
-    }
+        case 'address':
+            $value = '<address>'."\n";
 
-    if($field_slug=='f-card')
-    {
+            $value .= $field->content->address_line_1->content.', '.$field->content->address_line_2->content."</br>";
+            $value .= $field->content->city->content.', '.$field->content->state->content."</br>";
+            $value .= $field->content->landmark->content."</br>";
+            $value .= $field->content->country->content.', '.$field->content->zip_code->content;
 
-        $value = '<meta name="og:title" content="'.$field->content->og_title->content.'">'."\n";
-        $value .= '<meta name="og:description" content="'.$field->content->og_description->content.'">'."\n";
-        $value .= '<meta name="og:image" content="'.$field->content->og_image->content.'">'."\n";
-    }
+            $value .= '</address>';
+            break;
 
-    if($field_slug=='address')
-    {
-        $value = '<address>'."\n";
+        case 'json':
+            $value = json_encode($field->content,JSON_PRETTY_PRINT);
+            break;
 
-        $value .= $field->content->address_line_1->content.', '.$field->content->address_line_2->content."</br>";
-        $value .= $field->content->city->content.', '.$field->content->state->content."</br>";
-        $value .= $field->content->landmark->content."</br>";
-        $value .= $field->content->country->content.', '.$field->content->zip_code->content;
+        case 'image-group':
+            $value = '<div class="columns is-multiline is-flex-mobile is-vcentered">'."\n";
 
-        $value .= '</address>';
-    }
+            foreach ($field->content as $item){
+                $value .= '<div class="column">'."\n";
+                $value .= '<img src='.$item.'/>'."\n";
+                $value .= '</div>'."\n";
+            }
 
-    if($field_slug=='image-group')
-    {
-
-        $value = '<div class="columns is-multiline is-flex-mobile is-vcentered">'."\n";
-
-        foreach ($field->content as $item){
-            $value .= '<div class="column">'."\n";
-            $value .= '<img src='.$item.'/>'."\n";
             $value .= '</div>'."\n";
-        }
+            break;
 
-        $value .= '</div>'."\n";
+        case 'list':
+            $value = '<ul>'."\n";
 
-    }
-
-    if($field_slug=='json')
-    {
-        $value = json_encode($field->content,JSON_PRETTY_PRINT);
+            foreach ($field->content as $item){
+                $value .= '<li>'.$item.'</li>'."\n";
+            }
+            $value .= '</ul>';
+            break;
     }
 
     return $value;
