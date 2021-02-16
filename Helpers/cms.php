@@ -59,6 +59,7 @@ function get_the_content($id, array $args = null, $output='html')
 //-----------------------------------------------------------------------------------
 function get_field(Content $content, $field_slug, $group_slug='default', $type='content', $return_html=true )
 {
+
     if($type=='content')
     {
         return get_content_field($content, $field_slug, $group_slug, $return_html);
@@ -138,12 +139,32 @@ function get_content_field(Content $content, $field_slug, $group_slug='default',
     {
         $value = '<address>'."\n";
 
-        $value .= $field->content->address_line_1->content.', '.$field->content->address_line_2->content."</br>";
-        $value .= $field->content->city->content.', '.$field->content->state->content."</br>";
+        $value .= $field->content->address_line_1->content.' '.$field->content->address_line_2->content."</br>";
+        $value .= $field->content->city->content.' '.$field->content->state->content."</br>";
         $value .= $field->content->landmark->content."</br>";
-        $value .= $field->content->country->content.', '.$field->content->zip_code->content;
+        $value .= $field->content->country->content.' '.$field->content->zip_code->content;
 
         $value .= '</address>';
+    }
+
+    if($field_slug=='image-group')
+    {
+
+        $value = '<div class="columns is-multiline is-flex-mobile is-vcentered">'."\n";
+
+        foreach ($field->content as $item){
+            $value .= '<div class="column">'."\n";
+            $value .= '<img src='.$item.'/>'."\n";
+            $value .= '</div>'."\n";
+        }
+
+        $value .= '</div>'."\n";
+
+    }
+
+    if($field_slug=='json')
+    {
+        $value = json_encode($field->content,JSON_PRETTY_PRINT);
     }
 
     return $value;
@@ -229,6 +250,26 @@ function get_template_field(Content $content, $field_slug, $group_slug='default'
         $value .= $field->content->country->content.', '.$field->content->zip_code->content;
 
         $value .= '</address>';
+    }
+
+    if($field_slug=='image-group')
+    {
+
+        $value = '<div class="columns is-multiline is-flex-mobile is-vcentered">'."\n";
+
+        foreach ($field->content as $item){
+            $value .= '<div class="column">'."\n";
+            $value .= '<img src='.$item.'/>'."\n";
+            $value .= '</div>'."\n";
+        }
+
+        $value .= '</div>'."\n";
+
+    }
+
+    if($field_slug=='json')
+    {
+        $value = json_encode($field->content,JSON_PRETTY_PRINT);
     }
 
     return $value;
