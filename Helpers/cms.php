@@ -132,10 +132,8 @@ function get_template_field(Content $content, $field_slug, $group_slug='default'
 function setReturnValue($field,$field_slug,$return_html=true)
 {
 
-    $value = $field->content;
-
     if(!$return_html){
-        return $value;
+        return $field->content;
     }
 
 
@@ -195,6 +193,10 @@ function setReturnValue($field,$field_slug,$return_html=true)
                 $value .= '<li>'.$item.'</li>'."\n";
             }
             $value .= '</ul>';
+            break;
+
+        default:
+            $value = $field->content;
             break;
     }
 
