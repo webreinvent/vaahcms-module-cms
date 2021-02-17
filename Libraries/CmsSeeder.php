@@ -377,7 +377,15 @@ class CmsSeeder{
                             break;
 
                         case 'json':
-                            $field['content'] = json_encode(['name' => $faker->name]);
+
+                            for($i=0;$i<=10;$i++){
+                                $data[] = [
+                                    'id' => $i,
+                                    'name' => $faker->name,
+                                    'email' => $faker->email
+                                ];
+                            }
+                            $field['content'] = json_encode($data);
                             break;
 
                         case 'seo-meta-tags':

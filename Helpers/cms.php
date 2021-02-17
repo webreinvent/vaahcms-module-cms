@@ -171,7 +171,7 @@ function setReturnValue($field,$field_slug,$return_html=true)
             break;
 
         case 'json':
-            $value = json_encode($field->content,JSON_PRETTY_PRINT);
+            $value = json_encode($field->content);
             break;
 
         case 'image-group':
