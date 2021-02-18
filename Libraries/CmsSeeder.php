@@ -152,9 +152,9 @@ class CmsSeeder{
 
             if(!$template_exist)
             {
-                $stored_template = ThemeTemplate::insert($template['template']);
+                ThemeTemplate::insert($template['template']);
             } else{
-                $stored_template = ThemeTemplate::where('vh_theme_id', $theme->id)
+                ThemeTemplate::where('vh_theme_id', $theme->id)
                     ->where('slug', $template['template']['slug'])
                     ->update($template['template']);
             }
@@ -163,7 +163,6 @@ class CmsSeeder{
                 ->where('slug', $template['template']['slug'])
                 ->first();
 
-            $stored_template = ThemeTemplate::find($stored_template->id);
 
             //template groups
             ThemeTemplate::syncWithFormGroups($stored_template, $template['groups']);
@@ -377,7 +376,15 @@ class CmsSeeder{
                             break;
 
                         case 'json':
-                            $field['content'] = json_encode(['name' => $faker->name]);
+
+                            for($i=0;$i<=10;$i++){
+                                $data[] = [
+                                    'id' => $i,
+                                    'name' => $faker->name,
+                                    'email' => $faker->email
+                                ];
+                            }
+                            $field['content'] = json_encode($data);
                             break;
 
                         case 'seo-meta-tags':
@@ -508,7 +515,7 @@ class CmsSeeder{
             'twitter:description','textarea',
             'Description of content (maximum 200 characters)');
 
-        $data['twitter_imaage'] = self::fillFieldContent(
+        $data['twitter_image'] = self::fillFieldContent(
             'https://via.placeholder.com/150',200,
             'twitter:image','text',
             'URL of image to use in the card. 
