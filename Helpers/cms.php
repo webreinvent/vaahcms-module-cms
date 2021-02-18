@@ -93,7 +93,7 @@ function get_content_field(Content $content, $field_slug, $group_slug='default',
         return null;
     }
 
-    return setReturnValue($field,$field_slug,$return_html);
+    return setReturnValue($field,$return_html);
 
 }
 
@@ -124,39 +124,44 @@ function get_template_field(Content $content, $field_slug, $group_slug='default'
         return null;
     }
 
-    return setReturnValue($field,$field_slug,$return_html);
+    return setReturnValue($field,$return_html);
 }
 
 
 //-----------------------------------------------------------------------------------
-function setReturnValue($field,$field_slug,$return_html=true)
+function setReturnValue($field,$return_html=true)
 {
 
-    if(!$return_html){
+
+    if(!$return_html || !isset($field['type'])
+        || !isset($field['type']['slug'])){
+        if($return_html && (is_object($field->content) || is_array($field->content))){
+            return json_encode($field->content);
+        }
         return $field->content;
     }
 
 
-    switch($field_slug){
+    switch($field['type']['slug']){
 
         case 'seo-meta-tags':
             $value = '<title>'.$field->content->seo_title->content.'</title>'."\n";
-            $value .= '<meta name="description" content="'.$field->content->seo_description->content.'">'."\n";
-            $value .= '<meta name="keywords" content="'.$field->content->seo_keywords->content.'">'."\n";
+            $value .= '<meta name="description" content="'.$field->content->seo_description->content.'"/>'."\n";
+            $value .= '<meta name="keywords" content="'.$field->content->seo_keywords->content.'"/>'."\n";
             break;
 
-        case 't-crad':
+        case 'twitter-card':
             $value = '<meta name="twitter:card" content="summary" />'."\n";
-            $value .= '<meta name="twitter:site" content="'.$field->content->twitter_site->content.'">'."\n";
-            $value .= '<meta name="twitter:title" content="'.$field->content->twitter_title->content.'">'."\n";
-            $value .= '<meta name="twitter:description" content="'.$field->content->twitter_description->content.'">'."\n";
-            $value .= '<meta name="twitter:image" content="'.$field->content->twitter_imaage->content.'">'."\n";
+            $value .= '<meta name="twitter:site" content="'.$field->content->twitter_site->content.'"/>'."\n";
+            $value .= '<meta name="twitter:title" content="'.$field->content->twitter_title->content.'"/>'."\n";
+            $value .= '<meta name="twitter:description" content="'.$field->content->twitter_description->content.'"/>'."\n";
+            $value .= '<meta name="twitter:image" content="'.$field->content->twitter_image->content.'"/>'."\n";
             break;
 
-        case 'f-card':
-            $value = '<meta name="og:title" content="'.$field->content->og_title->content.'">'."\n";
-            $value .= '<meta name="og:description" content="'.$field->content->og_description->content.'">'."\n";
-            $value .= '<meta name="og:image" content="'.$field->content->og_image->content.'">'."\n";
+        case 'facebook-card':
+            $value = '<meta name="og:title" content="'.$field->content->og_title->content.'"/>'."\n";
+            $value .= '<meta name="og:description" content="'.$field->content->og_description->content.'"/>'."\n";
+            $value .= '<meta name="og:image" content="'.$field->content->og_image->content.'"/>'."\n";
             break;
 
         case 'address':
@@ -175,11 +180,13 @@ function setReturnValue($field,$field_slug,$return_html=true)
             break;
 
         case 'image-group':
-            $value = '<div class="columns is-multiline is-flex-mobile is-vcentered">'."\n";
+
+            $value = '<div class="image-group field-id-'.$field->id.'" 
+            id="field-'.$field->id.'" >'."\n";
 
             foreach ($field->content as $item){
-                $value .= '<div class="column">'."\n";
-                $value .= '<img src='.$item.'/>'."\n";
+                $value .= '<div class="image-container">'."\n";
+                $value .= '<img class="image" src='.$item.'/>'."\n";
                 $value .= '</div>'."\n";
             }
 

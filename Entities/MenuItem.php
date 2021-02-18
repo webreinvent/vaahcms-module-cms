@@ -187,6 +187,11 @@ class MenuItem extends Model
                     $stored_item = new MenuItem();
                 }
 
+                if(isset($item['content']) && isset($item['content']['id'])
+                    && $item['content']['id']){
+                    $item['vh_content_id'] = $item['content']['id'];
+                }
+
                 $stored_item->fill($item);
                 $stored_item->save();
 
