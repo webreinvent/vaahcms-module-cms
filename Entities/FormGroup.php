@@ -173,6 +173,11 @@ class FormGroup extends Model {
             foreach ($fields_array as $f_index => $field)
             {
 
+                if(!isset($field['slug']) || !$field['slug']){
+                    $field['slug'] = Str::slug($field['name']);
+                }
+
+
                 $stored_field = FormField::where('vh_cms_form_group_id', $group->id)
                     ->where('slug', $field['slug'])
                     ->first();

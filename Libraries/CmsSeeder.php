@@ -163,6 +163,8 @@ class CmsSeeder{
                 ->where('slug', $template['template']['slug'])
                 ->first();
 
+            $stored_template = ThemeTemplate::find($stored_template->id);
+
 
             //template groups
             ThemeTemplate::syncWithFormGroups($stored_template, $template['groups']);
@@ -187,9 +189,9 @@ class CmsSeeder{
 
             if(!$exist)
             {
-                $stored = DB::table('vh_cms_content_types')->insert($content_type['content']);
+                DB::table('vh_cms_content_types')->insert($content_type['content']);
             } else{
-                $stored = DB::table('vh_cms_content_types')
+                DB::table('vh_cms_content_types')
                     ->where('slug', $content_type['content']['slug'])
                     ->update($content_type['content']);
             }
