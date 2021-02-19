@@ -8,7 +8,7 @@
             <header class="card-header">
 
                 <div class="card-header-title">
-                    <span>Create New Content Type</span>
+                    <span>Create New Block</span>
                 </div>
 
 

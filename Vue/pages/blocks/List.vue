@@ -20,7 +20,7 @@
                         <div class="card-header">
 
                             <div class="card-header-title">
-                                Content Types
+                                Blocks
                             </div>
 
                             <div class="card-header-buttons">
