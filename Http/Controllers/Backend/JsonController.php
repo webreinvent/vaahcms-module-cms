@@ -52,6 +52,13 @@ class JsonController extends Controller
                     'path' => "/menus",
                 ],
 
+                [
+                    "label"=>'Blocks',
+                    "icon"=>'link',
+                    "link"=> self::$link."blocks",
+                    'path' => "/blocks",
+                ],
+
             ],
 
         ];

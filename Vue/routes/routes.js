@@ -132,6 +132,87 @@ routes_list =     {
 
 routes.push(routes_list);
 
+
+import BlockList from "./../pages/blocks/List";
+import BlockCreate from "./../pages/blocks/Create";
+import BlockView from "./../pages/blocks/View";
+import BlockContentStructure from "./../pages/blocks/ContentStructure";
+import BlockEdit from "./../pages/blocks/Edit";
+
+routes_list =     {
+    path: '/blocks',
+    component: Backend,
+    props: true,
+    meta: {
+        middleware: [
+            GetBackendAssets
+        ]
+    },
+    children: [
+        {
+            path: '/',
+            name: 'blocks.list',
+            component: BlockList,
+            props: true,
+            meta: {
+                middleware: [
+                    GetBackendAssets
+                ]
+            },
+            children: [
+                {
+                    path: 'create',
+                    name: 'blocks.create',
+                    component: BlockCreate,
+                    props: true,
+                    meta: {
+                        middleware: [
+                            GetBackendAssets
+                        ]
+                    },
+                },
+                {
+                    path: 'content-structure/:id',
+                    name: 'blocks.content.structure',
+                    component: BlockContentStructure,
+                    props: true,
+                    meta: {
+                        middleware: [
+                            GetBackendAssets
+                        ]
+                    },
+                },
+                {
+                    path: 'view/:id',
+                    name: 'blocks.view',
+                    component: BlockView,
+                    props: true,
+                    meta: {
+                        middleware: [
+                            GetBackendAssets
+                        ]
+                    },
+                },
+                {
+                    path: 'edit/:id',
+                    name: 'blocks.edit',
+                    component: BlockEdit,
+                    props: true,
+                    meta: {
+                        middleware: [
+                            GetBackendAssets
+                        ]
+                    },
+                }
+
+            ]
+        }
+
+    ]
+};
+
+routes.push(routes_list);
+
 /*
 |--------------------------------------------------------------------------
 | Contents Routes
