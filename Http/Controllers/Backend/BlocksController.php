@@ -38,7 +38,7 @@ class BlocksController extends Controller
     //----------------------------------------------------------
     public function postCreate(Request $request)
     {
-        $response = ContentType::postCreate($request);
+        $response = Block::postCreate($request);
         return response()->json($response);
     }
     //----------------------------------------------------------
@@ -56,23 +56,9 @@ class BlocksController extends Controller
 
     }
     //----------------------------------------------------------
-    public function getItemRelations(Request $request, $id)
-    {
-
-        $response = ContentType::getItemWithRelations($id);
-        return response()->json($response);
-
-    }
-    //----------------------------------------------------------
-    public function postStoreGroups(Request $request, $id)
-    {
-        $response = ContentType::postStoreGroups($request, $id);
-        return response()->json($response);
-    }
-    //----------------------------------------------------------
     public function postStore(Request $request,$id)
     {
-        $response = ContentType::postStore($request,$id);
+        $response = Block::postStore($request,$id);
         return response()->json($response);
     }
 
@@ -104,25 +90,25 @@ class BlocksController extends Controller
 
             //------------------------------------
             case 'bulk-change-status':
-                $response = ContentType::bulkStatusChange($request);
+                $response = Block::bulkStatusChange($request);
                 break;
             //------------------------------------
             case 'bulk-trash':
 
-                $response = ContentType::bulkTrash($request);
+                $response = Block::bulkTrash($request);
 
                 break;
             //------------------------------------
             case 'bulk-restore':
 
-                $response = ContentType::bulkRestore($request);
+                $response = Block::bulkRestore($request);
 
                 break;
 
             //------------------------------------
             case 'bulk-delete':
 
-                $response = ContentType::bulkDelete($request);
+                $response = Block::bulkDelete($request);
 
                 break;
 

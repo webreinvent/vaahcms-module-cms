@@ -22,11 +22,10 @@
 
                     <div class="card-content">
 
-                        <p v-html="item.content"></p>
+                        <div class="content" v-html="item.content"></div>
 
 
                     </div>
-
 
                 </div>
 

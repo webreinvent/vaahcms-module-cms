@@ -8,7 +8,6 @@ let namespace = 'blocks';
 export default {
     computed:{
         root() {return this.$store.getters['root/state']},
-        permissions() {return this.$store.getters['root/state'].permissions},
         page() {return this.$store.getters[namespace+'/state']},
         ajax_url() {return this.$store.getters[namespace+'/state'].ajax_url},
         query_string() {return this.$store.getters[namespace+'/state'].query_string},
@@ -41,7 +40,6 @@ export default {
 
             this.updateView();
             this.updateQueryString();
-            this.updateActiveItem();
         }
     },
     mounted() {
@@ -287,8 +285,6 @@ export default {
                 this.$root.$emit('eReloadItem');
                 this.resetBulkAction();
                 this.getList();
-
-                this.$store.dispatch('root/reloadPermissions');
             } else
             {
                 this.$Progress.finish();
@@ -319,19 +315,6 @@ export default {
 
             this.getList();
 
-        },
-        //---------------------------------------------------------------------
-        updateActiveItem: function () {
-
-            if(this.$route.fullPath.includes('permissions/?')){
-                this.update('active_item', null);
-            }
-        },
-
-        //---------------------------------------------------------------------
-        hasPermission: function(slug)
-        {
-            return this.$vaah.hasPermission(this.permissions, slug);
         },
         //---------------------------------------------------------------------
         setDateRange: function()

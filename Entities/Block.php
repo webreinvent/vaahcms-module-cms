@@ -224,15 +224,18 @@ class Block extends Model {
     public static function validation($request)
     {
         $rules = array(
-            'name' => 'required|unique:vh_cms_content_types|max:60',
-            'slug' => 'required|unique:vh_cms_content_types|max:60',
-            'plural' => 'required|max:60',
-            'plural_slug' => 'required|unique:vh_cms_content_types|max:60',
-            'singular' => 'required|max:60',
-            'singular_slug' => 'required|unique:vh_cms_content_types|max:60',
+            'name' => 'required|unique:vh_cms_blocks|max:60',
+            'slug' => 'required|unique:vh_cms_blocks|max:60',
+            'content' => 'required',
+            'vh_theme_id' => 'required',
+            'vh_theme_location_id' => 'required',
+        );
+        $messages = array(
+            'vh_theme_id.required' => 'Select a theme.',
+            'vh_theme_location_id.required' => 'Select a theme location.',
         );
 
-        $validator = \Validator::make( $request->all(), $rules);
+        $validator = \Validator::make( $request->all(), $rules, $messages);
         if ( $validator->fails() ) {
 
             $errors             = errorsToArray($validator->errors());
@@ -240,8 +243,6 @@ class Block extends Model {
             $response['errors'] = $errors;
             return $response;
         }
-
-        $data = [];
 
         $response['status'] = 'success';
 
@@ -254,13 +255,16 @@ class Block extends Model {
         $rules = array(
             'name' => 'required|max:60',
             'slug' => 'required|max:60',
-            'plural' => 'required|max:60',
-            'plural_slug' => 'required|max:60',
-            'singular' => 'required|max:60',
-            'singular_slug' => 'required|max:60',
+            'content' => 'required',
+            'vh_theme_id' => 'required',
+            'vh_theme_location_id' => 'required',
+        );
+        $messages = array(
+            'vh_theme_id.required' => 'Select a theme.',
+            'vh_theme_location_id.required' => 'Select a theme location.',
         );
 
-        $validator = \Validator::make( $request->all(), $rules);
+        $validator = \Validator::make( $request->all(), $rules, $messages);
         if ( $validator->fails() ) {
 
             $errors             = errorsToArray($validator->errors());
@@ -268,8 +272,6 @@ class Block extends Model {
             $response['errors'] = $errors;
             return $response;
         }
-
-        $data = [];
 
         $response['status'] = 'success';
 
@@ -412,7 +414,9 @@ class Block extends Model {
         }
 
         // check if name exist
-        $name_exist = static::where('id','!=',$request['id'])->where('name',$request['name'])->first();
+        $name_exist = static::where('id','!=',$request['id'])
+            ->where('name',$request['name'])
+            ->first();
 
         if($name_exist)
         {
@@ -423,7 +427,9 @@ class Block extends Model {
 
 
         // check if slug exist
-        $slug_exist = static::where('id','!=',$request['id'])->where('slug',$request['slug'])->first();
+        $slug_exist = static::where('id','!=',$request['id'])
+            ->where('slug',$request['slug'])
+            ->first();
 
         if($slug_exist)
         {

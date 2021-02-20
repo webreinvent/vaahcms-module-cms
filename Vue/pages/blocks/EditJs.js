@@ -1,4 +1,5 @@
 import GlobalComponents from '../../vaahvue/helpers/GlobalComponents'
+import ContentFieldAll from '../../vaahvue/reusable/content-fields/All'
 import draggable from 'vuedraggable';
 
 let namespace = 'blocks';
@@ -8,11 +9,13 @@ export default {
     computed:{
         root() {return this.$store.getters['root/state']},
         page() {return this.$store.getters[namespace+'/state']},
+        assets() {return this.$store.getters[namespace+'/state'].assets},
         ajax_url() {return this.$store.getters[namespace+'/state'].ajax_url},
         item() {return this.$store.getters[namespace+'/state'].active_item},
     },
     components:{
         ...GlobalComponents,
+        ContentFieldAll,
         draggable
 
     },
@@ -139,6 +142,8 @@ export default {
             {
                 this.title = data.name;
                 this.update('active_item', data);
+                this.setActiveTheme(false);
+
             } else
             {
                 //if item does not exist or delete then redirect to list
@@ -212,6 +217,30 @@ export default {
             this.item.content_statuses.push(this.status);
             this.status = null;
             this.update('item', this.item);
+        },
+        //---------------------------------------------------------------------
+        setActiveTheme: function (set_null = true) {
+
+            if(set_null){
+                this.item.vh_theme_location_id = '';
+            }
+
+            this.update('item', this.item);
+
+            this.page.active_theme = {
+                'locations':[]
+            };
+
+            this.update('active_theme', this.page.active_theme);
+
+            if(this.item.vh_theme_id && this.assets && this.assets.themes){
+                let theme = this.$vaah.findInArrayByKey(this.assets.themes,
+                    'id', this.item.vh_theme_id);
+
+                this.update('active_theme', theme);
+            }
+
+
         },
     }
 }

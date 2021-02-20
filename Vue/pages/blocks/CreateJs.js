@@ -1,4 +1,5 @@
 import GlobalComponents from '../../vaahvue/helpers/GlobalComponents'
+import ContentFieldAll from '../../vaahvue/reusable/content-fields/All'
 import draggable from 'vuedraggable';
 
 let namespace = 'blocks';
@@ -13,6 +14,7 @@ export default {
     },
     components:{
         ...GlobalComponents,
+        ContentFieldAll,
         draggable,
     },
     data()
@@ -207,21 +209,33 @@ export default {
             let new_item = {
                 name: null,
                 slug: null,
-                plural: null,
-                plural_slug: null,
-                singular: null,
-                singular_slug: null,
-                excerpt: null,
+                vh_theme_id: "",
+                vh_theme_location_id: "",
+                content: "",
                 is_published: null,
-                is_commentable: null,
-                content_statuses: [
-                    'draft',
-                    'published',
-                    'protected',
-                ],
-                meta: null,
             };
             return new_item;
+        },
+    //---------------------------------------------------------------------
+        setActiveTheme: function () {
+
+            this.new_item.vh_theme_location_id = '';
+            this.update('new_item', this.new_item);
+
+            this.page.active_theme = {
+                'locations':[]
+            };
+
+            this.update('active_theme', this.page.active_theme);
+
+            if(this.new_item.vh_theme_id){
+                let theme = this.$vaah.findInArrayByKey(this.assets.themes,
+                    'id', this.new_item.vh_theme_id);
+
+                this.update('active_theme', theme);
+            }
+
+
         },
         //---------------------------------------------------------------------
     }

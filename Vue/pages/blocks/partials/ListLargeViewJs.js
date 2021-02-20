@@ -2,7 +2,6 @@ let namespace = 'blocks';
 export default {
     computed: {
         root() {return this.$store.getters['root/state']},
-        permissions() {return this.$store.getters['root/state'].permissions},
         page() {return this.$store.getters[namespace+'/state']},
         ajax_url() {return this.$store.getters[namespace+'/state'].ajax_url},
         query_string() {return this.$store.getters[namespace+'/state'].query_string},
@@ -94,11 +93,6 @@ export default {
 
             this.$vaah.console(data, 'copied data');
 
-        },
-        //---------------------------------------------------------------------
-        hasPermission: function(slug)
-        {
-            return this.$vaah.hasPermission(this.permissions, slug);
         },
         //---------------------------------------------------------------------
         toContentStructure: function (item) {

@@ -16,6 +16,9 @@ export default {
         ajax_url: ajax_url,
         json_url: json_url,
         assets: null,
+        active_theme: {
+            'locations': []
+        },
         assets_is_fetching: null,
         assets_reload: false,
         list: null,
@@ -41,19 +44,10 @@ export default {
         new_item:{
             name: null,
             slug: null,
-            plural: null,
-            plural_slug: null,
-            singular: null,
-            singular_slug: null,
-            excerpt: null,
+            vh_theme_id: "",
+            vh_theme_location_id: "",
+            content: "",
             is_published: null,
-            is_commentable: null,
-            content_statuses: [
-                'draft',
-                'published',
-                'protected',
-            ],
-            meta: null,
         },
 
     },
@@ -129,7 +123,6 @@ export default {
     getters:{
         state(state) {return state;},
         assets(state) {return state.assets;},
-        permissions(state) {return state.permissions;},
         is_logged_in(state) {return state.is_logged_in;},
     }
 
