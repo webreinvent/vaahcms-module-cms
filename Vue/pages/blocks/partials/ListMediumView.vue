@@ -27,30 +27,7 @@
 
                     </b-tooltip>
                 </b-table-column>
-                <b-table-column v-slot="props" field="plural" label="Plural">
 
-                    <b-tooltip label="Copy Plural Slug" type="is-dark">
-                        <vh-copy class="text-copyable"
-                                 :data="props.row.plural_slug"
-                                 :label="props.row.plural"
-                                 @copied="copiedData"
-                        >
-                        </vh-copy>
-
-                    </b-tooltip>
-                </b-table-column>
-
-                <b-table-column v-slot="props" field="singular" label="Singular">
-                    <b-tooltip label="Copy Singular Slug" type="is-dark">
-                        <vh-copy class="text-copyable"
-                                 :data="props.row.singular_slug"
-                                 :label="props.row.singular"
-                                 @copied="copiedData"
-                        >
-                        </vh-copy>
-
-                    </b-tooltip>
-                </b-table-column>
 
                 <b-table-column v-slot="props" width="100"
                                 field="is_published" label="Is Published">
@@ -70,18 +47,25 @@
 
                     <div v-else>
                         <b-tooltip label="Change Status" type="is-dark">
-                        <b-button v-if="props.row.is_published === 1" rounded size="is-small"
-                                  type="is-success" @click="changeStatus(props.row.id)">
-                            Yes
-                        </b-button>
-                        <b-button v-else rounded size="is-small" type="is-danger"
-                                  @click="changeStatus(props.row.id)">
-                            No
-                        </b-button>
-                    </b-tooltip>
+                            <b-button v-if="props.row.is_published === 1" rounded size="is-small"
+                                      type="is-success" @click="changeStatus(props.row.id)">
+                                Yes
+                            </b-button>
+                            <b-button v-else rounded size="is-small" type="is-danger"
+                                      @click="changeStatus(props.row.id)">
+                                No
+                            </b-button>
+                        </b-tooltip>
                     </div>
 
 
+                </b-table-column>
+
+
+                <b-table-column v-slot="props" width="150px" field="updated_at" label="Updated At">
+                    <span>
+                        {{$vaah.fromNow(props.row.updated_at)}}
+                    </span>
                 </b-table-column>
 
                 <b-table-column v-slot="props" field="actions" label=""

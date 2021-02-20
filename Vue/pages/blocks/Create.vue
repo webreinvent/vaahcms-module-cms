@@ -57,26 +57,17 @@
                         <b-input v-model="new_item.slug"></b-input>
                     </b-field>
 
-                    <b-field label="Content Plural Name" :label-position="labelPosition">
-                        <b-input v-model="new_item.plural"></b-input>
-                    </b-field>
+                    <b-field label="Themes"
+                             :label-position="labelPosition">
 
-                    <b-field label="Content Plural Slug" :label-position="labelPosition">
-                        <b-input v-model="new_item.plural_slug"></b-input>
-                    </b-field>
+                        <b-select v-model="new_item.vh_theme_id">
+                            <option value="">Select a Theme</option>
+                            <option v-for="(theme, index) in assets.themes"
+                                    :value="theme.id"
+                            >{{theme.name}}</option>
+                        </b-select>
 
-                    <b-field label="Content Singular Name" :label-position="labelPosition">
-                        <b-input v-model="new_item.singular"></b-input>
-                    </b-field>
 
-                    <b-field label="Content Singular Slug" :label-position="labelPosition">
-                        <b-input v-model="new_item.singular_slug"></b-input>
-                    </b-field>
-
-                    <b-field label="Excerpt" :label-position="labelPosition">
-                        <b-input type="textarea"
-                                 maxlength="200"
-                                 v-model="new_item.excerpt"></b-input>
                     </b-field>
 
                     <b-field label="Is Published" :label-position="labelPosition">
@@ -90,72 +81,6 @@
                                         :native-value=0>
                             <span>No</span>
                         </b-radio-button>
-                    </b-field>
-
-                    <b-field label="Is Comments Allowed" :label-position="labelPosition">
-                        <b-radio-button v-model="new_item.is_commentable"
-                                        :native-value=1>
-                            <span>Yes</span>
-                        </b-radio-button>
-
-                        <b-radio-button type="is-danger"
-                                        v-model="new_item.is_commentable"
-                                        :native-value=0>
-                            <span>No</span>
-                        </b-radio-button>
-                    </b-field>
-
-
-                    <b-field label="List Statuses" :label-position="labelPosition">
-
-                        <div class="draggable">
-                            <draggable v-model="new_item.content_statuses"
-                                       group="content_statuses"
-                                       >
-
-                                    <div v-for="(status, index) in new_item.content_statuses"
-                                         :key="index">
-
-
-                                        <b-field class="has-margin-bottom-5" expanded>
-                                            <p class="control drag">
-                                                <span class="button is-static">:::</span>
-                                            </p>
-
-                                            <b-input v-model="new_item.content_statuses[index]"
-                                                     v-if="index == edit_status_index && !disable_status_editing"
-                                                     expanded></b-input>
-
-                                            <b-input v-model="new_item.content_statuses[index]"
-                                                     v-else
-                                                     disabled
-                                                     expanded></b-input>
-
-
-                                            <p class="control">
-                                                <b-button
-                                                          @click="toggleEditStatus(index)"
-                                                          icon-left="edit">
-                                                </b-button>
-                                            </p>
-                                        </b-field>
-
-
-
-                                    </div>
-
-                            </draggable>
-                        </div>
-
-
-
-
-                    </b-field>
-
-                    <b-field label="New Status" :label-position="labelPosition">
-                        <b-input type="text" v-model="new_status"
-                                 placeholder="Type new status and press enter"
-                                 @keyup.enter.native="addStatus()"></b-input>
                     </b-field>
 
                 </div>

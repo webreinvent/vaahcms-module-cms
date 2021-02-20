@@ -4,8 +4,10 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use VaahCms\Modules\Cms\Entities\Block;
 use VaahCms\Modules\Cms\Entities\ContentType;
 use VaahCms\Modules\Cms\Entities\FieldType;
+use WebReinvent\VaahCms\Entities\Theme;
 
 class BlocksController extends Controller
 {
@@ -25,6 +27,8 @@ class BlocksController extends Controller
             ->get();
 
         $data['bulk_actions'] = vh_general_bulk_actions();
+        $data['themes'] = Theme::getActiveThemesWithLocations();
+
 
         $response['status'] = 'success';
         $response['data'] = $data;
@@ -40,14 +44,14 @@ class BlocksController extends Controller
     //----------------------------------------------------------
     public function getList(Request $request)
     {
-        $response = ContentType::getList($request);
+        $response = Block::getList($request);
         return response()->json($response);
     }
     //----------------------------------------------------------
     public function getItem(Request $request, $id)
     {
 
-        $response = ContentType::getItem($id);
+        $response = Block::getItem($id);
         return response()->json($response);
 
     }

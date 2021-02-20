@@ -112,11 +112,6 @@ export default {
 
             if(payload.name == 'blocks.create' || payload.name == 'blocks.view' || payload.name == 'blocks.edit')
             {
-                list_view = 'medium';
-            };
-
-            if(payload.name == 'blocks.blocks.structure')
-            {
                 list_view = 'small';
             };
 

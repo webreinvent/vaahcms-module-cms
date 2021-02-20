@@ -25,31 +25,6 @@
                     </b-tooltip>
                 </b-table-column>
 
-                <b-table-column v-slot="props" field="plural" label="Plural">
-
-                    <b-tooltip label="Copy Plural Slug" type="is-dark">
-                        <vh-copy class="text-copyable"
-                                 :data="props.row.plural_slug"
-                                 :label="props.row.plural"
-                                 @copied="copiedData"
-                        >
-                        </vh-copy>
-
-                    </b-tooltip>
-                </b-table-column>
-
-                <b-table-column v-slot="props" field="singular" label="Singular">
-                    <b-tooltip label="Copy Singular Slug" type="is-dark">
-                        <vh-copy class="text-copyable"
-                                 :data="props.row.singular_slug"
-                                 :label="props.row.singular"
-                                 @copied="copiedData"
-                        >
-                        </vh-copy>
-
-                    </b-tooltip>
-                </b-table-column>
-
                 <b-table-column v-slot="props" width="100"
                                 field="is_published" label="Is Published">
 
@@ -80,6 +55,13 @@
                     </div>
 
 
+                </b-table-column>
+
+
+                <b-table-column v-slot="props" width="150px" field="updated_at" label="Updated At">
+                    <span>
+                        {{$vaah.fromNow(props.row.updated_at)}}
+                    </span>
                 </b-table-column>
 
 
