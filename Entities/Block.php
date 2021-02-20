@@ -628,8 +628,22 @@ class Block extends Model {
     }
 
     //---------------------------------------------------------------------------
-    public static function getBlock($location, $html, $type)
+    public static function getBlock($location,  $block_slug)
     {
+
+        if($block_slug){
+            $block = self::where('vh_theme_location_id', $location->id)
+                ->where('is_published',1)
+                ->where('slug',$block_slug)
+                ->first();
+
+            if(!$block)
+            {
+                return false;
+            }
+
+            return $block->content;
+        }
 
         $blocks = self::where('vh_theme_location_id', $location->id)
             ->where('is_published',1)
@@ -647,7 +661,7 @@ class Block extends Model {
             $data .= $block->content;
         }
 
-        
+
         return $data;
     }
     //-------------------------------------------------
