@@ -22,6 +22,7 @@ export default {
         return {
             namespace: namespace,
             is_content_loading: false,
+            is_textarea_disable: false,
             is_btn_loading: null,
             labelPosition: 'on-border',
             params: {},

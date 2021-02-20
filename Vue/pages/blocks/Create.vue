@@ -14,11 +14,41 @@
                             <span>Content</span>
                         </div>
 
+                        <div class="card-header-buttons">
+                            <div class="field has-addons is-pulled-right">
+                                <p  class="control">
+                                    <b-button type="is-light"
+                                              @click="is_textarea_disable = true"
+                                              :disabled="is_textarea_disable">
+                                        TextArea
+                                    </b-button>
+                                </p>
+                                <p  class="control">
+                                    <b-button type="is-light"
+                                              @click="is_textarea_disable = false"
+                                              :disabled="!is_textarea_disable">
+                                        Editor
+                                    </b-button>
+                                </p>
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="card-content">
 
-                        <ContentFieldAll field_slug="editor"
+                        <ContentFieldAll v-if="is_textarea_disable"
+                                         field_slug="textarea"
+                                         :labelPosition="labelPosition"
+                                         v-model="new_item.content"
+                                         @onInput=""
+                                         @onChange=""
+                                         @onBlur=""
+                                         @onFocus="">
+                        </ContentFieldAll>
+
+                        <ContentFieldAll v-else
+                                         field_slug="editor"
                                          :labelPosition="labelPosition"
                                          v-model="new_item.content"
                                          @onInput=""
