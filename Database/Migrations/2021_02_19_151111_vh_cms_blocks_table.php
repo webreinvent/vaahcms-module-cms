@@ -23,6 +23,7 @@ class VhCmsBlocksTable extends Migration
             $table->string('name')->nullable()->index();
             $table->string('slug')->nullable()->index();
             $table->text('content')->nullable();
+            $table->integer('sort')->nullable()->index();
             $table->boolean('is_published')->nullable()->index();
 
             $table->text('meta')->nullable();

@@ -32,6 +32,7 @@ class Block extends Model {
         'slug',
         'excerpt',
         'content',
+        'sort',
         'is_published',
         'meta',
         'created_by',
@@ -154,6 +155,19 @@ class Block extends Model {
             return $validation;
         }
 
+        // check if sort number exist
+        $sort_number_exist = static::where('vh_theme_id',$request['vh_theme_id'])
+            ->where('vh_theme_location_id',$request['vh_theme_location_id'])
+            ->where('sort',$request['sort'])
+            ->first();
+
+        if($sort_number_exist)
+        {
+            $response['status'] = 'failed';
+            $response['errors'][] = "Select different sort number.";
+            return $response;
+        }
+
         $item = new static();
         $item->fill($request->all());
         $item->save();
@@ -231,6 +245,7 @@ class Block extends Model {
             'content' => 'required',
             'vh_theme_id' => 'required',
             'vh_theme_location_id' => 'required',
+            'sort' => 'required|numeric|min:0|regex:/^\d{1,13}?$/',
         );
         $messages = array(
             'vh_theme_id.required' => 'Select a theme.',
@@ -260,6 +275,7 @@ class Block extends Model {
             'content' => 'required',
             'vh_theme_id' => 'required',
             'vh_theme_location_id' => 'required',
+            'sort' => 'required|numeric|min:0|regex:/^\d{1,13}?$/',
         );
         $messages = array(
             'vh_theme_id.required' => 'Select a theme.',
@@ -440,6 +456,21 @@ class Block extends Model {
             return $response;
         }
 
+
+        // check if sort number exist
+        $sort_number_exist = static::where('id','!=',$request['id'])
+            ->where('vh_theme_id',$request['vh_theme_id'])
+            ->where('vh_theme_location_id',$request['vh_theme_location_id'])
+            ->where('sort',$request['sort'])
+            ->first();
+
+        if($sort_number_exist)
+        {
+            $response['status'] = 'failed';
+            $response['errors'][] = "Select different sort number.";
+            return $response;
+        }
+
         $update = static::where('id',$id)->withTrashed()->first();
 
         $update->fill($request->all());
@@ -597,24 +628,27 @@ class Block extends Model {
     }
 
     //---------------------------------------------------------------------------
-    public static function getBlock($location, $html, $type, $block_slug)
+    public static function getBlock($location, $html, $type)
     {
 
-        if(!$block_slug){
-            return false;
-        }
-
-        $block = self::where('vh_theme_location_id', $location->id)
+        $blocks = self::where('vh_theme_location_id', $location->id)
             ->where('is_published',1)
-            ->where('slug',$block_slug)
-            ->first();
+            ->orderBy('sort','asc')
+            ->get();
 
-        if(!$block)
+        if(count($blocks) < 1)
         {
             return false;
         }
 
-        return $block->content;
+        $data = "";
+
+        foreach ($blocks as $block){
+            $data .= $block->content;
+        }
+
+        
+        return $data;
     }
     //-------------------------------------------------
     //-------------------------------------------------

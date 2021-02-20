@@ -171,8 +171,13 @@
                                     <option value="">Select a Location</option>
                                     <option v-for="(location, index) in page.active_theme.locations"
                                             :value="location.id"
+                                            v-if="location.type === 'block'"
                                     >{{location.name}}</option>
                                 </b-select>
+                            </b-field>
+
+                            <b-field label="Sort" :label-position="labelPosition">
+                                <b-input type="number" v-model="item.sort" ></b-input>
                             </b-field>
 
                             <b-field label="Is Published" :label-position="labelPosition">
