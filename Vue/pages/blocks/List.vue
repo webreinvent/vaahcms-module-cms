@@ -278,10 +278,6 @@
                                             <ListSmallView @eReloadList="getList"/>
                                         </div>
 
-                                        <div v-else-if="page.list_view == 'medium'">
-                                            <ListMediumView @eReloadList="getList"/>
-                                        </div>
-
                                         <div v-else>
                                             <ListLargeView @eReloadList="getList"/>
                                         </div>

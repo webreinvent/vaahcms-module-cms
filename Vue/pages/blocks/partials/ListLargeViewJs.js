@@ -1,3 +1,5 @@
+import copy from "copy-to-clipboard";
+
 let namespace = 'blocks';
 export default {
     computed: {
@@ -85,7 +87,7 @@ export default {
         //---------------------------------------------------------------------
 
         //---------------------------------------------------------------------
-     copiedData: function (data) {
+        copiedData: function (data) {
 
             this.$vaah.toastSuccess(['copied']);
 
@@ -95,11 +97,21 @@ export default {
 
         },
         //---------------------------------------------------------------------
-        toContentStructure: function (item) {
-            this.update('active_item', item);
-            this.$router.push({name:'blocks.content.structure', params:{id:item.id}});
+        copyCode: function (item)
+        {
+            let code = "";
 
-        }
+            if(item && item.slug && item.theme_location && item.theme_location.slug){
+                code = "{!! vh_location('"+item.theme_location.slug+"', true, 'bulma', '"+item.slug+") !!}";
+            }
+
+            copy(code);
+
+            this.$buefy.toast.open({
+                message: 'Copied!',
+                type: 'is-success'
+            });
+        },
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------

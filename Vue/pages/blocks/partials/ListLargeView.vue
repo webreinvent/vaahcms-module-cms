@@ -68,10 +68,10 @@
                 <b-table-column v-slot="props" field="actions" label=""
                                 width="80">
 
-                    <b-tooltip label="Content Structure" type="is-dark">
+                    <b-tooltip label="Copy Content" type="is-dark">
                         <b-button size="is-small"
-                                  @click="toContentStructure(props.row)"
-                                  icon-left="align-left">
+                                  icon-left="copy"
+                                  @click="copyCode(props.row)">
                         </b-button>
                     </b-tooltip>
 

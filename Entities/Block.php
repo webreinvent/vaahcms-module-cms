@@ -175,6 +175,8 @@ class Block extends Model {
             $list = static::orderBy('id', $request['sort_order']);
         }
 
+        $list->with([ 'themeLocation']);
+
         if($request['trashed'] == 'true')
         {
 
@@ -592,6 +594,27 @@ class Block extends Model {
         $response['messages'][] = 'Action was successful';
 
         return $response;
+    }
+
+    //---------------------------------------------------------------------------
+    public static function getBlock($location, $html, $type, $block_slug)
+    {
+
+        if(!$block_slug){
+            return false;
+        }
+
+        $block = self::where('vh_theme_location_id', $location->id)
+            ->where('is_published',1)
+            ->where('slug',$block_slug)
+            ->first();
+
+        if(!$block)
+        {
+            return false;
+        }
+
+        return $block->content;
     }
     //-------------------------------------------------
     //-------------------------------------------------
