@@ -134,18 +134,6 @@ class Block extends Model {
         );
     }
     //-------------------------------------------------
-    public function contents()
-    {
-        return $this->hasMany(Content::class,
-            'vh_cms_content_type_id', 'id');
-    }
-    //-------------------------------------------------
-    public function groups()
-    {
-        return $this->morphMany(FormGroup::class, 'groupable')
-            ->orderBy('sort', 'asc');
-    }
-    //-------------------------------------------------
     public static function postCreate($request)
     {
 
@@ -202,14 +190,33 @@ class Block extends Model {
             $list->whereBetween('updated_at',[$request->from." 00:00:00",$request->to." 23:59:59"]);
         }
 
-        if($request['filter'] && $request['filter'] == '1')
+        if(isset($request['filter']) &&  $request['filter'])
+        {
+            if($request['filter'] == '1')
+            {
+                $list->where('is_published',$request['filter']);
+            }elseif($request['filter'] == '10'){
+                $list->whereNull('is_published')->orWhere('is_published',0);
+            }else{
+                $list->with(['theme'])
+                    ->whereHas('theme', function ($q) use ($request){
+                        $q->where('slug', $request['filter']);
+                    });
+
+            }
+        }
+
+        if(isset($request['location']) &&  $request['location'])
         {
 
-            $list->where('is_published',$request['filter']);
-        }elseif($request['filter'] == '10'){
+            $list->with(['themeLocation'])
+                ->whereHas('themeLocation', function ($q) use ($request){
+                    $q->where('slug', $request['location']);
+                });
 
-            $list->whereNull('is_published')->orWhere('is_published',0);
+
         }
+
 
         if(isset($request->q))
         {

@@ -27,7 +27,7 @@ class BlocksController extends Controller
             ->get();
 
         $data['bulk_actions'] = vh_general_bulk_actions();
-        $data['themes'] = Theme::getActiveThemesWithLocations();
+        $data['themes'] = Theme::getActiveThemesWithBlockLocations();
 
 
         $response['status'] = 'success';

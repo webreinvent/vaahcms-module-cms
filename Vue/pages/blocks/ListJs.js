@@ -23,6 +23,7 @@ export default {
             namespace: namespace,
             is_content_loading: false,
             is_btn_loading: false,
+            is_location_selector_visible: false,
             assets: null,
             selected_date: null,
             search_delay: null,
@@ -234,6 +235,8 @@ export default {
                 this.$vaah.updateCurrentURL(this.page.query_string, this.$router);
 
                 this.is_btn_loading = false;
+
+                this.setActiveTheme();
             }
 
             this.$Progress.finish();
@@ -303,7 +306,7 @@ export default {
         //---------------------------------------------------------------------
 
         //---------------------------------------------------------------------
-        setFilter: function () {
+        setFilter: function (data) {
 
             this.query_string.page = 1;
             this.update('query_string', this.query_string);
@@ -327,6 +330,33 @@ export default {
 
         },
         //---------------------------------------------------------------------
+
+        //---------------------------------------------------------------------
+        setActiveTheme: function () {
+
+            this.page.active_theme = {
+                'locations':[]
+            };
+
+            this.update('active_theme', this.page.active_theme);
+
+            this.is_location_selector_visible = false;
+
+
+            if(this.query_string.filter && isNaN(this.query_string.filter)
+                && this.page && this.page.assets
+                && this.page.assets.themes){
+
+                this.is_location_selector_visible = true;
+
+                let theme = this.$vaah.findInArrayByKey(this.page.assets.themes,
+                    'slug', this.query_string.filter);
+
+                this.update('active_theme', theme);
+            }
+
+
+        },
         //---------------------------------------------------------------------
     }
 }

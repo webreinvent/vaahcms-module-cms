@@ -33,6 +33,7 @@ export default {
             q: null,
             trashed: null,
             filter: null,
+            location: null,
             sort_by: null,
             sort_order: 'desc',
         },

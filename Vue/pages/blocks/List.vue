@@ -165,19 +165,42 @@
                                         <div class="level-item">
 
                                             <b-field label="">
-                                                <b-select placeholder="- Select a status -"
+                                                <b-select placeholder="- Select a filter -"
                                                           v-model="query_string.filter"
                                                           @input="setFilter()">
-                                                    <option value="">
-                                                        - Select a status -
-                                                    </option>
-                                                    <option value=01>
-                                                        Published
-                                                    </option>
-                                                    <option value=10>
-                                                        Unpublished
-                                                    </option>
 
+                                                    <optgroup label="Status">
+                                                        <option value=01>
+                                                            Published
+                                                        </option>
+                                                        <option value=10>
+                                                            Unpublished
+                                                        </option>
+                                                    </optgroup>
+
+                                                    <optgroup label="Themes">
+                                                        <option v-for="(theme, index) in page.assets.themes"
+                                                                :value="theme.slug"
+                                                        >{{theme.name}}</option>
+                                                    </optgroup>
+
+                                                </b-select>
+                                            </b-field>
+
+
+                                        </div>
+
+                                        <div v-if="is_location_selector_visible" class="level-item">
+
+                                            <b-field label="">
+                                                <b-select placeholder="- Select a location -"
+                                                          v-model="query_string.location"
+                                                          @input="setFilter()">
+
+                                                        <option value="">Select a Location</option>
+                                                        <option v-for="(location, index) in page.active_theme.locations"
+                                                                :value="location.slug"
+                                                        >{{location.name}}</option>
                                                 </b-select>
                                             </b-field>
 
