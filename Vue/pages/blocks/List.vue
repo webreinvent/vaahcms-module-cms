@@ -223,14 +223,11 @@
                                                     <option value=name>
                                                         Name
                                                     </option>
-                                                    <option value=plural>
-                                                        Plural Name
-                                                    </option>
-                                                    <option value=singular>
-                                                        Singular Name
-                                                    </option>
                                                     <option value=is_published>
                                                         Is Published
+                                                    </option>
+                                                    <option value=updated_at>
+                                                       Updated At
                                                     </option>
 
                                                 </b-select>
