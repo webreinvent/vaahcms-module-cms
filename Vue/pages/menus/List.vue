@@ -46,7 +46,6 @@
                                     <option value="">Select a Location</option>
                                     <option v-for="(location, index) in page.active_theme.locations"
                                             :value="location.id"
-                                            v-if="location.type === 'menu'"
                                     >{{location.name}}</option>
                                 </b-select>
                             </b-field>

@@ -169,6 +169,8 @@
                                                           v-model="query_string.filter"
                                                           @input="setFilter()">
 
+                                                    <option value="">Select a filter</option>
+
                                                     <optgroup label="Status">
                                                         <option value=01>
                                                             Published
@@ -197,7 +199,7 @@
                                                           v-model="query_string.location"
                                                           @input="setFilter()">
 
-                                                        <option value="">Select a Location</option>
+                                                        <option value="">Select a location</option>
                                                         <option v-for="(location, index) in page.active_theme.locations"
                                                                 :value="location.slug"
                                                         >{{location.name}}</option>
