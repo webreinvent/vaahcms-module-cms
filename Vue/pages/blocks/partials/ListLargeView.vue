@@ -14,15 +14,42 @@
                 </b-table-column>
 
                 <b-table-column v-slot="props" field="name" label="Name">
-                    <b-tooltip label="Copy Slug" type="is-dark">
+
+                    <b-tooltip label="Copy Block" type="is-dark">
                         <vh-copy class="text-copyable"
-                                 :data="props.row.slug"
                                  :label="props.row.name"
-                                 @copied="copiedData"
+                                 @copied="copyCode(props.row)"
                         >
+                            <b-icon icon="copy"></b-icon>
                         </vh-copy>
 
                     </b-tooltip>
+                </b-table-column>
+
+
+
+                <b-table-column v-slot="props" width="250"
+                                field="theme" label="Theme / Location">
+
+                    <b-taglist attached>
+                        <b-tag v-if="props.row.theme" type="is-dark">
+                            {{props.row.theme.name}}
+                        </b-tag>
+                        <b-tag v-if="props.row.theme_location" type="is-info">
+                            {{props.row.theme_location.name}}
+                        </b-tag>
+                        <b-tag v-if="props.row.theme_location||props.row.theme" type="is-default">
+                            <b-tooltip label="Copy Location Blocks" type="is-dark">
+                                <vh-copy class="text-copyable"
+                                         @copied="copyCode(props.row,true)"
+                                >
+                                    <b-icon icon="copy"></b-icon>
+                                </vh-copy>
+                            </b-tooltip>
+                        </b-tag>
+                    </b-taglist>
+
+
                 </b-table-column>
 
                 <b-table-column v-slot="props" width="100"
@@ -68,10 +95,10 @@
                 <b-table-column v-slot="props" field="actions" label=""
                                 width="80">
 
-                    <b-tooltip label="Copy Content" type="is-dark">
+                    <b-tooltip label="Edit" type="is-dark">
                         <b-button size="is-small"
-                                  icon-left="copy"
-                                  @click="copyCode(props.row)">
+                                  @click="toEdit(props.row)"
+                                  icon-left="pencil-alt">
                         </b-button>
                     </b-tooltip>
 

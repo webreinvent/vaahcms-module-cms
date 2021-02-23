@@ -180,10 +180,11 @@
                                                         </option>
                                                     </optgroup>
 
-                                                    <optgroup label="Themes">
-                                                        <option v-for="(theme, index) in page.assets.themes"
-                                                                :value="theme.slug"
-                                                        >{{theme.name}}</option>
+                                                    <optgroup v-for="(theme, index) in page.assets.themes" :label="theme.name">
+                                                        <option v-for="(location, index) in theme.locations"
+                                                                :value="location.slug"
+                                                        >{{location.name}}
+                                                        </option>
                                                     </optgroup>
 
                                                 </b-select>

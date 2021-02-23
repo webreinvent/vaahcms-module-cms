@@ -236,7 +236,7 @@ export default {
 
                 this.is_btn_loading = false;
 
-                this.setActiveTheme();
+                // this.setActiveTheme();
             }
 
             this.$Progress.finish();

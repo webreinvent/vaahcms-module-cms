@@ -97,13 +97,23 @@ export default {
 
         },
         //---------------------------------------------------------------------
-        copyCode: function (item)
+        copyCode: function (item,has_location = false)
         {
             let code = "";
 
-            if(item && item.slug && item.theme_location && item.theme_location.slug){
-                code = "{!! vh_block('"+item.slug+"') !!}";
+
+
+            if(has_location){
+                if(item && item.theme_location && item.theme_location.slug){
+                    code = "{!! vh_location_blocks('"+item.theme_location.slug+"') !!}";
+                }
+            }else{
+                if(item && item.slug){
+                    code = "{!! vh_block('"+item.slug+"') !!}";
+                }
             }
+
+
 
             copy(code);
 
@@ -113,6 +123,11 @@ export default {
             });
         },
         //---------------------------------------------------------------------
+        toEdit: function (item) {
+            this.update('active_item', item);
+            this.$router.push({name:'blocks.edit', params:{id:item.id}});
+
+        }
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
     }

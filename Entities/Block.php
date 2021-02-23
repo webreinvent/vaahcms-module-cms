@@ -177,7 +177,7 @@ class Block extends Model {
             $list = static::orderBy('id', $request['sort_order']);
         }
 
-        $list->with([ 'themeLocation']);
+        $list->with([ 'themeLocation','theme']);
 
         if($request['trashed'] == 'true')
         {
@@ -198,8 +198,8 @@ class Block extends Model {
             }elseif($request['filter'] == '10'){
                 $list->whereNull('is_published')->orWhere('is_published',0);
             }else{
-                $list->with(['theme'])
-                    ->whereHas('theme', function ($q) use ($request){
+                $list->with(['themeLocation'])
+                    ->whereHas('themeLocation', function ($q) use ($request){
                         $q->where('slug', $request['filter']);
                     });
 

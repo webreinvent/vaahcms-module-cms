@@ -9,12 +9,12 @@
             <template  >
 
                 <b-table-column v-slot="props" field="name" label="Name">
-                    <b-tooltip label="Copy Slug" type="is-dark">
+                    <b-tooltip label="Copy Block" type="is-dark">
                         <vh-copy class="text-copyable"
-                                 :data="props.row.slug"
                                  :label="props.row.name"
-                                 @copied="copiedData"
+                                 @copied="copyCode(props.row)"
                         >
+                            <b-icon icon="copy"></b-icon>
                         </vh-copy>
 
                     </b-tooltip>
@@ -23,10 +23,10 @@
                 <b-table-column v-slot="props" field="actions" label=""
                                 width="80">
 
-                    <b-tooltip label="Copy Content" type="is-dark">
+                    <b-tooltip label="Edit" type="is-dark">
                         <b-button size="is-small"
-                                  icon-left="copy"
-                                  @click="copyCode(props.row)">
+                                  @click="toEdit(props.row)"
+                                  icon-left="pencil-alt">
                         </b-button>
                     </b-tooltip>
 
