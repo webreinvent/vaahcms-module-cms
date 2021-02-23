@@ -644,9 +644,10 @@ class Block extends Model {
 
         $block = self::where('is_published',1)
             ->where('slug',$block_slug)
+            ->where('vh_theme_id',vh_get_theme_id())
             ->first();
 
-        if(!$block || $block->vh_theme_id !== vh_get_theme_id())
+        if(!$block)
         {
             return false;
         }
