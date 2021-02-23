@@ -646,7 +646,7 @@ class Block extends Model {
             ->where('slug',$block_slug)
             ->first();
 
-        if(!$block)
+        if(!$block || $block->vh_theme_id !== vh_get_theme_id())
         {
             return false;
         }

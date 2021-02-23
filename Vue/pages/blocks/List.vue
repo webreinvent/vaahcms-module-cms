@@ -158,7 +158,7 @@
 
 
                                 <!--filters-->
-                                <div class="level" v-if="page.show_filters">
+                                <div class="level" v-if="page.show_filters && page.list_view !='small'">
 
                                     <div class="level-left">
 
