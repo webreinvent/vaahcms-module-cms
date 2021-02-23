@@ -18,16 +18,16 @@
                             <div class="field has-addons is-pulled-right">
                                 <p  class="control">
                                     <b-button type="is-light"
-                                              @click="is_textarea_disable = true"
-                                              :disabled="is_textarea_disable">
-                                        TextArea
+                                              @click="is_textarea_disable = false"
+                                              :disabled="!is_textarea_disable">
+                                        Editor
                                     </b-button>
                                 </p>
                                 <p  class="control">
                                     <b-button type="is-light"
-                                              @click="is_textarea_disable = false"
-                                              :disabled="!is_textarea_disable">
-                                        Editor
+                                              @click="is_textarea_disable = true"
+                                              :disabled="is_textarea_disable">
+                                        Code Editor
                                     </b-button>
                                 </p>
                             </div>
@@ -37,15 +37,10 @@
 
                     <div class="card-content">
 
-                        <ContentFieldAll v-if="is_textarea_disable"
-                                         field_slug="textarea"
-                                         :labelPosition="labelPosition"
-                                         v-model="new_item.content"
-                                         @onInput=""
-                                         @onChange=""
-                                         @onBlur=""
-                                         @onFocus="">
-                        </ContentFieldAll>
+                        <codemirror v-if="is_textarea_disable"
+                                    ref="cmEditor" v-model="new_item.content"
+                                    :options="cm_options"
+                        />
 
                         <ContentFieldAll v-else
                                          field_slug="editor"

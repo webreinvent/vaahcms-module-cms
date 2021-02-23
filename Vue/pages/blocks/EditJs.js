@@ -1,6 +1,17 @@
-import GlobalComponents from '../../vaahvue/helpers/GlobalComponents'
+import  GlobalComponents from '../../vaahvue/helpers/GlobalComponents'
 import ContentFieldAll from '../../vaahvue/reusable/content-fields/All'
 import draggable from 'vuedraggable';
+import { codemirror } from 'vue-codemirror'
+
+// language
+import 'codemirror/mode/xml/xml.js'
+// theme css
+import 'codemirror/lib/codemirror.css'
+import 'codemirror/theme/monokai.css'
+// require active-line.js
+import'codemirror/addon/selection/active-line.js'
+// autoCloseTags
+import'codemirror/addon/edit/closetag.js'
 
 let namespace = 'blocks';
 
@@ -16,7 +27,8 @@ export default {
     components:{
         ...GlobalComponents,
         ContentFieldAll,
-        draggable
+        draggable,
+        codemirror
 
     },
     data()
@@ -33,6 +45,17 @@ export default {
             edit_status_index: null,
             status: null,
             disable_status_editing: true,
+            cm_options: {
+                tabSize: 4,
+                styleActiveLine: true,
+                lineNumbers: true,
+                lineWrapping: true,
+                autoCloseTags: true,
+                line: true,
+                mode: 'text/html',
+                theme: 'monokai'
+                // more CodeMirror options...
+            }
         }
     },
     watch: {
