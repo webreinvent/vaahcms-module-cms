@@ -102,7 +102,7 @@ export default {
             let code = "";
 
             if(item && item.slug && item.theme_location && item.theme_location.slug){
-                code = "{!! vh_location('"+item.theme_location.slug+"', true, 'bulma', '"+item.slug+"') !!}";
+                code = "{!! vh_block('"+item.slug+"') !!}";
             }
 
             copy(code);

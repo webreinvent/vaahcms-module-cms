@@ -635,21 +635,33 @@ class Block extends Model {
     }
 
     //---------------------------------------------------------------------------
-    public static function getBlock($location,  $block_slug)
+    public static function getBlock($block_slug)
     {
 
-        if($block_slug){
-            $block = self::where('vh_theme_location_id', $location->id)
-                ->where('is_published',1)
-                ->where('slug',$block_slug)
-                ->first();
+        if(!$block_slug){
+            return false;
+        }
 
-            if(!$block)
-            {
-                return false;
-            }
+        $block = self::where('is_published',1)
+            ->where('slug',$block_slug)
+            ->first();
 
-            return $block->content;
+        if(!$block)
+        {
+            return false;
+        }
+
+        return $block->content;
+    }
+
+    //---------------------------------------------------------------------------
+    public static function getBlocksByLocation($location)
+    {
+
+
+        if(!$location)
+        {
+            return false;
         }
 
         $blocks = self::where('vh_theme_location_id', $location->id)

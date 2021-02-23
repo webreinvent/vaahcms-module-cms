@@ -308,6 +308,10 @@ export default {
         //---------------------------------------------------------------------
         setFilter: function (data) {
 
+            if(!isNaN(this.query_string.filter)){
+                this.query_string.location = null;
+            }
+
             this.query_string.page = 1;
             this.update('query_string', this.query_string);
 
