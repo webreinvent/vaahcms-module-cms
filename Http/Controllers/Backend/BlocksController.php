@@ -4,13 +4,12 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use VaahCms\Modules\Cms\Entities\Content;
+use VaahCms\Modules\Cms\Entities\Block;
 use VaahCms\Modules\Cms\Entities\ContentType;
-use VaahCms\Modules\Cms\Entities\Menu;
+use VaahCms\Modules\Cms\Entities\FieldType;
 use WebReinvent\VaahCms\Entities\Theme;
 
-
-class MenusController extends Controller
+class BlocksController extends Controller
 {
 
     public $theme;
@@ -21,12 +20,15 @@ class MenusController extends Controller
         $this->theme = vh_get_backend_theme();
     }
 
-    //----------------------------------------------------------
-
     public function getAssets(Request $request)
     {
 
-        $data['themes'] = Theme::getActiveThemesWithMenuLocations();
+        $data['field_types'] = FieldType::select('id', 'name', 'slug', 'meta')
+            ->get();
+
+        $data['bulk_actions'] = vh_general_bulk_actions();
+        $data['themes'] = Theme::getActiveThemesWithBlockLocations();
+
 
         $response['status'] = 'success';
         $response['data'] = $data;
@@ -36,37 +38,31 @@ class MenusController extends Controller
     //----------------------------------------------------------
     public function postCreate(Request $request)
     {
-        $response = Menu::postCreate($request);
+        $response = Block::postCreate($request);
         return response()->json($response);
     }
     //----------------------------------------------------------
     public function getList(Request $request)
     {
-        $response = Menu::getList($request);
+        $response = Block::getList($request);
         return response()->json($response);
     }
     //----------------------------------------------------------
     public function getItem(Request $request, $id)
     {
-        $response = Menu::getItem($id);
-        return response()->json($response);
-    }
 
+        $response = Block::getItem($id);
+        return response()->json($response);
+
+    }
     //----------------------------------------------------------
-    public function getMenuItems(Request $request, $id)
+    public function postStore(Request $request,$id)
     {
-        $response = Menu::getMenuItems($id);
-        return response()->json($response);
-    }
-    //----------------------------------------------------------
-    public function postStore(Request $request, $id)
-    {
-        $response = Menu::postStore($request,$id);
+        $response = Block::postStore($request,$id);
         return response()->json($response);
     }
 
     //----------------------------------------------------------
-
     //----------------------------------------------------------
     public function postActions(Request $request, $action)
     {
@@ -94,34 +90,28 @@ class MenusController extends Controller
 
             //------------------------------------
             case 'bulk-change-status':
-                $response = Menu::bulkStatusChange($request);
+                $response = Block::bulkStatusChange($request);
                 break;
             //------------------------------------
             case 'bulk-trash':
 
-                $response = Menu::bulkTrash($request);
+                $response = Block::bulkTrash($request);
 
                 break;
             //------------------------------------
             case 'bulk-restore':
 
-                $response = Menu::bulkRestore($request);
+                $response = Block::bulkRestore($request);
 
                 break;
 
             //------------------------------------
             case 'bulk-delete':
 
-                $response = Menu::bulkDelete($request);
+                $response = Block::bulkDelete($request);
 
                 break;
 
-            //------------------------------------
-            case 'set-as-home-page':
-
-                $response = Menu::setAsHomePage($request);
-
-                break;
             //------------------------------------
         }
 
@@ -130,31 +120,7 @@ class MenusController extends Controller
     }
 
     //----------------------------------------------------------
-    public function getContentList(Request $request)
-    {
-
-        $list = Content::orderBy('created_at', 'desc');
-
-        if($request->has('q'))
-        {
-            $list->where(function ($s)use($request){
-                $s->where('name', 'LIKE', '%'.$request->q.'%')
-                    ->orWhere('id', $request->q );
-            });
-        }
-
-        $list = $list->take(10)->get();
-
-        $data = [];
-
-        $data['list'] = $list;
-
-        $response['status'] = 'success';
-        $response['data'] = $data;
-
-        return response()->json($response);
-
-    }
+    //----------------------------------------------------------
     //----------------------------------------------------------
 
 
