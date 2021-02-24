@@ -504,11 +504,7 @@ class Block extends Model {
             $item = static::where('id', $id)->withTrashed()->first();
             if($item)
             {
-
-                $item->contents()->forceDelete();
-
                 $item->forceDelete();
-
             }
         }
 
