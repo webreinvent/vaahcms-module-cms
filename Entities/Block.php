@@ -170,7 +170,7 @@ class Block extends Model {
     //-------------------------------------------------
     public static function getList($request)
     {
-        if($request['sort_by'])
+        if($request->has('sort_by') && $request['sort_by'])
         {
             $list = static::orderBy($request['sort_by'], $request['sort_order']);
         }else{
@@ -179,18 +179,19 @@ class Block extends Model {
 
         $list->with([ 'themeLocation','theme']);
 
-        if($request['trashed'] == 'true')
+        if($request->has('trashed') && $request['trashed'] == 'true')
         {
 
             $list->withTrashed();
         }
 
-        if(isset($request->from) && isset($request->to))
+        if($request->has('from') && $request->from
+            && $request->has('to') && $request->to)
         {
             $list->whereBetween('updated_at',[$request->from." 00:00:00",$request->to." 23:59:59"]);
         }
 
-        if(isset($request['filter']) &&  $request['filter'])
+        if($request->has('filter') &&  $request['filter'])
         {
             if($request['filter'] == '1')
             {
@@ -206,19 +207,7 @@ class Block extends Model {
             }
         }
 
-        if(isset($request['location']) &&  $request['location'])
-        {
-
-            $list->with(['themeLocation'])
-                ->whereHas('themeLocation', function ($q) use ($request){
-                    $q->where('slug', $request['location']);
-                });
-
-
-        }
-
-
-        if(isset($request->q))
+        if($request->has('q') && $request->q)
         {
             $search_array = explode(" ",$request->q);
 
@@ -322,110 +311,6 @@ class Block extends Model {
         $response['data'] = $item;
 
         return $response;
-
-    }
-    //-------------------------------------------------
-    public static function getItemWithRelations($id)
-    {
-
-        $item = static::where('id', $id)
-            ->with(['createdByUser', 'updatedByUser',
-                'deletedByUser',
-                'groups'=>function($g){
-                $g->orderBy('sort', 'asc')->with(['fields' => function($f){
-                    $f->orderBy('sort', 'asc')->with(['type']);
-                }]);
-                }])
-            ->withTrashed()
-            ->first();
-
-        $response['status'] = 'success';
-        $response['data'] = $item;
-
-        return $response;
-
-    }
-    //-------------------------------------------------
-    public static function syncWithFormGroups(ContentType $content_type, $groups_array)
-    {
-
-
-        $stored_groups = $content_type->groups()->get()->pluck('id')->toArray();
-
-        $input_groups = collect($groups_array)->pluck('id')->toArray();
-        $groups_to_delete = array_diff($stored_groups, $input_groups);
-
-
-        if(count($groups_to_delete) > 0)
-        {
-            FormGroup::deleteItems($groups_to_delete);
-        }
-
-
-
-        foreach($groups_array as $g_index => $group)
-        {
-
-            $group['sort'] = $g_index;
-            $group['slug'] = Str::slug($group['name']);
-
-            $stored_group = $content_type->groups()->where('slug', $group['slug'])->first();
-
-            $group_fillable = $group;
-            unset($group_fillable['fields']);
-
-
-            if($stored_group)
-            {
-                $stored_group->fill($group_fillable);
-                $stored_group =$content_type->groups()->save($stored_group);
-            } else{
-                $stored_group = $content_type->groups()->create($group_fillable);
-            }
-
-
-            FormGroup::syncWithFormFields($stored_group, $group['fields']);
-
-        }
-
-
-    }
-    //-------------------------------------------------
-    public static function postStoreGroups($request,$id)
-    {
-
-        $rules = array(
-            '*.fields' => 'array',
-            '*.fields.*.name' => 'required|max:100',
-        );
-
-        $validator = \Validator::make( $request->all(), $rules);
-        if ( $validator->fails() ) {
-
-            $errors             = errorsToArray($validator->errors());
-            $response['status'] = 'failed';
-            $response['errors'] = $errors;
-            return $response;
-        }
-
-
-        $content_type = static::find($id);
-
-        //find delete groups
-        static::syncWithFormGroups($content_type, $request->all());
-
-
-        $response = [];
-
-        $response['status'] = 'success';
-        $response['data'][] = '';
-        $response['messages'][] = 'Action was successful';
-        if(env('APP_DEBUG'))
-        {
-            $response['hint'][] = '';
-        }
-        return $response;
-
 
     }
     //-------------------------------------------------
@@ -641,6 +526,7 @@ class Block extends Model {
         if(!$block_slug){
             return false;
         }
+
 
         $block = self::where('is_published',1)
             ->where('slug',$block_slug)

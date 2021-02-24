@@ -193,22 +193,6 @@
 
                                         </div>
 
-                                        <div v-if="is_location_selector_visible" class="level-item">
-
-                                            <b-field label="">
-                                                <b-select placeholder="- Select a location -"
-                                                          v-model="query_string.location"
-                                                          @input="setFilter()">
-
-                                                        <option value="">Select a location</option>
-                                                        <option v-for="(location, index) in page.active_theme.locations"
-                                                                :value="location.slug"
-                                                        >{{location.name}}</option>
-                                                </b-select>
-                                            </b-field>
-
-
-                                        </div>
                                         <div class="level-item">
 
                                             <b-field label="">
