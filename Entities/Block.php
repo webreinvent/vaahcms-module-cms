@@ -534,7 +534,9 @@ class Block extends Model {
             return false;
         }
 
-        return $block->content;
+        $output = str_replace("{{url('/')}}",url('/'),$block->content);
+
+        return $output;
     }
 
     //---------------------------------------------------------------------------
