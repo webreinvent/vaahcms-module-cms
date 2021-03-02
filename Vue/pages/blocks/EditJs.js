@@ -3,6 +3,7 @@ import ContentFieldAll from '../../vaahvue/reusable/content-fields/All'
 import draggable from 'vuedraggable';
 import { codemirror } from 'vue-codemirror'
 
+
 // language
 import 'codemirror/mode/xml/xml.js'
 // theme css
@@ -12,6 +13,7 @@ import 'codemirror/theme/monokai.css'
 import'codemirror/addon/selection/active-line.js'
 // autoCloseTags
 import'codemirror/addon/edit/closetag.js'
+import copy from "copy-to-clipboard";
 
 let namespace = 'blocks';
 
@@ -179,6 +181,15 @@ export default {
         store: function () {
             this.$Progress.start();
 
+            let self = this;
+
+            console.log(122,this.item);
+
+            $.each(this.assets.replace_strings, function( index, string ) {
+                let regex = new RegExp(string.value, "g");
+                self.item.content = self.item.content.replace(regex, string.name);
+            });
+
             let params =  this.item;
 
             let url = this.ajax_url+'/store/'+this.item.id;
@@ -270,6 +281,27 @@ export default {
         resetActiveItem: function () {
             this.update('active_item', null);
             this.$router.push({name:'blocks.list'});
+        },
+        //---------------------------------------------------------------------
+        setDynamicContent: function () {
+            let self = this;
+
+            $.each(self.assets.replace_strings, function( index, string ) {
+                let regex = new RegExp(string.value, "g");
+                self.item.content = self.item.content.replace(regex, string.name);
+            });
+
+            self.is_textarea_disable = true;
+        },
+        //---------------------------------------------------------------------
+        copyCode: function (item,has_location = false)
+        {
+            copy(item);
+
+            this.$buefy.toast.open({
+                message: 'Copied!',
+                type: 'is-success'
+            });
         },
     }
 }

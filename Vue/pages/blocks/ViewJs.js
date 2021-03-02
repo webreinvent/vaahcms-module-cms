@@ -83,14 +83,32 @@ export default {
             this.$Progress.finish();
             this.is_content_loading = false;
 
-            if(data && data)
+            if(data && data && this.page && this.page.assets )
             {
                 if(data.is_active == 1){
                     data.is_active = 'Yes';
                 }else{
                     data.is_active = 'No';
                 }
-                this.update('active_item', data);
+
+
+                let self = this;
+
+
+                var bar = new Promise((resolve, reject) => {
+                    $.each(self.page.assets.replace_strings, function( index, string ) {
+                        let regex = new RegExp(string.name, "g");
+                        data.content = data.content.replace(regex, string.value);
+                        if (index === self.page.assets.replace_strings.length -1) resolve();
+                    });
+
+                });
+
+                bar.then(() => {
+                    this.update('active_item', data);
+                });
+
+
             } else
             {
                 //if item does not exist or delete then redirect to list

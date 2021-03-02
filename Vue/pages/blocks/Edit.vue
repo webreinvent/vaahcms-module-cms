@@ -29,10 +29,34 @@
                                 </p>
                                 <p  class="control">
                                     <b-button type="is-light"
-                                              @click="is_textarea_disable = true"
+                                              @click="setDynamicContent"
                                               :disabled="is_textarea_disable">
                                         Code Editor
                                     </b-button>
+                                </p>
+                                <p  class="control">
+                                    <b-dropdown position="is-bottom-left" :triggers="['hover']" aria-role="list">
+                                        <template #trigger>
+                                            <button class="button is-light"
+                                                    slot="trigger">
+                                                <b-icon icon="caret-down"></b-icon>
+                                            </button>
+                                        </template>
+
+
+
+                                        <span v-for="string in assets.replace_strings">
+                                            <b-dropdown-item >
+                                            <vh-copy class="text-copyable"
+                                                     @copied="copyCode(string.name)"
+                                            >
+                                                <b-icon icon="copy"></b-icon> {{string.name.replace(/[^a-zA-Z ]/g, " ")}}
+                                            </vh-copy>
+                                        </b-dropdown-item>
+                                        </span>
+
+
+                                    </b-dropdown>
                                 </p>
                             </div>
                         </div>
@@ -41,14 +65,18 @@
 
                     <div class="card-content">
 
+
                         <codemirror v-if="is_textarea_disable"
                                 ref="cmEditor" v-model="item.content"
                                 :options="cm_options"
                         />
 
+
+
                         <ContentFieldAll v-else
                                         field_slug="editor"
                                          :labelPosition="labelPosition"
+                                         :editor_string="assets.replace_strings"
                                          v-model="item.content"
                                          @onInput=""
                                          @onChange=""

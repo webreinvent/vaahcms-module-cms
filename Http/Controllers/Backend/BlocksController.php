@@ -23,6 +23,26 @@ class BlocksController extends Controller
     public function getAssets(Request $request)
     {
 
+        $data['replace_strings'] = [
+
+            0=>[
+                'name' => '{{MODULE_URL}}',
+                'value' => url('/vaahcms/modules'),
+            ],
+            1=>[
+                'name' => '{{THEME_URL}}',
+                'value' => url('/vaahcms/themes'),
+            ],
+            2=>[
+                'name' => '{{STORAGE_URL}}',
+                'value' => url('/storage'),
+            ],
+            3=>[
+                'name' => '{{PUBLIC_URL}}',
+                'value' => url('/'),
+            ],
+        ];
+
         $data['field_types'] = FieldType::select('id', 'name', 'slug', 'meta')
             ->get();
 
