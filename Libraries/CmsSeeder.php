@@ -210,7 +210,7 @@ class CmsSeeder{
         }
     }
     //-------------------------------------------------------
-    public static function pages($theme_slug, $file_path)
+    public static function createSampleField($theme_slug, $file_path, $content_type_slug = 'pages')
     {
 
         $theme = self::getTheme($theme_slug);
@@ -230,7 +230,7 @@ class CmsSeeder{
             return false;
         }
 
-        $content_type = ContentType::where('slug', 'pages')
+        $content_type = ContentType::where('slug', $content_type_slug)
             ->with(['groups.fields.type'])
             ->first()->toArray();
 
@@ -250,6 +250,10 @@ class CmsSeeder{
             if(!$template)
             {
                 continue;
+            }
+
+            if(!isset($item['slug']) || !$item['slug']){
+                $item['slug'] = Str::slug($item['name']);
             }
 
             $page = Content::where('slug', $item['slug'])
