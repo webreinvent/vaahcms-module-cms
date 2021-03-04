@@ -26,7 +26,7 @@ class SetContent
 
         $permalink = $request->segment(2);
 
-        if(isset($content_type) || !isset($permalink))
+        if(isset($content_type) && !isset($permalink))
         {
             $permalink = $content_type;
             $content_type = 'pages';
