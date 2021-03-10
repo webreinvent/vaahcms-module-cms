@@ -328,19 +328,15 @@ class ContentType extends Model {
     public static function syncWithFormGroups(ContentType $content_type, $groups_array)
     {
 
+        $stored_groups = $content_type->groups()->get()->pluck('slug')->toArray();
 
-        $stored_groups = $content_type->groups()->get()->pluck('id')->toArray();
-
-        $input_groups = collect($groups_array)->pluck('id')->toArray();
+        $input_groups = collect($groups_array)->pluck('slug')->toArray();
         $groups_to_delete = array_diff($stored_groups, $input_groups);
-
 
         if(count($groups_to_delete) > 0)
         {
             FormGroup::deleteItems($groups_to_delete);
         }
-
-
 
         foreach($groups_array as $g_index => $group)
         {
@@ -362,6 +358,11 @@ class ContentType extends Model {
                 $stored_group = $content_type->groups()->create($group_fillable);
             }
 
+            foreach ($group['fields'] as $key => $field){
+                if(!isset($field['slug']) || !$field['slug']){
+                    $group['fields'][$key]['slug'] = Str::slug($field['name']);
+                }
+            }
 
             FormGroup::syncWithFormFields($stored_group, $group['fields']);
 
