@@ -37,7 +37,7 @@ class PublicController extends Controller
         if (view()->exists($view)) {
             return view($view);
         } else {
-            throw new \Exception($view." not found.");
+            return abort(404);
         }
 
     }
@@ -60,7 +60,7 @@ class PublicController extends Controller
         if (view()->exists($view)) {
             return view($view);
         } else {
-            throw new \Exception($view." not found.");
+            return abort(404);
         }
 
     }
