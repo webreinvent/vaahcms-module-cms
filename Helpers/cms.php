@@ -199,6 +199,9 @@ function setReturnValue($field,$return_html=true)
         return $field->content;
     }
 
+    if(!is_array($field->content) && !is_object($field->content)){
+        $field->content = replace_dynamic_strings($field->content);
+    }
 
     switch($field['type']['slug']){
 
