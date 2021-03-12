@@ -438,11 +438,16 @@ class Content extends Model {
                 $field_content->where('vh_cms_form_field_id', $field->id);
                 $field_content = $field_content->first();
 
-
                 if($field_content)
                 {
                     $groups[$i]['fields'][$y]['vh_cms_form_field_id'] = $field_content->id;
-                    $groups[$i]['fields'][$y]['content'] = $field_content->content;
+
+                    if($field_content->content && !is_array($field_content->content) && !is_object($field_content->content)){
+                        $groups[$i]['fields'][$y]['content'] = replace_dynamic_strings($field_content->content);
+                    }else{
+                        $groups[$i]['fields'][$y]['content'] = $field_content->content;
+                    }
+
                     $groups[$i]['fields'][$y]['content_meta'] = $field_content->meta;
                 }
 
@@ -536,6 +541,8 @@ class Content extends Model {
                 if(is_array($field['content']) || is_object($field['content']))
                 {
                     $field['content'] = json_encode($field['content']);
+                }else{
+                    $field['content'] = replace_dynamic_strings($field['content'],true);
                 }
 
                 if($field['type']['slug'] == 'user' && $field['content']){

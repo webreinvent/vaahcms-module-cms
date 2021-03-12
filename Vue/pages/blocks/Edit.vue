@@ -22,14 +22,14 @@
 
                                 <p  class="control">
                                     <b-button type="is-light"
-                                              @click="is_textarea_disable = false"
+                                              @click="setDynamicContent(false)"
                                               :disabled="!is_textarea_disable">
                                         Editor
                                     </b-button>
                                 </p>
                                 <p  class="control">
                                     <b-button type="is-light"
-                                              @click="setDynamicContent"
+                                              @click="setDynamicContent(true)"
                                               :disabled="is_textarea_disable">
                                         Code Editor
                                     </b-button>
@@ -45,7 +45,7 @@
 
 
 
-                                        <span v-for="string in assets.replace_strings">
+                                        <span v-for="string in assets.replace_strings.success">
                                             <b-dropdown-item >
                                             <vh-copy class="text-copyable"
                                                      @copied="copyCode(string.name)"

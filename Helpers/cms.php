@@ -18,8 +18,66 @@
 //-----------------------------------------------------------------------------------
 use VaahCms\Modules\Cms\Entities\Content;
 
+
+//-----------------------------------------------------------------------------------
+function cms_dynamic_variables()
+{
+    $list = [
+        [
+            'name' => '#!PUBLIC:MODULE_URL!#',
+            'value' => url('/vaahcms/modules'),
+            'detail'=>'Will be replaced with public module url.'
+        ],
+        [
+            'name' => '#!PUBLIC:THEME_URL!#',
+            'value' => url('/vaahcms/themes'),
+            'detail'=>'Will be replaced with public theme url.'
+        ],
+        [
+            'name' => '#!PUBLIC:STORAGE_URL!#',
+            'value' => url('/storage'),
+            'detail'=>'Will be replaced with public storage url.'
+        ],
+        [
+            'name' => '#!PUBLIC:BASE_URL!#',
+            'value' => url('/'),
+            'detail'=>'Will be replaced with public url.',
+        ]
+    ];
+
+    return $list;
+
+}
+
 function get_content_types(array $args = null)
 {
+
+
+
+
+}
+
+function replace_dynamic_strings($content = null,$has_replace_string = false)
+{
+
+    $extend = new \WebReinvent\VaahCms\Http\Controllers\ExtendController();
+
+    $dynamic_string = $extend->getPublicUrls();
+
+    if($dynamic_string && $dynamic_string['status'] === 'success'){
+        foreach ($dynamic_string['data'] as $string){
+
+            if($has_replace_string){
+                $content = str_replace($string['value'],$string['name'],$content);
+            }else{
+                $content = str_replace($string['name'],$string['value'],$content);
+            }
+
+
+        }
+    }
+
+    return $content;
 
 
 

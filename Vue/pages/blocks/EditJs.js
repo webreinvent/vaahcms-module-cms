@@ -283,15 +283,26 @@ export default {
             this.$router.push({name:'blocks.list'});
         },
         //---------------------------------------------------------------------
-        setDynamicContent: function () {
+        setDynamicContent: function (value) {
             let self = this;
 
-            $.each(self.assets.replace_strings, function( index, string ) {
-                let regex = new RegExp(string.value, "g");
-                self.item.content = self.item.content.replace(regex, string.name);
-            });
+            if(value){
+                $.each(self.assets.replace_strings.success, function( index, string ) {
+                    let regex = new RegExp(string.value, "g");
+                    self.item.content = self.item.content.replace(regex, string.name);
+                });
+
+            }else{
+                $.each(self.assets.replace_strings.success, function( index, string ) {
+                    let regex = new RegExp(string.value, "g");
+                    self.item.content = self.item.content.replace(regex, string.name);
+                });
+
+            }
 
             self.is_textarea_disable = true;
+
+
         },
         //---------------------------------------------------------------------
         copyCode: function (item,has_location = false)
