@@ -534,9 +534,7 @@ class Block extends Model {
             return false;
         }
 
-        $output = str_replace("{{url('/')}}",url('/'),$block->content);
-
-        return $output;
+        return replace_dynamic_strings($block->content);
     }
 
     //---------------------------------------------------------------------------
@@ -562,7 +560,7 @@ class Block extends Model {
         $data = "";
 
         foreach ($blocks as $block){
-            $data .= $block->content;
+            $data .= replace_dynamic_strings($block->content);
         }
 
 
