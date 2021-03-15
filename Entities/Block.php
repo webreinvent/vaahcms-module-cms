@@ -307,6 +307,8 @@ class Block extends Model {
             ->withTrashed()
             ->first();
 
+        $item['content'] = replace_dynamic_strings($item['content']);
+
         $response['status'] = 'success';
         $response['data'] = $item;
 
@@ -322,6 +324,7 @@ class Block extends Model {
         {
             return $validation;
         }
+
 
         // check if name exist
         $name_exist = static::where('id','!=',$request['id'])
@@ -362,6 +365,8 @@ class Block extends Model {
             $response['errors'][] = "Select different sort number.";
             return $response;
         }
+
+        $request['content'] = replace_dynamic_strings($request['content'],true);
 
         $update = static::where('id',$id)->withTrashed()->first();
 

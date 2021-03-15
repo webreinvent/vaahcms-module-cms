@@ -91,22 +91,7 @@ export default {
                     data.is_active = 'No';
                 }
 
-
-                let self = this;
-
-
-                var bar = new Promise((resolve, reject) => {
-                    $.each(self.page.assets.replace_strings, function( index, string ) {
-                        let regex = new RegExp(string.name, "g");
-                        data.content = data.content.replace(regex, string.value);
-                        if (index === self.page.assets.replace_strings.length -1) resolve();
-                    });
-
-                });
-
-                bar.then(() => {
-                    this.update('active_item', data);
-                });
+                this.update('active_item', data);
 
 
             } else

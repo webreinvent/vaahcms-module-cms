@@ -181,15 +181,6 @@ export default {
         store: function () {
             this.$Progress.start();
 
-            let self = this;
-
-            console.log(122,this.item);
-
-            $.each(this.assets.replace_strings, function( index, string ) {
-                let regex = new RegExp(string.value, "g");
-                self.item.content = self.item.content.replace(regex, string.name);
-            });
-
             let params =  this.item;
 
             let url = this.ajax_url+'/store/'+this.item.id;
@@ -294,13 +285,13 @@ export default {
 
             }else{
                 $.each(self.assets.replace_strings.success, function( index, string ) {
-                    let regex = new RegExp(string.value, "g");
-                    self.item.content = self.item.content.replace(regex, string.name);
+                    let regex = new RegExp(string.name, "g");
+                    self.item.content = self.item.content.replace(regex, string.value);
                 });
 
             }
 
-            self.is_textarea_disable = true;
+            self.is_textarea_disable = value;
 
 
         },
