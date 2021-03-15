@@ -56,33 +56,6 @@ function get_content_types(array $args = null)
 
 
 }
-
-function replace_dynamic_strings($content = null,$has_replace_string = false)
-{
-
-    $extend = new \WebReinvent\VaahCms\Http\Controllers\ExtendController();
-
-    $dynamic_string = $extend->getPublicUrls();
-
-    if($dynamic_string && $dynamic_string['status'] === 'success'){
-        foreach ($dynamic_string['data'] as $string){
-
-            if($has_replace_string){
-                $content = str_replace($string['value'],$string['name'],$content);
-            }else{
-                $content = str_replace($string['name'],$string['value'],$content);
-            }
-
-
-        }
-    }
-
-    return $content;
-
-
-
-
-}
 //-----------------------------------------------------------------------------------
 function get_content_type($id, array $args = null)
 {
@@ -200,7 +173,7 @@ function setReturnValue($field,$return_html=true)
     }
 
     if(!is_array($field->content) && !is_object($field->content)){
-        $field->content = replace_dynamic_strings($field->content);
+        $field->content = vh_translate_dynamic_strings($field->content);
     }
 
     switch($field['type']['slug']){

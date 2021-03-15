@@ -307,7 +307,7 @@ class Block extends Model {
             ->withTrashed()
             ->first();
 
-        $item['content'] = replace_dynamic_strings($item['content']);
+        $item['content'] = vh_translate_dynamic_strings($item['content']);
 
         $response['status'] = 'success';
         $response['data'] = $item;
@@ -366,7 +366,7 @@ class Block extends Model {
             return $response;
         }
 
-        $request['content'] = replace_dynamic_strings($request['content'],true);
+        $request['content'] = vh_translate_dynamic_strings($request['content'],['has_replace_string' => true]);
 
         $update = static::where('id',$id)->withTrashed()->first();
 
@@ -539,7 +539,7 @@ class Block extends Model {
             return false;
         }
 
-        return replace_dynamic_strings($block->content);
+        return vh_translate_dynamic_strings($block->content);
     }
 
     //---------------------------------------------------------------------------
@@ -565,7 +565,7 @@ class Block extends Model {
         $data = "";
 
         foreach ($blocks as $block){
-            $data .= replace_dynamic_strings($block->content);
+            $data .= vh_translate_dynamic_strings($block->content);
         }
 
 

@@ -443,7 +443,7 @@ class Content extends Model {
                     $groups[$i]['fields'][$y]['vh_cms_form_field_id'] = $field_content->id;
 
                     if($field_content->content && !is_array($field_content->content) && !is_object($field_content->content)){
-                        $groups[$i]['fields'][$y]['content'] = replace_dynamic_strings($field_content->content);
+                        $groups[$i]['fields'][$y]['content'] = vh_translate_dynamic_strings($field_content->content);
                     }else{
                         $groups[$i]['fields'][$y]['content'] = $field_content->content;
                     }
@@ -542,7 +542,7 @@ class Content extends Model {
                 {
                     $field['content'] = json_encode($field['content']);
                 }else{
-                    $field['content'] = replace_dynamic_strings($field['content'],true);
+                    $field['content'] = vh_translate_dynamic_strings($field['content'],['has_replace_string' => true]);
                 }
 
                 if($field['type']['slug'] == 'user' && $field['content']){
