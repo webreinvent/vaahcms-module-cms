@@ -172,8 +172,12 @@ function setReturnValue($field,$return_html=true)
         return $field->content;
     }
 
-    if(!is_array($field->content) && !is_object($field->content)){
-        $field->content = vh_translate_dynamic_strings($field->content);
+    if(is_array($field->content) || is_object($field->content)){
+        $field->content = json_decode(
+            vh_translate_dynamic_strings(json_encode($field['content']))
+        );
+    }else{
+        $field->content = vh_translate_dynamic_strings($field['content']);
     }
 
     switch($field['type']['slug']){
