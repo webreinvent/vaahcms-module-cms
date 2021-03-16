@@ -3,6 +3,7 @@ import ContentFieldAll from '../../vaahvue/reusable/content-fields/All'
 import draggable from 'vuedraggable';
 import { codemirror } from 'vue-codemirror'
 
+
 // language
 import 'codemirror/mode/xml/xml.js'
 // theme css
@@ -12,6 +13,7 @@ import 'codemirror/theme/monokai.css'
 import'codemirror/addon/selection/active-line.js'
 // autoCloseTags
 import'codemirror/addon/edit/closetag.js'
+import copy from "copy-to-clipboard";
 
 let namespace = 'blocks';
 
@@ -70,32 +72,6 @@ export default {
                 if(new_val)
                 {
                     this.item.slug = this.$vaah.strToSlug(new_val);
-                    this.updateNewItem();
-                }
-
-            }
-        },
-
-        'item.plural': {
-            deep: true,
-            handler(new_val, old_val) {
-
-                if(new_val)
-                {
-                    this.item.plural_slug = this.$vaah.strToSlug(new_val);
-                    this.updateNewItem();
-                }
-
-            }
-        },
-
-        'item.singular': {
-            deep: true,
-            handler(new_val, old_val) {
-
-                if(new_val)
-                {
-                    this.item.singular_slug = this.$vaah.strToSlug(new_val);
                     this.updateNewItem();
                 }
 
@@ -270,6 +246,38 @@ export default {
         resetActiveItem: function () {
             this.update('active_item', null);
             this.$router.push({name:'blocks.list'});
+        },
+        //---------------------------------------------------------------------
+        setDynamicContent: function (value) {
+            let self = this;
+
+            if(value){
+                $.each(self.assets.replace_strings.success, function( index, string ) {
+                    let regex = new RegExp(string.value, "g");
+                    self.item.content = self.item.content.replace(regex, string.name);
+                });
+
+            }else{
+                $.each(self.assets.replace_strings.success, function( index, string ) {
+                    let regex = new RegExp(string.name, "g");
+                    self.item.content = self.item.content.replace(regex, string.value);
+                });
+
+            }
+
+            self.is_textarea_disable = value;
+
+
+        },
+        //---------------------------------------------------------------------
+        copyCode: function (item,has_location = false)
+        {
+            copy(item);
+
+            this.$buefy.toast.open({
+                message: 'Copied!',
+                type: 'is-success'
+            });
         },
     }
 }

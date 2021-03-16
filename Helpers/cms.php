@@ -18,6 +18,37 @@
 //-----------------------------------------------------------------------------------
 use VaahCms\Modules\Cms\Entities\Content;
 
+
+//-----------------------------------------------------------------------------------
+function cms_dynamic_variables()
+{
+    $list = [
+        [
+            'name' => '#!PUBLIC:MODULE_URL!#',
+            'value' => url('/vaahcms/modules'),
+            'detail'=>'Will be replaced with public module url.'
+        ],
+        [
+            'name' => '#!PUBLIC:THEME_URL!#',
+            'value' => url('/vaahcms/themes'),
+            'detail'=>'Will be replaced with public theme url.'
+        ],
+        [
+            'name' => '#!PUBLIC:STORAGE_URL!#',
+            'value' => url('/storage'),
+            'detail'=>'Will be replaced with public storage url.'
+        ],
+        [
+            'name' => '#!PUBLIC:BASE_URL!#',
+            'value' => url('/'),
+            'detail'=>'Will be replaced with public url.',
+        ]
+    ];
+
+    return $list;
+
+}
+
 function get_content_types(array $args = null)
 {
 
@@ -141,6 +172,13 @@ function setReturnValue($field,$return_html=true)
         return $field->content;
     }
 
+    if(is_array($field->content) || is_object($field->content)){
+        $field->content = json_decode(
+            vh_translate_dynamic_strings(json_encode($field['content']))
+        );
+    }else{
+        $field->content = vh_translate_dynamic_strings($field['content']);
+    }
 
     switch($field['type']['slug']){
 

@@ -167,7 +167,7 @@ class Content extends Model {
             'author', 'id'
         )->select(
             'id', 'uuid', 'first_name', 'last_name', 'email',
-            'username', 'display_name', 'title', 'bio', 'website',
+            'username', 'display_name', 'title', 'bio', 'website'
         );
     }
     //-------------------------------------------------
@@ -438,11 +438,18 @@ class Content extends Model {
                 $field_content->where('vh_cms_form_field_id', $field->id);
                 $field_content = $field_content->first();
 
-
                 if($field_content)
                 {
                     $groups[$i]['fields'][$y]['vh_cms_form_field_id'] = $field_content->id;
-                    $groups[$i]['fields'][$y]['content'] = $field_content->content;
+
+                    if(is_array($field_content->content) || is_object($field_content->content)){
+                        $groups[$i]['fields'][$y]['content'] = json_decode(
+                            vh_translate_dynamic_strings(json_encode($field_content->content))
+                        );
+                    }else{
+                        $groups[$i]['fields'][$y]['content'] = vh_translate_dynamic_strings($field_content->content);
+                    }
+
                     $groups[$i]['fields'][$y]['content_meta'] = $field_content->meta;
                 }
 
@@ -533,9 +540,18 @@ class Content extends Model {
                     $stored_field->vh_cms_form_field_id = $field['id'];
                 }
 
-                if(is_array($field['content']) || is_object($field['content']))
-                {
-                    $field['content'] = json_encode($field['content']);
+                if(is_array($field['content']) || is_object($field['content'])){
+                    $field['content'] = json_decode(
+                        vh_translate_dynamic_strings(
+                            json_encode($field['content']),
+                            ['has_replace_string' => true]
+                        )
+                    );
+                }else{
+                    $field['content'] = vh_translate_dynamic_strings(
+                        $field['content'],
+                        ['has_replace_string' => true]
+                    );
                 }
 
                 if($field['type']['slug'] == 'user' && $field['content']){

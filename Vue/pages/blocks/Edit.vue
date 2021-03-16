@@ -22,17 +22,41 @@
 
                                 <p  class="control">
                                     <b-button type="is-light"
-                                              @click="is_textarea_disable = false"
+                                              @click="setDynamicContent(false)"
                                               :disabled="!is_textarea_disable">
                                         Editor
                                     </b-button>
                                 </p>
                                 <p  class="control">
                                     <b-button type="is-light"
-                                              @click="is_textarea_disable = true"
+                                              @click="setDynamicContent(true)"
                                               :disabled="is_textarea_disable">
                                         Code Editor
                                     </b-button>
+                                </p>
+                                <p  class="control">
+                                    <b-dropdown position="is-bottom-left" :triggers="['hover']" aria-role="list">
+                                        <template #trigger>
+                                            <button class="button is-light"
+                                                    slot="trigger">
+                                                <b-icon icon="caret-down"></b-icon>
+                                            </button>
+                                        </template>
+
+
+
+                                        <span v-for="string in assets.replace_strings.success">
+                                            <b-dropdown-item >
+                                            <vh-copy class="text-copyable"
+                                                     @copied="copyCode(string.name)"
+                                            >
+                                                <b-icon icon="copy"></b-icon> {{string.name.replace(/[^a-zA-Z ]/g, " ")}}
+                                            </vh-copy>
+                                        </b-dropdown-item>
+                                        </span>
+
+
+                                    </b-dropdown>
                                 </p>
                             </div>
                         </div>
@@ -45,6 +69,7 @@
                                 ref="cmEditor" v-model="item.content"
                                 :options="cm_options"
                         />
+
 
                         <ContentFieldAll v-else
                                         field_slug="editor"

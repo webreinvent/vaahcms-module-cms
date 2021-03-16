@@ -23,6 +23,8 @@ class BlocksController extends Controller
     public function getAssets(Request $request)
     {
 
+        $data['replace_strings'] = vh_action('getPublicUrls', null, 'array');
+
         $data['field_types'] = FieldType::select('id', 'name', 'slug', 'meta')
             ->get();
 

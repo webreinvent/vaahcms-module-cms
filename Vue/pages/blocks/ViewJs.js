@@ -83,14 +83,17 @@ export default {
             this.$Progress.finish();
             this.is_content_loading = false;
 
-            if(data && data)
+            if(data && data && this.page && this.page.assets )
             {
                 if(data.is_active == 1){
                     data.is_active = 'Yes';
                 }else{
                     data.is_active = 'No';
                 }
+
                 this.update('active_item', data);
+
+
             } else
             {
                 //if item does not exist or delete then redirect to list

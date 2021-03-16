@@ -64,6 +64,28 @@ class Block extends Model {
         return null;
     }
     //-------------------------------------------------
+    public function setContentAttribute($value)
+    {
+        if($value)
+        {
+            $this->attributes['content'] = vh_translate_dynamic_strings($value,['has_replace_string' => true]);
+        } else{
+            $this->attributes['content'] = null;
+        }
+
+    }
+    //-------------------------------------------------
+    public function getContentAttribute($value)
+    {
+        if($value)
+        {
+            return vh_translate_dynamic_strings($value);
+        }
+
+        return null;
+
+    }
+    //-------------------------------------------------
     public function setMetaAttribute($value)
     {
         if($value)
@@ -223,8 +245,6 @@ class Block extends Model {
 
         $data['list'] = $list->paginate(config('vaahcms.per_page'));
 
-
-
         $response['status'] = 'success';
         $response['data'] = $data;
 
@@ -322,6 +342,7 @@ class Block extends Model {
         {
             return $validation;
         }
+
 
         // check if name exist
         $name_exist = static::where('id','!=',$request['id'])
@@ -534,7 +555,7 @@ class Block extends Model {
             return false;
         }
 
-        return $block->content;
+        return vh_translate_dynamic_strings($block->content);
     }
 
     //---------------------------------------------------------------------------
@@ -560,7 +581,7 @@ class Block extends Model {
         $data = "";
 
         foreach ($blocks as $block){
-            $data .= $block->content;
+            $data .= vh_translate_dynamic_strings($block->content);
         }
 
 
