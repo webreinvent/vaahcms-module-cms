@@ -78,32 +78,6 @@ export default {
             }
         },
 
-        'item.plural': {
-            deep: true,
-            handler(new_val, old_val) {
-
-                if(new_val)
-                {
-                    this.item.plural_slug = this.$vaah.strToSlug(new_val);
-                    this.updateNewItem();
-                }
-
-            }
-        },
-
-        'item.singular': {
-            deep: true,
-            handler(new_val, old_val) {
-
-                if(new_val)
-                {
-                    this.item.singular_slug = this.$vaah.strToSlug(new_val);
-                    this.updateNewItem();
-                }
-
-            }
-        },
-
     },
     mounted() {
         //----------------------------------------------------

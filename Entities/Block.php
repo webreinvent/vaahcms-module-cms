@@ -64,6 +64,28 @@ class Block extends Model {
         return null;
     }
     //-------------------------------------------------
+    public function setContentAttribute($value)
+    {
+        if($value)
+        {
+            $this->attributes['content'] = vh_translate_dynamic_strings($value,['has_replace_string' => true]);
+        } else{
+            $this->attributes['content'] = null;
+        }
+
+    }
+    //-------------------------------------------------
+    public function getContentAttribute($value)
+    {
+        if($value)
+        {
+            return vh_translate_dynamic_strings($value);
+        }
+
+        return null;
+
+    }
+    //-------------------------------------------------
     public function setMetaAttribute($value)
     {
         if($value)
@@ -223,8 +245,6 @@ class Block extends Model {
 
         $data['list'] = $list->paginate(config('vaahcms.per_page'));
 
-
-
         $response['status'] = 'success';
         $response['data'] = $data;
 
@@ -307,8 +327,6 @@ class Block extends Model {
             ->withTrashed()
             ->first();
 
-        $item['content'] = vh_translate_dynamic_strings($item['content']);
-
         $response['status'] = 'success';
         $response['data'] = $item;
 
@@ -365,8 +383,6 @@ class Block extends Model {
             $response['errors'][] = "Select different sort number.";
             return $response;
         }
-
-        $request['content'] = vh_translate_dynamic_strings($request['content'],['has_replace_string' => true]);
 
         $update = static::where('id',$id)->withTrashed()->first();
 

@@ -65,18 +65,15 @@
 
                     <div class="card-content">
 
-
                         <codemirror v-if="is_textarea_disable"
                                 ref="cmEditor" v-model="item.content"
                                 :options="cm_options"
                         />
 
 
-
                         <ContentFieldAll v-else
                                         field_slug="editor"
                                          :labelPosition="labelPosition"
-                                         :editor_string="assets.replace_strings"
                                          v-model="item.content"
                                          @onInput=""
                                          @onChange=""
