@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class PublicController extends Controller
 {
@@ -34,7 +35,8 @@ class PublicController extends Controller
 
         $view = $theme_slug.'::'.$file_path;
 
-        if (view()->exists($view)) {
+        if ( view()->exists($view)
+            && ( Auth::check() || $request->data->status === 'published') ) {
             return view($view);
         } else {
             return abort(404);
