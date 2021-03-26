@@ -48,6 +48,15 @@ class Content extends Model {
     protected $appends  = [
         'link_prefix', 'link'
     ];
+
+    //-------------------------------------------------
+
+    protected $casts = [
+        "is_published_at" => 'date:Y-m-d H:i:s',
+        "created_at" => 'date:Y-m-d H:i:s',
+        "updated_at" => 'date:Y-m-d H:i:s',
+        "deleted_at" => 'date:Y-m-d H:i:s'
+    ];
     //-------------------------------------------------
 
     //-------------------------------------------------
