@@ -35,6 +35,7 @@ class ContentsController extends Controller
         $data['default_theme'] = $default_theme_template['theme'];
         $data['default_template'] = $default_theme_template['template'];
         $data['bulk_actions'] = vh_general_bulk_actions();
+        $data['media_upload_url'] = route('backend.cms.media.upload');
 
 
         $data['content_type'] = $request->content_type;
