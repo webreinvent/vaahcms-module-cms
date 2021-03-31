@@ -17,7 +17,6 @@ class DatabaseTableSeeder extends Seeder
     public function run()
     {
         $this->seedFields();
-        $this->seedMenus();
     }
 
     //---------------------------------------------------------------
@@ -89,13 +88,6 @@ class DatabaseTableSeeder extends Seeder
     {
         $list = $this->getListFromJson("fields.json");
         $this->storeSeedsWithUuid('vh_cms_field_types', $list);
-    }
-    //---------------------------------------------------------------
-    public function seedMenus()
-    {
-        $list = $this->getListFromJson("menus.json");
-
-        CmsSeeder::menus('jalapeno', $list);
     }
     //---------------------------------------------------------------
     //---------------------------------------------------------------

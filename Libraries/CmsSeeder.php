@@ -652,7 +652,7 @@ class CmsSeeder{
     }
 
     //-------------------------------------------------------
-    public static function menus($theme_slug, $list)
+    public static function menus($theme_slug, $file_path)
     {
 
         $theme = self::getTheme($theme_slug);
@@ -667,9 +667,12 @@ class CmsSeeder{
 
         $theme_location = self::getThemeLocation($theme, 'menu', 'top');
 
-        $sort = 0;
-        $parent_sort = 0;
-        $parent_slug = '';
+        $list = self::getJsonData($file_path);
+
+        if(count($list) < 1)
+        {
+            return false;
+        }
 
         foreach ($list as $item){
 
@@ -711,20 +714,29 @@ class CmsSeeder{
                     continue;
                 }
 
-                $item['sort'] = $parent_sort;
-
-                if($item['parent'] != $parent_slug){
-                    $parent_sort = 0;
-                    $item['sort'] = $parent_sort;
+                if(!isset($item['sort']) || !$item['sort']){
+                    if(!isset(${ $item['menu_slug'].'_'.$parent_menu->slug.'_sort' })){
+                        ${ $item['menu_slug'].'_'.$parent_menu->slug.'_sort' } = 0;
+                    }else{
+                        ${ $item['menu_slug'].'_'.$parent_menu->slug.'_sort' }++;
+                    }
                 }
 
-                $parent_sort++;
+                $item['sort'] = ${ $item['menu_slug'].'_'.$parent_menu->slug.'_sort' };
 
                 $item['parent_id'] = $parent_menu->id;
 
             }else{
-                $item['sort'] = $sort;
-                $sort++;
+
+                if(!isset($item['sort']) || !$item['sort']){
+                    if(!isset(${ $item['menu_slug'].'_sort' })){
+                        ${ $item['menu_slug'].'_sort' } = 0;
+                    }else{
+                        ${ $item['menu_slug'].'_sort' }++;
+                    }
+                }
+
+                $item['sort'] = ${ $item['menu_slug'].'_sort' };
             }
 
             unset($item['parent']);
@@ -735,9 +747,78 @@ class CmsSeeder{
             {
                 DB::table('vh_cms_menu_items')->insert($item);
             } else{
-                DB::table('vh_cms_content_types')
+                DB::table('vh_cms_menu_items')
                     ->where('slug', $item['slug'])
                     ->where('vh_menu_id', $menu->id)
+                    ->update($item);
+            }
+
+
+        }
+
+
+    }
+
+    //-------------------------------------------------------
+    public static function blocks($theme_slug, $file_path)
+    {
+
+        $theme = self::getTheme($theme_slug);
+
+        if(is_array($theme)
+            && isset($theme['status'])
+            && $theme['status'] == 'failed'
+        )
+        {
+            return $theme;
+        }
+
+        $list = self::getJsonData($file_path);
+
+        if(count($list) < 1)
+        {
+            return false;
+        }
+
+        foreach ($list as $item){
+
+            if(!isset($item['slug']) || !$item['slug']){
+                $item['slug'] = Str::slug($item['name']);
+            }
+
+            $theme_location = self::getThemeLocation($theme, 'block', $item['theme_location']);
+
+            $item['vh_theme_location_id'] = $theme_location->id;
+            $item['vh_theme_id'] = $theme->id;
+            $item['is_published'] = true;
+
+            $exist = DB::table('vh_cms_blocks')
+                ->where('slug', $item['slug'])
+                ->where('vh_theme_location_id', $theme_location->id)
+                ->where('vh_theme_id', $theme->id)
+                ->first();
+
+            if(!isset($item['sort']) || !$item['sort']){
+                if(!isset(${ $item['theme_location'] . '_sort' })){
+                    ${ $item['theme_location'] . '_sort' } = 0;
+                }else{
+                    ${ $item['theme_location'] . '_sort' }++;
+                }
+
+                $item['sort'] = ${ $item['theme_location'] . '_sort' };
+            }
+
+            unset($item['theme_location']);
+
+
+            if(!$exist)
+            {
+                DB::table('vh_cms_blocks')->insert($item);
+            } else{
+                DB::table('vh_cms_blocks')
+                    ->where('slug', $item['slug'])
+                    ->where('vh_theme_location_id', $theme_location->id)
+                    ->where('vh_theme_id', $theme->id)
                     ->update($item);
             }
 
