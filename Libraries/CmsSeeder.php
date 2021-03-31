@@ -32,6 +32,37 @@ class CmsSeeder{
 
         return $theme;
     }
+
+    //-------------------------------------------------------
+    public static function getThemeLocation($theme, $type, $slug)
+    {
+        $theme_location = DB::table('vh_theme_locations')
+            ->where('vh_theme_id', $theme->id)
+            ->where('type', $type)
+            ->where('slug', $slug)
+            ->first();
+
+        if(!$theme_location)
+        {
+            $data = [
+                'vh_theme_id'  => $theme->id,
+                'type'  => $type,
+                'name'  => Str::title($slug),
+                'slug'  => $slug,
+                'excerpt'  => Str::title($slug).' of every page',
+            ];
+
+            DB::table('vh_theme_locations')->insert($data);
+
+            $theme_location = DB::table('vh_theme_locations')
+                ->where('vh_theme_id', $theme->id)
+                ->where('type', $type)
+                ->where('slug', $slug)
+                ->first();
+        }
+
+        return $theme_location;
+    }
     //-------------------------------------------------------
     public static function storeSeeds($theme_slug,
         $table, $list, $primary_key='slug',
@@ -587,6 +618,131 @@ class CmsSeeder{
             $response['message'] = $message;
         }
         return $response;
+
+
+    }
+
+
+
+    //-------------------------------------------------------
+    public static function getMenu($theme_location, $menu_slug)
+    {
+        $menu = DB::table('vh_cms_menus')
+            ->where('vh_theme_location_id', $theme_location->id)
+            ->where('slug', $menu_slug)
+            ->first();
+
+        if(!$menu)
+        {
+            $data = [
+                'vh_theme_location_id'  => $theme_location->id,
+                'name'  => Str::title($menu_slug),
+                'slug'  => $menu_slug,
+            ];
+
+            DB::table('vh_cms_menus')->insert($data);
+
+            $menu = DB::table('vh_cms_menus')
+                ->where('vh_theme_location_id', $theme_location->id)
+                ->where('slug', $menu_slug)
+                ->first();
+        }
+
+        return $menu;
+    }
+
+    //-------------------------------------------------------
+    public static function menus($theme_slug, $list)
+    {
+
+        $theme = self::getTheme($theme_slug);
+
+        if(is_array($theme)
+            && isset($theme['status'])
+            && $theme['status'] == 'failed'
+        )
+        {
+            return $theme;
+        }
+
+        $theme_location = self::getThemeLocation($theme, 'menu', 'top');
+
+        $sort = 0;
+        $parent_sort = 0;
+        $parent_slug = '';
+
+        foreach ($list as $item){
+
+            if(!isset($item['slug']) || !$item['slug']){
+                $item['slug'] = Str::slug($item['name']);
+            }
+
+            $menu = self::getMenu($theme_location, $item['menu_slug']);
+
+            $item['vh_menu_id'] = $menu->id;
+
+            if($item['type'] = 'content'){
+                $content = DB::table('vh_cms_contents')
+                    ->where('slug', $item['slug'])
+                    ->where('vh_theme_id', $theme->id)
+                    ->first();
+
+                $item['vh_content_id'] = $content->id;
+
+                $exist = DB::table('vh_cms_menu_items')
+                    ->where('slug', $item['slug'])
+                    ->where('vh_menu_id', $menu->id)
+                    ->where('vh_content_id', $content->id)
+                    ->first();
+            }else{
+                $exist = DB::table('vh_cms_menu_items')
+                    ->where('slug', $item['slug'])
+                    ->where('vh_menu_id', $menu->id)
+                    ->first();
+            }
+
+            if($item['parent']){
+                $parent_menu = DB::table('vh_cms_menu_items')
+                    ->where('slug', $item['parent'])
+                    ->where('vh_menu_id', $menu->id)
+                    ->first();
+
+                if(!$parent_menu){
+                    continue;
+                }
+
+                $item['sort'] = $parent_sort;
+
+                if($item['parent'] != $parent_slug){
+                    $parent_sort = 0;
+                    $item['sort'] = $parent_sort;
+                }
+
+                $parent_sort++;
+
+                $item['parent_id'] = $parent_menu->id;
+
+            }else{
+                $item['sort'] = $sort;
+                $sort++;
+            }
+
+            unset($item['parent']);
+            unset($item['menu_slug']);
+
+
+            if(!$exist)
+            {
+                DB::table('vh_cms_menu_items')->insert($item);
+            } else{
+                DB::table('vh_cms_content_types')
+                    ->where('slug', $item['slug'])
+                    ->where('vh_menu_id', $menu->id)
+                    ->update($item);
+            }
+
+
+        }
 
 
     }

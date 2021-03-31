@@ -5,6 +5,7 @@ namespace VaahCms\Modules\Cms\Database\Seeds;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use VaahCms\Modules\Cms\Libraries\CmsSeeder;
 
 class DatabaseTableSeeder extends Seeder
 {
@@ -16,6 +17,7 @@ class DatabaseTableSeeder extends Seeder
     public function run()
     {
         $this->seedFields();
+        $this->seedMenus();
     }
 
     //---------------------------------------------------------------
@@ -87,6 +89,13 @@ class DatabaseTableSeeder extends Seeder
     {
         $list = $this->getListFromJson("fields.json");
         $this->storeSeedsWithUuid('vh_cms_field_types', $list);
+    }
+    //---------------------------------------------------------------
+    public function seedMenus()
+    {
+        $list = $this->getListFromJson("menus.json");
+
+        CmsSeeder::menus('jalapeno', $list);
     }
     //---------------------------------------------------------------
     //---------------------------------------------------------------

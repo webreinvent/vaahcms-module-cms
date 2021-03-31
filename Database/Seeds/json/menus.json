@@ -1,0 +1,72 @@
+[
+    {
+        "name": "Home",
+        "type": "content",
+        "parent": null,
+        "menu_slug": "top-menu",
+        "is_home": true
+    },
+    {
+        "name": "Solutions",
+        "type": "content",
+        "parent": null,
+        "menu_slug": "top-menu",
+        "is_home": false
+    },
+    {
+        "name": "Software",
+        "type": "content",
+        "parent": "solutions",
+        "menu_slug": "top-menu",
+        "is_home": false
+    },
+    {
+        "name": "Coaching",
+        "type": "content",
+        "parent": "solutions",
+        "menu_slug": "top-menu",
+        "is_home": false
+    },
+    {
+        "name": "Consulting",
+        "type": "content",
+        "parent": "solutions",
+        "menu_slug": "top-menu",
+        "is_home": false
+    },
+    {
+        "name": "Training",
+        "type": "content",
+        "parent": "solutions",
+        "menu_slug": "top-menu",
+        "is_home": false
+    },
+    {
+        "name": "Resources",
+        "type": "content",
+        "parent": null,
+        "menu_slug": "top-menu",
+        "is_home": false
+    },
+    {
+        "name": "Events",
+        "type": "content",
+        "parent": "resources",
+        "menu_slug": "top-menu",
+        "is_home": false
+    },
+    {
+        "name": "Insights",
+        "type": "content",
+        "parent": "resources",
+        "menu_slug": "top-menu",
+        "is_home": false
+    },
+    {
+        "name": "About us",
+        "type": "content",
+        "parent": null,
+        "menu_slug": "top-menu",
+        "is_home": false
+    }
+]
