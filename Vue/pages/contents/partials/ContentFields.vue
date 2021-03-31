@@ -46,6 +46,7 @@
                                             <ContentFieldAll :field_type="field.type"
                                                              :field_slug="field.type.slug"
                                                              :label="field.name"
+                                                             :meta="field.meta"
                                                              :placeholder="field.name"
                                                              :labelPosition="labelPosition"
                                                              v-model="field.content"

@@ -5,6 +5,7 @@ namespace VaahCms\Modules\Cms\Database\Seeds;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use VaahCms\Modules\Cms\Libraries\CmsSeeder;
 
 class DatabaseTableSeeder extends Seeder
 {

@@ -50,6 +50,19 @@
         "excerpt": ""
     },
     {
+        "name": "Select",
+        "excerpt": "",
+        "meta": {
+            "container_tag": "div",
+            "container_attr_class": "select",
+            "is_hidden": false,
+            "is_multiple": false,
+            "option": [
+                "Default"
+            ]
+        }
+    },
+    {
         "name": "Image",
         "excerpt": "",
         "meta": {
