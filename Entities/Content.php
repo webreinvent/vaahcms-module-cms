@@ -327,7 +327,8 @@ class Content extends Model {
                 $list->where(function ($q) use ($item){
                     $q->where('name', 'LIKE', '%'.$item.'%')
                         ->orWhere('id', 'LIKE', $item.'%')
-                        ->orWhere('slug', 'LIKE', '%'.$item.'%');
+                        ->orWhere('slug', 'LIKE', '%'.$item.'%')
+                        ->orWhere('permalink', 'LIKE', '%'.$item.'%');
                 });
             }
         }
