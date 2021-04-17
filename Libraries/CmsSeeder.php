@@ -313,9 +313,20 @@ class CmsSeeder{
             $page->fill($fillable);
             $page->save();
 
+            $json_content = array();
+            $json_template = array();
 
-            $content_groups = self::fillFields($content_type['groups']);
-            $template_groups = self::fillFields($template['groups']);
+            if(isset($item['content'])){
+                $json_content = $item['content'];
+            }
+
+            if(isset($item['template'])){
+                $json_template = $item['template'];
+            }
+
+
+            $content_groups = self::fillFields($content_type['groups'],$json_content);
+            $template_groups = self::fillFields($template['groups'],$json_template);
 
             Content::storeFormGroups($page, $content_groups);
             Content::storeFormGroups($page, $template_groups);
@@ -326,7 +337,7 @@ class CmsSeeder{
     //-------------------------------------------------------
 
     //-------------------------------------------------------
-    public static function fillFields($groups)
+    public static function fillFields($groups, $json_data = [])
     {
 
         $faker = \Faker\Factory::create();
@@ -347,8 +358,12 @@ class CmsSeeder{
             foreach ($group['fields'] as $key => $field)
             {
 
+                if(isset($json_data[$group['slug']]) && $json_data[$group['slug']]
+                    && isset($json_data[$group['slug']][$field['slug']])){
 
-                if(
+                        $field['content'] = $json_data[$group['slug']][$field['slug']];
+
+                } elseif(
                     isset($field['meta'])
                     && is_object($field['meta'])
                     && isset($field['meta']->default)
