@@ -287,15 +287,25 @@ class CmsSeeder{
                 $item['slug'] = Str::slug($item['name']);
             }
 
-            $page = Content::where('slug', $item['slug'])
+
+            $content = Content::where('slug', $item['slug'])
                 ->where('vh_cms_content_type_id', $content_type['id'])
                 ->where('vh_theme_id', $theme->id)
                 ->where('vh_theme_template_id', $template['id'])
                 ->first();
 
-            if(!$page)
-            {
-                $page = new Content();
+            $is_permalink_exist = Content::where('permalink', $item['permalink']);
+
+            if(!$content){
+                $content = new Content();
+            }else{
+                $is_permalink_exist->where('id','!=', $content->id);
+            }
+
+            $is_permalink_exist = $is_permalink_exist->first();
+
+            if($is_permalink_exist){
+                $item['permalink'] = Str::random(10).'-'.$item['permalink'];
             }
 
             $fillable = [
@@ -310,8 +320,8 @@ class CmsSeeder{
             ];
 
 
-            $page->fill($fillable);
-            $page->save();
+            $content->fill($fillable);
+            $content->save();
 
             $json_content = array();
             $json_template = array();
@@ -328,8 +338,8 @@ class CmsSeeder{
             $content_groups = self::fillFields($content_type['groups'],$json_content);
             $template_groups = self::fillFields($template['groups'],$json_template);
 
-            Content::storeFormGroups($page, $content_groups);
-            Content::storeFormGroups($page, $template_groups);
+            Content::storeFormGroups($content, $content_groups);
+            Content::storeFormGroups($content, $template_groups);
 
         }
 
