@@ -176,7 +176,7 @@ class Content extends Model {
             'author', 'id'
         )->select(
             'id', 'uuid', 'first_name', 'last_name', 'email',
-            'username', 'display_name', 'title', 'bio', 'website'
+            'username', 'display_name', 'title', 'bio', 'website','meta','avatar_url'
         );
     }
     //-------------------------------------------------

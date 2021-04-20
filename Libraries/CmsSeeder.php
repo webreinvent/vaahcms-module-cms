@@ -5,6 +5,7 @@ use Illuminate\Support\Str;
 use VaahCms\Modules\Cms\Entities\Content;
 use VaahCms\Modules\Cms\Entities\ContentType;
 use WebReinvent\VaahCms\Entities\ThemeTemplate;
+use WebReinvent\VaahCms\Entities\User;
 
 class CmsSeeder{
 
@@ -308,6 +309,18 @@ class CmsSeeder{
                 $item['permalink'] = Str::random(10).'-'.$item['permalink'];
             }
 
+            $author_id = null;
+
+            if(isset($item['author']) && $item['author']){
+
+                $user = User::where('email',$item['author'])->first();
+
+                if($user){
+                    $author_id = $user->id;
+                }
+
+            }
+
             $fillable = [
                 'vh_cms_content_type_id' => $content_type['id'],
                 'vh_theme_id' => $theme->id,
@@ -315,6 +328,7 @@ class CmsSeeder{
                 'name' => $item['name'],
                 'slug' => $item['slug'],
                 'permalink' => $item['permalink'],
+                'author' => $author_id,
                 'status' => 'published',
                 'is_published_at' => \Carbon::now(),
             ];
