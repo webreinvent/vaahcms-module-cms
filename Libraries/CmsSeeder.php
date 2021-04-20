@@ -95,6 +95,7 @@ class CmsSeeder{
             $record = DB::table($table)
                 ->where('vh_theme_id', $theme->id)
                 ->where($primary_key, $item[$primary_key])
+                ->where('type', $item['type'])
                 ->first();
 
 
@@ -102,7 +103,9 @@ class CmsSeeder{
             {
                 DB::table($table)->insert($item);
             } else{
-                DB::table($table)->where($primary_key, $item[$primary_key])
+                DB::table($table)->where('vh_theme_id', $theme->id)
+                    ->where($primary_key, $item[$primary_key])
+                    ->where('type', $item['type'])
                     ->update($item);
             }
         }
