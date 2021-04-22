@@ -176,7 +176,7 @@ class Content extends Model {
             'author', 'id'
         )->select(
             'id', 'uuid', 'first_name', 'last_name', 'email',
-            'username', 'display_name', 'title', 'bio', 'website'
+            'username', 'display_name', 'title', 'bio', 'website','meta','avatar_url'
         );
     }
     //-------------------------------------------------
@@ -327,7 +327,8 @@ class Content extends Model {
                 $list->where(function ($q) use ($item){
                     $q->where('name', 'LIKE', '%'.$item.'%')
                         ->orWhere('id', 'LIKE', $item.'%')
-                        ->orWhere('slug', 'LIKE', '%'.$item.'%');
+                        ->orWhere('slug', 'LIKE', '%'.$item.'%')
+                        ->orWhere('permalink', 'LIKE', '%'.$item.'%');
                 });
             }
         }

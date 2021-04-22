@@ -5,6 +5,7 @@ use Illuminate\Support\Str;
 use VaahCms\Modules\Cms\Entities\Content;
 use VaahCms\Modules\Cms\Entities\ContentType;
 use WebReinvent\VaahCms\Entities\ThemeTemplate;
+use WebReinvent\VaahCms\Entities\User;
 
 class CmsSeeder{
 
@@ -94,6 +95,7 @@ class CmsSeeder{
             $record = DB::table($table)
                 ->where('vh_theme_id', $theme->id)
                 ->where($primary_key, $item[$primary_key])
+                ->where('type', $item['type'])
                 ->first();
 
 
@@ -101,7 +103,9 @@ class CmsSeeder{
             {
                 DB::table($table)->insert($item);
             } else{
-                DB::table($table)->where($primary_key, $item[$primary_key])
+                DB::table($table)->where('vh_theme_id', $theme->id)
+                    ->where($primary_key, $item[$primary_key])
+                    ->where('type', $item['type'])
                     ->update($item);
             }
         }
@@ -287,15 +291,37 @@ class CmsSeeder{
                 $item['slug'] = Str::slug($item['name']);
             }
 
-            $page = Content::where('slug', $item['slug'])
+
+            $content = Content::where('slug', $item['slug'])
                 ->where('vh_cms_content_type_id', $content_type['id'])
                 ->where('vh_theme_id', $theme->id)
                 ->where('vh_theme_template_id', $template['id'])
                 ->first();
 
-            if(!$page)
-            {
-                $page = new Content();
+            $is_permalink_exist = Content::where('permalink', $item['permalink']);
+
+            if(!$content){
+                $content = new Content();
+            }else{
+                $is_permalink_exist->where('id','!=', $content->id);
+            }
+
+            $is_permalink_exist = $is_permalink_exist->first();
+
+            if($is_permalink_exist){
+                $item['permalink'] = Str::random(10).'-'.$item['permalink'];
+            }
+
+            $author_id = null;
+
+            if(isset($item['author']) && $item['author']){
+
+                $user = User::where('email',$item['author'])->first();
+
+                if($user){
+                    $author_id = $user->id;
+                }
+
             }
 
             $fillable = [
@@ -305,20 +331,32 @@ class CmsSeeder{
                 'name' => $item['name'],
                 'slug' => $item['slug'],
                 'permalink' => $item['permalink'],
+                'author' => $author_id,
                 'status' => 'published',
                 'is_published_at' => \Carbon::now(),
             ];
 
 
-            $page->fill($fillable);
-            $page->save();
+            $content->fill($fillable);
+            $content->save();
+
+            $json_content = array();
+            $json_template = array();
+
+            if(isset($item['content'])){
+                $json_content = $item['content'];
+            }
+
+            if(isset($item['template'])){
+                $json_template = $item['template'];
+            }
 
 
-            $content_groups = self::fillFields($content_type['groups']);
-            $template_groups = self::fillFields($template['groups']);
+            $content_groups = self::fillFields($content_type['groups'],$json_content);
+            $template_groups = self::fillFields($template['groups'],$json_template);
 
-            Content::storeFormGroups($page, $content_groups);
-            Content::storeFormGroups($page, $template_groups);
+            Content::storeFormGroups($content, $content_groups);
+            Content::storeFormGroups($content, $template_groups);
 
         }
 
@@ -326,7 +364,7 @@ class CmsSeeder{
     //-------------------------------------------------------
 
     //-------------------------------------------------------
-    public static function fillFields($groups)
+    public static function fillFields($groups, $json_data = [])
     {
 
         $faker = \Faker\Factory::create();
@@ -347,8 +385,12 @@ class CmsSeeder{
             foreach ($group['fields'] as $key => $field)
             {
 
+                if(isset($json_data[$group['slug']]) && $json_data[$group['slug']]
+                    && isset($json_data[$group['slug']][$field['slug']])){
 
-                if(
+                        $field['content'] = $json_data[$group['slug']][$field['slug']];
+
+                } elseif(
                     isset($field['meta'])
                     && is_object($field['meta'])
                     && isset($field['meta']->default)

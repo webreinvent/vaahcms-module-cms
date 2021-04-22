@@ -17,26 +17,32 @@
                     {{ props.row.name }}
                 </b-table-column>
 
-                <b-table-column v-slot="props" width="150px" field="status" label="Status">
+                <b-table-column v-slot="props" width="170" field="permalink" label="Permalink">
+                    <b-tooltip :label="props.row.permalink" type="is-dark">
+                        {{$vaah.limitString(props.row.permalink, 22)}}
+                    </b-tooltip>
+                </b-table-column>
+
+                <b-table-column v-slot="props" width="150" field="status" label="Status">
 
 
                     <div v-if="props.row.deleted_at">
 
-                    <b-dropdown aria-role="list" disabled size="is-small" v-model="props.row.status"
+                        <b-dropdown aria-role="list" disabled size="is-small" v-model="props.row.status"
                                     @input="changeStatus(props.row.id,props.row.status)">
 
                             <p v-if="props.row.status === 'published'"
-                                class="tag is-success"
-                                slot="trigger"
-                                role="button" slot-scope="{ active }">
+                               class="tag is-success"
+                               slot="trigger"
+                               role="button" slot-scope="{ active }">
                                 <span>{{ props.row.status }}</span>
 
                             </p>
 
                             <p v-else
-                                class="tag is-dark"
-                                slot="trigger"
-                                role="button" slot-scope="{ active }">
+                               class="tag is-dark"
+                               slot="trigger"
+                               role="button" slot-scope="{ active }">
                                 <span>{{ props.row.status }}</span>
 
                             </p>
