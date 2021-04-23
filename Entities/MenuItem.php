@@ -245,7 +245,7 @@ class MenuItem extends Model
         }]);
         $menu_item = $menu_item->first();
 
-        if(!$menu_item)
+        if(!$menu_item || !$menu_item->content)
         {
             return false;
         }

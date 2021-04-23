@@ -336,13 +336,15 @@ class ContentType extends Model {
     public static function syncWithFormGroups(ContentType $content_type, $groups_array)
     {
 
-        $stored_groups = $content_type->groups()->get()->pluck('slug')->toArray();
+        $stored_groups = $content_type->groups()->get()->pluck('slug','id')->toArray();
 
         $input_groups = collect($groups_array)->pluck('slug')->toArray();
         $groups_to_delete = array_diff($stored_groups, $input_groups);
 
         if(count($groups_to_delete) > 0)
         {
+            $groups_to_delete = array_flip($groups_to_delete);
+
             FormGroup::deleteItems($groups_to_delete);
         }
 
