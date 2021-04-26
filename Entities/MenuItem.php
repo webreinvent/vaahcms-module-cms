@@ -67,6 +67,14 @@ class MenuItem extends Model
     }
     //-------------------------------------------------
     //-------------------------------------------------
+    public function getAttrTargetBlankAttribute($value)
+    {
+        if($value === 1)
+        {
+            return true;
+        }
+        return false;
+    }
     //-------------------------------------------------
     public static function getNewDepth($menu_id)
     {
