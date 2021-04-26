@@ -35,7 +35,7 @@ class CmsSeeder{
     }
 
     //-------------------------------------------------------
-    public static function getThemeLocation($theme, $type, $slug)
+    public static function getThemeLocation($theme, $type, $slug = 'top')
     {
         $theme_location = DB::table('vh_theme_locations')
             ->where('vh_theme_id', $theme->id)
@@ -707,7 +707,7 @@ class CmsSeeder{
             return $theme;
         }
 
-        $theme_location = self::getThemeLocation($theme, 'menu', 'top');
+
 
         $list = self::getJsonData($file_path);
 
@@ -721,6 +721,8 @@ class CmsSeeder{
             if(!isset($item['slug']) || !$item['slug']){
                 $item['slug'] = Str::slug($item['name']);
             }
+
+            $theme_location = self::getThemeLocation($theme, 'menu', $item['theme_location']);
 
             $menu = self::getMenu($theme_location, $item['menu_slug']);
 
@@ -783,6 +785,7 @@ class CmsSeeder{
 
             unset($item['parent']);
             unset($item['menu_slug']);
+            unset($item['theme_location']);
 
 
             if(!$exist)
