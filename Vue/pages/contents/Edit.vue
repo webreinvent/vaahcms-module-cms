@@ -207,7 +207,7 @@
                                  :label-position="labelPosition">
 
 
-                            <b-select v-if="page" v-model="item.vh_theme_template_id" @input="setActiveTemplate">
+                            <b-select v-if="page && page.active_theme" v-model="item.vh_theme_template_id" @input="setActiveTemplate">
                                 <option value="">Select a Template</option>
                                 <option v-if="page.active_theme.templates"
                                         v-for="(template, index) in page.active_theme.templates"
