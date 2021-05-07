@@ -26,24 +26,23 @@
                                     </b-button>
                                 </p>
 
-                                <p  class="control">
-                                    <b-tooltip label="Settings" type="is-dark">
+                                <b-tooltip label="Settings" type="is-dark">
+                                    <p  class="control">
                                         <b-button type="is-light"
                                                   @click="showMenuSettings"
                                                   icon-left="cog">
                                         </b-button>
-                                    </b-tooltip>
+                                    </p>
+                                </b-tooltip>
 
-                                </p>
-
-                                <p class="control">
-                                    <b-tooltip label="Delete" type="is-dark">
+                                <b-tooltip label="Delete" type="is-dark">
+                                    <p class="control">
                                         <b-button type="is-light"
                                                   @click="deleteItem"
                                                   icon-left="trash">
                                         </b-button>
-                                    </b-tooltip>
-                                </p>
+                                    </p>
+                                </b-tooltip>
 
                             </div>
                         </div>

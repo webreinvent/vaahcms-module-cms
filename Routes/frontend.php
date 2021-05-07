@@ -39,3 +39,6 @@ Route::group(
 
         //------------------------------------------------
     });*/
+
+
+include("frontend/routes-cms.php");

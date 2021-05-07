@@ -43,5 +43,6 @@ Route::get( '/backend/json/getUserById/{id}', 'Backend\ContentsController@getUse
     ->name( 'vh.backend.cms.getUserById' );
 
 include('backend/content-types.php');
+include('backend/blocks.php');
 include('backend/contents.php');
 include('backend/menus.php');

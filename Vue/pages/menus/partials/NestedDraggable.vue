@@ -15,8 +15,8 @@
 
                     <b-input v-model="el.name" expanded placeholder="Menu Name"></b-input>
 
-                    <p  class="control">
-                        <b-tooltip label="Set as Home Page" type="is-dark">
+                    <b-tooltip label="Set as Home Page" type="is-dark">
+                        <p  class="control">
                             <b-button v-if="el.is_home" type="is-success"
                                       @click="setAsHomePage(el)"
                                       icon-left="house-user">
@@ -26,26 +26,26 @@
                                       @click="setAsHomePage(el)"
                                       icon-left="house-user">
                             </b-button>
-                        </b-tooltip>
-                    </p>
+                        </p>
+                    </b-tooltip>
 
-                    <p  class="control">
-                        <b-tooltip label="Settings" type="is-dark">
+                    <b-tooltip label="Settings" type="is-dark">
+                        <p  class="control">
                             <b-button type="is-light"
                                       @click="toggleMenuItemSettings($event)"
                                       icon-left="cog">
                             </b-button>
-                        </b-tooltip>
-                    </p>
+                        </p>
+                    </b-tooltip>
 
-                    <p class="control">
-                        <b-tooltip label="Delete" type="is-dark">
+                    <b-tooltip label="Delete" type="is-dark">
+                        <p class="control">
                             <b-button type="is-light"
                                       @click="removeMenuItem(el)"
                                       icon-left="trash">
                             </b-button>
-                        </b-tooltip>
-                    </p>
+                        </p>
+                    </b-tooltip>
 
                 </b-field>
 

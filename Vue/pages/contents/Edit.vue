@@ -1,8 +1,12 @@
 <script src="./EditJs.js"></script>
 <template>
-    <div class="column" v-if="assets && item && page">
+    <div class="column" v-if="assets">
 
-        <div class="columns">
+        <div class="card" v-if="is_content_loading">
+            <Loader/>
+        </div>
+
+        <div class="columns" v-else-if="item">
 
             <div class="column">
 
@@ -75,7 +79,7 @@
             </div>
 
 
-            <div class="column is-4">
+            <div class="column is-3">
 
                 <div class="card">
 
@@ -183,15 +187,17 @@
                                         :value="theme.id"
                                 >{{theme.name}}</option>
                             </b-select>
+                            <b-tooltip label="Sync Templates" type="is-dark">
                             <p class="control">
-                                <b-tooltip label="Sync Templates" type="is-dark">
+
                                     <b-button type="is-light"
                                               @click="syncSeeds"
                                               :loading="theme_sync_loader"
                                               icon-left="sync-alt">
                                     </b-button>
-                                </b-tooltip>
+
                             </p>
+                            </b-tooltip>
 
                         </b-field>
 
@@ -201,7 +207,7 @@
                                  :label-position="labelPosition">
 
 
-                            <b-select v-model="item.vh_theme_template_id" @input="setActiveTemplate">
+                            <b-select v-if="page && page.active_theme" v-model="item.vh_theme_template_id" @input="setActiveTemplate">
                                 <option value="">Select a Template</option>
                                 <option v-if="page.active_theme.templates"
                                         v-for="(template, index) in page.active_theme.templates"

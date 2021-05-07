@@ -1,19 +1,17 @@
 <script src="./BackendJs.js"></script>
 
 <template>
-    <div class="columns">
-        <div class="column is-2">
+    <div class="columns is-multiline">
+        <div class="column is-12">
             <AsideMenu/>
         </div>
 
-        <div class="column is-10">
-            <div class="container">
-
-                <router-view></router-view>
-
-            </div>
+        <div class="column is-12">
+            <router-view></router-view>
         </div>
     </div>
+
+
 
 </template>
 

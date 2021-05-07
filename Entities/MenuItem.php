@@ -23,6 +23,14 @@ class MenuItem extends Model
     ];
     //-------------------------------------------------
     protected $dateFormat = 'Y-m-d H:i:s';
+
+    //-------------------------------------------------
+
+    protected $casts = [
+        "created_at" => 'date:Y-m-d H:i:s',
+        "updated_at" => 'date:Y-m-d H:i:s',
+        "deleted_at" => 'date:Y-m-d H:i:s'
+    ];
     //-------------------------------------------------
 
     protected $fillable = [
@@ -59,6 +67,14 @@ class MenuItem extends Model
     }
     //-------------------------------------------------
     //-------------------------------------------------
+    public function getAttrTargetBlankAttribute($value)
+    {
+        if($value === 1)
+        {
+            return true;
+        }
+        return false;
+    }
     //-------------------------------------------------
     public static function getNewDepth($menu_id)
     {
@@ -187,6 +203,11 @@ class MenuItem extends Model
                     $stored_item = new MenuItem();
                 }
 
+                if(isset($item['content']) && isset($item['content']['id'])
+                    && $item['content']['id']){
+                    $item['vh_content_id'] = $item['content']['id'];
+                }
+
                 $stored_item->fill($item);
                 $stored_item->save();
 
@@ -232,7 +253,7 @@ class MenuItem extends Model
         }]);
         $menu_item = $menu_item->first();
 
-        if(!$menu_item)
+        if(!$menu_item || !$menu_item->content)
         {
             return false;
         }

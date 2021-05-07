@@ -48,6 +48,15 @@ class Content extends Model {
     protected $appends  = [
         'link_prefix', 'link'
     ];
+
+    //-------------------------------------------------
+
+    protected $casts = [
+        "is_published_at" => 'date:Y-m-d H:i:s',
+        "created_at" => 'date:Y-m-d H:i:s',
+        "updated_at" => 'date:Y-m-d H:i:s',
+        "deleted_at" => 'date:Y-m-d H:i:s'
+    ];
     //-------------------------------------------------
 
     //-------------------------------------------------
@@ -167,7 +176,7 @@ class Content extends Model {
             'author', 'id'
         )->select(
             'id', 'uuid', 'first_name', 'last_name', 'email',
-            'username', 'display_name', 'title', 'bio', 'website',
+            'username', 'display_name', 'title', 'bio', 'website','meta','avatar_url'
         );
     }
     //-------------------------------------------------
@@ -318,7 +327,8 @@ class Content extends Model {
                 $list->where(function ($q) use ($item){
                     $q->where('name', 'LIKE', '%'.$item.'%')
                         ->orWhere('id', 'LIKE', $item.'%')
-                        ->orWhere('slug', 'LIKE', '%'.$item.'%');
+                        ->orWhere('slug', 'LIKE', '%'.$item.'%')
+                        ->orWhere('permalink', 'LIKE', '%'.$item.'%');
                 });
             }
         }
@@ -379,10 +389,14 @@ class Content extends Model {
     {
 
         $item = static::where('id', $id)
-            ->with(['authorUser', 'createdByUser', 'updatedByUser', 'deletedByUser'])
-            ->with(['fields' => function($f){
-                $f->with(['group', 'field']);
-            }])
+            ->with([
+                'contentType', 'theme', 'template',
+                'authorUser', 'createdByUser', 'updatedByUser',
+                'deletedByUser',
+                'fields' => function($f){
+                    $f->with(['group', 'field']);
+                }
+            ])
             ->withTrashed()
             ->first();
 
@@ -390,9 +404,11 @@ class Content extends Model {
         $template_form_groups = static::getFormGroups($item, 'template');
 
         $response['status'] = 'success';
+
+        $item->content_form_groups = $content_form_groups;
+        $item->template_form_groups = $template_form_groups;
+
         $response['data'] = $item;
-        $response['data']['content_form_groups'] = $content_form_groups;
-        $response['data']['template_form_groups'] = $template_form_groups;
 
         return $response;
 
@@ -427,18 +443,23 @@ class Content extends Model {
                 $groups[$i]['fields'][$y]['content'] = null;
                 $groups[$i]['fields'][$y]['content_meta'] = null;
 
-
-
                 $field_content = ContentFormField::where('vh_cms_content_id', $content->id);
                 $field_content->where('vh_cms_form_group_id', $group->id);
                 $field_content->where('vh_cms_form_field_id', $field->id);
                 $field_content = $field_content->first();
 
-
                 if($field_content)
                 {
                     $groups[$i]['fields'][$y]['vh_cms_form_field_id'] = $field_content->id;
-                    $groups[$i]['fields'][$y]['content'] = $field_content->content;
+
+                    if(is_array($field_content->content) || is_object($field_content->content)){
+                        $groups[$i]['fields'][$y]['content'] = json_decode(
+                            vh_translate_dynamic_strings(json_encode($field_content->content))
+                        );
+                    }else{
+                        $groups[$i]['fields'][$y]['content'] = vh_translate_dynamic_strings($field_content->content);
+                    }
+
                     $groups[$i]['fields'][$y]['content_meta'] = $field_content->meta;
                 }
 
@@ -494,6 +515,7 @@ class Content extends Model {
     //-------------------------------------------------
     public static function storeFormGroups(Content $content, $groups)
     {
+
         $i = 0;
         foreach ($groups as $group)
         {
@@ -503,11 +525,22 @@ class Content extends Model {
             $y = 0;
             foreach ($group['fields'] as $field)
             {
+
                 $stored_field = null;
-                if(isset($field['vh_cms_form_field_id']) && !empty($field['vh_cms_form_field_id']))
+                if(
+                    isset($field['vh_cms_form_group_id'])
+                    && isset($field['id'])
+                )
                 {
-                    $stored_field = ContentFormField::find($field['vh_cms_form_field_id']);
+
+                    $stored_field = ContentFormField::where('vh_cms_form_group_id', $field['vh_cms_form_group_id'])
+                    ->where('vh_cms_form_field_id', $field['id'])
+                    ->where('vh_cms_content_id', $content->id)
+                    ->first();
+
                 }
+
+
 
                 if(!$stored_field)
                 {
@@ -517,9 +550,18 @@ class Content extends Model {
                     $stored_field->vh_cms_form_field_id = $field['id'];
                 }
 
-                if(is_array($field['content']) || is_object($field['content']))
-                {
-                    $field['content'] = json_encode($field['content']);
+                if(is_array($field['content']) || is_object($field['content'])){
+                    $field['content'] = json_decode(
+                        vh_translate_dynamic_strings(
+                            json_encode($field['content']),
+                            ['has_replace_string' => true]
+                        )
+                    );
+                }else{
+                    $field['content'] = vh_translate_dynamic_strings(
+                        $field['content'],
+                        ['has_replace_string' => true]
+                    );
                 }
 
                 if($field['type']['slug'] == 'user' && $field['content']){
@@ -795,6 +837,7 @@ class Content extends Model {
 
     }
     //-------------------------------------------------
+
     //-------------------------------------------------
     //-------------------------------------------------
     //-------------------------------------------------

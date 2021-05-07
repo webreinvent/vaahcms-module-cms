@@ -1,6 +1,18 @@
 <?php
 
 
+Route::group(
+    [
+        'prefix' => 'backend/cms/media',
+        'namespace'  => 'Backend',
+        'middleware' => ['web', 'has.backend.access'],
+    ],
+    function () {
+        //---------------------------------------------------------
+        Route::post('/upload', 'MediaController@upload')
+            ->name('backend.cms.media.upload');
+        //---------------------------------------------------------
+    });
 
 Route::group(
     [

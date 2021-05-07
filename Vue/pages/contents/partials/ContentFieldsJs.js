@@ -50,9 +50,20 @@ export default {
             if(group.slug != 'default')
             {
                 code = "{!! get_field($data, '"+field.slug+"', '"+group.slug+"') !!}";
+
+                if(field.type.slug == 'image')
+                {
+                    code = "<img src='{{get_field($data, '"+field.slug+"', '"+group.slug+"')'/>";
+                }
+
             } else
             {
                 code = "{!! get_field($data, '"+field.slug+"') !!}";
+
+                if(field.type.slug == 'image')
+                {
+                    code = "<img src='{{get_field($data, '"+field.slug+"')}}'/>";
+                }
             }
 
             copy(code);

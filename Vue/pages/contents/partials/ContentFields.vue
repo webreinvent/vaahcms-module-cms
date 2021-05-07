@@ -28,22 +28,25 @@
                         <div class="block">
 
                             <div v-if="groups.length > 0"
-                                        v-for="(group,index) in groups"
-                                        :key="'content-fields-group-'+index"
-                                        :aria-id="'content-fields-group-'+index">
+                                 v-for="(group,index) in groups"
+                                 class="has-border-bottom-width-1"
+                                 :key="'content-fields-group-'+index"
+                                 :aria-id="'content-fields-group-'+index">
 
                                 <h4 class="title is-5">{{group.name}}</h4>
 
-                                <div class="block has-margin-top-10 has-padding-bottom-10" v-if="group.fields.length>0"
+                                <div class="block has-margin-top-10 has-padding-bottom-10"
+                                     v-if="group.fields.length>0"
                                          v-for="(field, f_index) in group.fields"
                                          :class="'field-type field-'+field.type.slug"
                                          :key="f_index">
 
-                                    <div class="columns">
+                                    <div class="columns is-gapless">
                                         <div class="column ">
                                             <ContentFieldAll :field_type="field.type"
                                                              :field_slug="field.type.slug"
                                                              :label="field.name"
+                                                             :meta="field.meta"
                                                              :placeholder="field.name"
                                                              :labelPosition="labelPosition"
                                                              v-model="field.content"

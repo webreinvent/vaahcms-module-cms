@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class PublicController extends Controller
 {
@@ -23,7 +24,6 @@ class PublicController extends Controller
 
     public function page(Request $request, $permalink)
     {
-
         $theme_slug = $request->data->theme->slug;
 
         if(!is_null($request->data->template->file_path))
@@ -35,10 +35,11 @@ class PublicController extends Controller
 
         $view = $theme_slug.'::'.$file_path;
 
-        if (view()->exists($view)) {
+        if ( view()->exists($view)
+            && ( Auth::check() || $request->data->status === 'published') ) {
             return view($view);
         } else {
-            throw new \Exception($view." not found.");
+            return abort(404);
         }
 
     }
@@ -61,7 +62,7 @@ class PublicController extends Controller
         if (view()->exists($view)) {
             return view($view);
         } else {
-            throw new \Exception($view." not found.");
+            return abort(404);
         }
 
     }

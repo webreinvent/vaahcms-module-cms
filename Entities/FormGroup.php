@@ -41,6 +41,14 @@ class FormGroup extends Model {
     //-------------------------------------------------
     protected $appends  = [
     ];
+
+    //-------------------------------------------------
+
+    protected $casts = [
+        "created_at" => 'date:Y-m-d H:i:s',
+        "updated_at" => 'date:Y-m-d H:i:s',
+        "deleted_at" => 'date:Y-m-d H:i:s'
+    ];
     //-------------------------------------------------
     //-------------------------------------------------
     public function setMetaAttribute($value)
@@ -138,29 +146,52 @@ class FormGroup extends Model {
     public static function syncWithFormFields(FormGroup $group, $fields_array)
     {
 
+        if(count($fields_array) < 1)
+        {
+            return false;
+        }
+
+
         //delete form group fields which are just removed
         $stored_group_fields = FormField::where('vh_cms_form_group_id', $group->id)
             ->get()
-            ->pluck('id')
+            ->pluck('slug')
             ->toArray();
 
-        $input_group_fields = collect($fields_array)->pluck('id')->toArray();
-        $fields_to_delete = array_diff($stored_group_fields, $input_group_fields);
+        $input_group_field_slugs = collect($fields_array)->pluck('slug')->toArray();
+        $fields_to_delete_slugs = array_diff($stored_group_fields, $input_group_field_slugs);
 
-        if(count($fields_to_delete) > 0)
+
+        if(count($fields_to_delete_slugs) > 0)
         {
-            FormField::deleteItems($fields_to_delete);
-        }
+            $fields_to_delete = FormField::where('vh_cms_form_group_id', $group->id)
+                ->whereIn('slug', $fields_to_delete_slugs)
+                ->get()
+                ->pluck('id')
+                ->toArray();
 
+            if(count($fields_to_delete) > 0)
+            {
+                FormField::deleteItems($fields_to_delete);
+            }
+        }
 
         if(count($fields_array) > 0 )
         {
             foreach ($fields_array as $f_index => $field)
             {
-                if(isset($field['id']))
+
+                if(!isset($field['slug']) || !$field['slug']){
+                    $field['slug'] = Str::slug($field['name']);
+                }
+
+
+                $stored_field = FormField::where('vh_cms_form_group_id', $group->id)
+                    ->where('slug', $field['slug'])
+                    ->first();
+
+                if(!$stored_field)
                 {
-                    $stored_field = FormField::find($field['id']);
-                } else{
                     $stored_field = new FormField();
                 }
 

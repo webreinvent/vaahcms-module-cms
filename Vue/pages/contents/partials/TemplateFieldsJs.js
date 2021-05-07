@@ -45,14 +45,20 @@ export default {
         //---------------------------------------------------------------------
         copyCode: function (group, field)
         {
-            let code = "";
-            if(group.slug != 'default')
+            let code = '';
+            if(!group && !group.slug)
             {
-                code = "{!! get_field($data, '"+field.slug+"', '"+group.slug+"', 'template') !!}";
-            } else
-            {
-                code = "{!! get_field($data, '"+field.slug+"', 'default', 'template') !!}";
+                group.slug = 'default';
             }
+
+
+            code = "{!! get_field($data, '"+field.slug+"', '"+group.slug+"', 'template') !!}";
+
+            if(field.type.slug == 'image')
+            {
+                code = "<img src='{{get_field($data, '"+field.slug+"', '"+group.slug+"', 'template')}}'/>";
+            }
+
 
             copy(code);
 
