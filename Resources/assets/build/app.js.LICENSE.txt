@@ -1,5 +1,5 @@
 /*!
-    * tiptap v1.32.0
+    * tiptap v1.32.1
     * (c) 2021 überdosis GbR (limited liability)
     * @license MIT
     */
@@ -11,7 +11,7 @@
     */
 
 /*!
-    * tiptap-extensions v1.35.0
+    * tiptap-extensions v1.35.1
     * (c) 2021 überdosis GbR (limited liability)
     * @license MIT
     */
@@ -28,25 +28,25 @@
  */
 
 /*!
- * FilePond 4.25.2
+ * FilePond 4.27.1
  * Licensed under MIT, https://opensource.org/licenses/MIT/
  * Please visit https://pqina.nl/filepond/ for details.
  */
 
 /*!
- * FilePondPluginFileRename 1.1.6
+ * FilePondPluginFileRename 1.1.8
  * Licensed under MIT, https://opensource.org/licenses/MIT/
  * Please visit https://pqina.nl/filepond/ for details.
  */
 
 /*!
- * FilePondPluginFileValidateSize 2.2.1
+ * FilePondPluginFileValidateSize 2.2.4
  * Licensed under MIT, https://opensource.org/licenses/MIT/
  * Please visit https://pqina.nl/filepond/ for details.
  */
 
 /*!
- * FilePondPluginFileValidateType 1.2.5
+ * FilePondPluginFileValidateType 1.2.6
  * Licensed under MIT, https://opensource.org/licenses/MIT/
  * Please visit https://pqina.nl/filepond/ for details.
  */
@@ -58,19 +58,19 @@
  */
 
 /*!
- * FilePondPluginImageEdit 1.6.2
+ * FilePondPluginImageEdit 1.6.3
  * Licensed under MIT, https://opensource.org/licenses/MIT/
  * Please visit https://pqina.nl/filepond/ for details.
  */
 
 /*!
- * FilePondPluginImagePreview 4.6.5
+ * FilePondPluginImagePreview 4.6.6
  * Licensed under MIT, https://opensource.org/licenses/MIT/
  * Please visit https://pqina.nl/filepond/ for details.
  */
 
 /*!
- * Font Awesome Free 5.15.2 by @fontawesome - https://fontawesome.com
+ * Font Awesome Free 5.15.3 by @fontawesome - https://fontawesome.com
  * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
  */
 
