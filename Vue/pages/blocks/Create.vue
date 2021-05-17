@@ -14,36 +14,11 @@
                             <span>Content</span>
                         </div>
 
-                        <div class="card-header-buttons">
-                            <div class="field has-addons is-pulled-right">
-                                <p  class="control">
-                                    <b-button type="is-light"
-                                              @click="is_textarea_disable = false"
-                                              :disabled="!is_textarea_disable">
-                                        Editor
-                                    </b-button>
-                                </p>
-                                <p  class="control">
-                                    <b-button type="is-light"
-                                              @click="is_textarea_disable = true"
-                                              :disabled="is_textarea_disable">
-                                        Code Editor
-                                    </b-button>
-                                </p>
-                            </div>
-                        </div>
-
                     </div>
 
                     <div class="card-content">
 
-                        <codemirror v-if="is_textarea_disable"
-                                    ref="cmEditor" v-model="new_item.content"
-                                    :options="cm_options"
-                        />
-
-                        <ContentFieldAll v-else
-                                         field_slug="editor"
+                        <ContentFieldAll field_slug="editor"
                                          :labelPosition="labelPosition"
                                          v-model="new_item.content"
                                          @onInput=""
