@@ -38,7 +38,6 @@ export default {
         return {
             namespace: namespace,
             is_content_loading: false,
-            is_textarea_disable: false,
             is_btn_loading: null,
             labelPosition: 'on-border',
             params: {},
@@ -246,28 +245,6 @@ export default {
         resetActiveItem: function () {
             this.update('active_item', null);
             this.$router.push({name:'blocks.list'});
-        },
-        //---------------------------------------------------------------------
-        setDynamicContent: function (value) {
-            let self = this;
-
-            if(value){
-                $.each(self.assets.replace_strings.success, function( index, string ) {
-                    let regex = new RegExp(string.value, "g");
-                    self.item.content = self.item.content.replace(regex, string.name);
-                });
-
-            }else{
-                $.each(self.assets.replace_strings.success, function( index, string ) {
-                    let regex = new RegExp(string.name, "g");
-                    self.item.content = self.item.content.replace(regex, string.value);
-                });
-
-            }
-
-            self.is_textarea_disable = value;
-
-
         },
         //---------------------------------------------------------------------
         copyCode: function (item,has_location = false)
