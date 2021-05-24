@@ -217,6 +217,16 @@ class Content extends Model {
             return $validation;
         }
 
+        $name_exist = static::where('vh_cms_content_type_id',$request->content_type->id)
+            ->where('name',$request['name'])->first();
+
+        if($name_exist)
+        {
+            $response['status'] = 'failed';
+            $response['errors'][] = "This name is already exist.";
+            return $response;
+        }
+
         $inputs = $request->all();
 
         $item = new static();
@@ -483,7 +493,9 @@ class Content extends Model {
             return $validation;
         }
 
-        $name_exist = static::where('id','!=',$request['id'])->where('name',$request['name'])->first();
+        $name_exist = static::where('id','!=',$request['id'])
+            ->where('vh_cms_content_type_id',$request['vh_cms_content_type_id'])
+            ->where('name',$request['name'])->first();
 
         if($name_exist)
         {
