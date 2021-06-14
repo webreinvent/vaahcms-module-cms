@@ -258,8 +258,6 @@ export default {
                 code = "{!! vh_location_blocks('"+location.slug+"') !!}";
             }
 
-            console.log(id,'-->',code);
-
             copy(code);
 
             this.$buefy.toast.open({
