@@ -76,18 +76,18 @@
 
                                 <div class="card-header-buttons">
                                     <b-field>
-                                        <p class="control">
-                                            <b-tooltip label="Copy Slug" type="is-dark">
+                                        <b-tooltip label="Copy Slug" type="is-dark">
+                                            <p class="control">
                                                 <b-button @click="$vaah.copy(group.slug)"
                                                 >#{{group.id}}</b-button>
-                                            </b-tooltip>
-                                        </p>
-                                        <p class="control">
-                                            <b-tooltip label="Delete Group" type="is-dark">
+                                            </p>
+                                        </b-tooltip>
+                                        <b-tooltip label="Delete Group" type="is-dark">
+                                            <p class="control">
                                                 <b-button @click="deleteGroup(group, index)" icon-left="trash">
                                                 </b-button>
-                                            </b-tooltip>
-                                        </p>
+                                            </p>
+                                        </b-tooltip>
 
 
                                     </b-field>
@@ -117,26 +117,26 @@
                                                     </p>
                                                     <b-input v-model="field.name" expanded placeholder="Field Name">
                                                     </b-input>
-                                                    <p class="control">
-                                                        <b-tooltip label="Copy Slug" type="is-dark">
+                                                    <b-tooltip label="Copy Slug" type="is-dark">
+                                                        <p class="control">
                                                             <b-button @click="$vaah.copy(field.slug)"
                                                             >#{{field.id}}</b-button>
-                                                        </b-tooltip>
-                                                    </p>
+                                                        </p>
+                                                    </b-tooltip>
 
-                                                    <p class="control">
-                                                        <b-tooltip label="Field Option" type="is-dark">
+                                                    <b-tooltip label="Field Option" type="is-dark">
+                                                        <p class="control">
                                                             <b-button icon-left="cog"
                                                                       @click="toggleFieldOptions($event)"></b-button>
-                                                        </b-tooltip>
-                                                    </p>
+                                                        </p>
+                                                    </b-tooltip>
 
-                                                    <p class="control">
-                                                        <b-tooltip label="Delete Field" type="is-dark">
+                                                    <b-tooltip label="Delete Field" type="is-dark">
+                                                        <p class="control">
                                                             <b-button @click="deleteGroupField(group, f_index)"
                                                                       icon-left="trash"></b-button>
-                                                        </b-tooltip>
-                                                    </p>
+                                                        </p>
+                                                    </b-tooltip>
 
                                                 </b-field>
                                                 <div class="dropzone-field-options ">
