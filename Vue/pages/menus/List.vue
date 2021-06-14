@@ -44,6 +44,19 @@
                                     :value="location.id"
                             >{{location.name}}</option>
                         </b-select>
+                        <b-tooltip :active="!!page.query_string.vh_theme_location_id"
+                                   label="Copy Code" type="is-dark">
+                            <p class="control">
+                                <b-button icon-left="copy"
+                                          :disabled="!page.query_string.vh_theme_location_id"
+                                          class="button"
+                                          @click="copyCode(
+                                          page.active_theme.locations,
+                                          page.query_string.vh_theme_location_id
+                                          )">
+                                </b-button>
+                            </p>
+                        </b-tooltip>
                     </b-field>
 
                     <b-field label="Menus"

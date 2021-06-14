@@ -114,6 +114,19 @@
                                             :value="location.id"
                                     >{{location.name}}</option>
                                 </b-select>
+                                <b-tooltip :active="!!new_item.vh_theme_location_id"
+                                           label="Copy Code" type="is-dark">
+                                    <p class="control">
+                                        <b-button icon-left="copy"
+                                                  :disabled="!new_item.vh_theme_location_id"
+                                                  class="button"
+                                                  @click="copyCode(
+                                          page.active_theme.locations,
+                                          new_item.vh_theme_location_id
+                                          )">
+                                        </b-button>
+                                    </p>
+                                </b-tooltip>
                             </b-field>
 
                             <b-field label="Sort" :label-position="labelPosition">

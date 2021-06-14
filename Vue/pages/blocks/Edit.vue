@@ -17,36 +17,6 @@
                             <span>Content</span>
                         </div>
 
-                        <!--<div class="card-header-buttons">
-                            <div class="field has-addons is-pulled-right">
-
-                                <p  class="control">
-                                    <b-dropdown position="is-bottom-left" :triggers="['hover']" aria-role="list">
-                                        <template #trigger>
-                                            <button class="button is-light"
-                                                    slot="trigger">
-                                                <b-icon icon="caret-down"></b-icon>
-                                            </button>
-                                        </template>
-
-
-
-                                        <span v-for="string in assets.replace_strings.success">
-                                            <b-dropdown-item >
-                                            <vh-copy class="text-copyable"
-                                                     @copied="copyCode(string.name)"
-                                            >
-                                                <b-icon icon="copy"></b-icon> {{string.name.replace(/[^a-zA-Z ]/g, " ")}}
-                                            </vh-copy>
-                                        </b-dropdown-item>
-                                        </span>
-
-
-                                    </b-dropdown>
-                                </p>
-                            </div>
-                        </div>-->
-
                     </div>
 
                     <div class="card-content">
@@ -173,6 +143,19 @@
                                             v-if="location.type === 'block'"
                                     >{{location.name}}</option>
                                 </b-select>
+                                <b-tooltip :active="!!item.vh_theme_location_id"
+                                           label="Copy Code" type="is-dark">
+                                    <p class="control">
+                                        <b-button icon-left="copy"
+                                                  :disabled="!item.vh_theme_location_id"
+                                                  class="button"
+                                                  @click="copyCode(
+                                          page.active_theme.locations,
+                                          item.vh_theme_location_id
+                                          )">
+                                        </b-button>
+                                    </p>
+                                </b-tooltip>
                             </b-field>
 
                             <b-field label="Sort" :label-position="labelPosition">

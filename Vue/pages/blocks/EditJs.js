@@ -246,10 +246,19 @@ export default {
             this.update('active_item', null);
             this.$router.push({name:'blocks.list'});
         },
+
         //---------------------------------------------------------------------
-        copyCode: function (item,has_location = false)
+        copyCode: function (item,id)
         {
-            copy(item);
+            let code = "";
+
+            let location = this.$vaah.findInArrayByKey(item, 'id', id);
+
+            if(location){
+                code = "{!! vh_location_blocks('"+location.slug+"') !!}";
+            }
+
+            copy(code);
 
             this.$buefy.toast.open({
                 message: 'Copied!',
