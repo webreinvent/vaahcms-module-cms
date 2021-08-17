@@ -449,52 +449,62 @@ class Content extends Model {
             $groups = $content->template->groups;
         }
 
+        $arr_group = [];
+
 
         $i = 0;
+
         foreach ($groups as $group)
         {
 
-            $groups[$i] = $group;
-
             $y = 0;
-            foreach ($group->fields as $field)
-            {
-                $groups[$i]['fields'][$y] = $field;
-                $groups[$i]['fields'][$y]['type'] = $field->type;
 
+            $group_fields = $group->fields->groupBy('vh_cms_form_group_index');
 
-                $groups[$i]['fields'][$y]['vh_cms_form_field_id'] = null;
-                $groups[$i]['fields'][$y]['content'] = null;
-                $groups[$i]['fields'][$y]['content_meta'] = null;
+            foreach ($group_fields as $key => $fields){
 
-                $field_content = ContentFormField::where('vh_cms_content_id', $content->id);
-                $field_content->where('vh_cms_form_group_id', $group->id);
-                $field_content->where('vh_cms_form_field_id', $field->id);
-                $field_content = $field_content->first();
+                $arr_group[$i][$key] = $group;
 
-                if($field_content)
+                foreach ($fields as $field)
                 {
-                    $groups[$i]['fields'][$y]['vh_cms_form_field_id'] = $field_content->id;
 
-                    if(is_array($field_content->content) || is_object($field_content->content)){
-                        $groups[$i]['fields'][$y]['content'] = json_decode(
-                            vh_translate_dynamic_strings(json_encode($field_content->content))
-                        );
-                    }else{
-                        $groups[$i]['fields'][$y]['content'] = vh_translate_dynamic_strings($field_content->content);
+                    $arr_group[$i][$key]['fields'][$y] = $field;
+                    $arr_group[$i][$key]['fields'][$y]['type'] = $field->type;
+
+
+                    $arr_group[$i][$key]['fields'][$y]['vh_cms_form_field_id'] = null;
+                    $arr_group[$i][$key]['fields'][$y]['content'] = null;
+                    $arr_group[$i][$key]['fields'][$y]['content_meta'] = null;
+
+                    $field_content = ContentFormField::where('vh_cms_content_id', $content->id);
+                    $field_content->where('vh_cms_form_group_id', $group->id);
+                    $field_content->where('vh_cms_form_field_id', $field->id);
+                    $field_content = $field_content->first();
+
+                    if($field_content)
+                    {
+                        $arr_group[$i][$key]['fields'][$y]['vh_cms_form_field_id'] = $field_content->id;
+
+                        if(is_array($field_content->content) || is_object($field_content->content)){
+                            $arr_group[$i][$key]['fields'][$y]['content'] = json_decode(
+                                vh_translate_dynamic_strings(json_encode($field_content->content))
+                            );
+                        }else{
+                            $arr_group[$i][$key]['fields'][$y]['content'] = vh_translate_dynamic_strings($field_content->content);
+                        }
+
+                        $arr_group[$i][$key]['fields'][$y]['content_meta'] = $field_content->meta;
                     }
 
-                    $groups[$i]['fields'][$y]['content_meta'] = $field_content->meta;
+
+                    $y++;
                 }
-
-
-                $y++;
             }
 
             $i++;
         }
 
-        return $groups;
+        return $arr_group;
     }
     //-------------------------------------------------
     //-------------------------------------------------

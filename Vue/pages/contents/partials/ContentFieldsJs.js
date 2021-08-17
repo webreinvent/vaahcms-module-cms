@@ -18,6 +18,7 @@ export default {
     {
         let obj = {
             namespace: namespace,
+            group_index: null,
             labelPosition: 'on-border',
         };
 
@@ -100,6 +101,14 @@ export default {
 
         },
         //---------------------------------------------------------------------
+        addGroup: function (arr_groups,group)
+        {
+
+            arr_groups.push(group);
+
+
+        },
+        //---------------------------------------------------------------------
         removeField: function (field,index)
         {
             if(field.content !== 'string'){
@@ -114,6 +123,11 @@ export default {
 
             }
 
+        },
+        //---------------------------------------------------------------------
+        removeGroup: function (arr_groups,index)
+        {
+            arr_groups.splice(index, 1);
         }
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
