@@ -41,8 +41,9 @@
                                          :class="'field-type field-'+field.type.slug"
                                          :key="f_index">
 
-                                    <div class="columns is-gapless">
-                                        <div class="column ">
+                                    <div v-if="typeof field.content === 'string'"
+                                         class="columns is-gapless">
+                                        <div class="column" >
                                             <ContentFieldAll :field_type="field.type"
                                                              :field_slug="field.type.slug"
                                                              :label="field.name"
@@ -53,11 +54,48 @@
                                                              @onInput=""
                                                              @onChange=""
                                                              @onBlur=""
-                                                             @onFocus=""/>
+                                                             @onFocus="">
+                                            </ContentFieldAll>
                                         </div>
                                         <div class="column is-1">
                                             <b-button icon-left="copy"
                                             @click="copyCode(group, field)">
+                                            </b-button>
+                                        </div>
+                                    </div>
+                                    <div v-else v-for="(content,key) in field.content"
+                                         class="columns mb-3 is-gapless">
+                                        <div class="column"  >
+                                            <ContentFieldAll :field_type="field.type"
+                                                             :field_slug="field.type.slug"
+                                                             :label="key === 0 ? field.name : ''"
+                                                             :meta="field.meta"
+                                                             :placeholder="field.name"
+                                                             :labelPosition="labelPosition"
+                                                             v-model="field.content[key]"
+                                                             @onInput=""
+                                                             @onChange=""
+                                                             @onBlur=""
+                                                             @onFocus="">
+                                            </ContentFieldAll>
+                                        </div>
+                                        <div v-if="key === 0" class="column is-1">
+                                            <b-button icon-left="copy"
+                                            @click="copyCode(group, field)">
+                                            </b-button>
+                                        </div>
+                                        <div v-else class="column is-1">
+                                            <b-button type="is-danger" icon-left="minus"
+                                            @click="removeField(field,key)">
+                                            </b-button>
+                                        </div>
+                                    </div>
+
+                                    <div v-if="field.is_repeatable" class="columns is-centered">
+                                        <div class="column is-2">
+                                            <b-button type="is-small" icon-left="plus"
+                                            @click="addField(field)">
+                                                Add Field
                                             </b-button>
                                         </div>
                                     </div>

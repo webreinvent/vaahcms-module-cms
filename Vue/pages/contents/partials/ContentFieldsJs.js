@@ -83,6 +83,37 @@ export default {
             }
 
 
+        },
+        //---------------------------------------------------------------------
+        addField: function (field)
+        {
+            if(typeof field.content === 'string'){
+                let content = field.content;
+
+                field.content = [
+                    content,
+                    ""
+                ]
+            }else{
+                field.content.push('');
+            }
+
+        },
+        //---------------------------------------------------------------------
+        removeField: function (field,index)
+        {
+            if(field.content !== 'string'){
+
+                if(field.content.length === 2 && field.is_repeatable != 1){
+                    let val = field.content[0];
+                    field.content = null;
+                    field.content = val;
+                }else{
+                    field.content.splice(index, 1);
+                }
+
+            }
+
         }
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
