@@ -565,8 +565,6 @@ class Content extends Model {
 
                     if(!$field['vh_cms_form_field_id']){
 
-                        dd($field);
-
                         $add_field = new FormField();
                         $add_field->fill($field);
                         $add_field->save();

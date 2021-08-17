@@ -24,6 +24,7 @@ class FormField extends Model {
     protected $fillable = [
         'uuid',
         'vh_cms_form_group_id',
+        'vh_cms_form_group_index',
         'vh_cms_field_type_id',
         'sort',
         'name',
