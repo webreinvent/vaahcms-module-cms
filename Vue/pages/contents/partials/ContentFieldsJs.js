@@ -104,7 +104,19 @@ export default {
         addGroup: function (arr_groups,group)
         {
 
-            arr_groups.push(group);
+            let temp_group = group;
+
+
+            $.each(temp_group.fields, function( index, field ) {
+
+                if(field.type.slug !== "seo-meta-tags"){
+                    field.content = "";
+                    field.vh_cms_form_field_id = null;
+                    field.vh_cms_form_group_index = arr_groups.length;
+                }
+            });
+
+            arr_groups.push(temp_group);
 
 
         },

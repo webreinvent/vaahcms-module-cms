@@ -553,80 +553,96 @@ class Content extends Model {
     {
 
         $i = 0;
-        foreach ($groups as $group)
+        foreach ($groups as $key => $arr_groups)
         {
 
-            $groups[$i] = $group;
+            foreach ($arr_groups as $group){
+                $groups[$i] = $group;
 
-            $y = 0;
-            foreach ($group['fields'] as $field)
-            {
-
-                $stored_field = null;
-                if(
-                    isset($field['vh_cms_form_group_id'])
-                    && isset($field['id'])
-                )
+                $y = 0;
+                foreach ($group['fields'] as $field)
                 {
 
-                    $stored_field = ContentFormField::where('vh_cms_form_group_id', $field['vh_cms_form_group_id'])
-                    ->where('vh_cms_form_field_id', $field['id'])
-                    ->where('vh_cms_content_id', $content->id)
-                    ->first();
+                    if(!$field['vh_cms_form_field_id']){
 
-                }
+                        dd($field);
 
+                        $add_field = new FormField();
+                        $add_field->fill($field);
+                        $add_field->save();
 
-
-                if(!$stored_field)
-                {
-                    $stored_field = new ContentFormField();
-                    $stored_field->vh_cms_content_id = $content->id;
-                    $stored_field->vh_cms_form_group_id = $group['id'];
-                    $stored_field->vh_cms_form_field_id = $field['id'];
-                }
-
-                if(is_array($field['content']) || is_object($field['content'])){
-                    $field['content'] = json_decode(
-                        vh_translate_dynamic_strings(
-                            json_encode($field['content']),
-                            ['has_replace_string' => true]
-                        )
-                    );
-                }else{
-                    $field['content'] = vh_translate_dynamic_strings(
-                        $field['content'],
-                        ['has_replace_string' => true]
-                    );
-                }
-
-                if($field['type']['slug'] == 'user' && $field['content']){
-
-                    $user = $user_id = User::where('email',$field['content'])->first();
-
-                    if($user)
-                    {
-                        $stored_field->content = $user->id;
+                        $field['id'] = $add_field['id'];
+                        $field['vh_cms_form_field_id'] = $add_field['vh_cms_form_field_id'];
                     }
 
-                }else{
-                    $stored_field->content = $field['content'];
+                    $stored_field = null;
+                    if(
+                        isset($field['vh_cms_form_group_id'])
+                        && isset($field['id'])
+                    )
+                    {
+
+                        $stored_field = ContentFormField::where('vh_cms_form_group_id', $field['vh_cms_form_group_id'])
+                            ->where('vh_cms_form_field_id', $field['id'])
+                            ->where('vh_cms_content_id', $content->id)
+                            ->first();
+
+                    }
+
+
+
+                    if(!$stored_field)
+                    {
+                        $stored_field = new ContentFormField();
+                        $stored_field->vh_cms_content_id = $content->id;
+                        $stored_field->vh_cms_form_group_id = $group['id'];
+                        $stored_field->vh_cms_form_field_id = $field['id'];
+                    }
+
+                    if(is_array($field['content']) || is_object($field['content'])){
+                        $field['content'] = json_decode(
+                            vh_translate_dynamic_strings(
+                                json_encode($field['content']),
+                                ['has_replace_string' => true]
+                            )
+                        );
+                    }else{
+                        $field['content'] = vh_translate_dynamic_strings(
+                            $field['content'],
+                            ['has_replace_string' => true]
+                        );
+                    }
+
+                    if($field['type']['slug'] == 'user' && $field['content']){
+
+                        $user = $user_id = User::where('email',$field['content'])->first();
+
+                        if($user)
+                        {
+                            $stored_field->content = $user->id;
+                        }
+
+                    }else{
+                        $stored_field->content = $field['content'];
+                    }
+
+                    $stored_field->meta = $field['meta'];
+                    try{
+                        $stored_field->save();
+                    }catch(\Exception $e)
+                    {
+                        $response['status'] = 'failed';
+                        $response['inputs'] = $field;
+                        $response['errors'][] = $e->getMessage();
+                        return $response;
+                    }
+
+
+                    $y++;
                 }
-
-                $stored_field->meta = $field['meta'];
-                try{
-                    $stored_field->save();
-                }catch(\Exception $e)
-                {
-                    $response['status'] = 'failed';
-                    $response['inputs'] = $field;
-                    $response['errors'][] = $e->getMessage();
-                    return $response;
-                }
-
-
-                $y++;
             }
+
+
 
             $i++;
         }
