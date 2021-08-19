@@ -89,6 +89,7 @@ class ContentsController extends Controller
     //----------------------------------------------------------
     public function postActions(Request $request, $content_slug, $action)
     {
+
         $rules = array(
             'inputs' => 'required',
         );
@@ -132,6 +133,13 @@ class ContentsController extends Controller
             case 'bulk-delete':
 
                 $response = Content::bulkDelete($request);
+
+                break;
+
+            //------------------------------------
+            case 'remove-group':
+
+                $response = Content::removeGroup($request);
 
                 break;
 

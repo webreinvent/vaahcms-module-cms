@@ -9,6 +9,7 @@ export default {
     props:['groups'],
     computed: {
         root() {return this.$store.getters['root/state']},
+        ajax_url() {return this.$store.getters[namespace+'/state'].ajax_url},
     },
     components:{
         ContentFieldAll,
@@ -112,6 +113,7 @@ export default {
                 if(field.type.slug !== "seo-meta-tags"){
                     field.content = "";
                     field.vh_cms_form_group_index = arr_groups.length;
+                    field.vh_cms_form_field_id  = null;
                 }
             });
 
@@ -136,11 +138,33 @@ export default {
 
         },
         //---------------------------------------------------------------------
-        removeGroup: function (arr_groups,index)
+        removeGroup: function (arr_groups,group,index)
         {
-            arr_groups.splice(index, 1);
-        }
+
+            // arr_groups.splice(index, 1);
+
+
+            if(group.fields[0].vh_cms_form_field_id){
+                this.$Progress.start();
+                let url = this.ajax_url+'/actions/remove-group';
+                let params = {
+                    inputs: {
+                        index: index,
+                        group_id: group.fields[0].vh_cms_form_group_id,
+                        content_id: this.$route.params.id
+                    },
+                };
+                this.$vaah.ajax(url, params, this.removeGroupAfter);
+            }
+
+        },
         //---------------------------------------------------------------------
+        //---------------------------------------------------------------------
+        removeGroupAfter: function (data,res) {
+            this.$emit('eReloadList');
+            this.$Progress.finish();
+
+        },
         //---------------------------------------------------------------------
     }
 }

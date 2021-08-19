@@ -61,7 +61,7 @@
 
                                         <header v-if="index > 0" class="card-header">
                                             <div class="card-header-title">
-
+                                                {{group.name}}
                                             </div>
 
                                             <b-button type="is-text"

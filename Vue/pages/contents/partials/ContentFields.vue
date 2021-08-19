@@ -62,7 +62,7 @@
 
                                         <header v-if="index > 0" class="card-header">
                                             <div class="card-header-title">
-
+                                                {{group.name}}
                                             </div>
 
                                                 <b-button type="is-text"
@@ -73,7 +73,7 @@
                                                 <b-button type="is-text"
                                                           dusk="action-download"
                                                           class="card-header-icon has-margin-top-5 has-margin-right-5"
-                                                          @click="removeGroup(arr_groups,index)"
+                                                          @click="removeGroup(arr_groups,group,index)"
                                                           icon-left="times">
 
                                                 </b-button>

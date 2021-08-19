@@ -796,6 +796,23 @@ class Content extends Model {
         return $response;
     }
     //-------------------------------------------------
+    public static function removeGroup($request)
+    {
+
+        $inputs = $request->inputs;
+
+        ContentFormField::where([
+            'vh_cms_content_id' => $inputs['content_id'],
+            'vh_cms_form_group_id' => $inputs['group_id'],
+            'vh_cms_form_group_index' => $inputs['index']])->forceDelete();
+
+
+        $response['status'] = 'success';
+        $response['data'] = [];
+
+        return $response;
+    }
+    //-------------------------------------------------
     public static function getContents($content_type_slug, $args)
     {
 
