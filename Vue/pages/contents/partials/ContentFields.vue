@@ -34,10 +34,29 @@
                                  :aria-id="'content-fields-group-'+g_index">
 
                                 <div  v-for="(group,index) in arr_groups">
-                                    <h4 v-if="index === 0"
-                                        class="title is-5">
-                                        {{group.name}}
-                                    </h4>
+
+                                    <nav class="level">
+                                        <!-- Left side -->
+                                        <div class="level-left">
+                                            <div class="level-item">
+                                                <h4 v-if="index === 0"
+                                                    class="title is-5">
+                                                    {{group.name}}
+                                                </h4>
+                                            </div>
+                                        </div>
+                                        <!-- Right side -->
+                                        <div class="right">
+                                            <div  v-if="index === 0" class="level-item">
+                                                <b-button icon-left="file">
+                                                </b-button>
+                                                <b-button icon-left="copy">
+                                                </b-button>
+                                            </div>
+                                        </div>
+                                    </nav>
+
+
 
                                     <div class="card mb-3">
 
@@ -45,6 +64,11 @@
                                             <div class="card-header-title">
 
                                             </div>
+
+                                                <b-button type="is-text"
+                                                          class="card-header-icon has-margin-top-5 has-margin-right-5"
+                                                          icon-left="file">
+                                                </b-button>
 
                                                 <b-button type="is-text"
                                                           dusk="action-download"
@@ -103,12 +127,18 @@
                                                                          @onFocus="">
                                                         </ContentFieldAll>
                                                     </div>
-                                                    <div v-if="key === 0" class="column is-1">
+                                                    <div v-if="key === 0" class="column is-2">
+                                                        <b-button icon-left="file"
+                                                                  @click="copyCode(group, field)">
+                                                        </b-button>
                                                         <b-button icon-left="copy"
                                                                   @click="copyCode(group, field)">
                                                         </b-button>
                                                     </div>
-                                                    <div v-else class="column is-1">
+                                                    <div v-else class="column is-2">
+                                                        <b-button icon-left="file"
+                                                                  @click="copyCode(group, field)">
+                                                        </b-button>
                                                         <b-button type="is-danger" icon-left="minus"
                                                                   @click="removeField(field,key)">
                                                         </b-button>
