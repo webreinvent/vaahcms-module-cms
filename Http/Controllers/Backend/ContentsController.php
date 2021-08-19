@@ -43,7 +43,13 @@ class ContentsController extends Controller
 
         if($form_groups['status'] == 'success')
         {
-            $data['content_type']['form_groups'] = [$form_groups['data']->groups];
+
+            $arr_group = [];
+
+            foreach ($form_groups['data']->groups as $group){
+                $arr_group[] = [$group];
+            }
+            $data['content_type']['form_groups'] = $arr_group;
         }
 
         $response['status'] = 'success';

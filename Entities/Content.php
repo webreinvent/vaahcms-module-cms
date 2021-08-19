@@ -263,24 +263,30 @@ class Content extends Model {
         $item->save();
 
 
-        foreach ($inputs['content_groups'] as $group)
+
+        foreach ($inputs['content_groups'] as $arr_group)
         {
 
-            foreach ($group['fields'] as $field)
-            {
-                $content_field = [];
-                $content_field['vh_cms_content_id'] = $item->id;
-                $content_field['vh_cms_form_group_id'] = $group['id'];
-                $content_field['vh_cms_form_field_id'] = $field['id'];
+            foreach ($arr_group as $key => $group) {
 
-                if(isset($field['content']))
-                {
-                    $content_field['content'] = $field['content'];
-                    $store_field = new ContentFormField();
-                    $store_field->fill($content_field);
-                    $store_field->save();
+
+                foreach ($group['fields'] as $field) {
+                    $content_field = [];
+                    $content_field['vh_cms_content_id'] = $item->id;
+                    $content_field['vh_cms_form_group_id'] = $group['id'];
+                    $content_field['vh_cms_form_field_id'] = $field['id'];
+                    $content_field['vh_cms_form_group_index'] = $key;
+
+                    if (isset($field['content'])) {
+
+                        $content_field['content'] = $field['content'];
+                        $store_field = new ContentFormField();
+                        $store_field->fill($content_field);
+                        $store_field->save();
+
+                    }
+
                 }
-
             }
 
         }
@@ -447,6 +453,7 @@ class Content extends Model {
             $groups = $content->template->groups;
         }
 
+
         $arr_group = [];
 
 
@@ -458,6 +465,9 @@ class Content extends Model {
             $group_fields = $group->contentFields->where('vh_cms_content_id',$content->id)
                 ->groupBy('vh_cms_form_group_index');
 
+            if(count($group_fields) === 0 ){
+                $group_fields[] = '';
+            }
 
             foreach ($group_fields as $key => $fields){
 
@@ -560,6 +570,7 @@ class Content extends Model {
     {
 
         $i = 0;
+
         foreach ($groups as $arr_groups)
         {
 

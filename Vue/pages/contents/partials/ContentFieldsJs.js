@@ -88,7 +88,7 @@ export default {
         //---------------------------------------------------------------------
         addField: function (field)
         {
-            if(typeof field.content === 'string'){
+            if(!field.content || typeof field.content === 'string'){
                 let content = field.content;
 
                 field.content = [
