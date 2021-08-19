@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class VhCmsFormFieldsAddVhCmsFormGroupIndex extends Migration
+class VhCmsContentFormFieldsAddVhCmsFormGroupIndex extends Migration
 {
     /**
      * Run the migrations.
@@ -14,9 +14,9 @@ class VhCmsFormFieldsAddVhCmsFormGroupIndex extends Migration
     public function up()
     {
 
-        Schema::table('vh_cms_form_fields', function (Blueprint $table) {
+        Schema::table('vh_cms_content_form_fields', function (Blueprint $table) {
             $table->tinyInteger('vh_cms_form_group_index')
-                ->after('vh_cms_form_group_id')
+                ->after('vh_cms_form_field_id')
                 ->default(0)
                 ->nullable()
                 ->index();
@@ -30,7 +30,7 @@ class VhCmsFormFieldsAddVhCmsFormGroupIndex extends Migration
     */
     public function down()
     {
-        Schema::table('vh_cms_form_fields', function (Blueprint $table) {
+        Schema::table('vh_cms_content_form_fields', function (Blueprint $table) {
             $table->dropColumn('vh_cms_form_group_index');
         });
     }

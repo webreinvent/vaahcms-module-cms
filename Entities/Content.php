@@ -291,24 +291,29 @@ class Content extends Model {
 
         }
 
-        foreach ($inputs['template_groups'] as $group)
+        foreach ($inputs['template_groups'] as $arr_group)
         {
 
-            foreach ($group['fields'] as $field)
-            {
-                $content_field = [];
-                $content_field['vh_cms_content_id'] = $item->id;
-                $content_field['vh_cms_form_group_id'] = $group['id'];
-                $content_field['vh_cms_form_field_id'] = $field['id'];
+            foreach ($arr_group as $key => $group) {
 
-                if(isset($field['content']))
-                {
-                    $content_field['content'] = $field['content'];
-                    $store_field = new ContentFormField();
-                    $store_field->fill($content_field);
-                    $store_field->save();
+
+                foreach ($group['fields'] as $field) {
+                    $content_field = [];
+                    $content_field['vh_cms_content_id'] = $item->id;
+                    $content_field['vh_cms_form_group_id'] = $group['id'];
+                    $content_field['vh_cms_form_field_id'] = $field['id'];
+                    $content_field['vh_cms_form_group_index'] = $key;
+
+                    if (isset($field['content'])) {
+
+                        $content_field['content'] = $field['content'];
+                        $store_field = new ContentFormField();
+                        $store_field->fill($content_field);
+                        $store_field->save();
+
+                    }
+
                 }
-
             }
 
         }
