@@ -141,8 +141,7 @@ export default {
         removeGroup: function (arr_groups,group,index)
         {
 
-            // arr_groups.splice(index, 1);
-
+            arr_groups.splice(index, 1);
 
             if(group.fields[0].vh_cms_form_field_id){
                 this.$Progress.start();
@@ -161,9 +160,7 @@ export default {
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
         removeGroupAfter: function (data,res) {
-            this.$emit('eReloadList');
             this.$Progress.finish();
-
         },
         //---------------------------------------------------------------------
     }

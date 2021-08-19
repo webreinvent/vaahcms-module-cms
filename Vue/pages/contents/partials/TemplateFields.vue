@@ -72,7 +72,7 @@
                                             <b-button type="is-text"
                                                       dusk="action-download"
                                                       class="card-header-icon has-margin-top-5 has-margin-right-5"
-                                                      @click="removeGroup(arr_groups,index)"
+                                                      @click="removeGroup(arr_groups,group,index)"
                                                       icon-left="times">
 
                                             </b-button>
