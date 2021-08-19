@@ -121,6 +121,13 @@ class FormField extends Model {
         )->select('id', 'uuid', 'first_name', 'last_name', 'email');
     }
     //-------------------------------------------------
+    public function contentFields()
+    {
+        return $this->hasMany(ContentFormField::class,
+            'vh_cms_form_field_id', 'id'
+        );
+    }
+    //-------------------------------------------------
     //-------------------------------------------------
     public function type()
     {

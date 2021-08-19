@@ -134,6 +134,13 @@ class FormGroup extends Model {
         )->orderBy('sort', 'asc');
     }
     //-------------------------------------------------
+    public function contentFields()
+    {
+        return $this->hasMany(ContentFormField::class,
+            'vh_cms_form_group_id', 'id'
+        );
+    }
+    //-------------------------------------------------
     public static function deleteItem($id)
     {
 

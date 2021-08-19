@@ -440,8 +440,6 @@ class Content extends Model {
     //-------------------------------------------------
     public static function getFormGroups(Content $content, $type, array $fields=null)
     {
-        $groups = [];
-
         if($type=='content')
         {
             $groups = $content->contentType->groups;
@@ -457,18 +455,23 @@ class Content extends Model {
         foreach ($groups as $group)
         {
 
-            $y = 0;
+            $group_fields = $group->contentFields->where('vh_cms_content_id',$content->id)
+                ->groupBy('vh_cms_form_group_index');
 
-            $group_fields = $group->fields->groupBy('vh_cms_form_group_index');
 
             foreach ($group_fields as $key => $fields){
 
-                $arr_group[$i][$key] = $group;
+                $arr_group[$i][$key] = $group->toArray();
 
-                foreach ($fields as $field)
+                $y = 0;
+
+                foreach ($group->fields as $field)
                 {
 
                     $arr_group[$i][$key]['fields'][$y] = $field;
+
+                    $arr_group[$i][$key]['fields'][$y] = $arr_group[$i][$key]['fields'][$y]->toArray();
+
                     $arr_group[$i][$key]['fields'][$y]['type'] = $field->type;
 
 
@@ -479,10 +482,12 @@ class Content extends Model {
                     $field_content = ContentFormField::where('vh_cms_content_id', $content->id);
                     $field_content->where('vh_cms_form_group_id', $group->id);
                     $field_content->where('vh_cms_form_field_id', $field->id);
+                    $field_content->where('vh_cms_form_group_index', $key);
                     $field_content = $field_content->first();
 
                     if($field_content)
                     {
+
                         $arr_group[$i][$key]['fields'][$y]['vh_cms_form_field_id'] = $field_content->id;
 
                         if(is_array($field_content->content) || is_object($field_content->content)){
@@ -496,12 +501,14 @@ class Content extends Model {
                         $arr_group[$i][$key]['fields'][$y]['content_meta'] = $field_content->meta;
                     }
 
-
                     $y++;
+
                 }
+
             }
 
             $i++;
+
         }
 
         return $arr_group;
@@ -553,26 +560,16 @@ class Content extends Model {
     {
 
         $i = 0;
-        foreach ($groups as $key => $arr_groups)
+        foreach ($groups as $arr_groups)
         {
 
-            foreach ($arr_groups as $group){
+            foreach ($arr_groups as $key =>  $group){
+
                 $groups[$i] = $group;
 
                 $y = 0;
                 foreach ($group['fields'] as $field)
                 {
-
-                    if(!$field['vh_cms_form_field_id']){
-
-                        $add_field = new FormField();
-                        $add_field->fill($field);
-                        $add_field->save();
-
-                        $field['id'] = $add_field['id'];
-                        $field['vh_cms_form_field_id'] = $add_field['vh_cms_form_field_id'];
-                    }
-
                     $stored_field = null;
                     if(
                         isset($field['vh_cms_form_group_id'])
@@ -583,10 +580,10 @@ class Content extends Model {
                         $stored_field = ContentFormField::where('vh_cms_form_group_id', $field['vh_cms_form_group_id'])
                             ->where('vh_cms_form_field_id', $field['id'])
                             ->where('vh_cms_content_id', $content->id)
+                            ->where('vh_cms_form_group_index', $key)
                             ->first();
 
                     }
-
 
 
                     if(!$stored_field)
@@ -595,6 +592,7 @@ class Content extends Model {
                         $stored_field->vh_cms_content_id = $content->id;
                         $stored_field->vh_cms_form_group_id = $group['id'];
                         $stored_field->vh_cms_form_field_id = $field['id'];
+                        $stored_field->vh_cms_form_group_index = $key;
                     }
 
                     if(is_array($field['content']) || is_object($field['content'])){
@@ -627,6 +625,9 @@ class Content extends Model {
                     $stored_field->meta = $field['meta'];
                     try{
                         $stored_field->save();
+
+//                        dump($stored_field);
+
                     }catch(\Exception $e)
                     {
                         $response['status'] = 'failed';
