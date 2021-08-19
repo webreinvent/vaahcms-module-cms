@@ -43,7 +43,7 @@ class ContentsController extends Controller
 
         if($form_groups['status'] == 'success')
         {
-            $data['content_type']['form_groups'] = $form_groups['data']->groups;
+            $data['content_type']['form_groups'] = [$form_groups['data']->groups];
         }
 
         $response['status'] = 'success';

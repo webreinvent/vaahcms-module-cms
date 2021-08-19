@@ -64,7 +64,7 @@
                                                  :class="'field-type field-'+field.type.slug"
                                                  :key="f_index">
 
-                                                <div v-if="typeof field.content === 'string'
+                                                <div v-if="!field.content || typeof field.content === 'string'
                                                     || field.type.slug === 'seo-meta-tags'"
                                                      class="columns is-gapless">
                                                     <div class="column" >
