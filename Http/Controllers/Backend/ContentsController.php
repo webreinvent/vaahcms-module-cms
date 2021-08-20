@@ -37,6 +37,10 @@ class ContentsController extends Controller
         $data['bulk_actions'] = vh_general_bulk_actions();
         $data['media_upload_url'] = route('backend.cms.media.upload');
 
+        $data['non_repeatable_fields'] = ['seo-meta-tags','list',
+            'image-group','facebook-card','twitter-card',
+            'json','address','tags'];
+
 
         $data['content_type'] = $request->content_type;
         $form_groups = ContentType::getItemWithRelations($request->content_type->id);

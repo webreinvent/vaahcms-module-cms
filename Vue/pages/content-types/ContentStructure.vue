@@ -142,7 +142,8 @@
                                                 <div class="dropzone-field-options ">
 
                                                     <table class="table">
-                                                        <tr>
+
+                                                        <tr v-if="!assets.non_repeatable_fields.includes(field.type.slug)">
                                                             <td width="180" >
                                                                 Is repeatable
                                                             </td>

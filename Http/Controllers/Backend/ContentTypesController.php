@@ -24,6 +24,10 @@ class ContentTypesController extends Controller
         $data['field_types'] = FieldType::select('id', 'name', 'slug', 'meta')
             ->get();
 
+        $data['non_repeatable_fields'] = ['seo-meta-tags','list',
+            'image-group','facebook-card','twitter-card',
+            'json','address','tags'];
+
         $data['bulk_actions'] = vh_general_bulk_actions();
 
         $response['status'] = 'success';

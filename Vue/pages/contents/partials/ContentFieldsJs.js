@@ -9,6 +9,7 @@ export default {
     props:['groups'],
     computed: {
         root() {return this.$store.getters['root/state']},
+        assets() {return this.$store.getters[namespace+'/state'].assets},
         ajax_url() {return this.$store.getters[namespace+'/state'].ajax_url},
     },
     components:{
@@ -94,10 +95,10 @@ export default {
 
                 field.content = [
                     content,
-                    ""
+                    null
                 ]
             }else{
-                field.content.push('');
+                field.content.push(null);
             }
 
         },

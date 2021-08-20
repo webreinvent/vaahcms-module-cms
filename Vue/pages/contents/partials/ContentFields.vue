@@ -89,7 +89,7 @@
                                                  :key="f_index">
 
                                                 <div v-if="!field.content || typeof field.content === 'string'
-                                                    || field.type.slug === 'seo-meta-tags'"
+                                                    || assets.non_repeatable_fields.includes(field.type.slug)"
                                                      class="columns is-gapless">
                                                     <div class="column" >
                                                         <ContentFieldAll :field_type="field.type"
@@ -116,7 +116,10 @@
                                                     <div class="column"  >
                                                         <ContentFieldAll :field_type="field.type"
                                                                          :field_slug="field.type.slug"
-                                                                         :label="key === 0 || field.type.slug === 'image' ? field.name : ''"
+                                                                         :label="key === 0
+                                                                         || field.type.slug === 'image'
+                                                                         || field.type.slug === 'media'
+                                                                         ? field.name : ''"
                                                                          :meta="field.meta"
                                                                          :placeholder="field.name"
                                                                          :labelPosition="labelPosition"
@@ -127,7 +130,8 @@
                                                                          @onFocus="">
                                                         </ContentFieldAll>
                                                     </div>
-                                                    <div v-if="key === 0" class="column is-2">
+                                                    <div v-if="key === 0" class="column is-2"
+                                                         style="width: 14.6%">
                                                         <b-button icon-left="file"
                                                                   @click="copyCode(group, field)">
                                                         </b-button>
@@ -135,7 +139,8 @@
                                                                   @click="copyCode(group, field)">
                                                         </b-button>
                                                     </div>
-                                                    <div v-else class="column is-2">
+                                                    <div v-else class="column is-2"
+                                                         style="width: 14.6%">
                                                         <b-button icon-left="file"
                                                                   @click="copyCode(group, field)">
                                                         </b-button>
@@ -145,7 +150,7 @@
                                                     </div>
                                                 </div>
 
-                                                <div v-if="field.is_repeatable" class="columns is-centered">
+                                                <div v-if="field.is_repeatable && !assets.non_repeatable_fields.includes(field.type.slug)" class="columns is-centered">
                                                     <div class="column is-2">
                                                         <b-button type="is-small" icon-left="plus"
                                                                   @click="addField(field)">

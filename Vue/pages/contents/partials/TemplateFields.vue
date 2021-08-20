@@ -115,7 +115,10 @@
                                                     <div class="column"  >
                                                         <ContentFieldAll :field_type="field.type"
                                                                          :field_slug="field.type.slug"
-                                                                         :label="key === 0 || field.type.slug === 'image' ? field.name : ''"
+                                                                         :label="key === 0
+                                                                         || field.type.slug === 'image'
+                                                                         || field.type.slug === 'media'
+                                                                         ? field.name : ''"
                                                                          :meta="field.meta"
                                                                          :placeholder="field.name"
                                                                          :labelPosition="labelPosition"
