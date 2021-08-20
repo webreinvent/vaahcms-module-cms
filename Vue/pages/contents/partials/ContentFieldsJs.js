@@ -47,26 +47,15 @@ export default {
             this.$vaah.updateState(update);
         },
         //---------------------------------------------------------------------
-        copyCode: function (group, field)
+        copyCode: function (group, field,group_index = null,field_index = null)
         {
             let code = "";
-            if(group.slug != 'default')
+
+            code = "{!! get_field($data, '"+field.slug+"', '"+group.slug+"', "+group_index+", "+field_index+") !!}";
+
+            if(field.type.slug == 'image')
             {
-                code = "{!! get_field($data, '"+field.slug+"', '"+group.slug+"') !!}";
-
-                if(field.type.slug == 'image')
-                {
-                    code = "<img src='{{get_field($data, '"+field.slug+"', '"+group.slug+"')'/>";
-                }
-
-            } else
-            {
-                code = "{!! get_field($data, '"+field.slug+"') !!}";
-
-                if(field.type.slug == 'image')
-                {
-                    code = "<img src='{{get_field($data, '"+field.slug+"')}}'/>";
-                }
+                code = "<img src='{{get_field($data, '"+field.slug+"', '"+group.slug+"', "+group_index+", "+field_index+")'/>";
             }
 
             copy(code);

@@ -470,6 +470,17 @@ class Content extends Model {
             $group_fields = $group->contentFields->where('vh_cms_content_id',$content->id)
                 ->groupBy('vh_cms_form_group_index');
 
+/*
+//            end($group_fields->toArray());
+
+            $index = key($group_fields->toArray());
+
+            for($key = 0){
+
+            }
+
+            dd(key($group_fields->toArray()));*/
+
             if(count($group_fields) === 0 ){
                 $group_fields[] = '';
             }
