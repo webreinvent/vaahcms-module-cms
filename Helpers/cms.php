@@ -112,6 +112,17 @@ function get_group(Content $content, $group_slug='default', $type='content',
     }
 }
 //-----------------------------------------------------------------------------------
+function get_the_group(Content $content, $group_slug='default', $type='content',
+                   $group_index = null )
+{
+    if($type=='content')
+    {
+        return get_group_content_field($content, $group_slug,$group_index,false);
+    } else {
+//        return get_template_field($content, $field_slug, $group_slug,$group_index , $field_index);
+    }
+}
+//-----------------------------------------------------------------------------------
 function get_the_field(Content $content, $field_slug,
                        $group_slug='default', $type='content',
                        $group_index = 0 , $field_index = null)
@@ -130,48 +141,34 @@ function get_content_field(Content $content, $field_slug,
                            $field_index = null, $return_html=true)
 {
 
+
+    foreach ($content->content_form_groups as $arr_group){
+        foreach ($arr_group as $key => $group){
+            if($group['slug'] === $group_slug){
+
+                if($group_index === $key && isset($arr_group[$group_index])){
+                    foreach ($arr_group[$group_index]['fields'] as $field){
+                        if($field['slug'] === $field_slug){
+                            return setReturnValue($field,$field_index,$return_html);
+                        }
+
+                    }
+                }
+
+
+
+            }
+        }
+    }
+
     if(isset($content->content_form_groups[0])
         && isset($content->content_form_groups[0][$group_index])
         && $content->content_form_groups[0][$group_index]['slug'] === $group_slug){
 
 
-        foreach ($content->content_form_groups[0][$group_index]['fields'] as $field){
-            if($field['slug'] === $field_slug){
-                return setReturnValue($field,$field_index,$return_html);
-            }
 
-        }
 
     }
-
-
-    return null;
-
-    dd($content->content_form_groups);
-
-    if(!isset($content->content_form_groups)
-    || $content->content_form_groups->count() < 1
-    )
-    {
-        return null;
-    }
-
-    $group = $content->content_form_groups->where('slug', $group_slug)->first();
-
-    if(!$group)
-    {
-        return null;
-    }
-
-
-    $field = $group->fields->where('slug', $field_slug)->first();
-
-    if(!$field)
-    {
-        return null;
-    }
-
-    return setReturnValue($field,$return_html);
 
 }
 //-----------------------------------------------------------------------------------
@@ -181,6 +178,37 @@ function get_group_content_field(Content $content, $group_slug='default',
 
     if(!$return_html){
 
+        $array_val = [];
+
+        foreach ($content->content_form_groups as $arr_group){
+            foreach ($arr_group as $key => $group){
+                if($group['slug'] === $group_slug){
+
+
+                    if($group_index === null){
+
+                        foreach ($group['fields']  as $field){
+
+                            $array_val[$key][$field["slug"]] = $field["content"];
+
+                        }
+
+                    }else{
+
+                        if($group_index === $key && isset($arr_group[$group_index])){
+                            foreach ($arr_group[$group_index]['fields']  as $field){
+
+                                $array_val[$key][$field["slug"]] = $field["content"];
+
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+
+        return $array_val;
     }
 
     $data = "<ul>";
