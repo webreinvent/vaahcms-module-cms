@@ -47,15 +47,60 @@ export default {
             this.$vaah.updateState(update);
         },
         //---------------------------------------------------------------------
-        copyCode: function (group, field,group_index = null,field_index = null)
+        copyCode: function (group, field,group_index = 0,field_index = null)
         {
+
+            console.log(group_index,field_index);
+
             let code = "";
 
-            code = "{!! get_field($data, '"+field.slug+"', '"+group.slug+"', "+group_index+", "+field_index+") !!}";
+            if(field_index == null){
+                if(group_index === 0){
+                    code = "{!! get_field($data, '"+field.slug+"', '"+group.slug+"') !!}";
 
-            if(field.type.slug == 'image')
-            {
-                code = "<img src='{{get_field($data, '"+field.slug+"', '"+group.slug+"', "+group_index+", "+field_index+")'/>";
+                    if(field.type.slug == 'image')
+                    {
+                        code = "<img src='{{get_field($data, '"+field.slug+"', '"+group.slug+"')'/>";
+                    }
+                }else{
+                    code = "{!! get_field($data, '"+field.slug+"', '"+group.slug+"','content' , "+group_index+") !!}";
+
+                    if(field.type.slug == 'image')
+                    {
+                        code = "<img src='{{get_field($data, '"+field.slug+"', '"+group.slug+"','content' , "+group_index+")'/>";
+                    }
+                }
+
+            }else{
+                code = "{!! get_field($data, '"+field.slug+"', '"+group.slug+"','content' , "+group_index+", "+field_index+") !!}";
+
+                if(field.type.slug == 'image')
+                {
+                    code = "<img src='{{get_field($data, '"+field.slug+"', '"+group.slug+"','content' , "+group_index+", "+field_index+")'/>";
+                }
+            }
+
+
+
+            copy(code);
+
+            this.$buefy.toast.open({
+                message: 'Copied!',
+                type: 'is-success'
+            });
+        },
+        //---------------------------------------------------------------------
+        copyGroupCode: function (group,group_index = null)
+        {
+
+            let code = "";
+
+            if(group_index == null){
+                code = "{!! get_group($data ,'"+group.slug+"' ) !!}";
+
+            }else{
+                code = "{!! get_group($data ,'"+group.slug+"' ,'content' ,"+group_index+" ) !!}";
+
             }
 
             copy(code);
@@ -101,7 +146,8 @@ export default {
             $.each(temp_group.fields, function( index, field ) {
 
                 if(field.type.slug !== "seo-meta-tags"){
-                    field.content = "";
+                    field.content = null;
+                    if(field.is_repeatable) field.content = [''];
                     field.vh_cms_form_group_index = arr_groups.length;
                     field.vh_cms_form_field_id  = null;
                 }

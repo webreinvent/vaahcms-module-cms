@@ -470,17 +470,6 @@ class Content extends Model {
             $group_fields = $group->contentFields->where('vh_cms_content_id',$content->id)
                 ->groupBy('vh_cms_form_group_index');
 
-/*
-//            end($group_fields->toArray());
-
-            $index = key($group_fields->toArray());
-
-            for($key = 0){
-
-            }
-
-            dd(key($group_fields->toArray()));*/
-
             if(count($group_fields) === 0 ){
                 $group_fields[] = '';
             }
@@ -521,7 +510,13 @@ class Content extends Model {
                                 vh_translate_dynamic_strings(json_encode($field_content->content))
                             );
                         }else{
-                            $arr_group[$i][$key]['fields'][$y]['content'] = vh_translate_dynamic_strings($field_content->content);
+
+                            if(!$field->is_repeatable){
+                                $arr_group[$i][$key]['fields'][$y]['content'] = vh_translate_dynamic_strings($field_content->content);
+                            }else{
+                                $arr_group[$i][$key]['fields'][$y]['content'] = [vh_translate_dynamic_strings($field_content->content)];
+                            }
+
                         }
 
                         $arr_group[$i][$key]['fields'][$y]['content_meta'] = $field_content->meta;

@@ -48,9 +48,11 @@
                                         <!-- Right side -->
                                         <div class="right">
                                             <div  v-if="index === 0" class="level-item">
-                                                <b-button icon-left="file">
+                                                <b-button @click="copyGroupCode(group,index)"
+                                                          icon-left="file">
                                                 </b-button>
-                                                <b-button icon-left="copy">
+                                                <b-button @click="copyGroupCode(group)"
+                                                          icon-left="copy">
                                                 </b-button>
                                             </div>
                                         </div>
@@ -67,6 +69,7 @@
 
                                                 <b-button type="is-text"
                                                           class="card-header-icon has-margin-top-5 has-margin-right-5"
+                                                          @click="copyGroupCode(group,index)"
                                                           icon-left="file">
                                                 </b-button>
 
@@ -107,7 +110,7 @@
                                                     </div>
                                                     <div class="column is-1">
                                                         <b-button icon-left="copy"
-                                                                  @click="copyCode(group, field)">
+                                                                  @click="copyCode(group, field,index)">
                                                         </b-button>
                                                     </div>
                                                 </div>
@@ -133,16 +136,16 @@
                                                     <div v-if="key === 0" class="column is-2"
                                                          style="width: 14.6%">
                                                         <b-button icon-left="file"
-                                                                  @click="copyCode(group, field,g_index,key)">
+                                                                  @click="copyCode(group, field,index,key)">
                                                         </b-button>
                                                         <b-button icon-left="copy"
-                                                                  @click="copyCode(group, field)">
+                                                                  @click="copyCode(group, field,index)">
                                                         </b-button>
                                                     </div>
                                                     <div v-else class="column is-2"
                                                          style="width: 14.6%">
                                                         <b-button icon-left="file"
-                                                                  @click="copyCode(group, field,g_index,key)">
+                                                                  @click="copyCode(group, field,index,key)">
                                                         </b-button>
                                                         <b-button type="is-danger" icon-left="minus"
                                                                   @click="removeField(field,key)">
@@ -158,9 +161,6 @@
                                                         </b-button>
                                                     </div>
                                                 </div>
-
-
-
 
                                             </div>
 

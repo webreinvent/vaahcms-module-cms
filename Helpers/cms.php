@@ -88,36 +88,62 @@ function get_the_content($id, array $args = null, $output='html')
 //-----------------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------------
-function get_field(Content $content, $field_slug, $group_slug='default', $group_index = 0 , $field_index = null, $type='content', $return_html=true )
+function get_field(Content $content, $field_slug,
+                   $group_slug='default', $type='content',
+                   $group_index = 0 , $field_index = null )
 {
 
     if($type=='content')
     {
-        return get_content_field($content, $field_slug, $group_slug,$group_index , $field_index, $return_html);
+        return get_content_field($content, $field_slug, $group_slug,$group_index , $field_index);
     } else {
-        return get_template_field($content, $field_slug, $group_slug,$group_index , $field_index, $return_html);
+        return get_template_field($content, $field_slug, $group_slug,$group_index , $field_index);
     }
 }
 //-----------------------------------------------------------------------------------
-function get_content_field(Content $content, $field_slug, $group_slug='default',$group_index , $field_index, $return_html=true)
+function get_group(Content $content, $group_slug='default', $type='content',
+                   $group_index = null )
+{
+    if($type=='content')
+    {
+        return get_group_content_field($content, $group_slug,$group_index,true);
+    } else {
+//        return get_template_field($content, $field_slug, $group_slug,$group_index , $field_index);
+    }
+}
+//-----------------------------------------------------------------------------------
+function get_the_field(Content $content, $field_slug,
+                       $group_slug='default', $type='content',
+                       $group_index = 0 , $field_index = null)
 {
 
+    if($type=='content')
+    {
+        return get_content_field($content, $field_slug, $group_slug,$group_index , $field_index, false);
+    } else {
+        return get_template_field($content, $field_slug, $group_slug,$group_index , $field_index, false);
+    }
+}
+//-----------------------------------------------------------------------------------
+function get_content_field(Content $content, $field_slug,
+                           $group_slug='default', $group_index = 0 ,
+                           $field_index = null, $return_html=true)
+{
 
-    foreach ($content->content_form_groups[$group_index] as $group){
+    if(isset($content->content_form_groups[0])
+        && isset($content->content_form_groups[0][$group_index])
+        && $content->content_form_groups[0][$group_index]['slug'] === $group_slug){
 
 
-        if($group['slug'] === $group_slug){
-
-
-            foreach ($group['fields'] as $field){
-                if($field['slug'] === $field_slug){
-                    return setReturnValue($field,$field_index,$return_html);
-                }
-
+        foreach ($content->content_form_groups[0][$group_index]['fields'] as $field){
+            if($field['slug'] === $field_slug){
+                return setReturnValue($field,$field_index,$return_html);
             }
 
         }
+
     }
+
 
     return null;
 
@@ -148,10 +174,57 @@ function get_content_field(Content $content, $field_slug, $group_slug='default',
     return setReturnValue($field,$return_html);
 
 }
+//-----------------------------------------------------------------------------------
+function get_group_content_field(Content $content, $group_slug='default',
+                                 $group_index = null , $return_html=true)
+{
+
+    if(!$return_html){
+
+    }
+
+    $data = "<ul>";
+
+    foreach ($content->content_form_groups as $arr_group){
+        foreach ($arr_group as $key => $group){
+            if($group['slug'] === $group_slug){
+
+                if($group_index === null){
+
+                    $data .= '<br/><li> <strong>'.$group['name'].' - ' .($key+1).'</strong></li>';
+
+                    foreach ($group['fields']  as $field){
+
+                        $data .= '<li> <strong>'.$field["name"].'</strong> : '.setGroupReturnValue($field).'</li><br/>';
+
+                    }
+
+                }else{
+
+                    if($group_index === $key && isset($arr_group[$group_index])){
+                        $data .= '<br/><li> <strong>'.$group['name'].'</strong></li>';
+
+                        foreach ($arr_group[$group_index]['fields']  as $field){
+                            $data .= '<li> <strong>'.$field["name"].'</strong> : '.setGroupReturnValue($field).'</li><br/>';
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+
+
+    $data .= "</ul>";
+
+    return $data;
+}
 
 
 //-----------------------------------------------------------------------------------
-function get_template_field(Content $content, $field_slug, $group_slug='default', $return_html=true)
+function get_template_field(Content $content, $field_slug,
+                            $group_slug='default', $group_index = 0,
+                            $field_index = null, $return_html=true)
 {
 
     if(!isset($content->template_form_groups)
@@ -286,6 +359,49 @@ function setReturnValue($field,$field_index = null,$return_html=true)
 
     }
 
+
+    return $value;
+}
+
+
+//-----------------------------------------------------------------------------------
+function setGroupReturnValue($field)
+{
+    $value = null;
+
+    if($field['content']){
+        switch($field['type']['slug']){
+
+            case 'seo-meta-tags':
+                $value = '<ul>';
+                $value .= '<li><strong>Title</strong> : '.$field['content']->seo_title->content.'</li>';
+                $value .= '<li><strong>Description</strong> : '.$field['content']->seo_description->content.'</li>';
+                $value .= '<li><strong>Keywords</strong> : '.$field['content']->seo_keywords->content.'</li>';
+                $value .= '</ul>';
+                break;
+
+            case 'twitter-card':
+                $value = '<ul>';
+                $value .= '<li><strong>Site</strong> : '.$field['content']->twitter_site->content.'</li>';
+                $value .= '<li><strong>Title</strong> : '.$field['content']->twitter_title->content.'</li>';
+                $value .= '<li><strong>Description</strong> : '.$field['content']->twitter_description->content.'</li>';
+                $value .= '<li><strong>Image URl</strong> : '.$field['content']->twitter_image->content.'</li>';
+                $value .= '</ul>';
+                break;
+
+            case 'facebook-card':
+                $value = '<ul>';
+                $value .= '<li><strong>Title</strong> : '.$field['content']->og_title->content.'</li>';
+                $value .= '<li><strong>Description</strong> : '.$field['content']->og_description->content.'</li>';
+                $value .= '<li><strong>Image URl</strong> : '.$field['content']->og_image->content.'</li>';
+                $value .= '</ul>';
+                break;
+
+            default:
+                $value = setReturnValue($field,null,true);
+                break;
+        }
+    }
 
     return $value;
 }
