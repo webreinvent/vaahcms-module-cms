@@ -175,12 +175,20 @@
                                                             </td>
                                                         </tr>
 
+
                                                         <template v-if="field.meta">
-                                                            <tr v-for="(meta_item, meta_index) in field.meta">
+                                                            <tr v-for="(meta_item, meta_index) in field.meta"
+                                                                v-if="(meta_index !== 'container_opening_tag'
+                                                                    && meta_index !== 'container_closing_tag')
+                                                                    || assets.non_repeatable_fields.includes(field.type.slug)
+                                                                    || field.is_repeatable">
+
                                                                 <td v-html="$vaah.toLabel(meta_index)"></td>
                                                                 <td>
                                                                     <div v-if="meta_index.includes('is_')">
-                                                                        <b-checkbox v-model="field.meta[meta_index]">{{$vaah.toLabel(meta_index)}}</b-checkbox>
+                                                                        <b-checkbox v-model="field.meta[meta_index]">
+                                                                            {{$vaah.toLabel(meta_index)}}
+                                                                        </b-checkbox>
                                                                     </div>
                                                                     <div v-else-if="meta_index === 'option'">
                                                                         <b-taginput
@@ -190,6 +198,12 @@
                                                                                 aria-close-label="Delete this tag">
                                                                         </b-taginput>
                                                                     </div>
+                                                                    <!--<div v-else-if="(meta_index === 'container_opening_tag'
+                                                                    || meta_index === 'container_closing_tag')">
+                                                                        <b-input v-if="assets.non_repeatable_fields.includes(field.type.slug)"
+                                                                                 v-model="field.meta[meta_index]"
+                                                                                 type="text"></b-input>
+                                                                    </div>-->
                                                                     <div v-else>
                                                                         <b-input v-model="field.meta[meta_index]"
                                                                                  type="text"></b-input>

@@ -4,8 +4,10 @@
         "name": "Text",
         "excerpt": "",
         "meta": {
-            "container_start": "span",
-            "container_end": "short-text",
+            "opening_tag": "<p class='text'>",
+            "closing_tag": "</p>",
+            "container_opening_tag": "",
+            "container_closing_tag": "",
             "is_hidden": false
         }
     },
@@ -13,8 +15,10 @@
         "name": "Textarea",
         "excerpt": "",
         "meta": {
-            "container_tag": "span",
-            "container_attr_class": "long-text",
+            "opening_tag": "<p class='text-area'>",
+            "closing_tag": "</p>",
+            "container_opening_tag": "",
+            "container_closing_tag": "",
             "is_hidden": false
         }
     },
@@ -22,8 +26,10 @@
         "name": "Title",
         "excerpt": "",
         "meta": {
-            "container_tag": "h1",
-            "container_attr_class": "title",
+            "opening_tag": "<h2 class='title'>",
+            "closing_tag": "</h2>",
+            "container_opening_tag": "",
+            "container_closing_tag": "",
             "is_hidden": false
         }
     },
@@ -31,8 +37,10 @@
         "name": "Slug",
         "excerpt": "",
         "meta": {
-            "container_start": "span",
-            "container_end": "slug",
+            "opening_tag": "<p class='slug'>",
+            "closing_tag": "</p>",
+            "container_opening_tag": "",
+            "container_closing_tag": "",
             "is_hidden": true
         }
     },
@@ -40,8 +48,10 @@
         "name": "Editor",
         "excerpt": "",
         "meta": {
-            "container_tag": "div",
-            "container_attr_class": "editor",
+            "opening_tag": "<p class='editor'>",
+            "closing_tag": "</p>",
+            "container_opening_tag": "",
+            "container_closing_tag": "",
             "is_hidden": false
         }
     },
@@ -53,8 +63,10 @@
         "name": "Select",
         "excerpt": "",
         "meta": {
-            "container_tag": "div",
-            "container_attr_class": "select",
+            "opening_tag": "<li>",
+            "closing_tag": "</li>",
+            "container_opening_tag": "<ul class='select'>",
+            "container_closing_tag": "</ul>",
             "is_hidden": false,
             "is_multiple": false,
             "option": [
@@ -66,8 +78,10 @@
         "name": "Image",
         "excerpt": "",
         "meta": {
-            "container_tag": "div",
-            "container_attr_class": "image",
+            "opening_tag": "<p class='image'>",
+            "closing_tag": "</p>",
+            "container_opening_tag": "",
+            "container_closing_tag": "",
             "is_hidden": false
         }
     },
@@ -75,8 +89,10 @@
         "name": "Media",
         "excerpt": "",
         "meta": {
-            "container_tag": "div",
-            "container_attr_class": "media",
+            "opening_tag": "<p class='media'>",
+            "closing_tag": "</p>",
+            "container_opening_tag": "",
+            "container_closing_tag": "",
             "is_hidden": false
         }
     },
@@ -84,8 +100,10 @@
         "name": "Markdown",
         "excerpt": "",
         "meta": {
-            "container_tag": "div",
-            "container_attr_class": "markdown",
+            "opening_tag": "<p class='markdown'>",
+            "closing_tag": "</p>",
+            "container_opening_tag": "",
+            "container_closing_tag": "",
             "is_hidden": false
         }
     },
@@ -93,8 +111,6 @@
         "name": "SEO Meta Tags",
         "excerpt": "",
         "meta": {
-            "container_tag": "div",
-            "container_attr_class": "seo-meta-tag",
             "is_hidden": true
         }
     },
@@ -102,8 +118,10 @@
         "name": "Number",
         "excerpt": "",
         "meta": {
-            "container_tag": "span",
-            "container_attr_class": "number",
+            "opening_tag": "<p class='number'>",
+            "closing_tag": "</p>",
+            "container_opening_tag": "",
+            "container_closing_tag": "",
             "is_hidden": false
         }
     },
@@ -111,8 +129,10 @@
         "name": "Boolean",
         "excerpt": "",
         "meta": {
-            "container_tag": "span",
-            "container_attr_class": "boolean",
+            "opening_tag": "<p class='boolean'>",
+            "closing_tag": "</p>",
+            "container_opening_tag": "",
+            "container_closing_tag": "",
             "is_hidden": false
         }
     },
@@ -120,8 +140,10 @@
         "name": "Date",
         "excerpt": "",
         "meta": {
-            "container_tag": "span",
-            "container_attr_class": "date",
+            "opening_tag": "<p class='date'>",
+            "closing_tag": "</p>",
+            "container_opening_tag": "",
+            "container_closing_tag": "",
             "is_hidden": false
         }
     },
@@ -129,8 +151,10 @@
         "name": "Time",
         "excerpt": "",
         "meta": {
-            "container_tag": "span",
-            "container_attr_class": "time",
+            "opening_tag": "<p class='time'>",
+            "closing_tag": "</p>",
+            "container_opening_tag": "",
+            "container_closing_tag": "",
             "is_hidden": false
         }
     },
@@ -138,8 +162,10 @@
         "name": "Date Time",
         "excerpt": "",
         "meta": {
-            "container_tag": "span",
-            "container_attr_class": "date-time",
+            "opening_tag": "<p class='date-time'>",
+            "closing_tag": "</p>",
+            "container_opening_tag": "",
+            "container_closing_tag": "",
             "is_hidden": false
         }
     },
@@ -147,8 +173,10 @@
         "name": "Email",
         "excerpt": "",
         "meta": {
-            "container_tag": "span",
-            "container_attr_class": "email",
+            "opening_tag": "<p class='email'>",
+            "closing_tag": "</p>",
+            "container_opening_tag": "",
+            "container_closing_tag": "",
             "is_hidden": false
         }
     },
@@ -156,8 +184,10 @@
         "name": "Password",
         "excerpt": "",
         "meta": {
-            "container_tag": "span",
-            "container_attr_class": "password",
+            "opening_tag": "<p class='password'>",
+            "closing_tag": "</p>",
+            "container_opening_tag": "",
+            "container_closing_tag": "",
             "is_hidden": false
         }
     },
@@ -165,8 +195,10 @@
         "name": "UUID",
         "excerpt": "",
         "meta": {
-            "container_tag": "span",
-            "container_attr_class": "uuid",
+            "opening_tag": "<p class='uuid'>",
+            "closing_tag": "</p>",
+            "container_opening_tag": "",
+            "container_closing_tag": "",
             "is_hidden": false
         }
     },
@@ -174,8 +206,10 @@
         "name": "Currency Code",
         "excerpt": "",
         "meta": {
-            "container_tag": "span",
-            "container_attr_class": "currency-code",
+            "opening_tag": "<p class='currency-code'>",
+            "closing_tag": "</p>",
+            "container_opening_tag": "",
+            "container_closing_tag": "",
             "is_hidden": false
         }
     },
@@ -183,8 +217,10 @@
         "name": "Price",
         "excerpt": "",
         "meta": {
-            "container_tag": "span",
-            "container_attr_class": "price",
+            "opening_tag": "<p class='price'>",
+            "closing_tag": "</p>",
+            "container_opening_tag": "",
+            "container_closing_tag": "",
             "is_hidden": false
         }
     },
@@ -192,8 +228,10 @@
         "name": "List",
         "excerpt": "",
         "meta": {
-            "container_tag": "div",
-            "container_attr_class": "list",
+            "opening_tag": "<li>",
+            "closing_tag": "</li>",
+            "container_opening_tag": "<ul class='list'>",
+            "container_closing_tag": "</ul>",
             "is_hidden": false
         }
     },
@@ -202,8 +240,10 @@
         "name": "Image Group",
         "excerpt": "",
         "meta": {
-            "container_tag": "div",
-            "container_attr_class": "image-group",
+            "opening_tag": "<li>",
+            "closing_tag": "</li>",
+            "container_opening_tag": "<ul class='image-group'>",
+            "container_closing_tag": "</ul>",
             "is_hidden": false
         }
     },
@@ -211,8 +251,10 @@
         "name": "Phone Number",
         "excerpt": "",
         "meta": {
-            "container_tag": "span",
-            "container_attr_class": "phone-number",
+            "opening_tag": "<p class='phone-number'>",
+            "closing_tag": "</p>",
+            "container_opening_tag": "",
+            "container_closing_tag": "",
             "is_hidden": false
         }
     },
@@ -220,8 +262,10 @@
         "name": "Address",
         "excerpt": "",
         "meta": {
-            "container_tag": "span",
-            "container_attr_class": "address",
+            "opening_tag": "<li>",
+            "closing_tag": "</li>",
+            "container_opening_tag": "<ul class='address'>",
+            "container_closing_tag": "</ul>",
             "is_hidden": false
         }
     },
@@ -229,8 +273,10 @@
         "name": "Relation",
         "excerpt": "",
         "meta": {
-            "container_tag": "span",
-            "container_attr_class": "relation",
+            "opening_tag": "<p>",
+            "closing_tag": "</p>",
+            "container_opening_tag": "span",
+            "container_closing_tag": "span",
             "is_hidden": true
         }
     },
@@ -238,8 +284,10 @@
         "name": "Tags",
         "excerpt": "",
         "meta": {
-            "container_tag": "span",
-            "container_attr_class": "tags",
+            "opening_tag": "<li>",
+            "closing_tag": "</li>",
+            "container_opening_tag": "<ul class='tags'>",
+            "container_closing_tag": "</ul>",
             "is_hidden": false
 
         }
@@ -248,8 +296,10 @@
         "name": "Json",
         "excerpt": "",
         "meta": {
-            "container_tag": "div",
-            "container_attr_class": "json",
+            "opening_tag": "<li>",
+            "closing_tag": "</li>",
+            "container_opening_tag": "<ul class='json'>",
+            "container_closing_tag": "</ul>",
             "is_hidden": false
         }
     },
@@ -257,8 +307,6 @@
         "name": "Twitter Card",
         "excerpt": "",
         "meta": {
-            "container_tag": "div",
-            "container_attr_class": "json",
             "is_hidden": true
         }
     },
@@ -266,8 +314,6 @@
         "name": "Facebook Card",
         "excerpt": "",
         "meta": {
-            "container_tag": "div",
-            "container_attr_class": "json",
             "is_hidden": true
         }
     }
