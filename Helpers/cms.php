@@ -189,7 +189,7 @@ function get_group_content_field(Content $content, $group_slug='default',
 
                         foreach ($group['fields']  as $field){
 
-                            $array_val[$key][$field["slug"]] = $field["content"];
+                            $array_val[$key][$field["slug"]] = setGroupReturnValue($field,false);
 
                         }
 
@@ -198,7 +198,7 @@ function get_group_content_field(Content $content, $group_slug='default',
                         if($group_index === $key && isset($arr_group[$group_index])){
                             foreach ($arr_group[$group_index]['fields']  as $field){
 
-                                $array_val[$key][$field["slug"]] = $field["content"];
+                                $array_val[$key][$field["slug"]] = setGroupReturnValue($field,false);
 
                             }
                         }
@@ -366,7 +366,19 @@ function setReturnValue($field,$field_index = null,$return_html=true)
                 break;
 
             default:
-                $value = $field['content'];
+
+                if(is_string($field['content'])
+                    && isset($field['meta']->opening_tag)
+                    && isset($field['meta']->closing_tag)){
+                    $value = $field['meta']->opening_tag;
+                    $value .= $field['content'];
+                    $value .= $field['meta']->closing_tag;
+
+                }else{
+                    $value = $field['content'];
+                }
+
+
                 break;
         }
     }
@@ -388,13 +400,55 @@ function setReturnValue($field,$field_index = null,$return_html=true)
     }
 
 
+
+    if($field['is_repeatable'] && !is_string($value)){
+
+        $data = $value;
+        $value = '<ul>'."\n";
+
+        foreach ($data as $item){
+            $value .= '<li>'.$item.'</li>'."\n";
+        }
+        $value .= '</ul>';
+    }
+
+
+
     return $value;
 }
 
 
 //-----------------------------------------------------------------------------------
-function setGroupReturnValue($field)
+function setGroupReturnValue($field,$return_html = true)
 {
+
+    if(!$return_html){
+        $value = null;
+
+        if($field['content']){
+
+            if($field['type']['slug'] =='seo-meta-tags'
+                || $field['type']['slug'] =='twitter-card'
+                || $field['type']['slug'] =='facebook-card'
+                || $field['type']['slug'] =='address'){
+                if(is_object($field['content'])){
+                    $value = [];
+
+                    foreach ($field['content'] as $key => $item){
+                        $value[$key] = $item->content;
+                    }
+                }
+
+            }else{
+                $value = $field['content'];
+            }
+        }
+
+        return $value;
+    }
+
+
+
     $value = null;
 
     if($field['content']){
