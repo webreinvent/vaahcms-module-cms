@@ -119,7 +119,7 @@ function get_the_group(Content $content, $group_slug='default', $type='content',
     {
         return get_group_content_field($content, $group_slug,$group_index,false);
     } else {
-//        return get_template_field($content, $field_slug, $group_slug,$group_index , $field_index);
+        return get_template_content_field($$content, $group_slug,$group_index,false);
     }
 }
 //-----------------------------------------------------------------------------------
@@ -130,7 +130,7 @@ function get_the_field(Content $content, $field_slug,
 
     if($type=='content')
     {
-        return get_content_field($content, $field_slug, $group_slug,$group_index , $field_index, false);
+        return get_content_field($content, $field_slug, $group_slug, $group_index , $field_index, false);
     } else {
         return get_template_field($content, $field_slug, $group_slug,$group_index , $field_index, false);
     }
@@ -240,6 +240,82 @@ function get_group_content_field(Content $content, $group_slug='default',
 
     return $data;
 }
+//-----------------------------------------------------------------------------------
+function get_template_content_field(Content $content, $group_slug='default',
+                                 $group_index = null , $return_html=true)
+{
+
+    if(!$return_html){
+
+        $array_val = [];
+
+        foreach ($content->template_form_groups as $arr_group){
+            foreach ($arr_group as $key => $group){
+                if($group['slug'] === $group_slug){
+
+
+                    if($group_index === null){
+
+                        foreach ($group['fields']  as $field){
+
+                            $array_val[$key][$field["slug"]] = setGroupReturnValue($field,false);
+
+                        }
+
+                    }else{
+
+                        if($group_index === $key && isset($arr_group[$group_index])){
+                            foreach ($arr_group[$group_index]['fields']  as $field){
+
+                                $array_val[$key][$field["slug"]] = setGroupReturnValue($field,false);
+
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+
+        return $array_val;
+    }
+
+    $data = "<ul>";
+
+    foreach ($content->template_form_groups as $arr_group){
+        foreach ($arr_group as $key => $group){
+            if($group['slug'] === $group_slug){
+
+                if($group_index === null){
+
+                    $data .= '<br/><li> <strong>'.$group['name'].' - ' .($key+1).'</strong></li>';
+
+                    foreach ($group['fields']  as $field){
+
+                        $data .= '<li> <strong>'.$field["name"].'</strong> : '.setGroupReturnValue($field).'</li><br/>';
+
+                    }
+
+                }else{
+
+                    if($group_index === $key && isset($arr_group[$group_index])){
+                        $data .= '<br/><li> <strong>'.$group['name'].'</strong></li>';
+
+                        foreach ($arr_group[$group_index]['fields']  as $field){
+                            $data .= '<li> <strong>'.$field["name"].'</strong> : '.setGroupReturnValue($field).'</li><br/>';
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+
+
+    $data .= "</ul>";
+
+    return $data;
+}
 
 
 //-----------------------------------------------------------------------------------
@@ -248,29 +324,26 @@ function get_template_field(Content $content, $field_slug,
                             $field_index = null, $return_html=true)
 {
 
-    if(!isset($content->template_form_groups)
-        || $content->template_form_groups->count() < 1
-    )
-    {
-        return null;
+    foreach ($content->template_form_groups as $arr_group){
+        foreach ($arr_group as $key => $group){
+            if($group['slug'] === $group_slug){
+
+                if($group_index === $key && isset($arr_group[$group_index])){
+                    foreach ($arr_group[$group_index]['fields'] as $field){
+                        if($field['slug'] === $field_slug){
+                            return setReturnValue($field,$field_index,$return_html);
+                        }
+
+                    }
+                }
+
+
+
+            }
+        }
     }
 
-    $group = $content->template_form_groups->where('slug', $group_slug)->first();
-
-    if(!$group)
-    {
-        return null;
-    }
-
-
-    $field = $group->fields->where('slug', $field_slug)->first();
-
-    if(!$field)
-    {
-        return null;
-    }
-
-    return setReturnValue($field,$return_html);
+    return null;
 }
 
 
@@ -342,51 +415,97 @@ function setReturnValue($field,$field_index = null,$return_html=true)
                 break;
 
             case 'address':
-                $value = '<address>'."\n";
+                $value = $field['meta']->opening_tag."\n";
 
-                $value .= $field['content']->address_line_1->content.', '.$field['content']->address_line_2->content."</br>";
-                $value .= $field['content']->city->content.', '.$field['content']->state->content."</br>";
-                $value .= $field['content']->landmark->content."</br>";
-                $value .= $field['content']->country->content.', '.$field['content']->zip_code->content;
+                $value .= $field['content']->address_line_1->content;
 
-                $value .= '</address>';
+                if($field['content']->address_line_1->content
+                    && $field['content']->address_line_2->content){
+                    $value .= ", ";
+                }
+
+                $value .= $field['content']->address_line_2->content;
+
+                if($field['content']->address_line_1->content
+                    || $field['content']->address_line_2->content){
+                    $value .= "</br>";
+                }
+
+                $value .= $field['content']->city->content;
+
+                if($field['content']->city->content
+                    && $field['content']->state->content){
+                    $value .= ", ";
+                }
+
+                $value .= $field['content']->state->content;
+
+                if($field['content']->city->content
+                    || $field['content']->state->content){
+                    $value .= "</br>";
+                }
+
+                if($field['content']->landmark->content){
+                    $value .= $field['content']->landmark->content."</br>";
+                }
+
+
+                $value .= $field['content']->country->content;
+
+                if($field['content']->country->content
+                    && $field['content']->zip_code->content){
+                    $value .= ", ";
+                }
+
+                $value .= $field['content']->zip_code->content;
+
+                $value .= $field['meta']->closing_tag;
                 break;
 
             case 'json':
+
                 $value = json_encode($field['content']);
+
+//                $value = returnJsonDataInHtml($field,$field['content']);
+
                 break;
 
             case 'image-group':
 
-                $value = '<div class="image-group field-id-'.$field->id.'" 
-            id="field-'.$field->id.'" >'."\n";
+                $value = $field['meta']->container_opening_tag."\n";
 
                 foreach ($field['content'] as $item){
-                    $value .= '<div class="image-container">'."\n";
+                    $value .= $field['meta']->opening_tag."\n";
                     $value .= '<img class="image" src='.$item.'/>'."\n";
-                    $value .= '</div>'."\n";
+                    $value .= $field['meta']->closing_tag."\n";
                 }
 
-                $value .= '</div>'."\n";
+                $value .= $field['meta']->container_opening_tag;
+
                 break;
 
             case 'list':
-                $value = '<ul>'."\n";
+                $value = $field['meta']->container_opening_tag."\n";
 
-                foreach ($field['content'] as $item){
-                    $value .= '<li>'.$item.'</li>'."\n";
+                foreach ($field['content'] as  $item){
+                    $value .= $field['meta']->opening_tag.$item.$field['meta']->closing_tag;
                 }
-                $value .= '</ul>';
+
+                $value .= $field['meta']->container_opening_tag;
+
                 break;
 
             default:
 
-                if(is_string($field['content'])
-                    && isset($field['meta']->opening_tag)
-                    && isset($field['meta']->closing_tag)){
-                    $value = $field['meta']->opening_tag;
-                    $value .= $field['content'];
-                    $value .= $field['meta']->closing_tag;
+                if(is_string($field['content'])){
+                    if($field['is_repeatable']){
+                        $temp = $value;
+                        $value = [$temp];
+                    }else{
+                        $value = $field['meta']->opening_tag;
+                        $value .= $field['content'];
+                        $value .= $field['meta']->closing_tag;
+                    }
 
                 }else{
                     $value = $field['content'];
@@ -397,33 +516,27 @@ function setReturnValue($field,$field_index = null,$return_html=true)
         }
     }
 
-
-    if($field['is_repeatable'] && is_string($value)){
-        $temp = $value;
-        $value = [$temp];
-    }
-
-
     if(is_numeric($field_index) && is_array($value) && $field_index >= 0){
         if(isset($value[$field_index])){
             return $value[$field_index];
         }else{
             return null;
         }
-
     }
 
 
-
-    if($field['is_repeatable'] && !is_string($value)){
+    if(is_object($value) || is_array($value)){
 
         $data = $value;
-        $value = '<ul>'."\n";
+
+        $value = $field['meta']->container_opening_tag."\n";
 
         foreach ($data as $item){
-            $value .= '<li>'.$item.'</li>'."\n";
+            $value .= $field['meta']->opening_tag.$item.$field['meta']->closing_tag."\n";
         }
-        $value .= '</ul>';
+
+        $value .= $field['meta']->container_opening_tag;
+
     }
 
 
@@ -501,6 +614,25 @@ function setGroupReturnValue($field,$return_html = true)
 
         }
     }
+
+    return $value;
+}
+
+
+//-----------------------------------------------------------------------------------
+function returnJsonDataInHtml($field,$content)
+{
+    $value = $field['meta']->container_opening_tag."\n";
+
+    foreach ($content as $key => $item){
+        if(is_string($item)){
+            $value .= $field['meta']->opening_tag.'<strong>'.$key.'</strong>: '.$item.$field['meta']->closing_tag;
+        }else{
+            $value .= $field['meta']->opening_tag.'<strong>'.$key.'</strong> '.returnJsonDataInHtml($field,$item).$field['meta']->closing_tag;
+        }
+    }
+
+    $value .= $field['meta']->container_opening_tag;
 
     return $value;
 }

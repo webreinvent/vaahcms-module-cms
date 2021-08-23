@@ -927,6 +927,15 @@ class Content extends Model {
 
     }
     //-------------------------------------------------
+    public static function getNonRepeatableFields()
+    {
+
+        return ['seo-meta-tags','list',
+            'image-group','facebook-card','twitter-card',
+            'json','address','tags','select'];
+
+    }
+    //-------------------------------------------------
 
     //-------------------------------------------------
     //-------------------------------------------------

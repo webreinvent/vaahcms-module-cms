@@ -240,10 +240,10 @@
         "name": "Image Group",
         "excerpt": "",
         "meta": {
-            "opening_tag": "<li>",
-            "closing_tag": "</li>",
-            "container_opening_tag": "<ul class='image-group'>",
-            "container_closing_tag": "</ul>",
+            "opening_tag": "<div class=\"image-container\">",
+            "closing_tag": "</div>",
+            "container_opening_tag": "<div class=\"image-group\">",
+            "container_closing_tag": "</div>",
             "is_hidden": false
         }
     },
@@ -262,10 +262,8 @@
         "name": "Address",
         "excerpt": "",
         "meta": {
-            "opening_tag": "<li>",
-            "closing_tag": "</li>",
-            "container_opening_tag": "<ul class='address'>",
-            "container_closing_tag": "</ul>",
+            "opening_tag": "<address>",
+            "closing_tag": "</address>",
             "is_hidden": false
         }
     },

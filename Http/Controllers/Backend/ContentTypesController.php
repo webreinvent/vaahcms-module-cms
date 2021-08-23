@@ -4,6 +4,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use VaahCms\Modules\Cms\Entities\Content;
 use VaahCms\Modules\Cms\Entities\ContentType;
 use VaahCms\Modules\Cms\Entities\FieldType;
 
@@ -24,9 +25,7 @@ class ContentTypesController extends Controller
         $data['field_types'] = FieldType::select('id', 'name', 'slug', 'meta')
             ->get();
 
-        $data['non_repeatable_fields'] = ['seo-meta-tags','list',
-            'image-group','facebook-card','twitter-card',
-            'json','address','tags'];
+        $data['non_repeatable_fields'] = Content::getNonRepeatableFields();
 
         $data['bulk_actions'] = vh_general_bulk_actions();
 
