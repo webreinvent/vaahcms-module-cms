@@ -161,14 +161,7 @@ function get_content_field(Content $content, $field_slug,
         }
     }
 
-    if(isset($content->content_form_groups[0])
-        && isset($content->content_form_groups[0][$group_index])
-        && $content->content_form_groups[0][$group_index]['slug'] === $group_slug){
-
-
-
-
-    }
+    return null;
 
 }
 //-----------------------------------------------------------------------------------
@@ -288,8 +281,29 @@ function setReturnValue($field,$field_index = null,$return_html=true)
 
     if(!$return_html || !isset($field['type'])
         || !isset($field['type']['slug'])){
-        if($return_html && (is_object($field['content']) || is_array($field['content']))){
-            return json_encode($field['content']);
+        if(is_object($field['content'])){
+            $value = null;
+
+            if($field['content']){
+
+                if($field['type']['slug'] =='seo-meta-tags'
+                    || $field['type']['slug'] =='twitter-card'
+                    || $field['type']['slug'] =='facebook-card'
+                    || $field['type']['slug'] =='address'){
+                    if(is_object($field['content'])){
+                        $value = [];
+
+                        foreach ($field['content'] as $key => $item){
+                            $value[$key] = $item->content;
+                        }
+                    }
+
+                }else{
+                    $value = $field['content'];
+                }
+            }
+
+            return $value;
         }
         return $field['content'];
     }
@@ -451,37 +465,40 @@ function setGroupReturnValue($field,$return_html = true)
 
     $value = null;
 
+
     if($field['content']){
-        switch($field['type']['slug']){
 
-            case 'seo-meta-tags':
+        if($field['type']['slug'] =='seo-meta-tags'
+            || $field['type']['slug'] =='twitter-card'
+            || $field['type']['slug'] =='facebook-card'
+            || $field['type']['slug'] =='address'){
+            if(is_object($field['content'])){
                 $value = '<ul>';
-                $value .= '<li><strong>Title</strong> : '.$field['content']->seo_title->content.'</li>';
-                $value .= '<li><strong>Description</strong> : '.$field['content']->seo_description->content.'</li>';
-                $value .= '<li><strong>Keywords</strong> : '.$field['content']->seo_keywords->content.'</li>';
-                $value .= '</ul>';
-                break;
 
-            case 'twitter-card':
+                foreach ($field['content'] as $key => $item){
+                    $value .= '<li><strong>'.$key.'</strong> : '.$item->content.'</li>';
+                }
+
+                $value .= '</ul>';
+            }
+
+        }else{
+
+            if(is_object($field['content']) || is_array($field['content'])){
+
                 $value = '<ul>';
-                $value .= '<li><strong>Site</strong> : '.$field['content']->twitter_site->content.'</li>';
-                $value .= '<li><strong>Title</strong> : '.$field['content']->twitter_title->content.'</li>';
-                $value .= '<li><strong>Description</strong> : '.$field['content']->twitter_description->content.'</li>';
-                $value .= '<li><strong>Image URl</strong> : '.$field['content']->twitter_image->content.'</li>';
-                $value .= '</ul>';
-                break;
 
-            case 'facebook-card':
-                $value = '<ul>';
-                $value .= '<li><strong>Title</strong> : '.$field['content']->og_title->content.'</li>';
-                $value .= '<li><strong>Description</strong> : '.$field['content']->og_description->content.'</li>';
-                $value .= '<li><strong>Image URl</strong> : '.$field['content']->og_image->content.'</li>';
-                $value .= '</ul>';
-                break;
+                foreach ($field['content'] as $item){
+                    $value .= '<li>'.$item.'</li>';
+                }
 
-            default:
-                $value = setReturnValue($field,null,true);
-                break;
+                $value .= '</ul>';
+
+            }else{
+                $value = $field['content'];
+            }
+
+
         }
     }
 
