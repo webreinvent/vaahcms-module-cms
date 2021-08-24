@@ -50,8 +50,6 @@ export default {
         copyCode: function (group, field,group_index = 0,field_index = null)
         {
 
-            console.log(group_index,field_index);
-
             let code = "";
 
             if(field_index == null){
@@ -79,8 +77,6 @@ export default {
                     code = "<img src='{{get_field($data, '"+field.slug+"', '"+group.slug+"','content' , "+group_index+", "+field_index+")'/>";
                 }
             }
-
-
 
             copy(code);
 

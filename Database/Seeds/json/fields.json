@@ -111,6 +111,10 @@
         "name": "SEO Meta Tags",
         "excerpt": "",
         "meta": {
+            "opening_tag": "<li>",
+            "closing_tag": "</li>",
+            "container_opening_tag": "<ul class='seo-meta-tags'>",
+            "container_closing_tag": "</ul>",
             "is_hidden": true
         }
     },
@@ -262,8 +266,10 @@
         "name": "Address",
         "excerpt": "",
         "meta": {
-            "opening_tag": "<address>",
-            "closing_tag": "</address>",
+            "opening_tag": "<li>",
+            "closing_tag": "</li>",
+            "container_opening_tag": "<ul class='address'>",
+            "container_closing_tag": "</ul>",
             "is_hidden": false
         }
     },
@@ -294,10 +300,6 @@
         "name": "Json",
         "excerpt": "",
         "meta": {
-            "opening_tag": "<li>",
-            "closing_tag": "</li>",
-            "container_opening_tag": "<ul class='json'>",
-            "container_closing_tag": "</ul>",
             "is_hidden": false
         }
     },
@@ -305,6 +307,10 @@
         "name": "Twitter Card",
         "excerpt": "",
         "meta": {
+            "opening_tag": "<li>",
+            "closing_tag": "</li>",
+            "container_opening_tag": "<ul class='twitter-card'>",
+            "container_closing_tag": "</ul>",
             "is_hidden": true
         }
     },
@@ -312,6 +318,10 @@
         "name": "Facebook Card",
         "excerpt": "",
         "meta": {
+            "opening_tag": "<li>",
+            "closing_tag": "</li>",
+            "container_opening_tag": "<ul class='facebook-card'>",
+            "container_closing_tag": "</ul>",
             "is_hidden": true
         }
     }

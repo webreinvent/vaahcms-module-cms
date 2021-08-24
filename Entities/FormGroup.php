@@ -222,6 +222,13 @@ class FormGroup extends Model {
                     if($type)
                     {
                         $field['vh_cms_field_type_id'] = $type->id;
+
+                        if(isset($field['meta'])){
+                            $field['meta'] = array_merge((array) $type['meta'],$field['meta']);
+                        }else{
+                            $field['meta'] = (array) $type['meta'];
+                        }
+
                     }
 
                     unset($field['type']);

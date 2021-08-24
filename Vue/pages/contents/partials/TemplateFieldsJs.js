@@ -43,17 +43,33 @@ export default {
             this.$vaah.updateState(update);
         },
         //---------------------------------------------------------------------
-        copyCode: function (group, field) {
+        copyCode: function (group, field, group_index = 0, field_index = null) {
             let code = '';
-            if (!group && !group.slug) {
-                group.slug = 'default';
-            }
 
+            if(field_index == null){
+                if(group_index === 0){
+                    code = "{!! get_field($data, '"+field.slug+"', '"+group.slug+"','template') !!}";
 
-            code = "{!! get_field($data, '" + field.slug + "', '" + group.slug + "', 'template') !!}";
+                    if(field.type.slug == 'image')
+                    {
+                        code = "<img src='{{get_field($data, '"+field.slug+"', '"+group.slug+"','template')'/>";
+                    }
+                }else{
+                    code = "{!! get_field($data, '"+field.slug+"', '"+group.slug+"','template' , "+group_index+") !!}";
 
-            if (field.type.slug == 'image') {
-                code = "<img src='{{get_field($data, '" + field.slug + "', '" + group.slug + "', 'template')}}'/>";
+                    if(field.type.slug == 'image')
+                    {
+                        code = "<img src='{{get_field($data, '"+field.slug+"', '"+group.slug+"','template' , "+group_index+")'/>";
+                    }
+                }
+
+            }else{
+                code = "{!! get_field($data, '"+field.slug+"', '"+group.slug+"','template' , "+group_index+", "+field_index+") !!}";
+
+                if(field.type.slug == 'image')
+                {
+                    code = "<img src='{{get_field($data, '"+field.slug+"', '"+group.slug+"','template' , "+group_index+", "+field_index+")'/>";
+                }
             }
 
 
@@ -139,6 +155,27 @@ export default {
         //---------------------------------------------------------------------
         removeGroupAfter: function (data,res) {
             this.$Progress.finish();
+        },
+    //---------------------------------------------------------------------
+        copyGroupCode: function (group,group_index = null)
+        {
+
+            let code = "";
+
+            if(group_index == null){
+                code = "{!! get_group($data ,'"+group.slug+"' ,'template') !!}";
+
+            }else{
+                code = "{!! get_group($data ,'"+group.slug+"' ,'template' ,"+group_index+" ) !!}";
+
+            }
+
+            copy(code);
+
+            this.$buefy.toast.open({
+                message: 'Copied!',
+                type: 'is-success'
+            });
         },
         //---------------------------------------------------------------------
     }

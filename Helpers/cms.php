@@ -108,7 +108,7 @@ function get_group(Content $content, $group_slug='default', $type='content',
     {
         return get_group_content_field($content, $group_slug,$group_index,true);
     } else {
-//        return get_template_field($content, $field_slug, $group_slug,$group_index , $field_index);
+        return get_template_content_field($content, $group_slug,$group_index,true);
     }
 }
 //-----------------------------------------------------------------------------------
@@ -119,7 +119,8 @@ function get_the_group(Content $content, $group_slug='default', $type='content',
     {
         return get_group_content_field($content, $group_slug,$group_index,false);
     } else {
-        return get_template_content_field($$content, $group_slug,$group_index,false);
+
+        return get_template_content_field($content, $group_slug,$group_index,false);
     }
 }
 //-----------------------------------------------------------------------------------
@@ -204,29 +205,27 @@ function get_group_content_field(Content $content, $group_slug='default',
         return $array_val;
     }
 
-    $data = "<ul>";
+    $data = null;
 
     foreach ($content->content_form_groups as $arr_group){
+        $data = null;
         foreach ($arr_group as $key => $group){
             if($group['slug'] === $group_slug){
 
                 if($group_index === null){
 
-                    $data .= '<br/><li> <strong>'.$group['name'].' - ' .($key+1).'</strong></li>';
-
                     foreach ($group['fields']  as $field){
 
-                        $data .= '<li> <strong>'.$field["name"].'</strong> : '.setGroupReturnValue($field).'</li><br/>';
+                        $data .= setReturnValue($field);
 
                     }
 
                 }else{
 
                     if($group_index === $key && isset($arr_group[$group_index])){
-                        $data .= '<br/><li> <strong>'.$group['name'].'</strong></li>';
 
                         foreach ($arr_group[$group_index]['fields']  as $field){
-                            $data .= '<li> <strong>'.$field["name"].'</strong> : '.setGroupReturnValue($field).'</li><br/>';
+                            $data .= setReturnValue($field);
                         }
                     }
                 }
@@ -236,7 +235,7 @@ function get_group_content_field(Content $content, $group_slug='default',
     }
 
 
-    $data .= "</ul>";
+
 
     return $data;
 }
@@ -280,29 +279,27 @@ function get_template_content_field(Content $content, $group_slug='default',
         return $array_val;
     }
 
-    $data = "<ul>";
+    $data = null;
 
     foreach ($content->template_form_groups as $arr_group){
+        $data = null;
         foreach ($arr_group as $key => $group){
             if($group['slug'] === $group_slug){
 
                 if($group_index === null){
 
-                    $data .= '<br/><li> <strong>'.$group['name'].' - ' .($key+1).'</strong></li>';
-
                     foreach ($group['fields']  as $field){
 
-                        $data .= '<li> <strong>'.$field["name"].'</strong> : '.setGroupReturnValue($field).'</li><br/>';
+                        $data .= setReturnValue($field);
 
                     }
 
                 }else{
 
                     if($group_index === $key && isset($arr_group[$group_index])){
-                        $data .= '<br/><li> <strong>'.$group['name'].'</strong></li>';
 
                         foreach ($arr_group[$group_index]['fields']  as $field){
-                            $data .= '<li> <strong>'.$field["name"].'</strong> : '.setGroupReturnValue($field).'</li><br/>';
+                            $data .= setReturnValue($field);
                         }
                     }
                 }
@@ -312,7 +309,7 @@ function get_template_content_field(Content $content, $group_slug='default',
     }
 
 
-    $data .= "</ul>";
+
 
     return $data;
 }
@@ -395,78 +392,78 @@ function setReturnValue($field,$field_index = null,$return_html=true)
         switch($field['type']['slug']){
 
             case 'seo-meta-tags':
-                $value = '<title>'.$field['content']->seo_title->content.'</title>'."\n";
-                $value .= '<meta name="description" content="'.$field['content']->seo_description->content.'"/>'."\n";
-                $value .= '<meta name="keywords" content="'.$field['content']->seo_keywords->content.'"/>'."\n";
+
+                if(!$field['meta']->is_hidden){
+                    $value = $field['meta']->container_opening_tag."\n";
+
+                    foreach ($field['content'] as  $item){
+                        $value .= $field['meta']->opening_tag.$item->content.$field['meta']->closing_tag;
+                    }
+
+                    $value .= $field['meta']->container_opening_tag;
+                }else{
+                    $value = '<title>'.$field['content']->seo_title->content.'</title>'."\n";
+                    $value .= '<meta name="description" content="'.$field['content']->seo_description->content.'"/>'."\n";
+                    $value .= '<meta name="keywords" content="'.$field['content']->seo_keywords->content.'"/>'."\n";
+                }
+
+
                 break;
 
             case 'twitter-card':
-                $value = '<meta name="twitter:card" content="summary" />'."\n";
-                $value .= '<meta name="twitter:site" content="'.$field['content']->twitter_site->content.'"/>'."\n";
-                $value .= '<meta name="twitter:title" content="'.$field['content']->twitter_title->content.'"/>'."\n";
-                $value .= '<meta name="twitter:description" content="'.$field['content']->twitter_description->content.'"/>'."\n";
-                $value .= '<meta name="twitter:image" content="'.$field['content']->twitter_image->content.'"/>'."\n";
+
+
+                if(!$field['meta']->is_hidden){
+                    $value = $field['meta']->container_opening_tag."\n";
+
+                    foreach ($field['content'] as  $item){
+                        $value .= $field['meta']->opening_tag.$item->content.$field['meta']->closing_tag;
+                    }
+
+                    $value .= $field['meta']->container_opening_tag;
+                }else{
+                    $value = '<meta name="twitter:card" content="summary" />'."\n";
+                    $value .= '<meta name="twitter:site" content="'.$field['content']->twitter_site->content.'"/>'."\n";
+                    $value .= '<meta name="twitter:title" content="'.$field['content']->twitter_title->content.'"/>'."\n";
+                    $value .= '<meta name="twitter:description" content="'.$field['content']->twitter_description->content.'"/>'."\n";
+                    $value .= '<meta name="twitter:image" content="'.$field['content']->twitter_image->content.'"/>'."\n";
+                }
+
+
                 break;
 
             case 'facebook-card':
-                $value = '<meta name="og:title" content="'.$field['content']->og_title->content.'"/>'."\n";
-                $value .= '<meta name="og:description" content="'.$field['content']->og_description->content.'"/>'."\n";
-                $value .= '<meta name="og:image" content="'.$field['content']->og_image->content.'"/>'."\n";
+
+                if(!$field['meta']->is_hidden){
+                    $value = $field['meta']->container_opening_tag."\n";
+
+                    foreach ($field['content'] as  $item){
+                        $value .= $field['meta']->opening_tag.$item->content.$field['meta']->closing_tag;
+                    }
+
+                    $value .= $field['meta']->container_opening_tag;
+                }else{
+                    $value = '<meta name="og:title" content="'.$field['content']->og_title->content.'"/>'."\n";
+                    $value .= '<meta name="og:description" content="'.$field['content']->og_description->content.'"/>'."\n";
+                    $value .= '<meta name="og:image" content="'.$field['content']->og_image->content.'"/>'."\n";
+                }
+
                 break;
 
             case 'address':
-                $value = $field['meta']->opening_tag."\n";
+                $value = $field['meta']->container_opening_tag."\n";
 
-                $value .= $field['content']->address_line_1->content;
-
-                if($field['content']->address_line_1->content
-                    && $field['content']->address_line_2->content){
-                    $value .= ", ";
+                foreach ($field['content'] as  $item){
+                    $value .= $field['meta']->opening_tag.$item.$field['meta']->closing_tag;
                 }
 
-                $value .= $field['content']->address_line_2->content;
+                $value .= $field['meta']->container_opening_tag;
 
-                if($field['content']->address_line_1->content
-                    || $field['content']->address_line_2->content){
-                    $value .= "</br>";
-                }
-
-                $value .= $field['content']->city->content;
-
-                if($field['content']->city->content
-                    && $field['content']->state->content){
-                    $value .= ", ";
-                }
-
-                $value .= $field['content']->state->content;
-
-                if($field['content']->city->content
-                    || $field['content']->state->content){
-                    $value .= "</br>";
-                }
-
-                if($field['content']->landmark->content){
-                    $value .= $field['content']->landmark->content."</br>";
-                }
-
-
-                $value .= $field['content']->country->content;
-
-                if($field['content']->country->content
-                    && $field['content']->zip_code->content){
-                    $value .= ", ";
-                }
-
-                $value .= $field['content']->zip_code->content;
-
-                $value .= $field['meta']->closing_tag;
                 break;
 
             case 'json':
 
                 $value = json_encode($field['content']);
-
-//                $value = returnJsonDataInHtml($field,$field['content']);
 
                 break;
 
@@ -597,20 +594,7 @@ function setGroupReturnValue($field,$return_html = true)
 
         }else{
 
-            if(is_object($field['content']) || is_array($field['content'])){
-
-                $value = '<ul>';
-
-                foreach ($field['content'] as $item){
-                    $value .= '<li>'.$item.'</li>';
-                }
-
-                $value .= '</ul>';
-
-            }else{
-                $value = $field['content'];
-            }
-
+            $value = setReturnValue($field);
 
         }
     }
@@ -620,21 +604,5 @@ function setGroupReturnValue($field,$return_html = true)
 
 
 //-----------------------------------------------------------------------------------
-function returnJsonDataInHtml($field,$content)
-{
-    $value = $field['meta']->container_opening_tag."\n";
-
-    foreach ($content as $key => $item){
-        if(is_string($item)){
-            $value .= $field['meta']->opening_tag.'<strong>'.$key.'</strong>: '.$item.$field['meta']->closing_tag;
-        }else{
-            $value .= $field['meta']->opening_tag.'<strong>'.$key.'</strong> '.returnJsonDataInHtml($field,$item).$field['meta']->closing_tag;
-        }
-    }
-
-    $value .= $field['meta']->container_opening_tag;
-
-    return $value;
-}
 //-----------------------------------------------------------------------------------
 

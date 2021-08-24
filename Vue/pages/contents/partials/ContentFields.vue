@@ -48,7 +48,8 @@
                                         <!-- Right side -->
                                         <div class="right">
                                             <div  v-if="index === 0" class="level-item">
-                                                <b-button @click="copyGroupCode(group,index)"
+                                                <b-button v-if="arr_groups.length > 1"
+                                                          @click="copyGroupCode(group,index)"
                                                           icon-left="file">
                                                 </b-button>
                                                 <b-button @click="copyGroupCode(group)"
