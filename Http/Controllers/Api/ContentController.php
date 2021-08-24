@@ -154,7 +154,8 @@ class ContentController extends Controller
 
         $arr_include_groups = array();
         $arr_exclude_groups = array();
-        $arr_groups = array();
+        $arr_content = array();
+        $arr_template = array();
 
         if($request->has('include_groups')){
             $arr_include_groups = explode(",",$request->include_groups);
@@ -170,13 +171,17 @@ class ContentController extends Controller
                     || in_array($group[0]['slug'], $arr_include_groups))
                 && (count($arr_exclude_groups) == 0
                     || !in_array($group[0]['slug'], $arr_exclude_groups))){
-                $arr_groups['content'][$group[0]['slug']] = get_the_group(
+
+                $arr_content[$group[0]['slug']] = get_the_group(
                     $content_data['data'],
                     $group[0]['slug']
                 );
+
             }
 
         }
+
+        $content['content_fields'] = $arr_content;
 
         foreach ($content_data['data']['template_form_groups'] as $group){
 
@@ -184,17 +189,22 @@ class ContentController extends Controller
                     || in_array($group[0]['slug'], $arr_include_groups))
                 && (count($arr_exclude_groups) == 0
                     || !in_array($group[0]['slug'], $arr_exclude_groups))){
-                $arr_groups['template'][$group[0]['slug']] = get_the_group(
+
+                $arr_template[$group[0]['slug']] = get_the_group(
                     $content_data['data'],
                     $group[0]['slug'],
                     'template'
                 );
+
             }
 
         }
 
+        $content['template_fields'] = $arr_template;
+
+
         $response['status']     = 'success';
-        $response['data']       = $arr_groups;
+        $response['data']       = $content;
         return $response;
     }
 
