@@ -523,6 +523,11 @@ function setReturnValue($field,$field_index = null,$return_html=true)
                 break;
 
             case 'address':
+
+                if($field['meta']->is_hidden){
+                    return null;
+                }
+
                 $value = $field['meta']->container_opening_tag."\n";
 
                 foreach ($field['content'] as  $item){
@@ -535,11 +540,19 @@ function setReturnValue($field,$field_index = null,$return_html=true)
 
             case 'json':
 
+                if($field['meta']->is_hidden){
+                    return null;
+                }
+
                 $value = json_encode($field['content']);
 
                 break;
 
             case 'image-group':
+
+                if($field['meta']->is_hidden){
+                    return null;
+                }
 
                 $value = $field['meta']->container_opening_tag."\n";
 
@@ -554,6 +567,11 @@ function setReturnValue($field,$field_index = null,$return_html=true)
                 break;
 
             case 'list':
+
+                if($field['meta']->is_hidden){
+                    return null;
+                }
+
                 $value = $field['meta']->container_opening_tag."\n";
 
                 foreach ($field['content'] as  $item){
@@ -565,6 +583,10 @@ function setReturnValue($field,$field_index = null,$return_html=true)
                 break;
 
             default:
+
+                if($field['meta']->is_hidden){
+                    return null;
+                }
 
                 if(is_string($field['content'])){
                     if($field['is_repeatable']){
