@@ -12,3 +12,16 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+Route::group(
+    [
+        'prefix'     => 'cms',
+        'namespace' => 'Api',
+    ],
+    function () {
+        //------------------------------------------------
+        Route::get( '/contents/{plural}', 'ContentController@getContentList' );
+        //------------------------------------------------
+        Route::any( '/contents/{singular}/{content}', 'ContentController@getContentItem' );
+        //------------------------------------------------
+    });
