@@ -73,19 +73,6 @@ function get_contents($content_type_slug='pages', array $args = null)
 
 }
 //-----------------------------------------------------------------------------------
-function get_content($id, array $args = null, $output=null)
-{
-
-
-
-}
-//-----------------------------------------------------------------------------------
-function get_the_content($id, array $args = null, $output='html')
-{
-    $output = \VaahCms\Modules\Cms\Entities\Content::getTheContent($id, $args, $output);
-    return $output;
-}
-//-----------------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------------
 function get_field(Content $content, $field_slug,
@@ -98,6 +85,19 @@ function get_field(Content $content, $field_slug,
         return get_content_field($content, $field_slug, $group_slug,$group_index , $field_index);
     } else {
         return get_template_field($content, $field_slug, $group_slug,$group_index , $field_index);
+    }
+}
+//-----------------------------------------------------------------------------------
+function get_the_field(Content $content, $field_slug,
+                       $group_slug='default', $type='content',
+                       $group_index = 0 , $field_index = null)
+{
+
+    if($type=='content')
+    {
+        return get_content_field($content, $field_slug, $group_slug, $group_index , $field_index, false);
+    } else {
+        return get_template_field($content, $field_slug, $group_slug,$group_index , $field_index, false);
     }
 }
 //-----------------------------------------------------------------------------------
@@ -124,17 +124,14 @@ function get_the_group(Content $content, $group_slug='default', $type='content',
     }
 }
 //-----------------------------------------------------------------------------------
-function get_the_field(Content $content, $field_slug,
-                       $group_slug='default', $type='content',
-                       $group_index = 0 , $field_index = null)
+function get_content(Content $content, $type=null )
 {
-
-    if($type=='content')
-    {
-        return get_content_field($content, $field_slug, $group_slug, $group_index , $field_index, false);
-    } else {
-        return get_template_field($content, $field_slug, $group_slug,$group_index , $field_index, false);
-    }
+    return get_all_group_field($content,$type,true);
+}
+//-----------------------------------------------------------------------------------
+function get_the_content(Content $content, $type=null )
+{
+    return get_all_group_field($content,$type,false);
 }
 //-----------------------------------------------------------------------------------
 function get_content_field(Content $content, $field_slug,
@@ -236,6 +233,81 @@ function get_group_content_field(Content $content, $group_slug='default',
 
 
 
+
+    return $data;
+}
+//-----------------------------------------------------------------------------------
+function get_all_group_field(Content $content, $type, $return_html=true)
+{
+
+    if(!$return_html){
+
+        $array_val = [];
+
+        if(!$type || $type == 'content'){
+            foreach ($content->content_form_groups as $arr_group){
+                foreach ($arr_group as $key => $group){
+
+                    foreach ($group['fields']  as $field){
+
+                        $array_val['content'][$group['slug']][$key][$field["slug"]] = setGroupReturnValue($field,false);
+
+                    }
+
+                }
+            }
+        }
+
+
+        if(!$type || $type == 'template'){
+            foreach ($content->template_form_groups as $arr_group){
+                foreach ($arr_group as $key => $group){
+
+                    foreach ($group['fields']  as $field){
+
+                        $array_val['template'][$group['slug']][$key][$field["slug"]] = setGroupReturnValue($field,false);
+
+                    }
+
+                }
+            }
+        }
+
+
+        return $array_val;
+    }
+
+    $data = null;
+
+    if(!$type || $type == 'content'){
+        foreach ($content->content_form_groups as $arr_group){
+
+            foreach ($arr_group as $key => $group){
+
+                foreach ($group['fields']  as $field){
+
+                    $data .= setReturnValue($field);
+
+                }
+
+            }
+        }
+    }
+
+    if(!$type || $type == 'template'){
+        foreach ($content->template_form_groups as $arr_group){
+
+            foreach ($arr_group as $key => $group){
+
+                foreach ($group['fields']  as $field){
+
+                    $data .= setReturnValue($field);
+
+                }
+
+            }
+        }
+    }
 
     return $data;
 }
