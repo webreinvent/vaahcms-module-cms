@@ -6,70 +6,12 @@ use Illuminate\Routing\Controller;
 use VaahCms\Modules\Cms\Entities\Content;
 use VaahCms\Modules\Cms\Entities\ContentType;
 
-class ContentController extends Controller
+class ContentsController extends Controller
 {
 
     public function __construct()
     {
     }
-
-
-    //----------------------------------------------------------
-    //----------------------------------------------------------
-
-    public static function getContentTypeList(Request $request)
-    {
-
-        $content_type = ContentType::with(['groups' => function($q){
-            $q->with(['fields']);
-        }])->paginate(5);
-
-
-        $response['status']     = 'success';
-        $response['data']       = $content_type;
-        return $response;
-    }
-
-
-    //----------------------------------------------------------
-    //----------------------------------------------------------
-
-    public static function getContentTypeItem(Request $request, $slug)
-    {
-
-        /*$content_type = ContentType::with(['groups' => function($q){
-            $q->with(['fields']);
-        }])->where('slug', $slug)->first();*/
-
-
-        $content_type = ContentType::where('slug', $slug)->first();
-
-        $arr = array();
-
-        foreach ($content_type->groups as $group){
-            foreach ($group->fields as $key => $field){
-
-                $arr[$group->slug]['is_repeatable'] = (boolean) $group->is_repeatable;
-
-                $arr[$group->slug]['fields'][$field->slug] = [
-
-                    'type' => $field->type->slug,
-                    'is_repeatable' => (boolean) $field->is_repeatable,
-                    'meta' => $field->meta
-
-                ];
-            }
-        }
-
-        unset($content_type['groups']);
-
-        $content_type['groups'] = $arr;
-
-        $response['status']     = 'success';
-        $response['data']       = $content_type;
-        return $response;
-    }
-
 
     //----------------------------------------------------------
     //----------------------------------------------------------
