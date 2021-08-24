@@ -20,8 +20,8 @@ Route::group(
     ],
     function () {
         //------------------------------------------------
-        Route::get( '/contents/{plural}', 'ContentController@getContentList' );
+        Route::get( '/contents/{plural_slug}', 'ContentController@getContentList' );
         //------------------------------------------------
-        Route::any( '/contents/{singular}/{content}', 'ContentController@getContentItem' );
+        Route::any( '/contents/{singular_slug}/{content_slug}', 'ContentController@getContentItem' );
         //------------------------------------------------
     });
