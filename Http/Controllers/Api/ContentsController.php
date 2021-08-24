@@ -17,6 +17,63 @@ class ContentController extends Controller
     //----------------------------------------------------------
     //----------------------------------------------------------
 
+    public static function getContentTypeList(Request $request)
+    {
+
+        $content_type = ContentType::with(['groups' => function($q){
+            $q->with(['fields']);
+        }])->paginate(5);
+
+
+        $response['status']     = 'success';
+        $response['data']       = $content_type;
+        return $response;
+    }
+
+
+    //----------------------------------------------------------
+    //----------------------------------------------------------
+
+    public static function getContentTypeItem(Request $request, $slug)
+    {
+
+        /*$content_type = ContentType::with(['groups' => function($q){
+            $q->with(['fields']);
+        }])->where('slug', $slug)->first();*/
+
+
+        $content_type = ContentType::where('slug', $slug)->first();
+
+        $arr = array();
+
+        foreach ($content_type->groups as $group){
+            foreach ($group->fields as $key => $field){
+
+                $arr[$group->slug]['is_repeatable'] = (boolean) $group->is_repeatable;
+
+                $arr[$group->slug]['fields'][$field->slug] = [
+
+                    'type' => $field->type->slug,
+                    'is_repeatable' => (boolean) $field->is_repeatable,
+                    'meta' => $field->meta
+
+                ];
+            }
+        }
+
+        unset($content_type['groups']);
+
+        $content_type['groups'] = $arr;
+
+        $response['status']     = 'success';
+        $response['data']       = $content_type;
+        return $response;
+    }
+
+
+    //----------------------------------------------------------
+    //----------------------------------------------------------
+
     public static function getContentList(Request $request, $plural_slug)
     {
 
@@ -32,6 +89,15 @@ class ContentController extends Controller
         $contents = Content::where('vh_cms_content_type_id', $content_type->id)
             ->orderBy('id','desc');
 
+
+        if($request->has('q')
+            && $request->q){
+            $contents->where(function ($q) use ($request){
+                $q->where('name', 'LIKE', '%'.$request->q.'%')
+                    ->orWhere('slug', 'LIKE', '%'.$request->q.'%')
+                    ->orWhere('permalink', 'LIKE', '%'.$request->q.'%');
+            });;
+        }
 
         if($request->has('per_page')
             && $request->per_page
