@@ -69,11 +69,135 @@ function get_contents($content_type_slug='pages', array $args = null)
 
     $output = \VaahCms\Modules\Cms\Entities\Content::getContents($content_type_slug, $args);
 
+//    dd($output);
+
     if($output['status'] == 'success'){
         return getContentsHtml($output['data'],$args);
     }
 
     return $output;
+
+}
+//-----------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------
+function get_pagination($content_type_slug='pages', array $args = null, $css_type='bulma')
+{
+
+    $output = \VaahCms\Modules\Cms\Entities\Content::getContents($content_type_slug, $args);
+
+    if($output['status'] == 'success'){
+        return returnPaginationHtml($output['data'],$css_type);
+    }
+
+    return $output;
+
+}
+//-----------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------
+function returnPaginationHtml($contents, $css_type='bulma')
+{
+
+    $html = null;
+
+    switch($css_type)
+    {
+        case 'bootstrap':
+            break;
+
+        case 'ulli':
+            break;
+
+        case 'bulma':
+            $html = get_bulma_pagination($contents, false);
+            break;
+    }
+
+    return $html;
+
+}
+//-----------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------
+function get_bulma_pagination($contents)
+{
+
+    $arr_contents = $contents->toArray();
+
+    $value = '<nav class="pagination" role="navigation" aria-label="pagination">';
+
+    if($arr_contents['prev_page_url']){
+        $value .= '<a class="pagination-previous" 
+        href="'.$arr_contents['prev_page_url'].'" >Previous</a>';
+    }else{
+        $value .= '<a class="pagination-previous" 
+        title="This is the first page" disabled>Previous</a>';
+    }
+
+    if($arr_contents['next_page_url']){
+        $value .= '<a class="pagination-next" href="'.$arr_contents['next_page_url'].'" 
+                    >Next page</a>';
+    }else{
+        $value .= '<a class="pagination-next" 
+        title="This is the last page" disabled>Next page</a>';
+    }
+
+
+    $value .= '<ul class="pagination-list">';
+
+    if($arr_contents['first_page_url'] && $arr_contents['current_page'] != 1 ){
+        $value .= '<li>
+                  <a class="pagination-link" href="'.$arr_contents['first_page_url'].'"
+                  aria-label="Page 1" aria-current="page">1</a>
+                </li>';
+
+        if(($arr_contents['current_page'] - 1) > 2){
+            $value .= '<li>
+                          <span class="pagination-ellipsis">&hellip;</span>
+                        </li>';
+        }
+
+        if(($arr_contents['current_page'] - 1) > 1){
+            $value .= '<li>
+                  <a class="pagination-link" href="'.$arr_contents['prev_page_url'].'"
+                   aria-current="page">'.($arr_contents['current_page'] - 1).'</a>
+                </li>';
+        }
+        $value .= '<li>
+                  <a class="pagination-link is-current"
+                   aria-current="page">'.$arr_contents['current_page'].'</a>
+                </li>';
+
+        if(($arr_contents['last_page'] - $arr_contents['current_page']) > 1){
+            $value .= '<li>
+                  <a class="pagination-link " href="'.$arr_contents['next_page_url'].'"
+                   aria-current="page">'.($arr_contents['current_page'] + 1).'</a>
+                </li>';
+        }
+    }else{
+        $value .= '<li>
+                  <a class="pagination-link is-current" 
+                  aria-label="Page 1" aria-current="page">1</a>
+                </li>';
+    }
+
+    if(($arr_contents['last_page'] - $arr_contents['current_page']) > 2){
+        $value .= '<li>
+                          <span class="pagination-ellipsis">&hellip;</span>
+                        </li>';
+    }
+
+    if($arr_contents['last_page'] != $arr_contents['current_page']){
+        $value .= '<li>
+                  <a class="pagination-link" href="'.$arr_contents['last_page_url'].'"
+                  aria-label="Page 1" aria-current="page">'.$arr_contents['last_page'].'</a>
+                </li>';
+    }
+
+
+    $value .= '</ul>
+                </nav>';
+
+    return $value;
+
 
 }
 //-----------------------------------------------------------------------------------
