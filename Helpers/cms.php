@@ -69,6 +69,24 @@ function get_contents($content_type_slug='pages', array $args = null)
 
     $output = \VaahCms\Modules\Cms\Entities\Content::getContents($content_type_slug, $args);
 
+    if($output['status'] == 'success'){
+        return getContentsHtml($output['data'],$args);
+    }
+
+    return $output;
+
+}
+//-----------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------
+function get_the_contents($content_type_slug='pages', array $args = null)
+{
+
+    $output = \VaahCms\Modules\Cms\Entities\Content::getContents($content_type_slug, $args);
+
+    if($output['status'] == 'success'){
+        return $output['data'];
+    }
+
     return $output;
 
 }
@@ -413,6 +431,34 @@ function get_template_field(Content $content, $field_slug,
     }
 
     return null;
+}
+
+
+//-----------------------------------------------------------------------------------
+function getContentsHtml($contents,$args)
+{
+    $value = '';
+
+    if(isset($args['container_opening_tag']) && $args['container_opening_tag']){
+        $value = $args['container_opening_tag'];
+    }
+
+    foreach ($contents as $content){
+        if(isset($args['content_opening_tag']) && $args['content_opening_tag']){
+            $value .= $args['content_opening_tag'];
+        }
+        $value .= get_content($content);
+        if(isset($args['content_closing_tag']) && $args['content_closing_tag']){
+            $value .= $args['content_closing_tag'];
+        }
+    }
+
+    if(isset($args['container_closing_tag']) && $args['container_closing_tag']){
+        $value .= $args['container_closing_tag'];
+    }
+
+    return $value;
+
 }
 
 

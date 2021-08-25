@@ -829,36 +829,136 @@ class Content extends Model {
 
         $content_type = ContentType::where('slug', $content_type_slug)->first();
 
+        if(!$content_type)
+        {
+            $response['status']     = 'failed';
+            $response['errors']     = 'Content Type not found.';
+            return $response;
+        }
+
+        $contents = Content::where('vh_cms_content_type_id', $content_type->id)
+            ->orderBy('id','desc');
 
 
-        $contents = static::where('vh_cms_content_type_id', $content_type->id);
+        if(isset($args['q'])
+            && $args['q']){
 
-        /*if($args['content_groups']) {
+            $contents->where(function ($q) use ($args){
+                $q->where('name', 'LIKE', '%'.$args['q'].'%')
+                    ->orWhere('slug', 'LIKE', '%'.$args['q'].'%')
+                    ->orWhere('permalink', 'LIKE', '%'.$args['q'].'%');
 
-            $contents->whereHas('fields.group', function ($f) use ($args) {
+                $q->orWhereHas('fields',function ($p) use ($args){
+                    $p->where('content', 'LIKE', '%'.$args['q'].'%');
+                    $p->whereHas('field', function ($f) {
+                        $f->where('is_searchable' , 1);
+                    });
+                });
 
-                $group_slugs = array_keys($args['content_groups']);
-                $f->whereIn('slug', $group_slugs);
             });
+        }
+
+        if(isset($args['per_page'])
+            && $args['per_page']
+            && is_numeric($args['per_page'])){
+            $contents = $contents->paginate($args['per_page']);
+        }else{
+            $contents = $contents->paginate(config('vaahcms.per_page'));
+        }
+
+        if(!$contents)
+        {
+            $response['status']     = 'failed';
+            $response['errors']     = 'Content not found.';
+            return $response;
+        }
+
+        $arr_include_groups = array();
+        $arr_exclude_groups = array();
+
+        if(isset($args['include_groups'])){
+            if(is_string($args['include_groups'])){
+                $arr_include_groups = explode(",",$args['include_groups']);
+            }else{
+                $arr_include_groups = $args['include_groups'];
+            }
 
         }
 
-        $contents->with(['fields.group.groupable']);*/
-
-        /*if($args['content_groups'])
-        {
-            foreach($args['content_groups'] as $group)
-            {
-                $contents->whereHas('fields',  function ($g) use ($group){
-                    $g->where('slug', $group['slug']);
-                });
+        if(isset($args['exclude_groups'])){
+            if(is_string($args['exclude_groups'])){
+                $arr_exclude_groups = explode(",",$args['exclude_groups']);
+            }else{
+                $arr_exclude_groups = $args['exclude_groups'];
             }
-            $contents->with('groups');
-        }*/
+        }
+
+        foreach ($contents as $key => $content){
+
+            $content_data = Content::getItem($content->id);
+
+            if($content_data['status'] != 'success')
+            {
+                $response['status']     = 'failed';
+                $response['errors']     = 'Content Data not found.';
+                return $response;
+            }
+
+            $arr_content = array();
+
+            foreach ($content_data['data']['content_form_groups'] as $group){
+
+                if((count($arr_include_groups) ==  0
+                        || in_array($group[0]['slug'], $arr_include_groups))
+                    && (count($arr_exclude_groups) == 0
+                        || !in_array($group[0]['slug'], $arr_exclude_groups))){
 
 
-        $contents = $contents->paginate(1);
+                    $arr_content[] = $group;
 
+                }
+
+            }
+
+            $contents[$key]['content_form_groups'] = $arr_content;
+
+            $arr_template = array();
+
+            foreach ($content_data['data']['template_form_groups'] as $group){
+
+                if((count($arr_include_groups) ==  0
+                        || in_array($group[0]['slug'], $arr_include_groups))
+                    && (count($arr_exclude_groups) == 0
+                        || !in_array($group[0]['slug'], $arr_exclude_groups))){
+                    $arr_template[] = $group;
+
+                }
+
+            }
+
+            $contents[$key]['template_form_groups'] = $arr_template;
+        }
+
+        $response['status']     = 'success';
+        $response['data']       = $contents;
+        return $response;
+
+    }
+    //-------------------------------------------------
+    public static function getListOfContents($content_type_slug)
+    {
+
+        $content_type = ContentType::where('slug', $content_type_slug)->first();
+
+        if(!$content_type)
+        {
+            $response['status']     = 'failed';
+            $response['errors']     = 'Content Type not found.';
+            return $response;
+        }
+
+        $contents = Content::where('vh_cms_content_type_id', $content_type->id)
+            ->orderBy('id','desc')->pluck('name');
 
         return $contents;
 

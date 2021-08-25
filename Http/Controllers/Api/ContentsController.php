@@ -34,11 +34,20 @@ class ContentsController extends Controller
 
         if($request->has('q')
             && $request->q){
+
             $contents->where(function ($q) use ($request){
                 $q->where('name', 'LIKE', '%'.$request->q.'%')
                     ->orWhere('slug', 'LIKE', '%'.$request->q.'%')
                     ->orWhere('permalink', 'LIKE', '%'.$request->q.'%');
-            });;
+
+                $q->orWhereHas('fields',function ($p) use ($request){
+                    $p->where('content', 'LIKE', '%'.$request->q.'%');
+                    $p->whereHas('field', function ($f) {
+                        $f->where('is_searchable' , 1);
+                    });
+                });
+
+            });
         }
 
         if($request->has('per_page')
