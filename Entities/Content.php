@@ -967,6 +967,19 @@ class Content extends Model {
             return $response;
         }
 
+        $order = 'desc';
+        $order_by = 'id';
+
+        if(isset($args['order'])
+            && $args['order']){
+            $order = $args['order'];
+        }
+
+        if(isset($args['order_by'])
+            && $args['order_by']){
+            $order_by = $args['order_by'];
+        }
+
         $contents = Content::with(['fields','contentType' => function($q){
             $q->with(['groups' => function($g){
                 $g->with(['fields' => function($f){
@@ -976,8 +989,7 @@ class Content extends Model {
 
             }]);
 
-    }])->where('vh_cms_content_type_id', $content_type->id)
-            ->orderBy('id','desc');
+    }])->where('vh_cms_content_type_id', $content_type->id);
 
 
         if(isset($args['q'])
@@ -997,6 +1009,8 @@ class Content extends Model {
 
             });
         }
+
+        $contents->orderBy($order_by,$order);
 
         if(isset($args['per_page'])
             && $args['per_page']

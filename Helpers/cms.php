@@ -64,7 +64,7 @@ function get_content_type($id, array $args = null)
 }
 //-----------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------
-function get_contents($content_type_slug='pages', array $args = null)
+function get_contents($content_type_slug='pages', array $args = null,$has_pagination = true)
 {
 
     $output = \VaahCms\Modules\Cms\Entities\Content::getContents($content_type_slug, $args);
@@ -74,7 +74,9 @@ function get_contents($content_type_slug='pages', array $args = null)
         $val = null;
         $val .= getContentsHtml($output['data'],$args);
 
-        $val .= returnPaginationHtml($output['data']);
+        if($has_pagination){
+            $val .= returnPaginationHtml($output['data']);
+        }
 
         return $val;
 
