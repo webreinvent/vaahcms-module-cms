@@ -24,13 +24,35 @@ class ContentTypesController extends Controller
     public static function getContentTypeList(Request $request)
     {
 
-        $content_type = ContentType::with(['groups' => function($q){
-            $q->with(['fields']);
-        }])->paginate(5);
+        $content_types = ContentType::paginate(5);
+
+        foreach ($content_types as $content_type){
+
+            $arr = array();
+
+            foreach ($content_type->groups as $group){
+                foreach ($group->fields as $key => $field){
+
+                    $arr[$group->slug]['is_repeatable'] = (boolean) $group->is_repeatable;
+
+                    $arr[$group->slug]['fields'][$field->slug] = [
+
+                        'type' => $field->type->slug,
+                        'is_repeatable' => (boolean) $field->is_repeatable,
+                        'meta' => $field->meta
+
+                    ];
+                }
+            }
+
+            unset($content_type['groups']);
+
+            $content_type['groups'] = $arr;
+        }
 
 
         $response['status']     = 'success';
-        $response['data']       = $content_type;
+        $response['data']       = $content_types;
         return $response;
     }
 
@@ -40,11 +62,6 @@ class ContentTypesController extends Controller
 
     public static function getContentTypeItem(Request $request, $slug)
     {
-
-        /*$content_type = ContentType::with(['groups' => function($q){
-            $q->with(['fields']);
-        }])->where('slug', $slug)->first();*/
-
 
         $content_type = ContentType::where('slug', $slug)->first();
 
