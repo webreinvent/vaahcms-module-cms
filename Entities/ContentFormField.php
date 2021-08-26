@@ -83,8 +83,7 @@ class ContentFormField extends Model {
                 return json_decode($value);
             }
 
-
-            if(isset($this->field->type) && isset($this->field->type->slug))
+            /*if(isset($this->field->type) && isset($this->field->type->slug))
             {
                 $slug = $this->field->type->slug;
 
@@ -92,7 +91,7 @@ class ContentFormField extends Model {
                 {
                     $value = asset($value);
                 }
-            }
+            }*/
 
 
             return $value;

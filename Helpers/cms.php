@@ -69,10 +69,16 @@ function get_contents($content_type_slug='pages', array $args = null)
 
     $output = \VaahCms\Modules\Cms\Entities\Content::getContents($content_type_slug, $args);
 
-//    dd($output);
-
     if($output['status'] == 'success'){
-        return getContentsHtml($output['data'],$args);
+
+        $val = null;
+        $val .= getContentsHtml($output['data'],$args);
+
+        $val .= returnPaginationHtml($output['data']);
+
+        return $val;
+
+
     }
 
     return $output;
@@ -108,7 +114,7 @@ function returnPaginationHtml($contents, $css_type='bulma')
             break;
 
         case 'bulma':
-            $html = get_bulma_pagination($contents, false);
+            $html = get_bulma_pagination($contents);
             break;
     }
 
@@ -120,20 +126,18 @@ function returnPaginationHtml($contents, $css_type='bulma')
 function get_bulma_pagination($contents)
 {
 
-    $arr_contents = $contents->toArray();
-
     $value = '<nav class="pagination" role="navigation" aria-label="pagination">';
 
-    if($arr_contents['prev_page_url']){
+    if($contents->previousPageUrl()){
         $value .= '<a class="pagination-previous" 
-        href="'.$arr_contents['prev_page_url'].'" >Previous</a>';
+        href="'.$contents->previousPageUrl().'" >Previous</a>';
     }else{
         $value .= '<a class="pagination-previous" 
         title="This is the first page" disabled>Previous</a>';
     }
 
-    if($arr_contents['next_page_url']){
-        $value .= '<a class="pagination-next" href="'.$arr_contents['next_page_url'].'" 
+    if($contents->nextPageUrl()){
+        $value .= '<a class="pagination-next" href="'.$contents->nextPageUrl().'" 
                     >Next page</a>';
     }else{
         $value .= '<a class="pagination-next" 
@@ -143,33 +147,33 @@ function get_bulma_pagination($contents)
 
     $value .= '<ul class="pagination-list">';
 
-    if($arr_contents['first_page_url'] && $arr_contents['current_page'] != 1 ){
+    if($contents->url(1) && !$contents->onFirstPage() ){
         $value .= '<li>
-                  <a class="pagination-link" href="'.$arr_contents['first_page_url'].'"
+                  <a class="pagination-link" href="'.$contents->url(1).'"
                   aria-label="Page 1" aria-current="page">1</a>
                 </li>';
 
-        if(($arr_contents['current_page'] - 1) > 2){
+        if(($contents->currentPage() - 1) > 2){
             $value .= '<li>
                           <span class="pagination-ellipsis">&hellip;</span>
                         </li>';
         }
 
-        if(($arr_contents['current_page'] - 1) > 1){
+        if(($contents->currentPage() - 1) > 1){
             $value .= '<li>
-                  <a class="pagination-link" href="'.$arr_contents['prev_page_url'].'"
-                   aria-current="page">'.($arr_contents['current_page'] - 1).'</a>
+                  <a class="pagination-link" href="'.$contents->previousPageUrl().'"
+                   aria-current="page">'.($contents->currentPage() - 1).'</a>
                 </li>';
         }
         $value .= '<li>
                   <a class="pagination-link is-current"
-                   aria-current="page">'.$arr_contents['current_page'].'</a>
+                   aria-current="page">'.$contents->currentPage().'</a>
                 </li>';
 
-        if(($arr_contents['last_page'] - $arr_contents['current_page']) > 1){
+        if(($contents->lastPage() - $contents->currentPage()) > 1){
             $value .= '<li>
-                  <a class="pagination-link " href="'.$arr_contents['next_page_url'].'"
-                   aria-current="page">'.($arr_contents['current_page'] + 1).'</a>
+                  <a class="pagination-link " href="'.$contents->nextPageUrl().'"
+                   aria-current="page">'.($contents->currentPage() + 1).'</a>
                 </li>';
         }
     }else{
@@ -179,16 +183,16 @@ function get_bulma_pagination($contents)
                 </li>';
     }
 
-    if(($arr_contents['last_page'] - $arr_contents['current_page']) > 2){
+    if(($contents->lastPage() - $contents->currentPage()) > 2){
         $value .= '<li>
                           <span class="pagination-ellipsis">&hellip;</span>
                         </li>';
     }
 
-    if($arr_contents['last_page'] != $arr_contents['current_page']){
+    if($contents->lastPage() != $contents->currentPage()){
         $value .= '<li>
-                  <a class="pagination-link" href="'.$arr_contents['last_page_url'].'"
-                  aria-label="Page 1" aria-current="page">'.$arr_contents['last_page'].'</a>
+                  <a class="pagination-link" href="'.$contents->url($contents->lastPage()).'"
+                  aria-label="Page 1" aria-current="page">'.$contents->lastPage().'</a>
                 </li>';
     }
 
@@ -620,14 +624,6 @@ function setReturnValue($field,$field_index = null,$return_html=true)
         return $field['content'];
     }
 
-    if(is_array($field['content']) || is_object($field['content'])){
-        $field['content'] = json_decode(
-            vh_translate_dynamic_strings(json_encode($field['content']))
-        );
-    }else{
-        $field['content'] = vh_translate_dynamic_strings($field['content']);
-    }
-
     $value = null;
 
     if($field['content']){
@@ -760,8 +756,7 @@ function setReturnValue($field,$field_index = null,$return_html=true)
 
                 if(is_string($field['content'])){
                     if($field['is_repeatable']){
-                        $temp = $value;
-                        $value = [$temp];
+                        $value = [$field['content']];
                     }else{
                         $value = $field['meta']->opening_tag;
                         $value .= $field['content'];
