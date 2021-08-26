@@ -521,7 +521,6 @@ class Content extends Model {
                         'vh_cms_form_field_id'=> $field->id,
                         'vh_cms_form_group_index'=> $key])
                     ->first();
-                    $field_content = '';
 
 
                     if($field_content)
@@ -559,18 +558,19 @@ class Content extends Model {
         return $arr_group;
     }
     //-------------------------------------------------
-    public static function getFormGroupsTest(Content $content, $type, array $fields=null,$filter = null)
+    public static function getFormGroupsTest($content, $type, array $fields=null,$filter = null)
     {
+
         if($type=='content')
         {
-            $groups = $content->contentType->groups;
+            $groups = $content['content_type']['groups'];
         } else{
-            $groups = $content->template->groups;
+            $groups = $content->content_type->groups;
         }
 
         $arr_group = [];
 
-        $fields_list = ContentFormField::where(['vh_cms_content_id'=> $content->id])
+        $fields_list = ContentFormField::where(['vh_cms_content_id'=> $content['id']])
             ->get();
 
         $fields_list = collect($fields_list);
@@ -591,8 +591,10 @@ class Content extends Model {
 
             }
 
-            $group_fields = $group->contentFields->where('vh_cms_content_id',$content->id)
-                ->groupBy('vh_cms_form_group_index');
+            $group_fields = ContentFormField::where('vh_cms_content_id',$content['id'])
+                ->where('vh_cms_form_group_id',$group['id'])
+                ->groupBy('vh_cms_form_group_index')->get();
+
 
             if(count($group_fields) === 0 ){
                 $group_fields[] = '';
@@ -602,43 +604,41 @@ class Content extends Model {
 
 
                 $arr_group[$i][$key] = [
-                    'id' => $group->id,
-                    'name' => $group->name,
-                    'slug' => $group->slug,
-                    'is_repeatable' => $group->is_repeatable,
+                    'id' => $group['id'],
+                    'name' => $group['name'],
+                    'slug' => $group['slug'],
+                    'is_repeatable' => $group['is_repeatable'],
                 ];
 
                 $y = 0;
 
-                foreach ($group->fields as $field)
+                foreach ($group['fields'] as $field)
                 {
 
                     $arr_group[$i][$key]['fields'][$y] = [
-                        'id' => $field->id,
-                        'name' => $field->name,
-                        'slug' => $field->slug,
-                        'vh_cms_form_group_id' => $field->vh_cms_form_group_id,
-                        'is_repeatable' => $field->is_repeatable,
-                        'is_searchable' => $field->is_searchable,
-                        'meta' => $field->meta
+                        'id' => $field['id'],
+                        'name' => $field['name'],
+                        'slug' => $field['slug'],
+                        'vh_cms_form_group_id' => $field['vh_cms_form_group_id'],
+                        'is_repeatable' => $field['is_repeatable'],
+                        'is_searchable' => $field['is_searchable'],
+                        'meta' => $field['meta']
                     ];
 
-                    $arr_group[$i][$key]['fields'][$y]['type'] = $field->type;
-
+                    $arr_group[$i][$key]['fields'][$y]['type'] = $field['type'];
 
                     $arr_group[$i][$key]['fields'][$y]['vh_cms_form_field_id'] = null;
                     $arr_group[$i][$key]['fields'][$y]['content'] = null;
                     $arr_group[$i][$key]['fields'][$y]['content_meta'] = null;
 
-                    $field_content = $fields_list->where('vh_cms_form_group_id', $group->id)
-                        ->where('vh_cms_form_field_id', $field->id)
+                    $field_content = $fields_list->where('vh_cms_form_group_id', $group['id'])
+                        ->where('vh_cms_form_field_id', $field['id'])
                         ->where('vh_cms_form_group_index', $key)->first();
 
 
                     if($field_content)
                     {
-
-                        $arr_group[$i][$key]['fields'][$y]['vh_cms_form_field_id'] = $field_content->id;
+                        /*$arr_group[$i][$key]['fields'][$y]['vh_cms_form_field_id'] = $field_content->id;
 
                         if(is_array($field_content->content) || is_object($field_content->content)){
                             $arr_group[$i][$key]['fields'][$y]['content'] = json_decode(
@@ -646,13 +646,17 @@ class Content extends Model {
                             );
                         }else{
 
-                            if(!$field->is_repeatable){
+                            if(!$field['is_repeatable']){
                                 $arr_group[$i][$key]['fields'][$y]['content'] = vh_translate_dynamic_strings($field_content->content);
                             }else{
                                 $arr_group[$i][$key]['fields'][$y]['content'] = [vh_translate_dynamic_strings($field_content->content)];
                             }
 
-                        }
+
+
+                        }*/
+
+                        $arr_group[$i][$key]['fields'][$y]['content'] = $field_content->content;
 
                         $arr_group[$i][$key]['fields'][$y]['content_meta'] = $field_content->meta;
                     }
@@ -781,7 +785,7 @@ class Content extends Model {
                     try{
                         $stored_field->save();
 
-//                        dump($stored_field);
+                        dd($stored_field);
 
                     }catch(\Exception $e)
                     {
@@ -968,7 +972,16 @@ class Content extends Model {
             return $response;
         }
 
-        $contents = Content::where('vh_cms_content_type_id', $content_type->id)
+        $contents = Content::with(['contentType' => function($q){
+            $q->with(['groups' => function($g){
+                $g->with(['fields' => function($f){
+                    $f->with(['type']);
+
+                }]);
+
+            }]);
+
+    }])->where('vh_cms_content_type_id', $content_type->id)
             ->orderBy('id','desc');
 
 
@@ -1033,7 +1046,7 @@ class Content extends Model {
 
         foreach ($contents as $key => $content){
 
-            $contents[$key]['content_form_groups'] = static::getFormGroupsTest($content, 'content',null,$filter);
+            $contents[$key]['content_form_groups'] = static::getFormGroupsTest(collect($content), 'content',null,$filter);
 
             $arr_template = array();
 
