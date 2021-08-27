@@ -191,8 +191,12 @@ export default {
             this.update('active_template', template);
 
             let groups = [];
-            groups = template.groups;
 
+            $(template.groups).each(function (index, item) {
+
+                groups[index] = [item];
+            });
+            
             console.log('--->', groups);
 
             this.update('active_template_groups', groups);
