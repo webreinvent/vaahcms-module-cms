@@ -437,6 +437,7 @@ class Content extends Model {
 
 
         $content_form_groups = static::getFormGroups($item, 'content');
+
         $template_form_groups = static::getFormGroups($item, 'template');
 
         $response['status'] = 'success';
@@ -466,18 +467,10 @@ class Content extends Model {
 
         $i = 0;
 
-        $group_ids = $groups->pluck('id')->toArray();
-
-        $group_fields = ContentFormField::where('vh_cms_content_id',$content->id)
-            ->whereIn('vh_cms_form_group_id',$group_ids)
-            ->groupBy('vh_cms_form_group_index')->get();
-
-        $group_fields_collect = collect($group_fields);
-
         foreach ($groups as $group)
         {
 
-            $group_fields = $group_fields_collect->where('vh_cms_content_id',$content->id)
+            $group_fields = ContentFormField::where('vh_cms_content_id',$content->id)
                 ->where('vh_cms_form_group_id',$group->id)
                 ->groupBy('vh_cms_form_group_index')->get();
 
