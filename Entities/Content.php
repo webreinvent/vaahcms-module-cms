@@ -435,6 +435,7 @@ class Content extends Model {
             ->withTrashed()
             ->first();
 
+
         $content_form_groups = static::getFormGroups($item, 'content');
         $template_form_groups = static::getFormGroups($item, 'template');
 
@@ -461,18 +462,24 @@ class Content extends Model {
 
         $arr_group = [];
 
-        $fields = ContentFormField::where(['vh_cms_content_id'=> $content->id])
-            ->first();
-
 
 
         $i = 0;
 
+        $group_ids = $groups->pluck('id')->toArray();
+
+        $group_fields = ContentFormField::where('vh_cms_content_id',$content->id)
+            ->whereIn('vh_cms_form_group_id',$group_ids)
+            ->groupBy('vh_cms_form_group_index')->get();
+
+        $group_fields_collect = collect($group_fields);
+
         foreach ($groups as $group)
         {
 
-            $group_fields = $group->contentFields->where('vh_cms_content_id',$content->id)
-                ->groupBy('vh_cms_form_group_index');
+            $group_fields = $group_fields_collect->where('vh_cms_content_id',$content->id)
+                ->where('vh_cms_form_group_id',$group->id)
+                ->groupBy('vh_cms_form_group_index')->get();
 
             if(count($group_fields) === 0 ){
                 $group_fields[] = '';
@@ -558,12 +565,16 @@ class Content extends Model {
         return $arr_group;
     }
     //-------------------------------------------------
-    public static function getFormGroupsTest(Content $content, $type, array $fields=null,$filter = null)
+    public static function getFormGroupsTest(Content $content,
+                                             $type,
+                                             $group_fields,
+                                             $filter = null)
     {
 
         if($type=='content')
         {
             $groups = $content->contentType->groups;
+
         } else{
             $groups = $content->template->groups;
         }
@@ -588,8 +599,7 @@ class Content extends Model {
 
             }
 
-            $group_fields = $group->contentFields->where('vh_cms_content_id',$content->id)
-                ->groupBy('vh_cms_form_group_index');
+            $group_fields = $group_fields->where('vh_cms_content_id',$content->id);
 
             if(count($group_fields) === 0 ){
                 $group_fields[] = '';
@@ -637,7 +647,7 @@ class Content extends Model {
 
                         $arr_group[$i][$key]['fields'][$y]['vh_cms_form_field_id'] = $field_content->id;
 
-                        if(is_array($field_content->content) || is_object($field_content->content)){
+                        /*if(is_array($field_content->content) || is_object($field_content->content)){
                             $arr_group[$i][$key]['fields'][$y]['content'] = json_decode(
                                 vh_translate_dynamic_strings(json_encode($field_content->content))
                             );
@@ -651,9 +661,29 @@ class Content extends Model {
 
 
 
-                        }
+                        }*/
 
-//                        $arr_group[$i][$key]['fields'][$y]['content'] = $field_content->content;
+
+                        /*if(!$field->is_repeatable
+                            && (is_array($field_content->content) || is_object($field_content->content))
+                            && count($field_content->content) < 1){
+
+                            if(count($field_content->content) == 1){
+                                $arr_group[$i][$key]['fields'][$y]['content'] = $field_content->content[0];
+                            }else{
+                                $arr_group[$i][$key]['fields'][$y]['content'] = null;
+                            }
+
+
+                        }elseif($field->is_repeatable
+                            && is_string($field_content->content) ){
+                            $arr_group[$i][$key]['fields'][$y]['content'] = [$field_content->content];
+                        }else{
+                            $arr_group[$i][$key]['fields'][$y]['content'] = $field_content->content;
+                        }*/
+                        $arr_group[$i][$key]['fields'][$y]['content'] = $field_content->content;
+
+
 
                         $arr_group[$i][$key]['fields'][$y]['content_meta'] = $field_content->meta;
                     }
@@ -754,14 +784,12 @@ class Content extends Model {
                     if(is_array($field['content']) || is_object($field['content'])){
                         $field['content'] = json_decode(
                             vh_translate_dynamic_strings(
-                                json_encode($field['content']),
-                                ['has_replace_string' => true]
+                                json_encode($field['content'])
                             )
                         );
                     }else{
                         $field['content'] = vh_translate_dynamic_strings(
-                            $field['content'],
-                            ['has_replace_string' => true]
+                            $field['content']
                         );
                     }
 
@@ -985,11 +1013,11 @@ class Content extends Model {
                 $g->with(['fields' => function($f){
                     $f->with(['type']);
 
-                },'contentFields']);
+                }]);
 
             }]);
 
-    }])->where('vh_cms_content_type_id', $content_type->id);
+        }])->where('vh_cms_content_type_id', $content_type->id);
 
 
         if(isset($args['q'])
@@ -1052,10 +1080,16 @@ class Content extends Model {
             'exclude_groups' => $arr_exclude_groups
             ];
 
+        $content_ids = $contents->pluck('id')->toArray();
+
+        $group_fields = ContentFormField::whereIn('vh_cms_content_id',$content_ids)
+            ->get();
+
+        $group_fields = collect($group_fields)->groupBy('vh_cms_form_group_index');
 
         foreach ($contents as $key => $content){
 
-            $contents[$key]['content_form_groups'] = static::getFormGroupsTest($content, 'content',null,$filter);
+            $contents[$key]['content_form_groups'] = static::getFormGroupsTest($content, 'content',$group_fields,$filter);
 
             $arr_template = array();
 
