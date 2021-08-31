@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use VaahCms\Modules\Cms\Entities\Content;
+use VaahCms\Modules\Cms\Entities\ContentFormField;
 use VaahCms\Modules\Cms\Entities\ContentType;
 
 class ContentsController extends Controller
@@ -28,20 +29,52 @@ class ContentsController extends Controller
             return $response;
         }
 
-        $contents = Content::where('vh_cms_content_type_id', $content_type->id)
-            ->orderBy('id','desc');
+        $order = 'desc';
+        $order_by = 'id';
+
+        $input = $request->all();
+
+        if(isset($input['order'])
+            && $input['order']){
+            $order = $input['order'];
+        }
+
+        if(isset($input['order_by'])
+            && $input['order_by']){
+            $order_by = $input['order_by'];
+        }
+
+        $contents = Content::with(['fields','contentType' => function($q){
+            $q->with(['groups' => function($g){
+                $g->with(['fields' => function($f){
+                    $f->with(['type']);
+
+                }]);
+
+            }]);
+
+        },'template' => function($q){
+            $q->with(['groups' => function($g){
+                $g->with(['fields' => function($f){
+                    $f->with(['type']);
+
+                }]);
+
+            }]);
+
+        }])->where('vh_cms_content_type_id', $content_type->id);
 
 
-        if($request->has('q')
-            && $request->q){
+        if(isset($input['q'])
+            && $input['q']){
 
-            $contents->where(function ($q) use ($request){
-                $q->where('name', 'LIKE', '%'.$request->q.'%')
-                    ->orWhere('slug', 'LIKE', '%'.$request->q.'%')
-                    ->orWhere('permalink', 'LIKE', '%'.$request->q.'%');
+            $contents->where(function ($q) use ($input){
+                $q->where('name', 'LIKE', '%'.$input['q'].'%')
+                    ->orWhere('slug', 'LIKE', '%'.$input['q'].'%')
+                    ->orWhere('permalink', 'LIKE', '%'.$input['q'].'%');
 
-                $q->orWhereHas('fields',function ($p) use ($request){
-                    $p->where('content', 'LIKE', '%'.$request->q.'%');
+                $q->orWhereHas('fields',function ($p) use ($input){
+                    $p->where('content', 'LIKE', '%'.$input['q'].'%');
                     $p->whereHas('field', function ($f) {
                         $f->where('is_searchable' , 1);
                     });
@@ -50,12 +83,14 @@ class ContentsController extends Controller
             });
         }
 
-        if($request->has('per_page')
-            && $request->per_page
-            && is_numeric($request->per_page)){
-            $contents = $contents->paginate($request->per_page);
+        $contents->orderBy($order_by,$order);
+
+        if(isset($input['per_page'])
+            && $input['per_page']
+            && is_numeric($input['per_page'])){
+            $contents = $contents->paginate($input['per_page']);
         }else{
-            $contents = $contents->paginate('5');
+            $contents = $contents->paginate(config('vaahcms.per_page'));
         }
 
         if(!$contents)
@@ -68,64 +103,51 @@ class ContentsController extends Controller
         $arr_include_groups = array();
         $arr_exclude_groups = array();
 
-        if($request->has('include_groups')){
-            $arr_include_groups = explode(",",$request->include_groups);
+        if(isset($input['include_groups'])){
+            if(is_string($input['include_groups'])){
+                $arr_include_groups = explode(",",$input['include_groups']);
+            }else{
+                $arr_include_groups = $input['include_groups'];
+            }
+
         }
 
-        if($request->has('exclude_groups')){
-            $arr_exclude_groups = explode(",",$request->exclude_groups);
+        if(isset($input['exclude_groups'])){
+            if(is_string($input['exclude_groups'])){
+                $arr_exclude_groups = explode(",",$input['exclude_groups']);
+            }else{
+                $arr_exclude_groups = $input['exclude_groups'];
+            }
         }
+
+        $filter = [
+            'include_groups' => $arr_include_groups,
+            'exclude_groups' => $arr_exclude_groups
+        ];
+
+        $content_ids = $contents->pluck('id')->toArray();
+
+        $group_fields = ContentFormField::whereIn('vh_cms_content_id',$content_ids)
+            ->get();
+
+        $group_fields = collect($group_fields);
 
         foreach ($contents as $key => $content){
 
-            $content_data = Content::getItem($content->id);
+            $contents[$key]['content_form_groups'] = Content::getFormGroupsTest($content, 'content',$group_fields,$filter);
 
-            if($content_data['status'] != 'success')
-            {
-                $response['status']     = 'failed';
-                $response['errors']     = 'Content Data not found.';
-                return $response;
-            }
+            $contents[$key]['template_form_groups'] = Content::getFormGroupsTest($content, 'template',$group_fields,$filter);
 
-            $arr_content = array();
+            $group = get_the_content($contents[$key]);
 
-            foreach ($content_data['data']['content_form_groups'] as $group){
+            $contents[$key]['content_form_groups'] = isset($group['content_form_groups'])?$group['content_form_groups']:null;
 
-                if((count($arr_include_groups) ==  0
-                        || in_array($group[0]['slug'], $arr_include_groups))
-                    && (count($arr_exclude_groups) == 0
-                        || !in_array($group[0]['slug'], $arr_exclude_groups))){
+            $contents[$key]['template_form_groups'] = isset($group['template_form_groups'])?$group['template_form_groups']:null;;
 
+            unset($contents[$key]['template']);
+            unset($contents[$key]['fields']);
+            unset($contents[$key]['contentType']);
 
-                    $arr_content[$group[0]['slug']] = get_the_group(
-                        $content_data['data'],
-                        $group[0]['slug']
-                    );
-
-                }
-
-            }
-
-            $contents[$key]['content_fields'] = $arr_content;
-
-            $arr_template = array();
-
-            foreach ($content_data['data']['template_form_groups'] as $group){
-
-                if((count($arr_include_groups) ==  0
-                        || in_array($group[0]['slug'], $arr_include_groups))
-                    && (count($arr_exclude_groups) == 0
-                        || !in_array($group[0]['slug'], $arr_exclude_groups))){
-                    $arr_template[$group[0]['slug']] = get_the_group(
-                        $content_data['data'],
-                        $group[0]['slug'],
-                        'template'
-                    );
-                }
-
-            }
-
-            $contents[$key]['template_fields'] = $arr_template;
         }
 
         $response['status']     = 'success';

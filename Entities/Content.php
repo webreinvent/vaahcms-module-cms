@@ -525,22 +525,32 @@ class Content extends Model {
 
                     if($field_content)
                     {
-
+                        
                         $arr_group[$i][$key]['fields'][$y]['vh_cms_form_field_id'] = $field_content->id;
 
-                        if(is_array($field_content->content) || is_object($field_content->content)){
-                            $arr_group[$i][$key]['fields'][$y]['content'] = json_decode(
-                                vh_translate_dynamic_strings(json_encode($field_content->content))
-                            );
-                        }else{
+                        if(!$field->is_repeatable
+                            && (is_array($field_content->content)
+                                || is_object($field_content->content))
+                            && $field->type->slug != 'seo-meta-tags'
+                            && count($field_content->content) <= 1) {
 
-                            if(!$field->is_repeatable){
-                                $arr_group[$i][$key]['fields'][$y]['content'] = vh_translate_dynamic_strings($field_content->content);
-                            }else{
-                                $arr_group[$i][$key]['fields'][$y]['content'] = [vh_translate_dynamic_strings($field_content->content)];
+                            $content_val = null;
+
+                            if (count($field_content->content) == 1) {
+                                $content_val = $field_content->content[0];
                             }
 
+                        }elseif($field->is_repeatable
+                            && is_string($field_content->content) ){
+                            $content_val = [$field_content->content];
+                        }else{
+                            $content_val = $field_content->content;
                         }
+
+                        $content_val = ContentFormField::getContentAsset($content_val, $field->type->slug);
+
+
+                        $arr_group[$i][$key]['fields'][$y]['content'] = $content_val;
 
                         $arr_group[$i][$key]['fields'][$y]['content_meta'] = $field_content->meta;
                     }
@@ -592,7 +602,9 @@ class Content extends Model {
 
             }
 
-            $group_fields = $group_fields->where('vh_cms_content_id',$content->id);
+            $group_fields = $group_fields->where('vh_cms_content_id',$content->id)
+                ->where('vh_cms_form_group_id',$group->id)
+                ->groupBy('vh_cms_form_group_index');
 
             if(count($group_fields) === 0 ){
                 $group_fields[] = '';
@@ -674,9 +686,30 @@ class Content extends Model {
                         }else{
                             $arr_group[$i][$key]['fields'][$y]['content'] = $field_content->content;
                         }*/
-                        $arr_group[$i][$key]['fields'][$y]['content'] = $field_content->content;
+
+                        if(!$field->is_repeatable
+                            && (is_array($field_content->content)
+                                || is_object($field_content->content))
+                            && $field->type->slug != 'seo-meta-tags'
+                            && count($field_content->content) <= 1) {
+
+                            $content_val = null;
+
+                            if (count($field_content->content) == 1) {
+                                $content_val = $field_content->content[0];
+                            }
+
+                        }elseif($field->is_repeatable
+                            && is_string($field_content->content) ){
+                            $content_val = [$field_content->content];
+                        }else{
+                            $content_val = $field_content->content;
+                        }
+
+                        $content_val = ContentFormField::getContentAsset($content_val, $field->type->slug);
 
 
+                        $arr_group[$i][$key]['fields'][$y]['content'] = $content_val;
 
                         $arr_group[$i][$key]['fields'][$y]['content_meta'] = $field_content->meta;
                     }
@@ -1078,7 +1111,7 @@ class Content extends Model {
         $group_fields = ContentFormField::whereIn('vh_cms_content_id',$content_ids)
             ->get();
 
-        $group_fields = collect($group_fields)->groupBy('vh_cms_form_group_index');
+        $group_fields = collect($group_fields);
 
         foreach ($contents as $key => $content){
 

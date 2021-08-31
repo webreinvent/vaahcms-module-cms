@@ -398,7 +398,7 @@ function get_all_group_field(Content $content, $type, $return_html=true)
 
                     foreach ($group['fields']  as $field){
 
-                        $array_val['content_fields'][$group['slug']][$key][$field["slug"]] = setGroupReturnValue($field,false);
+                        $array_val['content_form_groups'][$group['slug']][$key][$field["slug"]] = setGroupReturnValue($field,false);
 
                     }
 
@@ -413,7 +413,7 @@ function get_all_group_field(Content $content, $type, $return_html=true)
 
                     foreach ($group['fields']  as $field){
 
-                        $array_val['template_fields'][$group['slug']][$key][$field["slug"]] = setGroupReturnValue($field,false);
+                        $array_val['template_form_groups'][$group['slug']][$key][$field["slug"]] = setGroupReturnValue($field,false);
 
                     }
 

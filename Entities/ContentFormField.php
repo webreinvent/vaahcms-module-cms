@@ -83,17 +83,6 @@ class ContentFormField extends Model {
                 return json_decode($value);
             }
 
-            /*if(isset($this->field->type) && isset($this->field->type->slug))
-            {
-                $slug = $this->field->type->slug;
-
-                if($slug == 'image' || $slug == 'media')
-                {
-                    $value = asset($value);
-                }
-            }*/
-
-
             return $value;
         }
 
@@ -171,6 +160,18 @@ class ContentFormField extends Model {
         return $this->belongsTo(FormField::class,
             'vh_cms_form_field_id', 'id'
         );
+    }
+    //-------------------------------------------------
+    public static function getContentAsset($content,$type)
+    {
+        $value = $content;
+
+        if($type && ($type == 'image' || $type == 'media'))
+        {
+            $value = asset($content);
+        }
+
+        return $value;
     }
     //-------------------------------------------------
 
