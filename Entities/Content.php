@@ -472,7 +472,11 @@ class Content extends Model {
 
             $group_fields = ContentFormField::where('vh_cms_content_id',$content->id)
                 ->where('vh_cms_form_group_id',$group->id)
-                ->groupBy('vh_cms_form_group_index')->get();
+                ->get();
+
+
+            $group_fields = collect($group_fields)->groupBy('vh_cms_form_group_index');
+
 
             if(count($group_fields) === 0 ){
                 $group_fields[] = '';
@@ -495,10 +499,6 @@ class Content extends Model {
 
                 foreach ($group->fields as $field)
                 {
-
-//                    $arr_group[$i][$key]['fields'][$y] = $field;
-
-//                    $arr_group[$i][$key]['fields'][$y] = $arr_group[$i][$key]['fields'][$y]->toArray();
                     $arr_group[$i][$key]['fields'][$y] = [
                         'id' => $field->id,
                         'name' => $field->name,
@@ -525,7 +525,7 @@ class Content extends Model {
 
                     if($field_content)
                     {
-                        
+
                         $arr_group[$i][$key]['fields'][$y]['vh_cms_form_field_id'] = $field_content->id;
 
                         if(!$field->is_repeatable
@@ -605,6 +605,8 @@ class Content extends Model {
             $group_fields = $group_fields->where('vh_cms_content_id',$content->id)
                 ->where('vh_cms_form_group_id',$group->id)
                 ->groupBy('vh_cms_form_group_index');
+
+            return $group_fields;
 
             if(count($group_fields) === 0 ){
                 $group_fields[] = '';
