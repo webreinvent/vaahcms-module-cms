@@ -606,7 +606,6 @@ class Content extends Model {
                 ->where('vh_cms_form_group_id',$group->id)
                 ->groupBy('vh_cms_form_group_index');
 
-            return $group_fields;
 
             if(count($group_fields) === 0 ){
                 $group_fields[] = '';
@@ -653,41 +652,6 @@ class Content extends Model {
                     {
 
                         $arr_group[$i][$key]['fields'][$y]['vh_cms_form_field_id'] = $field_content->id;
-
-                        /*if(is_array($field_content->content) || is_object($field_content->content)){
-                            $arr_group[$i][$key]['fields'][$y]['content'] = json_decode(
-                                vh_translate_dynamic_strings(json_encode($field_content->content))
-                            );
-                        }else{
-
-                            if(!$field->is_repeatable){
-                                $arr_group[$i][$key]['fields'][$y]['content'] = vh_translate_dynamic_strings($field_content->content);
-                            }else{
-                                $arr_group[$i][$key]['fields'][$y]['content'] = [vh_translate_dynamic_strings($field_content->content)];
-                            }
-
-
-
-                        }*/
-
-
-                        /*if(!$field->is_repeatable
-                            && (is_array($field_content->content) || is_object($field_content->content))
-                            && count($field_content->content) < 1){
-
-                            if(count($field_content->content) == 1){
-                                $arr_group[$i][$key]['fields'][$y]['content'] = $field_content->content[0];
-                            }else{
-                                $arr_group[$i][$key]['fields'][$y]['content'] = null;
-                            }
-
-
-                        }elseif($field->is_repeatable
-                            && is_string($field_content->content) ){
-                            $arr_group[$i][$key]['fields'][$y]['content'] = [$field_content->content];
-                        }else{
-                            $arr_group[$i][$key]['fields'][$y]['content'] = $field_content->content;
-                        }*/
 
                         if(!$field->is_repeatable
                             && (is_array($field_content->content)
