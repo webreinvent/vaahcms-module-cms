@@ -90,6 +90,35 @@ $args = [
 ];
 ```
 
+## API
+
+#### Content
+```php
+parameter = [
+
+    'q'                         => 'search_item', 
+    'per_page'                  => 5,                                       // default = 20
+    'include_groups'            => [],                    
+    'exclude_groups'            => [],     
+    'order'                     => 'name',                                  // default = id      
+    'order_by'                  => 'asc',                                   // default = desc      asc/desc/ASC/DESC              
+
+];
+
+<public-url>/api/cms/contents/{plural_slug}
+```
+
+```php
+<public-url>/api/cms/contents/{singular_slug}/{content_slug}
+```
+
+#### Content Type
+```php
+<public-url>/api/cms/contents-types
+
+<public-url>/api/cms/contents-types/{slug}
+```
+
 
 #### To Run Modules Dusk Test:
 - Change path of dusk in `phpunit.dusk.xml` to following:
