@@ -17,6 +17,45 @@ APP_MODULE_CMS_ENV=develop
 {!! vh_location('top', true) !!}
 ```
 
+#### Content
+```blade
+{!! get_content($data) !!}                      //   return HTML format
+
+{!! get_the_content($data) !!}                  //   return DATA format
+```
+
+```php
+get_content(Content $content, $type=null)
+
+$type = content/template;
+```
+
+#### Content List
+```blade
+{!! get_contents('page') !!}                      //   return HTML format
+
+{!! get_the_contents('page') !!}                  //   return DATA format
+```
+
+```php
+get_contents($content_type_slug='pages', array $args = null,$has_pagination = true)
+
+$args = [
+
+    'q'                         => 'search_item', 
+    'per_page'                  => 5,                                       // default = 20
+    'include_groups'            => [],                                      // group_slug
+    'exclude_groups'            => [],                                      // group_slug   
+    'order'                     => 'name',                                  // default = id      
+    'order_by'                  => 'asc',                                   // default = desc      asc/desc/ASC/DESC
+    'container_opening_tag'     => '<div class="columns is-multiline">',
+    'container_closing_tag'     => '</div>',
+    'content_opening_tag'       => '<div class="column is-4">',
+    'content_closing_tag'       => '</div>'               
+
+];
+```
+
 #### Field
 ```blade
 {!! get_field($data, 'title', 'default') !!}        //   return HTML format
@@ -51,45 +90,6 @@ $type = content/template;
 $group_index = 0/1/2/3/4/.....
 ```
 
-#### Content
-```blade
-{!! get_content($data) !!}                      //   return HTML format
-
-{!! get_the_content($data) !!}                  //   return DATA format
-```
-
-```php
-get_content(Content $content, $type=null)
-
-$type = content/template;
-```
-
-#### Content List
-```blade
-{!! get_contents('page') !!}                      //   return HTML format
-
-{!! get_the_contents('page') !!}                  //   return DATA format
-```
-
-```php
-get_contents($content_type_slug='pages', array $args = null,$has_pagination = true)
-
-$args = [
-
-    'q'                         => 'search_item', 
-    'per_page'                  => 5,                                       // default = 20
-    'include_groups'            => [],                    
-    'exclude_groups'            => [],     
-    'order'                     => 'name',                                  // default = id      
-    'order_by'                  => 'asc',                                   // default = desc      asc/desc/ASC/DESC
-    'container_opening_tag'     => '<div class="columns is-multiline">',
-    'container_closing_tag'     => '</div>',
-    'content_opening_tag'       => '<div class="column is-4">',
-    'content_closing_tag'       => '</div>'               
-
-];
-```
-
 ## API
 
 #### Content
@@ -98,8 +98,8 @@ parameter = [
 
     'q'                         => 'search_item', 
     'per_page'                  => 5,                                       // default = 20
-    'include_groups'            => [],                    
-    'exclude_groups'            => [],     
+    'include_groups'            => [],                                      // group_slug
+    'exclude_groups'            => [],                                      // group_slug
     'order'                     => 'name',                                  // default = id      
     'order_by'                  => 'asc',                                   // default = desc      asc/desc/ASC/DESC              
 

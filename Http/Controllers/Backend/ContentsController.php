@@ -6,6 +6,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use VaahCms\Modules\Cms\Entities\Content;
 use VaahCms\Modules\Cms\Entities\ContentType;
+use WebReinvent\VaahCms\Entities\Taxonomy;
 use WebReinvent\VaahCms\Entities\Theme;
 use WebReinvent\VaahCms\Entities\User;
 
@@ -201,6 +202,16 @@ class ContentsController extends Controller
     public function getUserById(Request $request,$id)
     {
         return User::find($id);
+    }
+    //----------------------------------------------------------
+    public function getTaxonomiesInTree(Request $request)
+    {
+        $item = Taxonomy::whereNotNull('is_active')
+            ->with(['children'])
+            ->where('vh_taxonomy_type_id',$request->q)
+            ->select('id', 'name', 'slug', 'parent_id')
+            ->get();
+        return $item;
     }
     //----------------------------------------------------------
 

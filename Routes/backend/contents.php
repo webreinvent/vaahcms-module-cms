@@ -46,4 +46,7 @@ Route::group(
         Route::post('/sync/seeds', 'ContentsController@syncSeeds')
             ->name('backend.cms.contents.syncSeeds');
         //---------------------------------------------------------
+        Route::post('/getTaxonomiesInTree', 'ContentsController@getTaxonomiesInTree')
+            ->name('backend.cms.contents.getTaxonomiesInTree');
+        //---------------------------------------------------------
     });

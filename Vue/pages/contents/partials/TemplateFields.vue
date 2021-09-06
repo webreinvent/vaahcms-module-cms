@@ -100,6 +100,8 @@
                                                                          :label="field.name"
                                                                          :meta="field.meta"
                                                                          :placeholder="field.name"
+                                                                         :app_url="field.type.slug === 'relation'
+                                                                         ? ajax_url+'/getTaxonomiesInTree' : ''"
                                                                          :labelPosition="labelPosition"
                                                                          v-model="field.content"
                                                                          @onInput=""
@@ -125,6 +127,8 @@
                                                                          ? field.name : ''"
                                                                          :meta="field.meta"
                                                                          :placeholder="field.name"
+                                                                         :app_url="field.type.slug === 'relation'
+                                                                         ? ajax_url+'/getTaxonomiesInTree' : ''"
                                                                          :labelPosition="labelPosition"
                                                                          v-model="field.content[key]"
                                                                          @onInput=""

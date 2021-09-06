@@ -198,12 +198,16 @@
                                                                                 aria-close-label="Delete this tag">
                                                                         </b-taginput>
                                                                     </div>
-                                                                    <!--<div v-else-if="(meta_index === 'container_opening_tag'
-                                                                    || meta_index === 'container_closing_tag')">
-                                                                        <b-input v-if="assets.non_repeatable_fields.includes(field.type.slug)"
-                                                                                 v-model="field.meta[meta_index]"
-                                                                                 type="text"></b-input>
-                                                                    </div>-->
+                                                                    <div v-else-if="meta_index === 'taxonomy_type'">
+
+                                                                        <tree-select v-model="field.meta[meta_index]"
+                                                                                     placeholder="Select..."
+                                                                                     :is_clearable="false"
+                                                                                     :is_multiple="false"
+                                                                                     :show_count="true"
+                                                                                     :options="assets.taxonomy_types" >
+                                                                        </tree-select>
+                                                                    </div>
                                                                     <div v-else>
                                                                         <b-input v-model="field.meta[meta_index]"
                                                                                  type="text"></b-input>

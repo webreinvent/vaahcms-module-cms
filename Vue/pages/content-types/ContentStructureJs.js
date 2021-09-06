@@ -1,5 +1,8 @@
 import GlobalComponents from '../../vaahvue/helpers/GlobalComponents'
 import draggable from 'vuedraggable';
+// import the component
+import TreeSelect from '../../vaahvue/reusable/TreeSelect'
+
 
 let namespace = 'content_types';
 
@@ -14,6 +17,7 @@ export default {
     },
     components:{
         ...GlobalComponents,
+        TreeSelect,
         draggable,
 
     },
@@ -31,6 +35,7 @@ export default {
                 fields:[
                 ]
             },
+
 
 
         }
@@ -213,10 +218,7 @@ export default {
         resetActiveItem: function () {
             this.update('active_item', null);
             this.$router.push({name:'content.types.list'});
-        },
-
-        //---------------------------------------------------------------------
-
+        }
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------

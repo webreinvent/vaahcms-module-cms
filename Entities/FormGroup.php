@@ -3,6 +3,7 @@
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use WebReinvent\VaahCms\Entities\TaxonomyType;
 use WebReinvent\VaahCms\Entities\User;
 use WebReinvent\VaahCms\Traits\CrudWithUuidObservantTrait;
 
@@ -231,6 +232,10 @@ class FormGroup extends Model {
 
                     }
 
+                    /*if($field['type']['slug'] == 'taxonomy'){
+                        TaxonomyType::getFirstOrCreate(Str::slug($field['name']));
+                    }*/
+
                     unset($field['type']);
                 }
 
@@ -239,6 +244,7 @@ class FormGroup extends Model {
                 $stored_field->slug = Str::slug($field['name']);
                 $stored_field->vh_cms_form_group_id = $group->id;
                 $stored_field->save();
+
             }
         }
 

@@ -46,15 +46,39 @@ class ExtendController extends Controller
     {
 
 
-        $list[0] = [
+        /*$list[0] = [
             'link' => self::$link."content-types/",
             'icon' => 'file-alt',
             'label'=> 'CMS'
-        ];
+        ];*/
 
-        /*$list[1]['child'][] =  [
-            'link' => self::$link."content-types/",
-            'label'=> 'Types'
+        $list[0] = [
+            'link' => '#',
+            'icon'=> 'file-alt',
+            'label'=> 'CMS',
+            'child' => [
+                [
+                    'link' => self::$link."content-types/",
+                    'icon' => 'paste',
+                    'label'=> 'Content Types'
+                ],
+                [
+                    'link' => self::$link."menus/",
+                    'icon' => 'bars',
+                    'label'=> 'Menus'
+                ],
+                [
+                    'link' => self::$link."blocks/",
+                    'icon' => 'th-large',
+                    'label'=> 'Blocks'
+                ],
+                [
+                    'link' => '#',
+                    'icon'=> 'file',
+                    'label'=> 'Content',
+                    'child' => []
+                ]
+            ]
         ];
 
         $content_types = ContentType::isPublished()->get();
@@ -63,12 +87,12 @@ class ExtendController extends Controller
         {
             foreach ($content_types as $content_type)
             {
-                $list[1]['child'][] =  [
+                $list[0]['child'][3]['child'][] =  [
                     'link' => self::$link."contents/".$content_type->slug."/list",
                     'label'=> $content_type->name
                 ];
             }
-        }*/
+        }
 
 
         $response['status'] = 'success';

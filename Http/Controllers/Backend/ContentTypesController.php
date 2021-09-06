@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller;
 use VaahCms\Modules\Cms\Entities\Content;
 use VaahCms\Modules\Cms\Entities\ContentType;
 use VaahCms\Modules\Cms\Entities\FieldType;
+use WebReinvent\VaahCms\Entities\TaxonomyType;
 
 class ContentTypesController extends Controller
 {
@@ -28,6 +29,10 @@ class ContentTypesController extends Controller
         $data['non_repeatable_fields'] = Content::getNonRepeatableFields();
 
         $data['bulk_actions'] = vh_general_bulk_actions();
+
+        $data['taxonomy_types'] = TaxonomyType::whereNotNull('is_active')
+            ->whereNull('parent_id')->with(['children'])
+            ->select('id', 'name', 'slug')->get();
 
         $response['status'] = 'success';
         $response['data'] = $data;

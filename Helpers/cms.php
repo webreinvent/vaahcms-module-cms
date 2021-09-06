@@ -396,10 +396,12 @@ function get_all_group_field(Content $content, $type, $return_html=true)
             foreach ($content->content_form_groups as $arr_group){
                 foreach ($arr_group as $key => $group){
 
-                    foreach ($group['fields']  as $field){
+                    if($group['fields']){
+                        foreach ($group['fields']  as $field){
 
-                        $array_val['content_form_groups'][$group['slug']][$key][$field["slug"]] = setGroupReturnValue($field,false);
+                            $array_val['content_form_groups'][$group['slug']][$key][$field["slug"]] = setGroupReturnValue($field,false);
 
+                        }
                     }
 
                 }
@@ -411,10 +413,12 @@ function get_all_group_field(Content $content, $type, $return_html=true)
             foreach ($content->template_form_groups as $arr_group){
                 foreach ($arr_group as $key => $group){
 
-                    foreach ($group['fields']  as $field){
+                    if($group['fields']){
+                        foreach ($group['fields']  as $field){
 
-                        $array_val['template_form_groups'][$group['slug']][$key][$field["slug"]] = setGroupReturnValue($field,false);
+                            $array_val['template_form_groups'][$group['slug']][$key][$field["slug"]] = setGroupReturnValue($field,false);
 
+                        }
                     }
 
                 }
@@ -432,10 +436,12 @@ function get_all_group_field(Content $content, $type, $return_html=true)
 
             foreach ($arr_group as $key => $group){
 
-                foreach ($group['fields']  as $field){
+                if($group['fields']){
+                    foreach ($group['fields']  as $field){
 
-                    $data .= setReturnValue($field);
+                        $data .= setReturnValue($field);
 
+                    }
                 }
 
             }
@@ -447,10 +453,12 @@ function get_all_group_field(Content $content, $type, $return_html=true)
 
             foreach ($arr_group as $key => $group){
 
-                foreach ($group['fields']  as $field){
+                if($group['fields']){
+                    foreach ($group['fields']  as $field){
 
-                    $data .= setReturnValue($field);
+                        $data .= setReturnValue($field);
 
+                    }
                 }
 
             }

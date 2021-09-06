@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use WebReinvent\VaahCms\Entities\ContentFormRelation;
+use WebReinvent\VaahCms\Entities\Taxonomy;
 use WebReinvent\VaahCms\Entities\User;
 use WebReinvent\VaahCms\Traits\CrudWithUuidObservantTrait;
 
@@ -172,6 +174,14 @@ class ContentFormField extends Model {
         }
 
         return $value;
+    }
+    //-------------------------------------------------
+    public function taxonomies()
+    {
+        return $this->morphedByMany(Taxonomy::class,
+            'relatable',
+            'vh_cms_content_form_relations',
+            'vh_cms_content_form_field_id');
     }
     //-------------------------------------------------
 

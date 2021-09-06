@@ -3,6 +3,7 @@
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use WebReinvent\VaahCms\Entities\Taxonomy;
 use WebReinvent\VaahCms\Entities\Theme;
 use WebReinvent\VaahCms\Entities\ThemeTemplate;
 use WebReinvent\VaahCms\Entities\User;
@@ -794,6 +795,18 @@ class Content extends Model {
                             $stored_field->content = $user->id;
                         }
 
+                    }elseif($field['type']['slug'] == 'relation' && $field['content']){
+
+                        $related_item = ContentFormField::where('id',$field['id'])->first();
+
+                        if(!is_array($field['content']) && !is_object($field['content'])){
+                            $field['content'] = [$field['content']];
+                        }
+
+                        $related_item->taxonomies()->sync($field['content']);
+
+                        $stored_field->content = $field['content'];
+
                     }else{
                         $stored_field->content = $field['content'];
                     }
@@ -1182,7 +1195,7 @@ class Content extends Model {
 
         return ['seo-meta-tags','list',
             'image-group','facebook-card','twitter-card',
-            'json','address','tags','select'];
+            'json','address','tags','select','relation'];
 
     }
     //-------------------------------------------------

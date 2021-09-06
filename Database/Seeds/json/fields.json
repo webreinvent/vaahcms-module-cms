@@ -277,11 +277,13 @@
         "name": "Relation",
         "excerpt": "",
         "meta": {
-            "opening_tag": "<p>",
+            "opening_tag": "<p class='relation'>",
             "closing_tag": "</p>",
-            "container_opening_tag": "span",
-            "container_closing_tag": "span",
-            "is_hidden": true
+            "container_opening_tag": null,
+            "container_closing_tag": null,
+            "taxonomy_type": null,
+            "is_hidden": false,
+            "is_multiple": false
         }
     },
     {
