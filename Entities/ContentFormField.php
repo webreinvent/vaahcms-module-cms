@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use WebReinvent\VaahCms\Entities\ContentFormRelation;
 use WebReinvent\VaahCms\Entities\Taxonomy;
 use WebReinvent\VaahCms\Entities\User;
 use WebReinvent\VaahCms\Traits\CrudWithUuidObservantTrait;
@@ -184,5 +183,10 @@ class ContentFormField extends Model {
             'vh_cms_content_form_field_id');
     }
     //-------------------------------------------------
+    public function contentFormRelations()
+    {
+        return $this->hasMany(ContentFormRelation::class,
+            'vh_cms_content_form_field_id', 'id');
+    }
 
 }

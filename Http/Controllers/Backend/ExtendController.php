@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use VaahCms\Modules\Cms\Entities\ContentType;
+use WebReinvent\VaahCms\Entities\TaxonomyType;
 
 class ExtendController extends Controller
 {
@@ -27,6 +28,38 @@ class ExtendController extends Controller
         $response['data'] = $links;
 
         return $response;
+
+    }
+    //----------------------------------------------------------
+    public static function getCmsContentRelations()
+    {
+        $arr = [
+            [
+                "name" => "Taxonomy",
+                "namespace" => "WebReinvent\\VaahCms\\Entities\\Taxonomy",
+                "options" => TaxonomyType::getListInTreeFormat(),
+                "filter_by" => 'vh_taxonomy_type_id',
+                "display_column" => 'name',
+                "has_children" => true
+            ],
+            [
+                "name" => "Role",
+                "namespace" => "WebReinvent\\VaahCms\\Entities\\Role",
+                "display_column" => 'slug',
+                "filters" => [
+                    [
+                        "query" => 'where',
+                        "column" => 'id',
+                        "condition" => '=',
+                        "value" => '1',
+                    ],
+                ],
+
+            ]
+        ];
+
+
+        return $arr;
 
     }
 

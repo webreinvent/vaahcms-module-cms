@@ -30,6 +30,7 @@ export default {
             labelPosition: 'on-border',
             params: {},
             local_action: null,
+            type_options: null,
             new_group:{
                 name:null,
                 fields:[
@@ -218,6 +219,30 @@ export default {
         resetActiveItem: function () {
             this.update('active_item', null);
             this.$router.push({name:'content.types.list'});
+        },
+        //---------------------------------------------------------------------
+        onSelectType: function (field,data) {
+
+            field.meta['selected_relation'] = null;
+
+
+            this.assets.content_relations.map(function(item, index) {
+
+                if(item['name'] === data)
+                {
+                    field.meta['selected_relation'] = item;
+                }
+
+            });
+
+            /*let val = this.$vaah.findInArrayByKey(this.assets.content_relations,
+                'name', data);*/
+
+            // field.meta['selected_relation'] = val;
+
+
+            field.meta['filter_id'] = null;
+
         }
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------

@@ -177,14 +177,17 @@
 
 
                                                         <template v-if="field.meta">
+
                                                             <tr v-for="(meta_item, meta_index) in field.meta"
                                                                 v-if="(meta_index !== 'container_opening_tag'
                                                                     && meta_index !== 'container_closing_tag')
                                                                     || assets.non_repeatable_fields.includes(field.type.slug)
                                                                     || field.is_repeatable">
 
-                                                                <td v-html="$vaah.toLabel(meta_index)"></td>
-                                                                <td>
+                                                                <td v-if="meta_index !== 'filter_id' && meta_index !== 'selected_relation'"
+                                                                    v-html="$vaah.toLabel(meta_index)"></td>
+
+                                                                <td v-if="meta_index !== 'filter_id' && meta_index !== 'selected_relation'">
                                                                     <div v-if="meta_index.includes('is_')">
                                                                         <b-checkbox v-model="field.meta[meta_index]">
                                                                             {{$vaah.toLabel(meta_index)}}
@@ -198,15 +201,33 @@
                                                                                 aria-close-label="Delete this tag">
                                                                         </b-taginput>
                                                                     </div>
-                                                                    <div v-else-if="meta_index === 'taxonomy_type'">
+                                                                    <div v-else-if="meta_index === 'type'">
 
-                                                                        <tree-select v-model="field.meta[meta_index]"
+                                                                        {{field.meta['selected_relation']}}
+
+                                                                        <b-field>
+                                                                            <b-select expanded v-model="field.meta[meta_index]"
+                                                                                      @input="onSelectType(field,field.meta[meta_index])"
+                                                                                      placeholder="Select">
+                                                                                <option :value=null>
+                                                                                    Select
+                                                                                </option>
+                                                                                <option
+                                                                                        v-for="(option, index) in assets.content_relations"
+                                                                                        :value="option.name"
+                                                                                        :key="index">
+                                                                                    {{ option.name }}
+                                                                                </option>
+                                                                            </b-select>
+                                                                        </b-field>
+
+                                                                        <tree-select v-if="field.meta[meta_index]
+                                                                        && field.meta[meta_index]['options']"
+                                                                                     v-model="field.meta['filter_id']"
                                                                                      placeholder="Select..."
-                                                                                     :is_clearable="false"
-                                                                                     :is_multiple="false"
-                                                                                     :show_count="true"
-                                                                                     :options="assets.taxonomy_types" >
+                                                                                     :options="field.meta[meta_index]['options']" >
                                                                         </tree-select>
+
                                                                     </div>
                                                                     <div v-else>
                                                                         <b-input v-model="field.meta[meta_index]"

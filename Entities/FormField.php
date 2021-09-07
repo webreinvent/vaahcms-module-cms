@@ -142,6 +142,8 @@ class FormField extends Model {
         //delete content fields
         ContentFormField::where('vh_cms_form_field_id', $id)->forceDelete();
 
+        ContentFormRelation::where('vh_cms_content_form_field_id', $id)->forceDelete();
+
         //delete group
         static::where('id', $id)->forceDelete();
 
@@ -151,6 +153,7 @@ class FormField extends Model {
 
         foreach ($ids_array as $id)
         {
+
             static::deleteItem($id);
         }
 

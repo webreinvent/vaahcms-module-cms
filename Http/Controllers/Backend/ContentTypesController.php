@@ -30,6 +30,8 @@ class ContentTypesController extends Controller
 
         $data['bulk_actions'] = vh_general_bulk_actions();
 
+        $data['content_relations'] = vh_content_relations();
+
         $data['taxonomy_types'] = TaxonomyType::whereNotNull('is_active')
             ->whereNull('parent_id')->with(['children'])
             ->select('id', 'name', 'slug')->get();

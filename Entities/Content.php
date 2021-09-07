@@ -803,7 +803,19 @@ class Content extends Model {
                             $field['content'] = [$field['content']];
                         }
 
-                        $related_item->taxonomies()->sync($field['content']);
+                        foreach ($field['content'] as $id){
+                            $data = [
+                                'relatable_id' => $id,
+                                'relatable_type' => $field['meta']['type']['namespace']
+                            ];
+                            $related_item->contentFormRelations()->associate($data);
+                        }
+
+
+//                        dd($related_item->contentFormRelations()->get());
+
+
+
 
                         $stored_field->content = $field['content'];
 

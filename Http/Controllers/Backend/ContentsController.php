@@ -206,11 +206,42 @@ class ContentsController extends Controller
     //----------------------------------------------------------
     public function getTaxonomiesInTree(Request $request)
     {
-        $item = Taxonomy::whereNotNull('is_active')
-            ->with(['children'])
-            ->where('vh_taxonomy_type_id',$request->q)
-            ->select('id', 'name', 'slug', 'parent_id')
-            ->get();
+        $input = $request->all();
+
+        $item = [];
+
+        if(isset($input['type']) && isset($input['type']['namespace'])){
+            $item = $input['type']['namespace']::orderBy('created_at', 'DESC');
+
+            if(isset($input['type']['has_children']) && $input['type']['has_children']){
+                $item->with(['children']);
+            }
+
+            if(isset($input['type']['filters'])){
+
+                foreach ($input['type']['filters'] as $filter){
+
+                    $query = $filter['query'];
+                    $column = $filter['column'];
+
+                    $item->$query(
+                        $column,
+                        $filter['condition']?$filter['condition']:"=",
+                        $filter['value']?$filter['value']:null
+
+                    );
+                }
+            }
+
+            if(isset($input['type']['filter_by']) && $input['type']['filter_by'] &&
+                isset($input['filter_id']) && $input['filter_id']){
+                $item->where($input['type']['filter_by'],$input['filter_id']);
+            }
+
+            $item = $item->get();
+        }
+
+
         return $item;
     }
     //----------------------------------------------------------
