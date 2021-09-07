@@ -110,8 +110,20 @@
                                                                          @onBlur=""
                                                                          @onFocus="">
                                                         </ContentFieldAll>
+
                                                     </div>
-                                                    <div class="column is-1">
+                                                    <div v-if="field.type.slug === 'relation'"
+                                                         class="column is-2"
+                                                         style="width: 14.6%">
+                                                        <b-button
+                                                                  icon-left="plus"
+                                                                  @click="showRelationPopup(field)">
+                                                        </b-button>
+                                                        <b-button icon-left="copy"
+                                                                  @click="copyCode(group, field,index)">
+                                                        </b-button>
+                                                    </div>
+                                                    <div v-else class="column is-1" >
                                                         <b-button icon-left="copy"
                                                                   @click="copyCode(group, field,index)">
                                                         </b-button>
@@ -202,6 +214,57 @@
         </b-collapse>
 
         <hr class="is-marginless"/>
+
+        <div class="modal"  :class="is_relation_popup_visible?'is-active':''">
+            <div class="modal-background"></div>
+            <div class="modal-content" style="width: 640px !important;">
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-header-title">
+                            Relation
+                        </div>
+                        <div class="card-header-icon">
+                              <b-field>
+
+                                  <tree-select style="width: 55%" v-model="taxo_type.parent_id"
+                                               placeholder="Select..."
+                                               :options="popup_list" >
+                                  </tree-select>
+
+                                  <b-input name="taxonomies-type-name" dusk="taxonomies-type-name"
+                                           v-model="taxo_type.name"></b-input>
+
+                                  <p class="control">
+                                      <b-button class="button is-primary">Add</b-button>
+                                  </p>
+                              </b-field>
+                        </div>
+
+                    </div>
+                    <div class="card-content">
+                        <TreeView v-if="popup_list"
+                                  ref="text_view"
+                                  :ajax_delete_url="ajax_url+'/deleteTaxonomyType'"
+                                  :options="popup_list"
+                                  :ajax_list_url="ajax_url+'/getTaxonomiesInTree'">
+
+                        </TreeView>
+                        <Loader v-else></Loader>
+                    </div>
+
+
+
+
+                </div>
+
+            </div>
+            <button class="modal-close is-large"
+                    @click="is_relation_popup_visible = false"
+                    aria-label="close"></button>
+        </div>
     </div>
+
+
 </template>
 

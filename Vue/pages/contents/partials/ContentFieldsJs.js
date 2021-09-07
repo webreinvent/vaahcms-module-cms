@@ -1,5 +1,7 @@
-
+import GlobalComponents from '../../../vaahvue/helpers/GlobalComponents';
 import ContentFieldAll from '../../../vaahvue/reusable/content-fields/All'
+import TreeView from '../../../vaahvue/reusable/TreeView'
+import TreeSelect from '../../../vaahvue/reusable/TreeSelect'
 
 import copy from "copy-to-clipboard";
 
@@ -13,6 +15,9 @@ export default {
         ajax_url() {return this.$store.getters[namespace+'/state'].ajax_url},
     },
     components:{
+        ...GlobalComponents,
+        TreeView,
+        TreeSelect,
         ContentFieldAll,
     },
 
@@ -20,6 +25,12 @@ export default {
     {
         let obj = {
             namespace: namespace,
+            is_relation_popup_visible: false,
+            taxo_type: {
+                parent_id:null,
+                name:null
+            },
+            popup_list: null,
             group_index: null,
             labelPosition: 'on-border',
         };
@@ -193,6 +204,32 @@ export default {
         //---------------------------------------------------------------------
         removeGroupAfter: function (data,res) {
             this.$Progress.finish();
+        },
+        //---------------------------------------------------------------------
+        //---------------------------------------------------------------------
+        showRelationPopup: function (field) {
+
+            this.is_relation_popup_visible = true;
+
+            this.popup_list = null;
+
+            console.log(field.meta.taxonomy_type);
+
+            let url = this.ajax_url+'/getTaxonomiesInTree';
+            let params = {
+                q: field.meta.taxonomy_type
+            };
+
+            console.log('--->', params);
+
+            this.axios.post(url, params).then((response) => {
+                this.popup_list = response.data;
+
+
+                console.log('--->', response);
+            });
+
+
         },
         //---------------------------------------------------------------------
     }
