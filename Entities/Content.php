@@ -772,6 +772,8 @@ class Content extends Model {
                         $stored_field->vh_cms_form_group_id = $group['id'];
                         $stored_field->vh_cms_form_field_id = $field['id'];
                         $stored_field->vh_cms_form_group_index = $key;
+
+                        $stored_field->save();
                     }
 
                     if(is_array($field['content']) || is_object($field['content'])){
@@ -797,7 +799,7 @@ class Content extends Model {
 
                     }elseif($field['type']['slug'] == 'relation'){
 
-                        $related_item = ContentFormField::where('id',$field['vh_cms_form_field_id'])->first();
+                        $related_item = ContentFormField::where('id',$stored_field->id)->first();
 
                         if(!is_array($field['content']) && !is_object($field['content'])){
                             $field['content'] = [$field['content']];

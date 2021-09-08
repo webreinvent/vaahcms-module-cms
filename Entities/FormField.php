@@ -140,9 +140,14 @@ class FormField extends Model {
     {
 
         //delete content fields
-        ContentFormField::where('vh_cms_form_field_id', $id)->forceDelete();
+        $content_form_fields = ContentFormField::with(['contentFormRelations'])
+            ->where('vh_cms_form_field_id', $id)->get();
 
-        ContentFormRelation::where('vh_cms_content_form_field_id', $id)->forceDelete();
+
+        foreach($content_form_fields as $field){
+            $field->contentFormRelations()->forceDelete();
+            $field->forceDelete();
+        }
 
         //delete group
         static::where('id', $id)->forceDelete();

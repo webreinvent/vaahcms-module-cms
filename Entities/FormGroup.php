@@ -212,10 +212,7 @@ class FormGroup extends Model {
                     ->where('slug', $field['slug'])
                     ->first();
 
-                if(!$stored_field)
-                {
-                    $stored_field = new FormField();
-                }
+
 
                 if(isset($field['type']) && isset($field['type']['slug']) )
                 {
@@ -232,11 +229,33 @@ class FormGroup extends Model {
 
                     }
 
-                    /*if($field['type']['slug'] == 'taxonomy'){
+                    if($field['type']['slug'] == 'relation'){
+
+                        if($stored_field){
+
+                            if($field['meta']['type'] != $stored_field->meta->type){
+                                $content_form_fields = ContentFormField::with(['contentFormRelations'])
+                                    ->where('vh_cms_form_field_id', $field['id'])->get();
+
+
+                                foreach($content_form_fields as $form_field){
+                                    $form_field->contentFormRelations()->forceDelete();
+                                    $form_field->content = null;
+                                    $form_field->save();
+                                }
+                            }
+
+                        }
+
                         TaxonomyType::getFirstOrCreate(Str::slug($field['name']));
-                    }*/
+                    }
 
                     unset($field['type']);
+                }
+
+                if(!$stored_field)
+                {
+                    $stored_field = new FormField();
                 }
 
                 $stored_field->fill($field);
