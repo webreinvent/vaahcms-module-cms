@@ -795,38 +795,41 @@ class Content extends Model {
                             $stored_field->content = $user->id;
                         }
 
-                    }elseif($field['type']['slug'] == 'relation' && $field['content']){
+                    }elseif($field['type']['slug'] == 'relation'){
 
-                        $related_item = ContentFormField::where('id',$field['id'])->first();
+                        $related_item = ContentFormField::where('id',$field['vh_cms_form_field_id'])->first();
 
                         if(!is_array($field['content']) && !is_object($field['content'])){
                             $field['content'] = [$field['content']];
                         }
 
-                        $arr_relation =  vh_content_relations();
+                        $relation =  vh_content_relations_by_name($field['meta']['type']);
 
-                        $relation = null;
+                        if($relation && isset($relation['namespace']) && $relation['namespace']){
+                            foreach ($field['content'] as $id){
+                                $data = [
+                                    'relatable_id' => $id,
+                                    'relatable_type' => $relation['namespace']
+                                ];
 
-                        foreach ($arr_relation as $rel){
-                            if($rel['name'] === $field['meta']['type']){
-                                $relation = $rel;
+                                $related_item->contentFormRelations()->updateOrCreate($data);
                             }
                         }
 
-                        foreach ($field['content'] as $id){
-                            $data = [
-                                'relatable_id' => $id,
-                                'relatable_type' => $relation['namespace']
-                            ];
+                        $relatable_ids = ContentFormRelation::where('vh_cms_content_form_field_id',$related_item->id)
+                            ->pluck('relatable_id')->toArray();
 
-                            $related_item->contentFormRelations()->create($data);
+
+                        $row_to_delete_ids = array_diff($relatable_ids, $field['content']);
+
+
+                        if(count($row_to_delete_ids) > 0)
+                        {
+                           ContentFormRelation::where('vh_cms_content_form_field_id', $related_item->id)
+                                ->whereIn('relatable_id', $row_to_delete_ids)
+                                ->forceDelete();
+
                         }
-
-
-//                        dd($related_item->contentFormRelations()->get());
-
-
-
 
                         $stored_field->content = $field['content'];
 

@@ -210,17 +210,10 @@ class ContentsController extends Controller
 
         $list = [];
 
-        $arr_relation =  vh_content_relations();
-
-        $relation = null;
         $display_column = 'name';
         $url = null;
 
-        foreach ($arr_relation as $rel){
-            if($rel['name'] === $input['type']){
-                $relation = $rel;
-            }
-        }
+        $relation =  vh_content_relations_by_name($input['type']);
 
         if($relation && isset($relation['namespace'])){
             $list = $relation['namespace']::orderBy('created_at', 'DESC');

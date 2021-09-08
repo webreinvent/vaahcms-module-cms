@@ -46,7 +46,7 @@ class ExtendController extends Controller
             [
                 "name" => "Role",
                 "namespace" => "WebReinvent\\VaahCms\\Entities\\Role",
-                "display_column" => 'type',
+                "display_column" => 'name',
                 "filters" => [
                     [
                         "query" => 'where',
