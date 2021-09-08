@@ -184,10 +184,14 @@
                                                                     || assets.non_repeatable_fields.includes(field.type.slug)
                                                                     || field.is_repeatable">
 
-                                                                <td v-if="meta_index !== 'filter_id' && meta_index !== 'selected_relation'"
+                                                                <td v-if="meta_index !== 'filter_id'
+                                                                && meta_index !== 'display_column'
+                                                                && meta_index !== 'options'"
                                                                     v-html="$vaah.toLabel(meta_index)"></td>
 
-                                                                <td v-if="meta_index !== 'filter_id' && meta_index !== 'selected_relation'">
+                                                                <td v-if="meta_index !== 'filter_id'
+                                                                && meta_index !== 'display_column'
+                                                                && meta_index !== 'options'">
                                                                     <div v-if="meta_index.includes('is_')">
                                                                         <b-checkbox v-model="field.meta[meta_index]">
                                                                             {{$vaah.toLabel(meta_index)}}
@@ -203,11 +207,11 @@
                                                                     </div>
                                                                     <div v-else-if="meta_index === 'type'">
 
-                                                                        {{field.meta['selected_relation']}}
-
                                                                         <b-field>
-                                                                            <b-select expanded v-model="field.meta[meta_index]"
-                                                                                      @input="onSelectType(field,field.meta[meta_index])"
+
+                                                                            <b-select ref="select_relation"
+                                                                                    expanded v-model="field.meta[meta_index]"
+                                                                                      @input="onSelectType(field,field.meta[meta_index],index,f_index)"
                                                                                       placeholder="Select">
                                                                                 <option :value=null>
                                                                                     Select
@@ -222,10 +226,14 @@
                                                                         </b-field>
 
                                                                         <tree-select v-if="field.meta[meta_index]
-                                                                        && field.meta[meta_index]['options']"
+                                                                        && $vaah.findInArrayByKey(
+                                                                        assets.content_relations,'name', field.meta[meta_index])
+                                                                        && $vaah.findInArrayByKey(
+                                                                        assets.content_relations,'name', field.meta[meta_index])['options']"
                                                                                      v-model="field.meta['filter_id']"
                                                                                      placeholder="Select..."
-                                                                                     :options="field.meta[meta_index]['options']" >
+                                                                                     :options="$vaah.findInArrayByKey(
+                                                                        assets.content_relations,'name', field.meta[meta_index])['options']" >
                                                                         </tree-select>
 
                                                                     </div>

@@ -208,23 +208,35 @@ class ContentsController extends Controller
     {
         $input = $request->all();
 
-        $item = [];
+        $list = [];
 
-        if(isset($input['type']) && isset($input['type']['namespace'])){
-            $item = $input['type']['namespace']::orderBy('created_at', 'DESC');
+        $arr_relation =  vh_content_relations();
 
-            if(isset($input['type']['has_children']) && $input['type']['has_children']){
-                $item->with(['children']);
+        $relation = null;
+        $display_column = 'name';
+        $url = null;
+
+        foreach ($arr_relation as $rel){
+            if($rel['name'] === $input['type']){
+                $relation = $rel;
+            }
+        }
+
+        if($relation && isset($relation['namespace'])){
+            $list = $relation['namespace']::orderBy('created_at', 'DESC');
+
+            if(isset($relation['has_children']) && $relation['has_children']){
+                $list->with(['children']);
             }
 
-            if(isset($input['type']['filters'])){
+            if(isset($relation['filters'])){
 
-                foreach ($input['type']['filters'] as $filter){
+                foreach ($relation['filters'] as $filter){
 
                     $query = $filter['query'];
                     $column = $filter['column'];
 
-                    $item->$query(
+                    $list->$query(
                         $column,
                         $filter['condition']?$filter['condition']:"=",
                         $filter['value']?$filter['value']:null
@@ -233,16 +245,29 @@ class ContentsController extends Controller
                 }
             }
 
-            if(isset($input['type']['filter_by']) && $input['type']['filter_by'] &&
+            if(isset($relation['filter_by']) && $relation['filter_by'] &&
                 isset($input['filter_id']) && $input['filter_id']){
-                $item->where($input['type']['filter_by'],$input['filter_id']);
+                $list->where($relation['filter_by'],$input['filter_id']);
             }
 
-            $item = $item->get();
+            $list = $list->get();
+
+            if(isset($relation['display_column']) && $relation['display_column']){
+                $display_column = $relation['display_column'];
+            }
+
+            if(isset($relation['add_url']) && $relation['add_url']){
+                $url = $relation['add_url'];
+            }
         }
 
 
-        return $item;
+        $response['status'] = 'success';
+        $response['data']['list'] = $list;
+        $response['data']['display_column'] = $display_column;
+        $response['data']['add_url'] = $url;
+
+        return $response;
     }
     //----------------------------------------------------------
 

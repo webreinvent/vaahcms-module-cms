@@ -282,6 +282,7 @@
             "container_opening_tag": null,
             "container_closing_tag": null,
             "type": null,
+            "filter_id": null,
             "is_hidden": false,
             "is_multiple": false
         }

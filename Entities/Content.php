@@ -803,12 +803,23 @@ class Content extends Model {
                             $field['content'] = [$field['content']];
                         }
 
+                        $arr_relation =  vh_content_relations();
+
+                        $relation = null;
+
+                        foreach ($arr_relation as $rel){
+                            if($rel['name'] === $field['meta']['type']){
+                                $relation = $rel;
+                            }
+                        }
+
                         foreach ($field['content'] as $id){
                             $data = [
                                 'relatable_id' => $id,
-                                'relatable_type' => $field['meta']['type']['namespace']
+                                'relatable_type' => $relation['namespace']
                             ];
-                            $related_item->contentFormRelations()->associate($data);
+
+                            $related_item->contentFormRelations()->create($data);
                         }
 
 

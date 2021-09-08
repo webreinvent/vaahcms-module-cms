@@ -39,19 +39,20 @@ class ExtendController extends Controller
                 "namespace" => "WebReinvent\\VaahCms\\Entities\\Taxonomy",
                 "options" => TaxonomyType::getListInTreeFormat(),
                 "filter_by" => 'vh_taxonomy_type_id',
+                "add_url" => route('vh.backend')."#/vaah/manage/taxonomies/create",
                 "display_column" => 'name',
                 "has_children" => true
             ],
             [
                 "name" => "Role",
                 "namespace" => "WebReinvent\\VaahCms\\Entities\\Role",
-                "display_column" => 'slug',
+                "display_column" => 'type',
                 "filters" => [
                     [
                         "query" => 'where',
-                        "column" => 'id',
+                        "column" => 'is_active',
                         "condition" => '=',
-                        "value" => '1',
+                        "value" => 1,
                     ],
                 ],
 

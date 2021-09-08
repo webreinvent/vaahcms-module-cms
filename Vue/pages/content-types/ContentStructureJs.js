@@ -30,7 +30,7 @@ export default {
             labelPosition: 'on-border',
             params: {},
             local_action: null,
-            type_options: null,
+            type_options: [],
             new_group:{
                 name:null,
                 fields:[
@@ -91,6 +91,7 @@ export default {
             this.is_content_loading = true;
             this.updateView();
             this.getAssets();
+
         },
         //---------------------------------------------------------------------
         async getAssets() {
@@ -221,25 +222,7 @@ export default {
             this.$router.push({name:'content.types.list'});
         },
         //---------------------------------------------------------------------
-        onSelectType: function (field,data) {
-
-            field.meta['selected_relation'] = null;
-
-
-            this.assets.content_relations.map(function(item, index) {
-
-                if(item['name'] === data)
-                {
-                    field.meta['selected_relation'] = item;
-                }
-
-            });
-
-            /*let val = this.$vaah.findInArrayByKey(this.assets.content_relations,
-                'name', data);*/
-
-            // field.meta['selected_relation'] = val;
-
+        onSelectType: function (field,data,group_index,field_index) {
 
             field.meta['filter_id'] = null;
 
