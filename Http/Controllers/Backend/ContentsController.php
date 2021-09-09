@@ -204,7 +204,7 @@ class ContentsController extends Controller
         return User::find($id);
     }
     //----------------------------------------------------------
-    public function getTaxonomiesInTree(Request $request)
+    public function getRelationsInTree(Request $request)
     {
         $input = $request->all();
 

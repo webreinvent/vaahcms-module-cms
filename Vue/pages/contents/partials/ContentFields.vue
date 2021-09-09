@@ -102,7 +102,7 @@
                                                                          :meta="field.meta"
                                                                          :placeholder="field.name"
                                                                          :app_url="field.type.slug === 'relation'
-                                                                         ? ajax_url+'/getTaxonomiesInTree' : ''"
+                                                                         ? ajax_url+'/getRelationsInTree' : ''"
                                                                          :labelPosition="labelPosition"
                                                                          v-model="field.content"
                                                                          @onInput=""
@@ -129,7 +129,7 @@
                                                                          ? field.name : ''"
                                                                          :meta="field.meta"
                                                                          :app_url="field.type.slug === 'relation'
-                                                                         ? ajax_url+'/getTaxonomiesInTree' : ''"
+                                                                         ? ajax_url+'/getRelationsInTree' : ''"
                                                                          :placeholder="field.name"
                                                                          :labelPosition="labelPosition"
                                                                          v-model="field.content[key]"

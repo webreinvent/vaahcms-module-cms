@@ -801,29 +801,35 @@ class Content extends Model {
 
                         $related_item = ContentFormField::where('id',$stored_field->id)->first();
 
-                        if(!is_array($field['content']) && !is_object($field['content'])){
-                            $field['content'] = [$field['content']];
-                        }
+                        if($field['content']){
 
-                        $relation =  vh_content_relations_by_name($field['meta']['type']);
+                            if(!is_array($field['content']) && !is_object($field['content'])){
+                                $field['content'] = [$field['content']];
+                            }
 
-                        if($relation && isset($relation['namespace']) && $relation['namespace']){
-                            foreach ($field['content'] as $id){
-                                $data = [
-                                    'relatable_id' => $id,
-                                    'relatable_type' => $relation['namespace']
-                                ];
+                            $relation =  vh_content_relations_by_name($field['meta']['type']);
 
-                                $related_item->contentFormRelations()->updateOrCreate($data);
+                            if($relation && isset($relation['namespace']) && $relation['namespace']){
+                                foreach ($field['content'] as $id){
+                                    $data = [
+                                        'relatable_id' => $id,
+                                        'relatable_type' => $relation['namespace']
+                                    ];
+
+                                    $related_item->contentFormRelations()->updateOrCreate($data);
+                                }
                             }
                         }
+
 
                         $relatable_ids = ContentFormRelation::where('vh_cms_content_form_field_id',$related_item->id)
                             ->pluck('relatable_id')->toArray();
 
-
-                        $row_to_delete_ids = array_diff($relatable_ids, $field['content']);
-
+                        if(!$field['content']){
+                            $row_to_delete_ids = array_diff($relatable_ids, []);
+                        }else{
+                            $row_to_delete_ids = array_diff($relatable_ids, $field['content']);
+                        }
 
                         if(count($row_to_delete_ids) > 0)
                         {
