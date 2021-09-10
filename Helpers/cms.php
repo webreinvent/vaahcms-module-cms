@@ -72,14 +72,13 @@ function get_contents($content_type_slug='pages', array $args = null,$has_pagina
     if($output['status'] == 'success'){
 
         $val = null;
-        $val .= getContentsHtml($output['data'],$args);
+        $val .= getContentsHtml($output['data']['list'],$args);
 
         if($has_pagination){
-            $val .= returnPaginationHtml($output['data']);
+            $val .= returnPaginationHtml($output['data']['list']);
         }
 
         return $val;
-
 
     }
 
@@ -385,7 +384,8 @@ function get_group_content_field(Content $content, $group_slug='default',
     return $data;
 }
 //-----------------------------------------------------------------------------------
-function get_all_group_field(Content $content, $type, $return_html=true)
+function get_all_group_field(Content $content, $type,
+                             $return_html=true )
 {
 
     if(!$return_html){
@@ -585,7 +585,7 @@ function getContentsHtml($contents,$args)
         if(isset($args['content_opening_tag']) && $args['content_opening_tag']){
             $value .= $args['content_opening_tag'];
         }
-        $value .= get_content($content);
+        $value .= get_content($content,null);
         if(isset($args['content_closing_tag']) && $args['content_closing_tag']){
             $value .= $args['content_closing_tag'];
         }
@@ -601,7 +601,8 @@ function getContentsHtml($contents,$args)
 
 
 //-----------------------------------------------------------------------------------
-function setReturnValue($field,$field_index = null,$return_html=true)
+function setReturnValue($field,$field_index = null,
+                        $return_html=true)
 {
 
 
@@ -755,6 +756,30 @@ function setReturnValue($field,$field_index = null,$return_html=true)
                 }
 
                 $value .= $field['meta']->container_opening_tag;
+
+                break;
+
+            case 'relation':
+
+                /*$value = $field['meta']->container_opening_tag."\n";
+
+                $column_name = 'name';
+
+                if(isset($field['relation']) && $field['relation']){
+                    foreach ($field['relation'] as  $item){
+
+                        $value .= $field['meta']->opening_tag;
+
+                        $value .= $item['relatable'][$column_name];
+
+                        $value .= $field['meta']->closing_tag;
+
+                    }
+                }
+
+                $value .= $field['meta']->container_opening_tag;*/
+
+
 
                 break;
 

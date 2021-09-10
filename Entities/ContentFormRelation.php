@@ -95,6 +95,9 @@ class ContentFormRelation extends Model {
         )->select('id', 'uuid', 'first_name', 'last_name', 'email');
     }
     //-------------------------------------------------
-
+    public function relatable()
+    {
+        return $this->morphTo('relatable');
+    }
     //-------------------------------------------------
 }

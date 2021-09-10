@@ -643,10 +643,17 @@ class Content extends Model {
                     $arr_group[$i][$key]['fields'][$y]['vh_cms_form_field_id'] = null;
                     $arr_group[$i][$key]['fields'][$y]['content'] = null;
                     $arr_group[$i][$key]['fields'][$y]['content_meta'] = null;
+                    $arr_group[$i][$key]['fields'][$y]['relation'] = null;
 
                     $field_content = $fields_list->where('vh_cms_form_group_id', $group->id)
                         ->where('vh_cms_form_field_id', $field->id)
                         ->where('vh_cms_form_group_index', $key)->first();
+
+
+                    if($field_content && isset($field_content->contentFormRelations)
+                        && count($field_content->contentFormRelations) > 0){
+                        $arr_group[$i][$key]['fields'][$y]['relation'] = $field_content['contentFormRelations'];
+                    }
 
 
                     if($field_content)
@@ -1047,7 +1054,11 @@ class Content extends Model {
             $order_by = $args['order_by'];
         }
 
-        $contents = Content::with(['fields','contentType' => function($q){
+        $contents = Content::with(['fields' => function($t){
+            $t->with(['contentFormRelations' => function($c){
+                $c->with(['relatable']);
+            }]);
+        },'contentType' => function($q){
             $q->with(['groups' => function($g){
                 $g->with(['fields' => function($f){
                     $f->with(['type']);
@@ -1128,7 +1139,8 @@ class Content extends Model {
 
         foreach ($contents as $key => $content){
 
-            $contents[$key]['content_form_groups'] = static::getFormGroupsTest($content, 'content',$group_fields,$filter);
+            $contents[$key]['content_form_groups'] = static::getFormGroupsTest($content,
+                'content',$group_fields,$filter);
 
             $arr_template = array();
 
@@ -1136,8 +1148,8 @@ class Content extends Model {
 
         }
 
-        $response['status']     = 'success';
-        $response['data']       = $contents;
+        $response['status']                 = 'success';
+        $response['data']['list']           = $contents;
         return $response;
 
     }
@@ -1230,6 +1242,41 @@ class Content extends Model {
         return ['seo-meta-tags','list',
             'image-group','facebook-card','twitter-card',
             'json','address','tags','select','relation'];
+
+    }
+    //-------------------------------------------------
+    public static function getListByVariables($var)
+    {
+
+        $list = $var['namespace']::orderBy('created_at', 'DESC');
+
+        if(isset($var['has_children']) && $var['has_children']){
+            $list->with(['children']);
+        }
+
+        if(isset($var['filters'])){
+
+            foreach ($var['filters'] as $filter){
+
+                $query = $filter['query'];
+                $column = $filter['column'];
+
+                $list->$query(
+                    $column,
+                    $filter['condition']?$filter['condition']:"=",
+                    $filter['value']?$filter['value']:null
+                );
+            }
+        }
+
+        if(isset($var['filter_by']) && $var['filter_by'] &&
+            isset($var['filter_id']) && $var['filter_id']){
+            $list->where($var['filter_by'],$var['filter_id']);
+        }
+
+        $list = $list->get();
+
+        return $list;
 
     }
     //-------------------------------------------------

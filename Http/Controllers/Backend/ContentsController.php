@@ -216,34 +216,10 @@ class ContentsController extends Controller
         $relation =  vh_content_relations_by_name($input['type']);
 
         if($relation && isset($relation['namespace'])){
-            $list = $relation['namespace']::orderBy('created_at', 'DESC');
 
-            if(isset($relation['has_children']) && $relation['has_children']){
-                $list->with(['children']);
-            }
+            $relation['filter_id'] = $input['filter_id'];
 
-            if(isset($relation['filters'])){
-
-                foreach ($relation['filters'] as $filter){
-
-                    $query = $filter['query'];
-                    $column = $filter['column'];
-
-                    $list->$query(
-                        $column,
-                        $filter['condition']?$filter['condition']:"=",
-                        $filter['value']?$filter['value']:null
-
-                    );
-                }
-            }
-
-            if(isset($relation['filter_by']) && $relation['filter_by'] &&
-                isset($input['filter_id']) && $input['filter_id']){
-                $list->where($relation['filter_by'],$input['filter_id']);
-            }
-
-            $list = $list->get();
+            $list = Content::getListByVariables($relation);
 
             if(isset($relation['display_column']) && $relation['display_column']){
                 $display_column = $relation['display_column'];
