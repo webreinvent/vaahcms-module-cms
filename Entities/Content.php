@@ -523,6 +523,13 @@ class Content extends Model {
                         'vh_cms_form_group_index'=> $key])
                     ->first();
 
+                    if($field->type->slug == 'relation' && $field_content
+                        && isset($field_content->contentFormRelations)
+                        && count($field_content->contentFormRelations) > 0){
+
+                        $field_content->content = $field_content['contentFormRelations']->pluck('relatable_id');
+                    }
+
 
                     if($field_content)
                     {
@@ -593,9 +600,9 @@ class Content extends Model {
         foreach ($groups as $group)
         {
 
-            if((count($filter['include_groups']) >  0
+            if((isset($filter['include_groups']) && count($filter['include_groups']) >  0
                     && !in_array($group['slug'], $filter['include_groups']))
-                || (count($filter['exclude_groups']) > 0
+                || (isset($filter['exclude_groups']) && count($filter['exclude_groups']) > 0
                     && in_array($group['slug'], $filter['exclude_groups']))){
 
 
@@ -845,8 +852,6 @@ class Content extends Model {
                                 ->forceDelete();
 
                         }
-
-                        $stored_field->content = $field['content'];
 
                     }else{
                         $stored_field->content = $field['content'];

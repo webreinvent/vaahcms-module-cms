@@ -573,7 +573,7 @@ function get_template_field(Content $content, $field_slug,
 
 
 //-----------------------------------------------------------------------------------
-function getContentsHtml($contents,$args)
+function getContentsHtml($contents,$args = [])
 {
     $value = '';
 

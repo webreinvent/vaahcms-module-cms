@@ -33,6 +33,15 @@ class ExtendController extends Controller
     //----------------------------------------------------------
     public static function getCmsContentRelations()
     {
+       /* $taxonomy_option = null;
+
+        if(!isset($exclude['Taxonomy']['options']))
+        {
+            $taxonomy_option = TaxonomyType::getListInTreeFormat();
+
+        }*/
+
+
         $arr = [
             [
                 "name" => "Taxonomy",
@@ -40,7 +49,7 @@ class ExtendController extends Controller
                 "options" => TaxonomyType::getListInTreeFormat(),
                 "filter_by" => 'vh_taxonomy_type_id',
                 "add_url" => route('vh.backend')."#/vaah/manage/taxonomies/create",
-                "display_column" => 'name',
+                "display_column" => 'slug',
                 "has_children" => true
             ],
             [
