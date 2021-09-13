@@ -34,7 +34,7 @@ Route::group(
     ],
     function () {
         //------------------------------------------------
-        Route::get( '/taxonomy/{taxonomy_type_slug}/{taxonomy_slug}',
+        Route::get( '/taxonomies/{taxonomy_type_slug}/{taxonomy_slug}',
             'PublicController@taxonomyContents' )
             ->name( 'vh.cms.taxonomy-content' );
         //------------------------------------------------

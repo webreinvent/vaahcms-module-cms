@@ -285,6 +285,24 @@ class Content extends Model {
                         $store_field->fill($content_field);
                         $store_field->save();
 
+
+                        if($field['type']['slug'] == 'relation'){
+
+                            $relation =  vh_content_relations_by_name($field['meta']['type']);
+
+                            if($relation && isset($relation['namespace']) && $relation['namespace']){
+                                foreach ($field['content'] as $id){
+                                    $data = [
+                                        'relatable_id' => $id,
+                                        'relatable_type' => $relation['namespace']
+                                    ];
+
+                                    $store_field->contentFormRelations()->updateOrCreate($data);
+                                }
+                            }
+
+                        }
+
                     }
 
                 }
@@ -852,6 +870,8 @@ class Content extends Model {
                                 ->forceDelete();
 
                         }
+
+                        $stored_field->content = $field['content'];
 
                     }else{
                         $stored_field->content = $field['content'];
