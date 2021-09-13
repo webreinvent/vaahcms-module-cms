@@ -51,6 +51,7 @@ class PublicController extends Controller
 
     public function content(Request $request, $content_type, $permalink)
     {
+
         $theme_slug = $request->data->theme->slug;
 
         if(!is_null($request->data->template->file_path))
@@ -74,7 +75,6 @@ class PublicController extends Controller
 
     public function taxonomyContents(Request $request, $taxonomy_type_slug, $taxonomy_slug)
     {
-
         $taxonomy = Taxonomy::where('slug',$taxonomy_slug)
             ->whereHas('type' , function ($t) use ($taxonomy_type_slug){
                 $t->where('slug',$taxonomy_type_slug);
@@ -125,8 +125,16 @@ class PublicController extends Controller
 
         }
 
+        $active_them_namespace = vh_get_active_theme_namespace();
 
-        return view('bulmablogtheme::frontend.default',['data' => $contents]);
+        if (view()->exists($active_them_namespace.'frontend.pages.taxonomy')) {
+            $view = $active_them_namespace.'frontend.pages.taxonomy';
+        } else {
+            $view = $active_them_namespace.'frontend.default';
+        }
+
+
+        return view($view,['data' => $contents]);
 
     }
 
@@ -179,8 +187,16 @@ class PublicController extends Controller
 
         }
 
+        $active_them_namespace = vh_get_active_theme_namespace();
 
-        return view('bulmablogtheme::frontend.default',['data' => $contents]);
+        if (view()->exists($active_them_namespace.'frontend.pages.search')) {
+            $view = $active_them_namespace.'frontend.pages.search';
+        } else {
+            $view = $active_them_namespace.'frontend.default';
+        }
+
+
+        return view($view,['data' => $contents]);
 
     }
 
