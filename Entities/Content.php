@@ -545,7 +545,8 @@ class Content extends Model {
                         && isset($field_content->contentFormRelations)
                         && count($field_content->contentFormRelations) > 0){
 
-                        $field_content->content = $field_content['contentFormRelations']->pluck('relatable_id');
+                        $field_content->content = $field_content['contentFormRelations']
+                            ->pluck('relatable_id');
                     }
 
 
@@ -668,16 +669,18 @@ class Content extends Model {
                     $arr_group[$i][$key]['fields'][$y]['vh_cms_form_field_id'] = null;
                     $arr_group[$i][$key]['fields'][$y]['content'] = null;
                     $arr_group[$i][$key]['fields'][$y]['content_meta'] = null;
-                    $arr_group[$i][$key]['fields'][$y]['relation'] = null;
 
                     $field_content = $fields_list->where('vh_cms_form_group_id', $group->id)
                         ->where('vh_cms_form_field_id', $field->id)
                         ->where('vh_cms_form_group_index', $key)->first();
 
 
-                    if($field_content && isset($field_content->contentFormRelations)
+                    if($field->type->slug == 'relation' && $field_content
+                        && isset($field_content->contentFormRelations)
                         && count($field_content->contentFormRelations) > 0){
-                        $arr_group[$i][$key]['fields'][$y]['relation'] = $field_content['contentFormRelations'];
+
+                        $field_content->content = $field_content['contentFormRelations']
+                            ->pluck('relatable');
                     }
 
 
@@ -711,6 +714,7 @@ class Content extends Model {
                         $arr_group[$i][$key]['fields'][$y]['content'] = $content_val;
 
                         $arr_group[$i][$key]['fields'][$y]['content_meta'] = $field_content->meta;
+
                     }
 
                     $y++;
