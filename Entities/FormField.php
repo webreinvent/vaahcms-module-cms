@@ -24,6 +24,7 @@ class FormField extends Model {
     protected $fillable = [
         'uuid',
         'vh_cms_form_group_id',
+        'vh_cms_form_group_index',
         'vh_cms_field_type_id',
         'sort',
         'name',
@@ -120,6 +121,13 @@ class FormField extends Model {
         )->select('id', 'uuid', 'first_name', 'last_name', 'email');
     }
     //-------------------------------------------------
+    public function contentFields()
+    {
+        return $this->hasMany(ContentFormField::class,
+            'vh_cms_form_field_id', 'id'
+        );
+    }
+    //-------------------------------------------------
     //-------------------------------------------------
     public function type()
     {
@@ -132,7 +140,14 @@ class FormField extends Model {
     {
 
         //delete content fields
-        ContentFormField::where('vh_cms_form_field_id', $id)->forceDelete();
+        $content_form_fields = ContentFormField::with(['contentFormRelations'])
+            ->where('vh_cms_form_field_id', $id)->get();
+
+
+        foreach($content_form_fields as $field){
+            $field->contentFormRelations()->forceDelete();
+            $field->forceDelete();
+        }
 
         //delete group
         static::where('id', $id)->forceDelete();
@@ -143,6 +158,7 @@ class FormField extends Model {
 
         foreach ($ids_array as $id)
         {
+
             static::deleteItem($id);
         }
 

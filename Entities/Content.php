@@ -3,6 +3,7 @@
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use WebReinvent\VaahCms\Entities\Taxonomy;
 use WebReinvent\VaahCms\Entities\Theme;
 use WebReinvent\VaahCms\Entities\ThemeTemplate;
 use WebReinvent\VaahCms\Entities\User;
@@ -263,46 +264,75 @@ class Content extends Model {
         $item->save();
 
 
-        foreach ($inputs['content_groups'] as $group)
+
+        foreach ($inputs['content_groups'] as $arr_group)
         {
 
-            foreach ($group['fields'] as $field)
-            {
-                $content_field = [];
-                $content_field['vh_cms_content_id'] = $item->id;
-                $content_field['vh_cms_form_group_id'] = $group['id'];
-                $content_field['vh_cms_form_field_id'] = $field['id'];
+            foreach ($arr_group as $key => $group) {
 
-                if(isset($field['content']))
-                {
-                    $content_field['content'] = $field['content'];
-                    $store_field = new ContentFormField();
-                    $store_field->fill($content_field);
-                    $store_field->save();
+
+                foreach ($group['fields'] as $field) {
+                    $content_field = [];
+                    $content_field['vh_cms_content_id'] = $item->id;
+                    $content_field['vh_cms_form_group_id'] = $group['id'];
+                    $content_field['vh_cms_form_field_id'] = $field['id'];
+                    $content_field['vh_cms_form_group_index'] = $key;
+
+                    if (isset($field['content'])) {
+
+                        $content_field['content'] = $field['content'];
+                        $store_field = new ContentFormField();
+                        $store_field->fill($content_field);
+                        $store_field->save();
+
+
+                        if($field['type']['slug'] == 'relation'){
+
+                            $relation =  vh_content_relations_by_name($field['meta']['type']);
+
+                            if($relation && isset($relation['namespace']) && $relation['namespace']){
+                                foreach ($field['content'] as $id){
+                                    $data = [
+                                        'relatable_id' => $id,
+                                        'relatable_type' => $relation['namespace']
+                                    ];
+
+                                    $store_field->contentFormRelations()->updateOrCreate($data);
+                                }
+                            }
+
+                        }
+
+                    }
+
                 }
-
             }
 
         }
 
-        foreach ($inputs['template_groups'] as $group)
+        foreach ($inputs['template_groups'] as $arr_group)
         {
 
-            foreach ($group['fields'] as $field)
-            {
-                $content_field = [];
-                $content_field['vh_cms_content_id'] = $item->id;
-                $content_field['vh_cms_form_group_id'] = $group['id'];
-                $content_field['vh_cms_form_field_id'] = $field['id'];
+            foreach ($arr_group as $key => $group) {
 
-                if(isset($field['content']))
-                {
-                    $content_field['content'] = $field['content'];
-                    $store_field = new ContentFormField();
-                    $store_field->fill($content_field);
-                    $store_field->save();
+
+                foreach ($group['fields'] as $field) {
+                    $content_field = [];
+                    $content_field['vh_cms_content_id'] = $item->id;
+                    $content_field['vh_cms_form_group_id'] = $group['id'];
+                    $content_field['vh_cms_form_field_id'] = $field['id'];
+                    $content_field['vh_cms_form_group_index'] = $key;
+
+                    if (isset($field['content'])) {
+
+                        $content_field['content'] = $field['content'];
+                        $store_field = new ContentFormField();
+                        $store_field->fill($content_field);
+                        $store_field->save();
+
+                    }
+
                 }
-
             }
 
         }
@@ -424,7 +454,9 @@ class Content extends Model {
             ->withTrashed()
             ->first();
 
+
         $content_form_groups = static::getFormGroups($item, 'content');
+
         $template_form_groups = static::getFormGroups($item, 'template');
 
         $response['status'] = 'success';
@@ -440,8 +472,6 @@ class Content extends Model {
     //-------------------------------------------------
     public static function getFormGroups(Content $content, $type, array $fields=null)
     {
-        $groups = [];
-
         if($type=='content')
         {
             $groups = $content->contentType->groups;
@@ -450,53 +480,255 @@ class Content extends Model {
         }
 
 
+        $arr_group = [];
+
+
+
         $i = 0;
+
         foreach ($groups as $group)
         {
 
-            $groups[$i] = $group;
-
-            $y = 0;
-            foreach ($group->fields as $field)
-            {
-                $groups[$i]['fields'][$y] = $field;
-                $groups[$i]['fields'][$y]['type'] = $field->type;
+            $group_fields = ContentFormField::where('vh_cms_content_id',$content->id)
+                ->where('vh_cms_form_group_id',$group->id)
+                ->get();
 
 
-                $groups[$i]['fields'][$y]['vh_cms_form_field_id'] = null;
-                $groups[$i]['fields'][$y]['content'] = null;
-                $groups[$i]['fields'][$y]['content_meta'] = null;
+            $group_fields = collect($group_fields)->groupBy('vh_cms_form_group_index');
 
-                $field_content = ContentFormField::where('vh_cms_content_id', $content->id);
-                $field_content->where('vh_cms_form_group_id', $group->id);
-                $field_content->where('vh_cms_form_field_id', $field->id);
-                $field_content = $field_content->first();
 
-                if($field_content)
+            if(count($group_fields) === 0 ){
+                $group_fields[] = '';
+            }
+
+            foreach ($group_fields as $key => $fields){
+
+                $arr_group[$i][$key] = [
+                    'id' => $group->id,
+                    'name' => $group->name,
+                    'slug' => $group->slug,
+                    'is_repeatable' => $group->is_repeatable,
+                ];
+
+                $y = 0;
+
+
+
+
+
+                foreach ($group->fields as $field)
                 {
-                    $groups[$i]['fields'][$y]['vh_cms_form_field_id'] = $field_content->id;
+                    $arr_group[$i][$key]['fields'][$y] = [
+                        'id' => $field->id,
+                        'name' => $field->name,
+                        'slug' => $field->slug,
+                        'vh_cms_form_group_id' => $field->vh_cms_form_group_id,
+                        'is_repeatable' => $field->is_repeatable,
+                        'is_searchable' => $field->is_searchable,
+                        'meta' => $field->meta
+                    ];
 
-                    if(is_array($field_content->content) || is_object($field_content->content)){
-                        $groups[$i]['fields'][$y]['content'] = json_decode(
-                            vh_translate_dynamic_strings(json_encode($field_content->content))
-                        );
-                    }else{
-                        $groups[$i]['fields'][$y]['content'] = vh_translate_dynamic_strings($field_content->content);
+                    $arr_group[$i][$key]['fields'][$y]['type'] = $field->type;
+
+
+                    $arr_group[$i][$key]['fields'][$y]['vh_cms_form_field_id'] = null;
+                    $arr_group[$i][$key]['fields'][$y]['content'] = null;
+                    $arr_group[$i][$key]['fields'][$y]['content_meta'] = null;
+
+                    $field_content = ContentFormField::where(['vh_cms_content_id'=> $content->id,
+                        'vh_cms_form_group_id'=> $group->id,
+                        'vh_cms_form_field_id'=> $field->id,
+                        'vh_cms_form_group_index'=> $key])
+                    ->first();
+
+                    if($field->type->slug == 'relation' && $field_content
+                        && isset($field_content->contentFormRelations)
+                        && count($field_content->contentFormRelations) > 0){
+
+                        $field_content->content = $field_content['contentFormRelations']
+                            ->pluck('relatable_id');
                     }
 
-                    $groups[$i]['fields'][$y]['content_meta'] = $field_content->meta;
+
+                    if($field_content)
+                    {
+
+                        $arr_group[$i][$key]['fields'][$y]['vh_cms_form_field_id'] = $field_content->id;
+
+                        if(!$field->is_repeatable
+                            && (is_array($field_content->content)
+                                || is_object($field_content->content))
+                            && $field->type->slug != 'seo-meta-tags'
+                            && count($field_content->content) <= 1) {
+
+                            $content_val = null;
+
+                            if (count($field_content->content) == 1) {
+                                $content_val = $field_content->content[0];
+                            }
+
+                        }elseif($field->is_repeatable
+                            && is_string($field_content->content) ){
+                            $content_val = [$field_content->content];
+                        }else{
+                            $content_val = $field_content->content;
+                        }
+
+                        $content_val = ContentFormField::getContentAsset($content_val, $field->type->slug);
+
+
+                        $arr_group[$i][$key]['fields'][$y]['content'] = $content_val;
+
+                        $arr_group[$i][$key]['fields'][$y]['content_meta'] = $field_content->meta;
+                    }
+
+                    $y++;
+
                 }
 
-
-                $y++;
             }
 
             $i++;
+
         }
 
-        return $groups;
+        return $arr_group;
     }
     //-------------------------------------------------
+    public static function getFormGroupsTest(Content $content,
+                                             $type,
+                                             $group_fields,
+                                             $filter = null)
+    {
+
+        if($type=='content')
+        {
+            $groups = $content->contentType->groups;
+
+        } else{
+            $groups = $content->template->groups;
+        }
+
+        $arr_group = [];
+
+        $fields_list = collect($content->fields);
+
+
+        $i = 0;
+
+        foreach ($groups as $group)
+        {
+
+            if((isset($filter['include_groups']) && count($filter['include_groups']) >  0
+                    && !in_array($group['slug'], $filter['include_groups']))
+                || (isset($filter['exclude_groups']) && count($filter['exclude_groups']) > 0
+                    && in_array($group['slug'], $filter['exclude_groups']))){
+
+
+                continue;
+
+            }
+
+            $group_fields = $group_fields->where('vh_cms_content_id',$content->id)
+                ->where('vh_cms_form_group_id',$group->id)
+                ->groupBy('vh_cms_form_group_index');
+
+
+            if(count($group_fields) === 0 ){
+                $group_fields[] = '';
+            }
+
+            foreach ($group_fields as $key => $fields){
+
+
+                $arr_group[$i][$key] = [
+                    'id' => $group->id,
+                    'name' => $group->name,
+                    'slug' => $group->slug,
+                    'is_repeatable' => $group->is_repeatable,
+                ];
+
+                $y = 0;
+
+                foreach ($group['fields'] as $field)
+                {
+
+                    $arr_group[$i][$key]['fields'][$y] = [
+                        'id' => $field->id,
+                        'name' => $field->name,
+                        'slug' => $field->slug,
+                        'vh_cms_form_group_id' => $field->vh_cms_form_group_id,
+                        'is_repeatable' => $field->is_repeatable,
+                        'is_searchable' => $field->is_searchable,
+                        'meta' => $field->meta
+                    ];
+
+                    $arr_group[$i][$key]['fields'][$y]['type'] = $field->type;
+
+
+                    $arr_group[$i][$key]['fields'][$y]['vh_cms_form_field_id'] = null;
+                    $arr_group[$i][$key]['fields'][$y]['content'] = null;
+                    $arr_group[$i][$key]['fields'][$y]['content_meta'] = null;
+
+                    $field_content = $fields_list->where('vh_cms_form_group_id', $group->id)
+                        ->where('vh_cms_form_field_id', $field->id)
+                        ->where('vh_cms_form_group_index', $key)->first();
+
+
+                    if($field->type->slug == 'relation' && $field_content
+                        && isset($field_content->contentFormRelations)
+                        && count($field_content->contentFormRelations) > 0){
+
+                        $field_content->content = $field_content['contentFormRelations']
+                            ->pluck('relatable');
+                    }
+
+
+                    if($field_content)
+                    {
+
+                        $arr_group[$i][$key]['fields'][$y]['vh_cms_form_field_id'] = $field_content->id;
+
+                        if(!$field->is_repeatable
+                            && (is_array($field_content->content)
+                                || is_object($field_content->content))
+                            && $field->type->slug != 'seo-meta-tags'
+                            && count($field_content->content) <= 1) {
+
+                            $content_val = null;
+
+                            if (count($field_content->content) == 1) {
+                                $content_val = $field_content->content[0];
+                            }
+
+                        }elseif($field->is_repeatable
+                            && is_string($field_content->content) ){
+                            $content_val = [$field_content->content];
+                        }else{
+                            $content_val = $field_content->content;
+                        }
+
+                        $content_val = ContentFormField::getContentAsset($content_val, $field->type->slug);
+
+
+                        $arr_group[$i][$key]['fields'][$y]['content'] = $content_val;
+
+                        $arr_group[$i][$key]['fields'][$y]['content_meta'] = $field_content->meta;
+
+                    }
+
+                    $y++;
+
+                }
+
+            }
+
+            $i++;
+
+        }
+
+        return $arr_group;
+    }
     //-------------------------------------------------
     public static function postStore($request,$id)
     {
@@ -543,80 +775,130 @@ class Content extends Model {
     {
 
         $i = 0;
-        foreach ($groups as $group)
+
+        foreach ($groups as $arr_groups)
         {
 
-            $groups[$i] = $group;
+            foreach ($arr_groups as $key =>  $group){
 
-            $y = 0;
-            foreach ($group['fields'] as $field)
-            {
+                $groups[$i] = $group;
 
-                $stored_field = null;
-                if(
-                    isset($field['vh_cms_form_group_id'])
-                    && isset($field['id'])
-                )
+                $y = 0;
+                foreach ($group['fields'] as $field)
                 {
-
-                    $stored_field = ContentFormField::where('vh_cms_form_group_id', $field['vh_cms_form_group_id'])
-                    ->where('vh_cms_form_field_id', $field['id'])
-                    ->where('vh_cms_content_id', $content->id)
-                    ->first();
-
-                }
-
-
-
-                if(!$stored_field)
-                {
-                    $stored_field = new ContentFormField();
-                    $stored_field->vh_cms_content_id = $content->id;
-                    $stored_field->vh_cms_form_group_id = $group['id'];
-                    $stored_field->vh_cms_form_field_id = $field['id'];
-                }
-
-                if(is_array($field['content']) || is_object($field['content'])){
-                    $field['content'] = json_decode(
-                        vh_translate_dynamic_strings(
-                            json_encode($field['content']),
-                            ['has_replace_string' => true]
-                        )
-                    );
-                }else{
-                    $field['content'] = vh_translate_dynamic_strings(
-                        $field['content'],
-                        ['has_replace_string' => true]
-                    );
-                }
-
-                if($field['type']['slug'] == 'user' && $field['content']){
-
-                    $user = $user_id = User::where('email',$field['content'])->first();
-
-                    if($user)
+                    $stored_field = null;
+                    if(
+                        isset($field['vh_cms_form_group_id'])
+                        && isset($field['id'])
+                    )
                     {
-                        $stored_field->content = $user->id;
+
+                        $stored_field = ContentFormField::where('vh_cms_form_group_id', $field['vh_cms_form_group_id'])
+                            ->where('vh_cms_form_field_id', $field['id'])
+                            ->where('vh_cms_content_id', $content->id)
+                            ->where('vh_cms_form_group_index', $key)
+                            ->first();
+
                     }
 
-                }else{
-                    $stored_field->content = $field['content'];
+                    if(!$stored_field)
+                    {
+                        $stored_field = new ContentFormField();
+                        $stored_field->vh_cms_content_id = $content->id;
+                        $stored_field->vh_cms_form_group_id = $group['id'];
+                        $stored_field->vh_cms_form_field_id = $field['id'];
+                        $stored_field->vh_cms_form_group_index = $key;
+
+                        $stored_field->save();
+                    }
+
+                    if(is_array($field['content']) || is_object($field['content'])){
+                        $field['content'] = json_decode(
+                            vh_translate_dynamic_strings(
+                                json_encode($field['content'])
+                            )
+                        );
+                    }else{
+                        $field['content'] = vh_translate_dynamic_strings(
+                            $field['content']
+                        );
+                    }
+
+                    if($field['type']['slug'] == 'user' && $field['content']){
+
+                        $user = $user_id = User::where('email',$field['content'])->first();
+
+                        if($user)
+                        {
+                            $stored_field->content = $user->id;
+                        }
+
+                    }elseif($field['type']['slug'] == 'relation'){
+
+                        $related_item = ContentFormField::where('id',$stored_field->id)->first();
+
+                        if($field['content']){
+
+                            if(!is_array($field['content']) && !is_object($field['content'])){
+                                $field['content'] = [$field['content']];
+                            }
+
+                            $relation =  vh_content_relations_by_name($field['meta']['type']);
+
+                            if($relation && isset($relation['namespace']) && $relation['namespace']){
+                                foreach ($field['content'] as $id){
+                                    $data = [
+                                        'relatable_id' => $id,
+                                        'relatable_type' => $relation['namespace']
+                                    ];
+
+                                    $related_item->contentFormRelations()->updateOrCreate($data);
+                                }
+                            }
+                        }
+
+
+                        $relatable_ids = ContentFormRelation::where('vh_cms_content_form_field_id',$related_item->id)
+                            ->pluck('relatable_id')->toArray();
+
+                        if(!$field['content']){
+                            $row_to_delete_ids = array_diff($relatable_ids, []);
+                        }else{
+                            $row_to_delete_ids = array_diff($relatable_ids, $field['content']);
+                        }
+
+                        if(count($row_to_delete_ids) > 0)
+                        {
+                           ContentFormRelation::where('vh_cms_content_form_field_id', $related_item->id)
+                                ->whereIn('relatable_id', $row_to_delete_ids)
+                                ->forceDelete();
+
+                        }
+
+                        $stored_field->content = $field['content'];
+
+                    }else{
+                        $stored_field->content = $field['content'];
+                    }
+
+                    $stored_field->meta = $field['meta'];
+                    try{
+                        $stored_field->save();
+
+                    }catch(\Exception $e)
+                    {
+                        $response['status'] = 'failed';
+                        $response['inputs'] = $field;
+                        $response['errors'][] = $e->getMessage();
+                        return $response;
+                    }
+
+
+                    $y++;
                 }
-
-                $stored_field->meta = $field['meta'];
-                try{
-                    $stored_field->save();
-                }catch(\Exception $e)
-                {
-                    $response['status'] = 'failed';
-                    $response['inputs'] = $field;
-                    $response['errors'][] = $e->getMessage();
-                    return $response;
-                }
-
-
-                $y++;
             }
+
+
 
             $i++;
         }
@@ -760,41 +1042,161 @@ class Content extends Model {
         return $response;
     }
     //-------------------------------------------------
+    public static function removeGroup($request)
+    {
+
+        $inputs = $request->inputs;
+
+        ContentFormField::where([
+            'vh_cms_content_id' => $inputs['content_id'],
+            'vh_cms_form_group_id' => $inputs['group_id'],
+            'vh_cms_form_group_index' => $inputs['index']])->forceDelete();
+
+
+        $response['status'] = 'success';
+        $response['data'] = [];
+
+        return $response;
+    }
+    //-------------------------------------------------
     public static function getContents($content_type_slug, $args)
+    {
+        $content_type = ContentType::where('slug', $content_type_slug)->first();
+
+        if(!$content_type)
+        {
+            $response['status']     = 'failed';
+            $response['errors']     = 'Content Type not found.';
+            return $response;
+        }
+
+        $order = 'desc';
+        $order_by = 'id';
+
+        if(isset($args['order'])
+            && $args['order']){
+            $order = $args['order'];
+        }
+
+        if(isset($args['order_by'])
+            && $args['order_by']){
+            $order_by = $args['order_by'];
+        }
+
+        $contents = Content::with(['fields' => function($t){
+            $t->with(['contentFormRelations' => function($c){
+                $c->with(['relatable']);
+            }]);
+        },'contentType' => function($q){
+            $q->with(['groups' => function($g){
+                $g->with(['fields' => function($f){
+                    $f->with(['type']);
+
+                }]);
+
+            }]);
+
+        }])->where('vh_cms_content_type_id', $content_type->id);
+
+
+        if(isset($args['q'])
+            && $args['q']){
+
+            $contents->where(function ($q) use ($args){
+                $q->where('name', 'LIKE', '%'.$args['q'].'%')
+                    ->orWhere('slug', 'LIKE', '%'.$args['q'].'%')
+                    ->orWhere('permalink', 'LIKE', '%'.$args['q'].'%');
+
+                $q->orWhereHas('fields',function ($p) use ($args){
+                    $p->where('content', 'LIKE', '%'.$args['q'].'%');
+                    $p->whereHas('field', function ($f) {
+                        $f->where('is_searchable' , 1);
+                    });
+                });
+
+            });
+        }
+
+        $contents->orderBy($order_by,$order);
+
+        if(isset($args['per_page'])
+            && $args['per_page']
+            && is_numeric($args['per_page'])){
+            $contents = $contents->paginate($args['per_page']);
+        }else{
+            $contents = $contents->paginate(config('vaahcms.per_page'));
+        }
+
+        if(!$contents)
+        {
+            $response['status']     = 'failed';
+            $response['errors']     = 'Content not found.';
+            return $response;
+        }
+
+        $arr_include_groups = array();
+        $arr_exclude_groups = array();
+
+        if(isset($args['include_groups'])){
+            if(is_string($args['include_groups'])){
+                $arr_include_groups = explode(",",$args['include_groups']);
+            }else{
+                $arr_include_groups = $args['include_groups'];
+            }
+
+        }
+
+        if(isset($args['exclude_groups'])){
+            if(is_string($args['exclude_groups'])){
+                $arr_exclude_groups = explode(",",$args['exclude_groups']);
+            }else{
+                $arr_exclude_groups = $args['exclude_groups'];
+            }
+        }
+
+        $filter = [
+            'include_groups' => $arr_include_groups,
+            'exclude_groups' => $arr_exclude_groups
+            ];
+
+        $content_ids = $contents->pluck('id')->toArray();
+
+        $group_fields = ContentFormField::whereIn('vh_cms_content_id',$content_ids)
+            ->get();
+
+        $group_fields = collect($group_fields);
+
+        foreach ($contents as $key => $content){
+
+            $contents[$key]['content_form_groups'] = static::getFormGroupsTest($content,
+                'content',$group_fields,$filter);
+
+            $arr_template = array();
+
+            $contents[$key]['template_form_groups'] = $arr_template;
+
+        }
+
+        $response['status']                 = 'success';
+        $response['data']['list']           = $contents;
+        return $response;
+
+    }
+    //-------------------------------------------------
+    public static function getListOfContents($content_type_slug)
     {
 
         $content_type = ContentType::where('slug', $content_type_slug)->first();
 
-
-
-        $contents = static::where('vh_cms_content_type_id', $content_type->id);
-
-        /*if($args['content_groups']) {
-
-            $contents->whereHas('fields.group', function ($f) use ($args) {
-
-                $group_slugs = array_keys($args['content_groups']);
-                $f->whereIn('slug', $group_slugs);
-            });
-
+        if(!$content_type)
+        {
+            $response['status']     = 'failed';
+            $response['errors']     = 'Content Type not found.';
+            return $response;
         }
 
-        $contents->with(['fields.group.groupable']);*/
-
-        /*if($args['content_groups'])
-        {
-            foreach($args['content_groups'] as $group)
-            {
-                $contents->whereHas('fields',  function ($g) use ($group){
-                    $g->where('slug', $group['slug']);
-                });
-            }
-            $contents->with('groups');
-        }*/
-
-
-        $contents = $contents->paginate(1);
-
+        $contents = Content::where('vh_cms_content_type_id', $content_type->id)
+            ->orderBy('id','desc')->pluck('name');
 
         return $contents;
 
@@ -860,6 +1262,50 @@ class Content extends Model {
         echo "<pre>";
         print_r($group->toArray());
         echo "</pre>";
+
+    }
+    //-------------------------------------------------
+    public static function getNonRepeatableFields()
+    {
+
+        return ['seo-meta-tags','list',
+            'image-group','facebook-card','twitter-card',
+            'json','address','tags','select','relation'];
+
+    }
+    //-------------------------------------------------
+    public static function getListByVariables($var)
+    {
+
+        $list = $var['namespace']::orderBy('created_at', 'DESC');
+
+        if(isset($var['has_children']) && $var['has_children']){
+            $list->with(['children']);
+        }
+
+        if(isset($var['filters'])){
+
+            foreach ($var['filters'] as $filter){
+
+                $query = $filter['query'];
+                $column = $filter['column'];
+
+                $list->$query(
+                    $column,
+                    $filter['condition']?$filter['condition']:"=",
+                    $filter['value']?$filter['value']:null
+                );
+            }
+        }
+
+        if(isset($var['filter_by']) && $var['filter_by'] &&
+            isset($var['filter_id']) && $var['filter_id']){
+            $list->where($var['filter_by'],$var['filter_id']);
+        }
+
+        $list = $list->get();
+
+        return $list;
 
     }
     //-------------------------------------------------

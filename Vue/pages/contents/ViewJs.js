@@ -75,8 +75,11 @@ export default {
         getItem: function () {
             this.$Progress.start();
             this.params = {};
-            let url = this.ajax_url+'/item/'+this.$route.params.id;
-            this.$vaah.ajaxGet(url, this.params, this.getItemAfter);
+
+            if(this.$route.params.id){
+                let url = this.ajax_url+'/item/'+this.$route.params.id;
+                this.$vaah.ajax(url, this.params, this.getItemAfter);
+            }
         },
         //---------------------------------------------------------------------
         getItemAfter: function (data, res) {
