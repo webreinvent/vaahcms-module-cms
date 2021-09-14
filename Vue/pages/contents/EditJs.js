@@ -31,6 +31,7 @@ export default {
         return {
             namespace: namespace,
             is_content_loading: false,
+            is_reload_btn_loading: false,
             is_btn_loading: null,
             labelPosition: 'on-border',
             params: {},
@@ -122,6 +123,7 @@ export default {
         getItemAfter: function (data, res) {
             this.$Progress.finish();
             this.is_content_loading = false;
+            this.is_reload_btn_loading = false;
 
             if(data)
             {
@@ -138,6 +140,7 @@ export default {
         //---------------------------------------------------------------------
         store: function () {
             this.$Progress.start();
+            this.is_btn_loading = true;
 
            this.updateItem();
 
@@ -164,6 +167,7 @@ export default {
                 }
 
             }
+            this.is_btn_loading = false;
 
         },
         //---------------------------------------------------------------------
@@ -251,6 +255,12 @@ export default {
             this.theme_sync_loader = false;
             this.reloadAssets();
             this.setActiveTheme();
+
+        },
+        //---------------------------------------------------------------------
+        reload: function () {
+            this.is_reload_btn_loading = true;
+            this.getItem();
 
         },
         //---------------------------------------------------------------------
