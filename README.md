@@ -10,6 +10,20 @@ Cms Module for VaahCMS
 APP_MODULE_CMS_ENV=develop
 ```
 
+#### Frontend Routes
+
+```php
+
+<public-url>/{permalink}
+
+<public-url>/{content_type}/{permalink}
+
+<public-url>/taxonomies/{taxonomy_type_slug}/{taxonomy_slug}
+
+<public-url>/search
+
+```
+
 ## Helper Methods
 
 #### Theme Locations
