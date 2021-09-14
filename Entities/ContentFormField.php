@@ -167,7 +167,7 @@ class ContentFormField extends Model {
     {
         $value = $content;
 
-        if($type && ($type == 'image' || $type == 'media'))
+        if($content && $type && ($type == 'image' || $type == 'media'))
         {
             $value = asset($content);
         }
