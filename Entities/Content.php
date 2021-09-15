@@ -513,9 +513,6 @@ class Content extends Model {
                 $y = 0;
 
 
-
-
-
                 foreach ($group->fields as $field)
                 {
                     $arr_group[$i][$key]['fields'][$y] = [
@@ -547,7 +544,10 @@ class Content extends Model {
 
                         $field_content->content = $field_content['contentFormRelations']
                             ->pluck('relatable_id');
+
                     }
+
+
 
 
                     if($field_content)
@@ -575,7 +575,6 @@ class Content extends Model {
                         }
 
                         $content_val = ContentFormField::getContentAsset($content_val, $field->type->slug);
-
 
                         $arr_group[$i][$key]['fields'][$y]['content'] = $content_val;
 
@@ -835,9 +834,19 @@ class Content extends Model {
 
                     }elseif($field['type']['slug'] == 'relation'){
 
+                        $type_name = $content->contentType->slug.'-'.$field['slug'];
+
+                        if(is_string($field['content']) && !is_numeric($field['content'])){
+                            $item = Taxonomy::getFirstOrCreate($type_name,$field['content']);
+
+                            $field['content'] = $item->id;
+                        }
+
                         $related_item = ContentFormField::where('id',$stored_field->id)->first();
 
-                        if($field['content']){
+                        $field['meta'] = (array) $field['meta'];
+
+                        if($field['content'] && isset($field['meta']['type'])){
 
                             if(!is_array($field['content']) && !is_object($field['content'])){
                                 $field['content'] = [$field['content']];

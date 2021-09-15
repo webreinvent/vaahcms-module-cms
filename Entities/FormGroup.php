@@ -233,7 +233,8 @@ class FormGroup extends Model {
 
                         if($stored_field){
 
-                            if($field['meta']['type'] != $stored_field->meta->type){
+                            if($stored_field->meta && isset($stored_field->meta->type)
+                                && $field['meta']['type'] != $stored_field->meta->type){
                                 $content_form_fields = ContentFormField::with(['contentFormRelations'])
                                     ->where('vh_cms_form_field_id', $field['id'])->get();
 
@@ -247,7 +248,6 @@ class FormGroup extends Model {
 
                         }
 
-                        TaxonomyType::getFirstOrCreate(Str::slug($field['name']));
                     }
 
                     unset($field['type']);

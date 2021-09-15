@@ -163,6 +163,13 @@ class ContentFormField extends Model {
         );
     }
     //-------------------------------------------------
+    public function content()
+    {
+        return $this->belongsTo(Content::class,
+            'vh_cms_content_id', 'id'
+        );
+    }
+    //-------------------------------------------------
     public static function getContentAsset($content,$type)
     {
         $value = $content;

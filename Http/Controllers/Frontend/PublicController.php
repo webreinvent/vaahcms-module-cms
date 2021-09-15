@@ -133,8 +133,7 @@ class PublicController extends Controller
             $view = $active_them_namespace.'frontend.default';
         }
 
-
-        return view($view,['data' => $contents]);
+        return view($view,['data' => $contents,'taxonomy' => $taxonomy]);
 
     }
 
