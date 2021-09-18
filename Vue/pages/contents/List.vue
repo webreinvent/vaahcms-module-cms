@@ -16,6 +16,10 @@
 
                     <div class="card-header-title">
                         {{page.assets.content_type.name}}
+
+                        <span v-if="page.list">
+                                 &nbsp; ({{page.list.total}})
+                        </span>
                     </div>
 
                     <div class="card-header-buttons">

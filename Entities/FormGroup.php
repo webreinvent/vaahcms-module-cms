@@ -1,5 +1,6 @@
 <?php namespace VaahCms\Modules\Cms\Entities;
 
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
@@ -45,24 +46,15 @@ class FormGroup extends Model {
 
     //-------------------------------------------------
 
-    protected $casts = [
-        "created_at" => 'date:Y-m-d H:i:s',
-        "updated_at" => 'date:Y-m-d H:i:s',
-        "deleted_at" => 'date:Y-m-d H:i:s'
-    ];
-    //-------------------------------------------------
 
-    public function __construct(array $attributes = [])
+
+    //-------------------------------------------------
+    protected function serializeDate(DateTimeInterface $date)
     {
         $date_time_format = config('settings.global.datetime_format');
-        if(is_array($this->casts) && isset($date_time_format))
-        {
-            foreach ($this->casts as $date_key => $format)
-            {
-                $this->casts[$date_key] = 'date:'.$date_time_format;
-            }
-        }
-        parent::__construct($attributes);
+
+        return $date->format($date_time_format);
+
     }
     //-------------------------------------------------
     //-------------------------------------------------
@@ -233,7 +225,8 @@ class FormGroup extends Model {
 
                         if($stored_field){
 
-                            if($field['meta']['type'] != $stored_field->meta->type){
+                            if($stored_field->meta && isset($stored_field->meta->type)
+                                && $field['meta']['type'] != $stored_field->meta->type){
                                 $content_form_fields = ContentFormField::with(['contentFormRelations'])
                                     ->where('vh_cms_form_field_id', $field['id'])->get();
 
@@ -247,7 +240,6 @@ class FormGroup extends Model {
 
                         }
 
-                        TaxonomyType::getFirstOrCreate(Str::slug($field['name']));
                     }
 
                     unset($field['type']);

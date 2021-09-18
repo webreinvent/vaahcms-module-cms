@@ -1,5 +1,6 @@
 <?php namespace VaahCms\Modules\Cms\Entities;
 
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
@@ -52,25 +53,15 @@ class Content extends Model {
 
     //-------------------------------------------------
 
-    protected $casts = [
-        "is_published_at" => 'date:Y-m-d H:i:s',
-        "created_at" => 'date:Y-m-d H:i:s',
-        "updated_at" => 'date:Y-m-d H:i:s',
-        "deleted_at" => 'date:Y-m-d H:i:s'
-    ];
-    //-------------------------------------------------
 
-    public function __construct(array $attributes = [])
+
+    //-------------------------------------------------
+    protected function serializeDate(DateTimeInterface $date)
     {
         $date_time_format = config('settings.global.datetime_format');
-        if(is_array($this->casts) && isset($date_time_format))
-        {
-            foreach ($this->casts as $date_key => $format)
-            {
-                $this->casts[$date_key] = 'date:'.$date_time_format;
-            }
-        }
-        parent::__construct($attributes);
+
+        return $date->format($date_time_format);
+
     }
     //-------------------------------------------------
 
@@ -513,9 +504,6 @@ class Content extends Model {
                 $y = 0;
 
 
-
-
-
                 foreach ($group->fields as $field)
                 {
                     $arr_group[$i][$key]['fields'][$y] = [
@@ -547,7 +535,10 @@ class Content extends Model {
 
                         $field_content->content = $field_content['contentFormRelations']
                             ->pluck('relatable_id');
+
                     }
+
+
 
 
                     if($field_content)
@@ -575,7 +566,6 @@ class Content extends Model {
                         }
 
                         $content_val = ContentFormField::getContentAsset($content_val, $field->type->slug);
-
 
                         $arr_group[$i][$key]['fields'][$y]['content'] = $content_val;
 
@@ -835,9 +825,19 @@ class Content extends Model {
 
                     }elseif($field['type']['slug'] == 'relation'){
 
+                        $type_name = $content->contentType->slug.'-'.$field['slug'];
+
+                        if(is_string($field['content']) && !is_numeric($field['content'])){
+                            $item = Taxonomy::getFirstOrCreate($type_name,$field['content']);
+
+                            $field['content'] = $item->id;
+                        }
+
                         $related_item = ContentFormField::where('id',$stored_field->id)->first();
 
-                        if($field['content']){
+                        $field['meta'] = (array) $field['meta'];
+
+                        if($field['content'] && isset($field['meta']['type'])){
 
                             if(!is_array($field['content']) && !is_object($field['content'])){
                                 $field['content'] = [$field['content']];

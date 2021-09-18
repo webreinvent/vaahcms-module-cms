@@ -1,5 +1,6 @@
 <?php namespace VaahCms\Modules\Cms\Entities;
 
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use WebReinvent\VaahCms\Entities\Taxonomy;
@@ -37,24 +38,15 @@ class ContentFormField extends Model {
 
     //-------------------------------------------------
 
-    protected $casts = [
-        "created_at" => 'date:Y-m-d H:i:s',
-        "updated_at" => 'date:Y-m-d H:i:s',
-        "deleted_at" => 'date:Y-m-d H:i:s'
-    ];
-    //-------------------------------------------------
 
-    public function __construct(array $attributes = [])
+
+    //-------------------------------------------------
+    protected function serializeDate(DateTimeInterface $date)
     {
         $date_time_format = config('settings.global.datetime_format');
-        if(is_array($this->casts) && isset($date_time_format))
-        {
-            foreach ($this->casts as $date_key => $format)
-            {
-                $this->casts[$date_key] = 'date:'.$date_time_format;
-            }
-        }
-        parent::__construct($attributes);
+
+        return $date->format($date_time_format);
+
     }
 
     //-------------------------------------------------
@@ -163,11 +155,18 @@ class ContentFormField extends Model {
         );
     }
     //-------------------------------------------------
+    public function content()
+    {
+        return $this->belongsTo(Content::class,
+            'vh_cms_content_id', 'id'
+        );
+    }
+    //-------------------------------------------------
     public static function getContentAsset($content,$type)
     {
         $value = $content;
 
-        if($type && ($type == 'image' || $type == 'media'))
+        if($content && $type && ($type == 'image' || $type == 'media'))
         {
             $value = asset($content);
         }
