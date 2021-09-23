@@ -38,7 +38,6 @@ export default {
         return {
             namespace: namespace,
             is_content_loading: false,
-            is_textarea_disable: false,
             is_btn_loading: null,
             labelPosition: 'on-border',
             params: {},
@@ -247,32 +246,19 @@ export default {
             this.update('active_item', null);
             this.$router.push({name:'blocks.list'});
         },
+
         //---------------------------------------------------------------------
-        setDynamicContent: function (value) {
-            let self = this;
+        copyCode: function (item,id)
+        {
+            let code = "";
 
-            if(value){
-                $.each(self.assets.replace_strings.success, function( index, string ) {
-                    let regex = new RegExp(string.value, "g");
-                    self.item.content = self.item.content.replace(regex, string.name);
-                });
+            let location = this.$vaah.findInArrayByKey(item, 'id', id);
 
-            }else{
-                $.each(self.assets.replace_strings.success, function( index, string ) {
-                    let regex = new RegExp(string.name, "g");
-                    self.item.content = self.item.content.replace(regex, string.value);
-                });
-
+            if(location){
+                code = "{!! vh_location_blocks('"+location.slug+"') !!}";
             }
 
-            self.is_textarea_disable = value;
-
-
-        },
-        //---------------------------------------------------------------------
-        copyCode: function (item,has_location = false)
-        {
-            copy(item);
+            copy(code);
 
             this.$buefy.toast.open({
                 message: 'Copied!',

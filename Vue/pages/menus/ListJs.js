@@ -1,4 +1,5 @@
 import GlobalComponents from '../../vaahvue/helpers/GlobalComponents';
+import copy from "copy-to-clipboard";
 
 
 let namespace = 'menus';
@@ -263,6 +264,25 @@ export default {
 
             }
 
+        },
+
+        //---------------------------------------------------------------------
+        copyCode: function (item,id)
+        {
+            let code = "";
+
+            let location = this.$vaah.findInArrayByKey(item, 'id', id);
+
+            if(location){
+                code = "{!! vh_location('"+location.slug+"', true) !!}";
+            }
+
+            copy(code);
+
+            this.$buefy.toast.open({
+                message: 'Copied!',
+                type: 'is-success'
+            });
         },
         //---------------------------------------------------------------------
     }

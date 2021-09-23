@@ -2,6 +2,7 @@
 
 namespace VaahCms\Modules\Cms\Entities;
 
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
@@ -23,11 +24,6 @@ class Menu extends Model
 
     //-------------------------------------------------
 
-    protected $casts = [
-        "created_at" => 'date:Y-m-d H:i:s',
-        "updated_at" => 'date:Y-m-d H:i:s',
-        "deleted_at" => 'date:Y-m-d H:i:s'
-    ];
     //-------------------------------------------------
 
     protected $fillable = [
@@ -35,6 +31,18 @@ class Menu extends Model
         'attr_class', 'vh_theme_location_id', 'vh_permission_slug',
         'created_by', 'updated_by', 'deleted_by'
     ];
+    //-------------------------------------------------
+
+
+
+    //-------------------------------------------------
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        $date_time_format = config('settings.global.datetime_format');
+
+        return $date->format($date_time_format);
+
+    }
     //-------------------------------------------------
     public function items()
     {

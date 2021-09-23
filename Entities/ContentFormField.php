@@ -1,7 +1,9 @@
 <?php namespace VaahCms\Modules\Cms\Entities;
 
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use WebReinvent\VaahCms\Entities\Taxonomy;
 use WebReinvent\VaahCms\Entities\User;
 use WebReinvent\VaahCms\Traits\CrudWithUuidObservantTrait;
 
@@ -26,6 +28,7 @@ class ContentFormField extends Model {
         'vh_cms_content_id',
         'vh_cms_form_group_id',
         'vh_cms_form_field_id',
+        'vh_cms_form_group_index',
         'content',
         'meta',
         'created_by',
@@ -35,11 +38,16 @@ class ContentFormField extends Model {
 
     //-------------------------------------------------
 
-    protected $casts = [
-        "created_at" => 'date:Y-m-d H:i:s',
-        "updated_at" => 'date:Y-m-d H:i:s',
-        "deleted_at" => 'date:Y-m-d H:i:s'
-    ];
+
+
+    //-------------------------------------------------
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        $date_time_format = config('settings.global.datetime_format');
+
+        return $date->format($date_time_format);
+
+    }
 
     //-------------------------------------------------
     public function setContentAttribute($value)
@@ -67,18 +75,6 @@ class ContentFormField extends Model {
             {
                 return json_decode($value);
             }
-
-
-            if(isset($this->field->type) && isset($this->field->type->slug))
-            {
-                $slug = $this->field->type->slug;
-
-                if($slug == 'image' || $slug == 'media')
-                {
-                    $value = asset($value);
-                }
-            }
-
 
             return $value;
         }
@@ -159,5 +155,37 @@ class ContentFormField extends Model {
         );
     }
     //-------------------------------------------------
+    public function content()
+    {
+        return $this->belongsTo(Content::class,
+            'vh_cms_content_id', 'id'
+        );
+    }
+    //-------------------------------------------------
+    public static function getContentAsset($content,$type)
+    {
+        $value = $content;
+
+        if($content && $type && ($type == 'image' || $type == 'media'))
+        {
+            $value = asset($content);
+        }
+
+        return $value;
+    }
+    //-------------------------------------------------
+    public function taxonomies()
+    {
+        return $this->morphedByMany(Taxonomy::class,
+            'relatable',
+            'vh_cms_content_form_relations',
+            'vh_cms_content_form_field_id');
+    }
+    //-------------------------------------------------
+    public function contentFormRelations()
+    {
+        return $this->hasMany(ContentFormRelation::class,
+            'vh_cms_content_form_field_id', 'id');
+    }
 
 }

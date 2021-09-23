@@ -1,8 +1,10 @@
 <?php namespace VaahCms\Modules\Cms\Entities;
 
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use WebReinvent\VaahCms\Entities\TaxonomyType;
 use WebReinvent\VaahCms\Entities\User;
 use WebReinvent\VaahCms\Traits\CrudWithUuidObservantTrait;
 
@@ -44,11 +46,16 @@ class FormGroup extends Model {
 
     //-------------------------------------------------
 
-    protected $casts = [
-        "created_at" => 'date:Y-m-d H:i:s',
-        "updated_at" => 'date:Y-m-d H:i:s',
-        "deleted_at" => 'date:Y-m-d H:i:s'
-    ];
+
+
+    //-------------------------------------------------
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        $date_time_format = config('settings.global.datetime_format');
+
+        return $date->format($date_time_format);
+
+    }
     //-------------------------------------------------
     //-------------------------------------------------
     public function setMetaAttribute($value)
@@ -118,6 +125,13 @@ class FormGroup extends Model {
         return $this->hasMany(FormField::class,
             'vh_cms_form_group_id', 'id'
         )->orderBy('sort', 'asc');
+    }
+    //-------------------------------------------------
+    public function contentFields()
+    {
+        return $this->hasMany(ContentFormField::class,
+            'vh_cms_form_group_id', 'id'
+        );
     }
     //-------------------------------------------------
     public static function deleteItem($id)
@@ -190,10 +204,7 @@ class FormGroup extends Model {
                     ->where('slug', $field['slug'])
                     ->first();
 
-                if(!$stored_field)
-                {
-                    $stored_field = new FormField();
-                }
+
 
                 if(isset($field['type']) && isset($field['type']['slug']) )
                 {
@@ -201,9 +212,42 @@ class FormGroup extends Model {
                     if($type)
                     {
                         $field['vh_cms_field_type_id'] = $type->id;
+
+                        if(isset($field['meta'])){
+                            $field['meta'] = array_merge((array) $type['meta'],$field['meta']);
+                        }else{
+                            $field['meta'] = (array) $type['meta'];
+                        }
+
+                    }
+
+                    if($field['type']['slug'] == 'relation'){
+
+                        if($stored_field){
+
+                            if($stored_field->meta && isset($stored_field->meta->type)
+                                && $field['meta']['type'] != $stored_field->meta->type){
+                                $content_form_fields = ContentFormField::with(['contentFormRelations'])
+                                    ->where('vh_cms_form_field_id', $field['id'])->get();
+
+
+                                foreach($content_form_fields as $form_field){
+                                    $form_field->contentFormRelations()->forceDelete();
+                                    $form_field->content = null;
+                                    $form_field->save();
+                                }
+                            }
+
+                        }
+
                     }
 
                     unset($field['type']);
+                }
+
+                if(!$stored_field)
+                {
+                    $stored_field = new FormField();
                 }
 
                 $stored_field->fill($field);
@@ -211,6 +255,7 @@ class FormGroup extends Model {
                 $stored_field->slug = Str::slug($field['name']);
                 $stored_field->vh_cms_form_group_id = $group->id;
                 $stored_field->save();
+
             }
         }
 

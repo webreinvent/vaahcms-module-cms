@@ -1,5 +1,8 @@
 import GlobalComponents from '../../vaahvue/helpers/GlobalComponents'
 import draggable from 'vuedraggable';
+// import the component
+import TreeSelect from '../../vaahvue/reusable/TreeSelect'
+
 
 let namespace = 'content_types';
 
@@ -14,6 +17,7 @@ export default {
     },
     components:{
         ...GlobalComponents,
+        TreeSelect,
         draggable,
 
     },
@@ -26,11 +30,13 @@ export default {
             labelPosition: 'on-border',
             params: {},
             local_action: null,
+            type_options: [],
             new_group:{
                 name:null,
                 fields:[
                 ]
             },
+
 
 
         }
@@ -85,6 +91,7 @@ export default {
             this.is_content_loading = true;
             this.updateView();
             this.getAssets();
+
         },
         //---------------------------------------------------------------------
         async getAssets() {
@@ -214,9 +221,12 @@ export default {
             this.update('active_item', null);
             this.$router.push({name:'content.types.list'});
         },
-
         //---------------------------------------------------------------------
+        onSelectType: function (field,data,group_index,field_index) {
 
+            field.meta['filter_id'] = null;
+
+        }
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------

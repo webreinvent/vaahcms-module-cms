@@ -136,13 +136,12 @@
 
                         </b-field>
 
-
-
                         <b-field label="Templates"
                                  :label-position="labelPosition">
 
-
-                            <b-select v-model="new_item.vh_theme_template_id" @input="setActiveTemplate">
+                            <b-select v-model="new_item.vh_theme_template_id"
+                                      placeholder="Select a Template"
+                                      @input="setActiveTemplate">
                                 <option value="">Select a Template</option>
                                 <option v-for="(template, index) in page.active_theme.templates"
                                         :value="template.id"

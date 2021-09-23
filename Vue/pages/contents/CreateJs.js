@@ -119,6 +119,8 @@ export default {
             {
                 this.$emit('eReloadList');
 
+                this.$store.dispatch(this.namespace+'/reloadAssets');
+
                 this.saveAndNew();
 
             }
@@ -152,7 +154,7 @@ export default {
                 parent_id: null,
                 vh_cms_content_type_id: null,
                 vh_theme_id: this.page.assets.default_theme.id,
-                vh_theme_template_id: this.page.assets.default_template.id,
+                vh_theme_template_id: this.page.assets.default_template?this.page.assets.default_template.id:null,
                 name: null,
                 slug: null,
                 is_published_at: null,
@@ -191,7 +193,11 @@ export default {
             this.update('active_template', template);
 
             let groups = [];
-            groups = template.groups;
+
+            $(template.groups).each(function (index, item) {
+
+                groups[index] = [item];
+            });
 
             console.log('--->', groups);
 

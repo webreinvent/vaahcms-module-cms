@@ -355,8 +355,8 @@ class CmsSeeder{
             $content_groups = self::fillFields($content_type['groups'],$json_content);
             $template_groups = self::fillFields($template['groups'],$json_template);
 
-            Content::storeFormGroups($content, $content_groups);
-            Content::storeFormGroups($content, $template_groups);
+            Content::storeFormGroups($content, [$content_groups]);
+            Content::storeFormGroups($content, [$template_groups]);
 
         }
 

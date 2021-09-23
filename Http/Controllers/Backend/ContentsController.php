@@ -6,6 +6,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use VaahCms\Modules\Cms\Entities\Content;
 use VaahCms\Modules\Cms\Entities\ContentType;
+use WebReinvent\VaahCms\Entities\Taxonomy;
 use WebReinvent\VaahCms\Entities\Theme;
 use WebReinvent\VaahCms\Entities\User;
 
@@ -37,13 +38,20 @@ class ContentsController extends Controller
         $data['bulk_actions'] = vh_general_bulk_actions();
         $data['media_upload_url'] = route('backend.cms.media.upload');
 
+        $data['non_repeatable_fields'] = Content::getNonRepeatableFields();
 
         $data['content_type'] = $request->content_type;
         $form_groups = ContentType::getItemWithRelations($request->content_type->id);
 
         if($form_groups['status'] == 'success')
         {
-            $data['content_type']['form_groups'] = $form_groups['data']->groups;
+
+            $arr_group = [];
+
+            foreach ($form_groups['data']->groups as $group){
+                $arr_group[] = [$group];
+            }
+            $data['content_type']['form_groups'] = $arr_group;
         }
 
         $response['status'] = 'success';
@@ -83,6 +91,7 @@ class ContentsController extends Controller
     //----------------------------------------------------------
     public function postActions(Request $request, $content_slug, $action)
     {
+
         $rules = array(
             'inputs' => 'required',
         );
@@ -126,6 +135,13 @@ class ContentsController extends Controller
             case 'bulk-delete':
 
                 $response = Content::bulkDelete($request);
+
+                break;
+
+            //------------------------------------
+            case 'remove-group':
+
+                $response = Content::removeGroup($request);
 
                 break;
 
@@ -186,6 +202,41 @@ class ContentsController extends Controller
     public function getUserById(Request $request,$id)
     {
         return User::find($id);
+    }
+    //----------------------------------------------------------
+    public function getRelationsInTree(Request $request)
+    {
+        $input = $request->all();
+
+        $list = [];
+
+        $display_column = 'name';
+        $url = null;
+
+        $relation =  vh_content_relations_by_name($input['type']);
+
+        if($relation && isset($relation['namespace'])){
+
+            $relation['filter_id'] = $input['filter_id'];
+
+            $list = Content::getListByVariables($relation);
+
+            if(isset($relation['display_column']) && $relation['display_column']){
+                $display_column = $relation['display_column'];
+            }
+
+            if(isset($relation['add_url']) && $relation['add_url']){
+                $url = $relation['add_url'];
+            }
+        }
+
+
+        $response['status'] = 'success';
+        $response['data']['list'] = $list;
+        $response['data']['display_column'] = $display_column;
+        $response['data']['add_url'] = $url;
+
+        return $response;
     }
     //----------------------------------------------------------
 

@@ -33,6 +33,13 @@
                                         Collapse All
                                     </b-button>
                                 </p>
+                                <p  class="control">
+                                    <b-button type="is-light"
+                                              @click="reload"
+                                              :loading="is_reload_btn_loading"
+                                              icon-left="redo-alt">
+                                    </b-button>
+                                </p>
                             </div>
                         </div>
 

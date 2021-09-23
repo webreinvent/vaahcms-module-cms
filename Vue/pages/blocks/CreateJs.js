@@ -2,6 +2,7 @@ import GlobalComponents from '../../vaahvue/helpers/GlobalComponents'
 import ContentFieldAll from '../../vaahvue/reusable/content-fields/All'
 import draggable from 'vuedraggable';
 import { codemirror } from 'vue-codemirror'
+import copy from "copy-to-clipboard";
 
 // language
 import 'codemirror/mode/xml/xml.js'
@@ -34,7 +35,6 @@ export default {
         return {
             namespace: namespace,
             is_content_loading: false,
-            is_textarea_disable: false,
             is_btn_loading: null,
             labelPosition: 'on-border',
             params: {},
@@ -260,6 +260,25 @@ export default {
             }
 
 
+        },
+
+        //---------------------------------------------------------------------
+        copyCode: function (item,id)
+        {
+            let code = "";
+
+            let location = this.$vaah.findInArrayByKey(item, 'id', id);
+
+            if(location){
+                code = "{!! vh_location_blocks('"+location.slug+"') !!}";
+            }
+
+            copy(code);
+
+            this.$buefy.toast.open({
+                message: 'Copied!',
+                type: 'is-success'
+            });
         },
         //---------------------------------------------------------------------
     }

@@ -16,6 +16,9 @@
 
                     <div class="card-header-title">
                         Blocks
+                        <span v-if="page.list">
+                                 &nbsp; ({{page.list.total}})
+                        </span>
                     </div>
 
                     <div class="card-header-buttons">

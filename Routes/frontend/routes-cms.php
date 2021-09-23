@@ -23,3 +23,23 @@ Route::group(
             ->name( 'vh.cms.content' );
         //------------------------------------------------
     });
+
+
+
+
+Route::group(
+    [
+        'middleware' => ['web'],
+        'namespace' => 'Frontend',
+    ],
+    function () {
+        //------------------------------------------------
+        Route::get( '/taxonomies/{taxonomy_type_slug}/{taxonomy_slug}',
+            'PublicController@taxonomyContents' )
+            ->name( 'vh.cms.taxonomy-content' );
+        //------------------------------------------------
+        Route::get( '/search',
+            'PublicController@searchContents' )
+            ->name( 'vh.cms.search-content' );
+        //------------------------------------------------
+    });

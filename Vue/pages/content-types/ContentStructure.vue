@@ -76,18 +76,18 @@
 
                                 <div class="card-header-buttons">
                                     <b-field>
-                                        <p class="control">
-                                            <b-tooltip label="Copy Slug" type="is-dark">
+                                        <b-tooltip label="Copy Slug" type="is-dark">
+                                            <p class="control">
                                                 <b-button @click="$vaah.copy(group.slug)"
                                                 >#{{group.id}}</b-button>
-                                            </b-tooltip>
-                                        </p>
-                                        <p class="control">
-                                            <b-tooltip label="Delete Group" type="is-dark">
+                                            </p>
+                                        </b-tooltip>
+                                        <b-tooltip label="Delete Group" type="is-dark">
+                                            <p class="control">
                                                 <b-button @click="deleteGroup(group, index)" icon-left="trash">
                                                 </b-button>
-                                            </b-tooltip>
-                                        </p>
+                                            </p>
+                                        </b-tooltip>
 
 
                                     </b-field>
@@ -117,32 +117,33 @@
                                                     </p>
                                                     <b-input v-model="field.name" expanded placeholder="Field Name">
                                                     </b-input>
-                                                    <p class="control">
-                                                        <b-tooltip label="Copy Slug" type="is-dark">
+                                                    <b-tooltip label="Copy Slug" type="is-dark">
+                                                        <p class="control">
                                                             <b-button @click="$vaah.copy(field.slug)"
                                                             >#{{field.id}}</b-button>
-                                                        </b-tooltip>
-                                                    </p>
+                                                        </p>
+                                                    </b-tooltip>
 
-                                                    <p class="control">
-                                                        <b-tooltip label="Field Option" type="is-dark">
+                                                    <b-tooltip label="Field Option" type="is-dark">
+                                                        <p class="control">
                                                             <b-button icon-left="cog"
                                                                       @click="toggleFieldOptions($event)"></b-button>
-                                                        </b-tooltip>
-                                                    </p>
+                                                        </p>
+                                                    </b-tooltip>
 
-                                                    <p class="control">
-                                                        <b-tooltip label="Delete Field" type="is-dark">
+                                                    <b-tooltip label="Delete Field" type="is-dark">
+                                                        <p class="control">
                                                             <b-button @click="deleteGroupField(group, f_index)"
                                                                       icon-left="trash"></b-button>
-                                                        </b-tooltip>
-                                                    </p>
+                                                        </p>
+                                                    </b-tooltip>
 
                                                 </b-field>
                                                 <div class="dropzone-field-options ">
 
                                                     <table class="table">
-                                                        <tr>
+
+                                                        <tr v-if="!assets.non_repeatable_fields.includes(field.type.slug)">
                                                             <td width="180" >
                                                                 Is repeatable
                                                             </td>
@@ -174,12 +175,27 @@
                                                             </td>
                                                         </tr>
 
+
                                                         <template v-if="field.meta">
-                                                            <tr v-for="(meta_item, meta_index) in field.meta">
-                                                                <td v-html="$vaah.toLabel(meta_index)"></td>
-                                                                <td>
+
+                                                            <tr v-for="(meta_item, meta_index) in field.meta"
+                                                                v-if="(meta_index !== 'container_opening_tag'
+                                                                    && meta_index !== 'container_closing_tag')
+                                                                    || assets.non_repeatable_fields.includes(field.type.slug)
+                                                                    || field.is_repeatable">
+
+                                                                <td v-if="meta_index !== 'filter_id'
+                                                                && meta_index !== 'display_column'
+                                                                && meta_index !== 'options'"
+                                                                    v-html="$vaah.toLabel(meta_index)"></td>
+
+                                                                <td v-if="meta_index !== 'filter_id'
+                                                                && meta_index !== 'display_column'
+                                                                && meta_index !== 'options'">
                                                                     <div v-if="meta_index.includes('is_')">
-                                                                        <b-checkbox v-model="field.meta[meta_index]">{{$vaah.toLabel(meta_index)}}</b-checkbox>
+                                                                        <b-checkbox v-model="field.meta[meta_index]">
+                                                                            {{$vaah.toLabel(meta_index)}}
+                                                                        </b-checkbox>
                                                                     </div>
                                                                     <div v-else-if="meta_index === 'option'">
                                                                         <b-taginput
@@ -188,6 +204,38 @@
                                                                                 placeholder="Add a tag"
                                                                                 aria-close-label="Delete this tag">
                                                                         </b-taginput>
+                                                                    </div>
+                                                                    <div v-else-if="meta_index === 'type'">
+
+                                                                        <b-field>
+
+                                                                            <b-select ref="select_relation"
+                                                                                    expanded v-model="field.meta[meta_index]"
+                                                                                      @input="onSelectType(field,field.meta[meta_index],index,f_index)"
+                                                                                      placeholder="Select">
+                                                                                <option :value=null>
+                                                                                    Select
+                                                                                </option>
+                                                                                <option
+                                                                                        v-for="(option, index) in assets.content_relations"
+                                                                                        :value="option.name"
+                                                                                        :key="index">
+                                                                                    {{ option.name }}
+                                                                                </option>
+                                                                            </b-select>
+                                                                        </b-field>
+
+                                                                        <tree-select v-if="field.meta[meta_index]
+                                                                        && $vaah.findInArrayByKey(
+                                                                        assets.content_relations,'name', field.meta[meta_index])
+                                                                        && $vaah.findInArrayByKey(
+                                                                        assets.content_relations,'name', field.meta[meta_index])['options']"
+                                                                                     v-model="field.meta['filter_id']"
+                                                                                     placeholder="Select..."
+                                                                                     :options="$vaah.findInArrayByKey(
+                                                                        assets.content_relations,'name', field.meta[meta_index])['options']" >
+                                                                        </tree-select>
+
                                                                     </div>
                                                                     <div v-else>
                                                                         <b-input v-model="field.meta[meta_index]"
