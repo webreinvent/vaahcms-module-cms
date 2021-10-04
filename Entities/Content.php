@@ -549,7 +549,7 @@ class Content extends Model {
                         if(!$field->is_repeatable
                             && (is_array($field_content->content)
                                 || is_object($field_content->content))
-                            && $field->type->slug != 'seo-meta-tags'
+                            && !in_array($field->type->slug,static::getNonRepeatableFields())
                             && count($field_content->content) <= 1) {
 
                             $content_val = null;
@@ -682,7 +682,7 @@ class Content extends Model {
                         if(!$field->is_repeatable
                             && (is_array($field_content->content)
                                 || is_object($field_content->content))
-                            && $field->type->slug != 'seo-meta-tags'
+                            && !in_array($field->type->slug,static::getNonRepeatableFields())
                             && count($field_content->content) <= 1) {
 
                             $content_val = null;

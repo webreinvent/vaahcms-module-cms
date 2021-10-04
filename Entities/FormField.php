@@ -41,6 +41,7 @@ class FormField extends Model {
 
     //-------------------------------------------------
     protected $appends  = [
+        "content"
     ];
 
     //-------------------------------------------------
@@ -75,6 +76,11 @@ class FormField extends Model {
         {
             return json_decode($value);
         }
+        return null;
+    }
+    //-------------------------------------------------
+    public function getContentAttribute($value)
+    {
         return null;
     }
     //-------------------------------------------------
