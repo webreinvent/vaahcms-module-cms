@@ -16,15 +16,16 @@ use Illuminate\Http\Request;
 Route::group(
     [
         'prefix'     => 'cms',
+        'middleware' => ['auth:api'],
         'namespace' => 'Api',
     ],
     function () {
         //------------------------------------------------
-        Route::get( '/contents-types', 'ContentTypesController@getContentTypeList' );
+        Route::any( '/contents-types', 'ContentTypesController@getContentTypeList' );
         //------------------------------------------------
-        Route::get( '/contents-types/{slug}', 'ContentTypesController@getContentTypeItem' );
+        Route::any( '/contents-types/{column}/{value}', 'ContentTypesController@getContentTypeItem' );
         //------------------------------------------------
-        Route::get( '/contents/{plural_slug}', 'ContentsController@getContentList' );
+        Route::any( '/contents/{plural_slug}', 'ContentsController@getContentList' );
         //------------------------------------------------
         Route::any( '/contents/{singular_slug}/{content_slug}', 'ContentsController@getContentItem' );
         //------------------------------------------------

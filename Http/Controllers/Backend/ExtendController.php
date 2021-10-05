@@ -4,7 +4,9 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use VaahCms\Modules\Cms\Entities\ContentType;
+use WebReinvent\VaahCms\Entities\Role;
 use WebReinvent\VaahCms\Entities\TaxonomyType;
+use WebReinvent\VaahCms\Entities\User;
 
 class ExtendController extends Controller
 {
@@ -33,14 +35,6 @@ class ExtendController extends Controller
     //----------------------------------------------------------
     public static function getCmsContentRelations()
     {
-       /* $taxonomy_option = null;
-
-        if(!isset($exclude['Taxonomy']['options']))
-        {
-            $taxonomy_option = TaxonomyType::getListInTreeFormat();
-
-        }*/
-
 
         $arr = [
             [
@@ -136,9 +130,27 @@ class ExtendController extends Controller
             }
         }
 
-
         $response['status'] = 'success';
         $response['data'] = $list;
+
+        return $response;
+    }
+    //----------------------------------------------------------
+    public function getDashboardCards()
+    {
+        $data = [
+
+            [
+                "count" => ContentType::count(),
+                "label" => 'Total Content Types',
+                "icon" => "copy",
+                "card_classes" => "has-background-warning-lighter",
+                "link" => self::$link."content-types/"
+            ]
+        ];
+
+        $response['status'] = 'success';
+        $response['data'] = $data;
 
         return $response;
     }
