@@ -40,29 +40,29 @@ if (mix.inProduction()) {
 }
 
 mix.webpackConfig({
+
     watchOptions: {
-        aggregateTimeout: 2000,
-        poll: 20,
+
+        aggregateTimeout: 20000,
+        poll: 1000,
         ignored: [
+            '**/*.php',
+            '**/node_modules',
             '/Config/',
             '/Database/',
-            '/Entities/',
-            '/Facades/',
             '/Helpers/',
             '/Http/',
+            '/jobs/',
             '/Libraries/',
-            '/Loaders/',
-            '/Observers/',
+            '/Mails/',
+            '/Models/',
+            '/node_modules/',
+            '/Notifications/',
             '/Providers/',
             '/Resources/',
             '/Routes/',
-            '/node_modules/',
             '/Tests/',
-            '/Traits/',
+            '/Wiki/',
         ]
-    },
-
-    plugins: [
-        //new Visualizer()
-    ],
+    }
 });
