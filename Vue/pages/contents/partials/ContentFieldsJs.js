@@ -131,7 +131,8 @@ export default {
         //---------------------------------------------------------------------
         addField: function (field)
         {
-            if(!field.content || typeof field.content === 'string'){
+            if(!field.content || typeof field.content === 'string'
+                || typeof field.content === 'number'){
                 let content = field.content;
 
                 field.content = [
@@ -152,12 +153,11 @@ export default {
 
             $.each(temp_group.fields, function( index, field ) {
 
-                if(field.type.slug !== "seo-meta-tags"){
-                    field.content = null;
-                    if(field.is_repeatable) field.content = [''];
-                    field.vh_cms_form_group_index = arr_groups.length;
-                    field.vh_cms_form_field_id  = null;
-                }
+                field.content = null;
+                if(field.is_repeatable) field.content = [''];
+                field.vh_cms_form_group_index = arr_groups.length;
+                field.vh_cms_form_field_id  = null;
+
             });
 
             arr_groups.push(temp_group);

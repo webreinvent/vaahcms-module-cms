@@ -774,128 +774,132 @@ class Content extends Model {
                 $groups[$i] = $group;
 
                 $y = 0;
-                foreach ($group['fields'] as $field)
-                {
-                    $stored_field = null;
-                    if(
-                        isset($field['vh_cms_form_group_id'])
-                        && isset($field['id'])
-                    )
+
+                if(isset($group['fields'])){
+                    foreach ($group['fields'] as $field)
                     {
-
-                        $stored_field = ContentFormField::where('vh_cms_form_group_id', $field['vh_cms_form_group_id'])
-                            ->where('vh_cms_form_field_id', $field['id'])
-                            ->where('vh_cms_content_id', $content->id)
-                            ->where('vh_cms_form_group_index', $key)
-                            ->first();
-
-                    }
-
-                    if(!$stored_field)
-                    {
-                        $stored_field = new ContentFormField();
-                        $stored_field->vh_cms_content_id = $content->id;
-                        $stored_field->vh_cms_form_group_id = $group['id'];
-                        $stored_field->vh_cms_form_field_id = $field['id'];
-                        $stored_field->vh_cms_form_group_index = $key;
-
-                        $stored_field->save();
-                    }
-
-                    if(is_array($field['content']) || is_object($field['content'])){
-                        $field['content'] = json_decode(
-                            vh_translate_dynamic_strings(
-                                json_encode($field['content'])
-                            )
-                        );
-                    }else{
-                        $field['content'] = vh_translate_dynamic_strings(
-                            $field['content']
-                        );
-                    }
-
-                    if($field['type']['slug'] == 'user' && $field['content']){
-
-                        $user = $user_id = User::where('email',$field['content'])->first();
-
-                        if($user)
+                        $stored_field = null;
+                        if(
+                            isset($field['vh_cms_form_group_id'])
+                            && isset($field['id'])
+                        )
                         {
-                            $stored_field->content = $user->id;
+
+                            $stored_field = ContentFormField::where('vh_cms_form_group_id', $field['vh_cms_form_group_id'])
+                                ->where('vh_cms_form_field_id', $field['id'])
+                                ->where('vh_cms_content_id', $content->id)
+                                ->where('vh_cms_form_group_index', $key)
+                                ->first();
+
                         }
 
-                    }elseif($field['type']['slug'] == 'relation'){
+                        if(!$stored_field)
+                        {
+                            $stored_field = new ContentFormField();
+                            $stored_field->vh_cms_content_id = $content->id;
+                            $stored_field->vh_cms_form_group_id = $group['id'];
+                            $stored_field->vh_cms_form_field_id = $field['id'];
+                            $stored_field->vh_cms_form_group_index = $key;
 
-                        $type_name = $content->contentType->slug.'-'.$field['slug'];
-
-                        if(is_string($field['content']) && !is_numeric($field['content'])){
-                            $item = Taxonomy::getFirstOrCreate($type_name,$field['content']);
-
-                            $field['content'] = $item->id;
+                            $stored_field->save();
                         }
 
-                        $related_item = ContentFormField::where('id',$stored_field->id)->first();
+                        if(is_array($field['content']) || is_object($field['content'])){
+                            $field['content'] = json_decode(
+                                vh_translate_dynamic_strings(
+                                    json_encode($field['content'])
+                                )
+                            );
+                        }else{
+                            $field['content'] = vh_translate_dynamic_strings(
+                                $field['content']
+                            );
+                        }
 
-                        $field['meta'] = (array) $field['meta'];
+                        if($field['type']['slug'] == 'user' && $field['content']){
 
-                        if($field['content'] && isset($field['meta']['type'])){
+                            $user = $user_id = User::where('email',$field['content'])->first();
 
-                            if(!is_array($field['content']) && !is_object($field['content'])){
-                                $field['content'] = [$field['content']];
+                            if($user)
+                            {
+                                $stored_field->content = $user->id;
                             }
 
-                            $relation =  vh_content_relations_by_name($field['meta']['type']);
+                        }elseif($field['type']['slug'] == 'relation'){
 
-                            if($relation && isset($relation['namespace']) && $relation['namespace']){
-                                foreach ($field['content'] as $id){
-                                    $data = [
-                                        'relatable_id' => $id,
-                                        'relatable_type' => $relation['namespace']
-                                    ];
+                            $type_name = $content->contentType->slug.'-'.$field['slug'];
 
-                                    $related_item->contentFormRelations()->updateOrCreate($data);
+                            if(is_string($field['content']) && !is_numeric($field['content'])){
+                                $item = Taxonomy::getFirstOrCreate($type_name,$field['content']);
+
+                                $field['content'] = $item->id;
+                            }
+
+                            $related_item = ContentFormField::where('id',$stored_field->id)->first();
+
+                            $field['meta'] = (array) $field['meta'];
+
+                            if($field['content'] && isset($field['meta']['type'])){
+
+                                if(!is_array($field['content']) && !is_object($field['content'])){
+                                    $field['content'] = [$field['content']];
+                                }
+
+                                $relation =  vh_content_relations_by_name($field['meta']['type']);
+
+                                if($relation && isset($relation['namespace']) && $relation['namespace']){
+                                    foreach ($field['content'] as $id){
+                                        $data = [
+                                            'relatable_id' => $id,
+                                            'relatable_type' => $relation['namespace']
+                                        ];
+
+                                        $related_item->contentFormRelations()->updateOrCreate($data);
+                                    }
                                 }
                             }
-                        }
 
 
-                        $relatable_ids = ContentFormRelation::where('vh_cms_content_form_field_id',$related_item->id)
-                            ->pluck('relatable_id')->toArray();
+                            $relatable_ids = ContentFormRelation::where('vh_cms_content_form_field_id',$related_item->id)
+                                ->pluck('relatable_id')->toArray();
 
-                        if(!$field['content']){
-                            $row_to_delete_ids = array_diff($relatable_ids, []);
+                            if(!$field['content']){
+                                $row_to_delete_ids = array_diff($relatable_ids, []);
+                            }else{
+                                $row_to_delete_ids = array_diff($relatable_ids, $field['content']);
+                            }
+
+                            if(count($row_to_delete_ids) > 0)
+                            {
+                                ContentFormRelation::where('vh_cms_content_form_field_id', $related_item->id)
+                                    ->whereIn('relatable_id', $row_to_delete_ids)
+                                    ->forceDelete();
+
+                            }
+
+                            $stored_field->content = $field['content'];
+
                         }else{
-                            $row_to_delete_ids = array_diff($relatable_ids, $field['content']);
+                            $stored_field->content = $field['content'];
                         }
 
-                        if(count($row_to_delete_ids) > 0)
+                        $stored_field->meta = $field['meta'];
+                        try{
+                            $stored_field->save();
+
+                        }catch(\Exception $e)
                         {
-                           ContentFormRelation::where('vh_cms_content_form_field_id', $related_item->id)
-                                ->whereIn('relatable_id', $row_to_delete_ids)
-                                ->forceDelete();
-
+                            $response['status'] = 'failed';
+                            $response['inputs'] = $field;
+                            $response['errors'][] = $e->getMessage();
+                            return $response;
                         }
 
-                        $stored_field->content = $field['content'];
 
-                    }else{
-                        $stored_field->content = $field['content'];
+                        $y++;
                     }
-
-                    $stored_field->meta = $field['meta'];
-                    try{
-                        $stored_field->save();
-
-                    }catch(\Exception $e)
-                    {
-                        $response['status'] = 'failed';
-                        $response['inputs'] = $field;
-                        $response['errors'][] = $e->getMessage();
-                        return $response;
-                    }
-
-
-                    $y++;
                 }
+
             }
 
 

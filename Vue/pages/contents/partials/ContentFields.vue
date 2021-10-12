@@ -93,8 +93,10 @@
                                                  :key="f_index">
 
                                                 <div v-if="!field.content || typeof field.content === 'string'
+                                                    ||typeof field.content === 'number'
                                                     || assets.non_repeatable_fields.includes(field.type.slug)"
                                                      class="columns is-gapless">
+
                                                     <div class="column" >
                                                         <ContentFieldAll :field_type="field.type"
                                                                          :field_slug="field.type.slug"
@@ -120,6 +122,7 @@
                                                 </div>
                                                 <div v-else v-for="(content,key) in field.content"
                                                      class="columns mb-3 is-gapless">
+
                                                     <div class="column"  >
                                                         <ContentFieldAll :field_type="field.type"
                                                                          :field_slug="field.type.slug"
