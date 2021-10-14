@@ -761,24 +761,36 @@ function setReturnValue($field,$field_index = null,
 
             case 'relation':
 
-                /*$value = $field['meta']->container_opening_tag."\n";
+                if($field['meta']->is_hidden){
+                    return null;
+                }
+
+                $value = $field['meta']->container_opening_tag."\n";
 
                 $column_name = 'name';
 
-                if(isset($field['relation']) && $field['relation']){
-                    foreach ($field['relation'] as  $item){
+                if(is_array($field['content'])){
+                    foreach ($field['content'] as  $item){
 
                         $value .= $field['meta']->opening_tag;
 
-                        $value .= $item['relatable'][$column_name];
+                        $value .= $item->{$column_name};
 
                         $value .= $field['meta']->closing_tag;
 
                     }
                 }
 
-                $value .= $field['meta']->container_opening_tag;*/
+                if(is_object($field['content'])){
 
+                    $value .= $field['meta']->opening_tag;
+
+                    $value .= $field['content']->{$column_name};
+
+                    $value .= $field['meta']->closing_tag;
+                }
+
+                $value .= $field['meta']->container_opening_tag;
 
 
                 break;

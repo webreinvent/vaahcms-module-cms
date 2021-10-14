@@ -430,7 +430,7 @@ class Content extends Model {
 
     }
     //-------------------------------------------------
-    public static function getItem($id)
+    public static function getItem($id, $with_relation = false)
     {
 
         $item = static::where('id', $id)
@@ -439,16 +439,18 @@ class Content extends Model {
                 'authorUser', 'createdByUser', 'updatedByUser',
                 'deletedByUser',
                 'fields' => function($f){
-                    $f->with(['group', 'field']);
+                    $f->with(['group', 'field','contentFormRelations' => function($c){
+                        $c->with(['relatable']);
+                    }]);
                 }
             ])
             ->withTrashed()
             ->first();
 
 
-        $content_form_groups = static::getFormGroups($item, 'content');
+        $content_form_groups = static::getFormGroups($item, 'content',$with_relation);
 
-        $template_form_groups = static::getFormGroups($item, 'template');
+        $template_form_groups = static::getFormGroups($item, 'template',$with_relation);
 
         $response['status'] = 'success';
 
@@ -461,7 +463,7 @@ class Content extends Model {
 
     }
     //-------------------------------------------------
-    public static function getFormGroups(Content $content, $type, array $fields=null)
+    public static function getFormGroups(Content $content, $type, $with_relation = false)
     {
         if($type=='content')
         {
@@ -533,13 +535,17 @@ class Content extends Model {
                         && isset($field_content->contentFormRelations)
                         && count($field_content->contentFormRelations) > 0){
 
-                        $field_content->content = $field_content['contentFormRelations']
-                            ->pluck('relatable_id');
+                        if($with_relation){
+                            $field_content->content = $field_content['contentFormRelations']
+                                ->pluck('relatable');
+                        }else{
+                            $field_content->content = $field_content['contentFormRelations']
+                                ->pluck('relatable_id');
+                        }
+
+
 
                     }
-
-
-
 
                     if($field_content)
                     {
@@ -671,7 +677,10 @@ class Content extends Model {
 
                         $field_content->content = $field_content['contentFormRelations']
                             ->pluck('relatable');
+
                     }
+
+
 
 
                     if($field_content)

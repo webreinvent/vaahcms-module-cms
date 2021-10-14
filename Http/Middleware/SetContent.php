@@ -49,7 +49,7 @@ class SetContent
             abort(404);
         }
 
-        $content = Content::getItem($content->id);
+        $content = Content::getItem($content->id,true);
 
         if($content['status'] != 'success')
         {
