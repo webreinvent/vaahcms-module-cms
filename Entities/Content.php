@@ -1111,6 +1111,54 @@ class Content extends Model {
 
         }])->where('vh_cms_content_type_id', $content_type->id);
 
+        if(isset($args['filters'])
+            && $args['filters'] && is_array($args['filters'])){
+
+            $contents->where(function ($q) use ($args){
+
+                foreach ($args['filters'] as $label => $value){
+                    $q->orWhereHas('fields', function($t) use ($label,$value){
+                        $t->whereHas('contentFormRelations' , function($c) use ($label,$value){
+
+                            $c->whereHas('contentFormFields', function($cf) use ($label){
+                                $cf->whereHas('field',function ($f) use ($label){
+                                    $f->where('slug',$label);
+                                });
+                            });
+                            $c->whereHas('relatable',function ($r) use ($value){
+                                if(is_string($value)){
+                                    $temp = $value;
+                                    $value = [$temp];
+                                }
+                                $r->whereIn('name',$value);
+                            });
+
+                        });
+                    });
+                }
+
+                $q->orWhere(function ($q) use ($args){
+
+                    foreach ($args['filters'] as $label => $value){
+                        $q->orWhereHas('fields',function ($p) use ($label,$value){
+                            if(is_string($value)){
+                                $temp = $value;
+                                $value = [$temp];
+                            }
+                            $p->whereIn('content', $value);
+                            $p->whereHas('field', function ($f) use ($label) {
+                                $f->where('slug',$label);
+                            });
+                        });
+                    }
+
+                });
+
+            });
+
+
+
+        }
 
         if(isset($args['q'])
             && $args['q']){

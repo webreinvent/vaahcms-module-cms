@@ -93,4 +93,11 @@ class ContentFormRelation extends Model {
         return $this->morphTo('relatable');
     }
     //-------------------------------------------------
+    public function contentFormFields()
+    {
+        return $this->belongsTo(ContentFormField::class,
+        'vh_cms_content_form_field_id', 'id'
+    );
+    }
+    //-------------------------------------------------
 }
