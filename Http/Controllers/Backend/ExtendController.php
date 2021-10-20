@@ -62,7 +62,10 @@ class ExtendController extends Controller
         ];
 
 
-        return $arr;
+        $response['status'] = 'success';
+        $response['data'] = $arr;
+
+        return $response;
 
     }
 
