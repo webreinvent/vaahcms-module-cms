@@ -1180,12 +1180,19 @@ class Content extends Model {
 
         $contents->orderBy($order_by,$order);
 
+        $page_name = 'page';
+
+        if(isset($args['page_name'])
+            && $args['page_name']){
+            $page_name = $args['page_name'];
+        }
+
         if(isset($args['per_page'])
             && $args['per_page']
             && is_numeric($args['per_page'])){
-            $contents = $contents->paginate($args['per_page']);
+            $contents = $contents->paginate($args['per_page'],['*'], $page_name);
         }else{
-            $contents = $contents->paginate(config('vaahcms.per_page'));
+            $contents = $contents->paginate(config('vaahcms.per_page'),['*'], $page_name);
         }
 
         if(!$contents)
