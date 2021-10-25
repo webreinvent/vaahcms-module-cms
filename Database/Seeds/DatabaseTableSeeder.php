@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use VaahCms\Modules\Cms\Libraries\CmsSeeder;
+use WebReinvent\VaahCms\Libraries\VaahSeeder;
 
 class DatabaseTableSeeder extends Seeder
 {
@@ -17,6 +18,7 @@ class DatabaseTableSeeder extends Seeder
     public function run()
     {
         $this->seedFields();
+        $this->seedPermissions();
     }
 
     //---------------------------------------------------------------
@@ -90,6 +92,13 @@ class DatabaseTableSeeder extends Seeder
         $this->storeSeedsWithUuid('vh_cms_field_types', $list);
     }
     //---------------------------------------------------------------
+
+    //---------------------------------------------------------------
+    public function seedPermissions()
+    {
+        $json_file_path = __DIR__."/json/permissions.json";
+        VaahSeeder::permissions($json_file_path);
+    }
     //---------------------------------------------------------------
     //---------------------------------------------------------------
     //---------------------------------------------------------------

@@ -1,0 +1,9 @@
+[
+
+    {
+        "name": "Can View Non Published Content",
+        "module": "cms",
+        "section": "content",
+        "details": "This will allow user to view non published content."
+    }
+]

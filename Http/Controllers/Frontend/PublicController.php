@@ -39,7 +39,8 @@ class PublicController extends Controller
         $view = $theme_slug.'::'.$file_path;
 
         if ( view()->exists($view)
-            && ( Auth::check() || $request->data->status === 'published') ) {
+            && ( (Auth::check() && \Auth::user()->hasPermission('can-view-non-published-content') )
+                || $request->data->status === 'published') ) {
             return view($view);
         } else {
             return abort(404);
