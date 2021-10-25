@@ -608,8 +608,7 @@ class Content extends Model {
         $arr_group = [];
 
         $fields_list = collect($content->fields);
-
-
+        
         $i = 0;
 
         foreach ($groups as $group)
@@ -625,16 +624,19 @@ class Content extends Model {
 
             }
 
-            $group_fields = $group_fields->where('vh_cms_content_id',$content->id)
-                ->where('vh_cms_form_group_id',$group->id)
-                ->groupBy('vh_cms_form_group_index');
+            $group_indexes = array();
 
 
-            if(count($group_fields) === 0 ){
-                $group_fields[] = '';
+            if($group->is_repeatable){
+                $group_indexes = $group_fields->where('vh_cms_form_group_id',$group->id)
+                    ->groupBy('vh_cms_form_group_index');
             }
 
-            foreach ($group_fields as $key => $fields){
+            if(count($group_indexes) === 0 ){
+                $group_indexes[] = '';
+            }
+
+            foreach ($group_indexes as $key => $fields){
 
 
                 $arr_group[$i][$key] = [
@@ -1253,6 +1255,8 @@ class Content extends Model {
         $group_fields = collect($group_fields);
 
         foreach ($contents as $key => $content){
+
+            $group_fields = $group_fields->where('vh_cms_content_id',$content->id);
 
             $contents[$key]['content_form_groups'] = static::getFormGroupsTest($content,
                 'content',$group_fields,$filter);
