@@ -128,7 +128,6 @@
                         </b-radio-button>
                     </b-field>
 
-
                     <b-field label="List Statuses" :label-position="labelPosition">
 
                         <div class="draggable">
@@ -141,7 +140,8 @@
 
 
                                     <b-field class="has-margin-bottom-5" expanded>
-                                        <p class="control drag">
+                                        <p v-if="disable_status_editing"
+                                           class="control drag">
                                             <span class="button is-static">:::</span>
                                         </p>
 
@@ -155,7 +155,8 @@
                                                  expanded></b-input>
 
 
-                                        <p class="control">
+                                        <p v-if="item.content_statuses[index] !== 'published'"
+                                           class="control">
                                             <b-button
                                                     @click="toggleEditStatus(index)"
                                                     icon-left="edit">

@@ -118,7 +118,8 @@
 
 
                                         <b-field class="has-margin-bottom-5" expanded>
-                                            <p class="control drag">
+                                            <p v-if="disable_status_editing"
+                                               class="control drag">
                                                 <span class="button is-static">:::</span>
                                             </p>
 
@@ -132,7 +133,8 @@
                                                      expanded></b-input>
 
 
-                                            <p class="control">
+                                            <p v-if="new_item.content_statuses[index] !== 'published'"
+                                               class="control">
                                                 <b-button
                                                           @click="toggleEditStatus(index)"
                                                           icon-left="edit">
