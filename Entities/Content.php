@@ -1193,11 +1193,9 @@ class Content extends Model {
             $contents->where('status','published');
         }
 
-        $page_name = 'page';
-
-        if(isset($args['page_name'])
-            && $args['page_name']){
-            $page_name = $args['page_name'];
+        if(isset($args['take'])
+            && $args['take']){
+            $contents->take($args['take']);
         }
 
         $pagination_method = 'paginate';
@@ -1207,13 +1205,24 @@ class Content extends Model {
             $pagination_method = 'simplePaginate';
         }
 
-        if(isset($args['per_page'])
-            && $args['per_page']
-            && is_numeric($args['per_page'])){
-            $contents = $contents->$pagination_method($args['per_page'],['*'], $page_name);
+        if(isset($args['has_pagination'])
+            && !$args['has_pagination']){
+
+            $contents = $contents->get();
+
         }else{
-            $contents = $contents->$pagination_method(config('vaahcms.per_page'),['*'], $page_name);
+
+            if(isset($args['per_page'])
+                && $args['per_page']
+                && is_numeric($args['per_page'])){
+                $contents = $contents->$pagination_method($args['per_page']);
+            }else{
+                $contents = $contents->$pagination_method(config('vaahcms.per_page'));
+            }
+
         }
+
+
 
         if(!$contents)
         {
