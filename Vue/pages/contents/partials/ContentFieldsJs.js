@@ -66,27 +66,12 @@ export default {
             if(field_index == null){
                 if(group_index === 0){
                     code = "{!! get_field($data, '"+field.slug+"', '"+group.slug+"') !!}";
-
-                    if(field.type.slug == 'image')
-                    {
-                        code = "<img src='{{get_field($data, '"+field.slug+"', '"+group.slug+"')'/>";
-                    }
                 }else{
                     code = "{!! get_field($data, '"+field.slug+"', '"+group.slug+"','content' , "+group_index+") !!}";
-
-                    if(field.type.slug == 'image')
-                    {
-                        code = "<img src='{{get_field($data, '"+field.slug+"', '"+group.slug+"','content' , "+group_index+")'/>";
-                    }
                 }
 
             }else{
                 code = "{!! get_field($data, '"+field.slug+"', '"+group.slug+"','content' , "+group_index+", "+field_index+") !!}";
-
-                if(field.type.slug == 'image')
-                {
-                    code = "<img src='{{get_field($data, '"+field.slug+"', '"+group.slug+"','content' , "+group_index+", "+field_index+")'/>";
-                }
             }
 
             copy(code);
