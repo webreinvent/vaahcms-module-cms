@@ -260,7 +260,7 @@ function get_group(Content $content, $group_slug='default', $type='content',
 }
 //-----------------------------------------------------------------------------------
 function get_the_group(Content $content, $group_slug='default', $type='content',
-                   $group_index = null )
+                       $group_index = null )
 {
     if($type=='content')
     {
@@ -469,7 +469,7 @@ function get_all_group_field(Content $content, $type,
 }
 //-----------------------------------------------------------------------------------
 function get_template_content_field(Content $content, $group_slug='default',
-                                 $group_index = null , $return_html=true)
+                                    $group_index = null , $return_html=true)
 {
 
     if(!$return_html){
@@ -740,6 +740,18 @@ function setReturnValue($field,$field_index = null,
                 }
 
                 $value .= $field['meta']->container_opening_tag;
+
+                break;
+
+            case 'image':
+
+                if($field['meta']->is_hidden){
+                    return null;
+                }
+
+                $value .= $field['meta']->opening_tag."\n";
+                $value .= '<img class="image" src="'.$field['content'].'"/>'."\n";
+                $value .= $field['meta']->closing_tag."\n";
 
                 break;
 

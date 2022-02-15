@@ -93,6 +93,7 @@
                                                  :key="f_index">
 
                                                 <div v-if="!field.content || typeof field.content === 'string'
+                                                    || typeof field.content === 'number'
                                                     || assets.non_repeatable_fields.includes(field.type.slug)"
                                                      class="columns is-gapless">
                                                     <div class="column" >

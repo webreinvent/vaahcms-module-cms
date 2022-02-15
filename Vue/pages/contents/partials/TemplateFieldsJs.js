@@ -8,6 +8,7 @@ export default {
     props:['groups'],
     computed: {
         root() {return this.$store.getters['root/state']},
+        assets() {return this.$store.getters[namespace+'/state'].assets},
         ajax_url() {return this.$store.getters[namespace+'/state'].ajax_url},
     },
     components:{
@@ -49,27 +50,12 @@ export default {
             if(field_index == null){
                 if(group_index === 0){
                     code = "{!! get_field($data, '"+field.slug+"', '"+group.slug+"','template') !!}";
-
-                    if(field.type.slug == 'image')
-                    {
-                        code = "<img src='{{get_field($data, '"+field.slug+"', '"+group.slug+"','template')'/>";
-                    }
                 }else{
                     code = "{!! get_field($data, '"+field.slug+"', '"+group.slug+"','template' , "+group_index+") !!}";
-
-                    if(field.type.slug == 'image')
-                    {
-                        code = "<img src='{{get_field($data, '"+field.slug+"', '"+group.slug+"','template' , "+group_index+")'/>";
-                    }
                 }
 
             }else{
                 code = "{!! get_field($data, '"+field.slug+"', '"+group.slug+"','template' , "+group_index+", "+field_index+") !!}";
-
-                if(field.type.slug == 'image')
-                {
-                    code = "<img src='{{get_field($data, '"+field.slug+"', '"+group.slug+"','template' , "+group_index+", "+field_index+")'/>";
-                }
             }
 
 
@@ -156,7 +142,7 @@ export default {
         removeGroupAfter: function (data,res) {
             this.$Progress.finish();
         },
-    //---------------------------------------------------------------------
+        //---------------------------------------------------------------------
         copyGroupCode: function (group,group_index = null)
         {
 

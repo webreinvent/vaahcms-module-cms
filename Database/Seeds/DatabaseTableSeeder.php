@@ -17,6 +17,8 @@ class DatabaseTableSeeder extends Seeder
     public function run()
     {
         $this->seedFields();
+        $file = __DIR__ . '/json/content_types.json';
+        CmsSeeder::contentTypes($file);
     }
 
     //---------------------------------------------------------------
