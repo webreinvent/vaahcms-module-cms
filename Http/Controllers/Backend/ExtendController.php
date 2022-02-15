@@ -143,5 +143,54 @@ class ExtendController extends Controller
         return $response;
     }
     //----------------------------------------------------------
+    public function getDashboardItems()
+    {
+
+        $data = array();
+
+        $data['next_steps'] = [
+            [
+                'name' => 'View Pages',
+                'icon' => 'eye',
+                'link' => self::$link."contents/pages/list"
+            ],
+            [
+                'name' => 'Add Pages',
+                'icon' => 'plus',
+                'link' => self::$link."contents/pages/list/create"
+            ],
+            [
+                'name' => 'Add a Content Type',
+                'icon' => 'edit',
+                'link' => self::$link."content-types/create"
+            ]
+        ];
+
+
+        $data['actions'] = [
+            [
+                'name' => 'Manage Menus',
+                'icon' => 'bars',
+                'link' => self::$link."menus/"
+            ],
+            [
+                'name' => 'Manage Blocks',
+                'icon' => 'th-large',
+                'link' => self::$link."blocks/"
+            ],
+            [
+                'name' => 'Learn more about CMS',
+                'icon' => 'graduation-cap',
+                'open_in_new_tab' => true,
+                'link' => "https://docs.vaah.dev/vaahcms/cms/introduction.html"
+            ]
+        ];
+
+        $response['status'] = 'success';
+        $response['data'] = $data;
+
+        return $response;
+    }
+    //----------------------------------------------------------
 
 }
