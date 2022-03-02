@@ -637,19 +637,49 @@ function setReturnValue($field,$field_index = null,
 
     $value = null;
 
+    $content_is_hidden = null;
+    $content_opening_tag = null;
+    $content_closing_tag = null;
+    $content_container_opening_tag = null;
+    $content_container_closing_tag = null;
+
+    if($field['meta']){
+
+        if(isset($field['meta']->is_hidden)){
+            $content_is_hidden = $field['meta']->is_hidden;
+        }
+
+        if(isset($field['meta']->opening_tag)){
+            $content_opening_tag = $field['meta']->opening_tag;
+        }
+
+        if(isset($field['meta']->closing_tag)){
+            $content_closing_tag = $field['meta']->closing_tag;
+        }
+
+        if(isset($field['meta']->container_opening_tag)){
+            $content_container_opening_tag = $field['meta']->container_opening_tag;
+        }
+
+        if(isset($field['meta']->container_closing_tag)){
+            $content_container_closing_tag = $field['meta']->container_closing_tag;
+        }
+
+    }
+
     if($field['content']){
         switch($field['type']['slug']){
 
             case 'seo-meta-tags':
 
-                if(!$field['meta']->is_hidden){
-                    $value = $field['meta']->container_opening_tag."\n";
+                if(!$content_is_hidden){
+                    $value = $content_container_opening_tag."\n";
 
                     foreach ($field['content'] as  $item){
-                        $value .= $field['meta']->opening_tag.$item->content.$field['meta']->closing_tag;
+                        $value .= $content_opening_tag.$item->content.$content_closing_tag;
                     }
 
-                    $value .= $field['meta']->container_opening_tag;
+                    $value .= $content_container_closing_tag;
                 }else{
                     $value = '<title>'.$field['content']->seo_title->content.'</title>'."\n";
                     $value .= '<meta name="description" content="'.$field['content']->seo_description->content.'"/>'."\n";
@@ -662,14 +692,14 @@ function setReturnValue($field,$field_index = null,
             case 'twitter-card':
 
 
-                if(!$field['meta']->is_hidden){
-                    $value = $field['meta']->container_opening_tag."\n";
+                if(!$content_is_hidden){
+                    $value = $content_container_opening_tag."\n";
 
                     foreach ($field['content'] as  $item){
-                        $value .= $field['meta']->opening_tag.$item->content.$field['meta']->closing_tag;
+                        $value .= $content_opening_tag.$item->content.$content_closing_tag;
                     }
 
-                    $value .= $field['meta']->container_opening_tag;
+                    $value .= $content_container_closing_tag;
                 }else{
                     $value = '<meta name="twitter:card" content="summary" />'."\n";
                     $value .= '<meta name="twitter:site" content="'.$field['content']->twitter_site->content.'"/>'."\n";
@@ -683,14 +713,14 @@ function setReturnValue($field,$field_index = null,
 
             case 'facebook-card':
 
-                if(!$field['meta']->is_hidden){
-                    $value = $field['meta']->container_opening_tag."\n";
+                if(!$content_is_hidden){
+                    $value = $content_container_opening_tag."\n";
 
                     foreach ($field['content'] as  $item){
-                        $value .= $field['meta']->opening_tag.$item->content.$field['meta']->closing_tag;
+                        $value .= $content_opening_tag.$item->content.$content_closing_tag;
                     }
 
-                    $value .= $field['meta']->container_opening_tag;
+                    $value .= $content_container_closing_tag;
                 }else{
                     $value = '<meta name="og:title" content="'.$field['content']->og_title->content.'"/>'."\n";
                     $value .= '<meta name="og:description" content="'.$field['content']->og_description->content.'"/>'."\n";
@@ -701,23 +731,23 @@ function setReturnValue($field,$field_index = null,
 
             case 'address':
 
-                if($field['meta']->is_hidden){
+                if($content_is_hidden){
                     return null;
                 }
 
-                $value = $field['meta']->container_opening_tag."\n";
+                $value = $content_container_opening_tag."\n";
 
                 foreach ($field['content'] as  $item){
-                    $value .= $field['meta']->opening_tag.$item.$field['meta']->closing_tag;
+                    $value .= $content_opening_tag.$item.$content_closing_tag;
                 }
 
-                $value .= $field['meta']->container_opening_tag;
+                $value .= $content_container_closing_tag;
 
                 break;
 
             case 'json':
 
-                if($field['meta']->is_hidden){
+                if($content_is_hidden){
                     return null;
                 }
 
@@ -727,69 +757,69 @@ function setReturnValue($field,$field_index = null,
 
             case 'image-group':
 
-                if($field['meta']->is_hidden){
+                if($content_is_hidden){
                     return null;
                 }
 
-                $value = $field['meta']->container_opening_tag."\n";
+                $value = $content_container_opening_tag."\n";
 
                 foreach ($field['content'] as $item){
-                    $value .= $field['meta']->opening_tag."\n";
+                    $value .= $content_opening_tag."\n";
                     $value .= '<img class="image" src='.$item.'/>'."\n";
-                    $value .= $field['meta']->closing_tag."\n";
+                    $value .= $content_closing_tag."\n";
                 }
 
-                $value .= $field['meta']->container_opening_tag;
+                $value .= $content_container_closing_tag;
 
                 break;
 
             case 'image':
 
-                if($field['meta']->is_hidden){
+                if($content_is_hidden){
                     return null;
                 }
 
-                $value .= $field['meta']->opening_tag."\n";
+                $value .= $content_opening_tag."\n";
                 $value .= '<img class="image" src="'.$field['content'].'"/>'."\n";
-                $value .= $field['meta']->closing_tag."\n";
+                $value .= $content_closing_tag."\n";
 
                 break;
 
             case 'list':
 
-                if($field['meta']->is_hidden){
+                if($content_is_hidden){
                     return null;
                 }
 
-                $value = $field['meta']->container_opening_tag."\n";
+                $value = $content_container_opening_tag."\n";
 
                 foreach ($field['content'] as  $item){
-                    $value .= $field['meta']->opening_tag.$item.$field['meta']->closing_tag;
+                    $value .= $content_opening_tag.$item.$content_closing_tag;
                 }
 
-                $value .= $field['meta']->container_opening_tag;
+                $value .= $content_container_closing_tag;
 
                 break;
 
             case 'relation':
 
-                /*$value = $field['meta']->container_opening_tag."\n";
+                /*$value = $content_container_opening_tag."\n";
 
                 $column_name = 'name';
 
                 if(isset($field['relation']) && $field['relation']){
                     foreach ($field['relation'] as  $item){
 
-                        $value .= $field['meta']->opening_tag;
+                        $value .= $content_opening_tag;
 
                         $value .= $item['relatable'][$column_name];
 
-                        $value .= $field['meta']->closing_tag;
+                        $value .= $content_closing_tag;
 
                     }
                 }
 
-                $value .= $field['meta']->container_opening_tag;*/
+                $value .= $content_container_closing_tag;*/
 
 
 
@@ -797,7 +827,7 @@ function setReturnValue($field,$field_index = null,
 
             default:
 
-                if($field['meta']->is_hidden){
+                if($content_is_hidden){
                     return null;
                 }
 
@@ -805,9 +835,9 @@ function setReturnValue($field,$field_index = null,
                     if($field['is_repeatable']){
                         $value = [$field['content']];
                     }else{
-                        $value = $field['meta']->opening_tag;
+                        $value = $content_opening_tag;
                         $value .= $field['content'];
-                        $value .= $field['meta']->closing_tag;
+                        $value .= $content_closing_tag;
                     }
 
                 }else{
@@ -832,13 +862,13 @@ function setReturnValue($field,$field_index = null,
 
         $data = $value;
 
-        $value = $field['meta']->container_opening_tag."\n";
+        $value = $content_container_opening_tag."\n";
 
         foreach ($data as $item){
-            $value .= $field['meta']->opening_tag.$item.$field['meta']->closing_tag."\n";
+            $value .= $content_opening_tag.$item.$content_closing_tag."\n";
         }
 
-        $value .= $field['meta']->container_opening_tag;
+        $value .= $content_container_closing_tag;
 
     }
 
