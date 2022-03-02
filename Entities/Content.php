@@ -470,7 +470,6 @@ class Content extends Model {
             $groups = $content->template->groups;
         }
 
-
         $arr_group = [];
 
 
@@ -568,7 +567,11 @@ class Content extends Model {
 
                         $content_val = ContentFormField::getContentAsset($content_val, $field->type->slug);
 
-                        $arr_group[$i][$key]['fields'][$y]['content'] = $content_val;
+                        $arr_group[$i][$key]['fields'][$y]['content'] = json_decode(
+                            vh_translate_dynamic_strings(
+                                json_encode($content_val)
+                            )
+                        );
 
                         $arr_group[$i][$key]['fields'][$y]['content_meta'] = $field_content->meta;
                     }
@@ -701,8 +704,9 @@ class Content extends Model {
 
                         $content_val = ContentFormField::getContentAsset($content_val, $field->type->slug);
 
-
-                        $arr_group[$i][$key]['fields'][$y]['content'] = $content_val;
+                        $arr_group[$i][$key]['fields'][$y]['content'] = vh_translate_dynamic_strings(
+                            $content_val
+                        );
 
                         $arr_group[$i][$key]['fields'][$y]['content_meta'] = $field_content->meta;
 
@@ -806,12 +810,14 @@ class Content extends Model {
                     if(is_array($field['content']) || is_object($field['content'])){
                         $field['content'] = json_decode(
                             vh_translate_dynamic_strings(
-                                json_encode($field['content'])
+                                json_encode($field['content']),
+                                ['has_replace_string' => true]
                             )
                         );
                     }else{
                         $field['content'] = vh_translate_dynamic_strings(
-                            $field['content']
+                            $field['content'],
+                            ['has_replace_string' => true]
                         );
                     }
 
