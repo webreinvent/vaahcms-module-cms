@@ -550,6 +550,7 @@ class Content extends Model {
                             && (is_array($field_content->content)
                                 || is_object($field_content->content))
                             && $field->type->slug != 'seo-meta-tags'
+                            && is_array($field_content->content)
                             && count($field_content->content) <= 1) {
 
                             $content_val = null;
