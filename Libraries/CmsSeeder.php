@@ -728,7 +728,7 @@ class CmsSeeder{
 
             $item['vh_menu_id'] = $menu->id;
 
-            if($item['type'] = 'content'){
+            if($item['type'] == 'content'){
                 $content = DB::table('vh_cms_contents')
                     ->where('slug', $item['slug'])
                     ->where('vh_theme_id', $theme->id)
