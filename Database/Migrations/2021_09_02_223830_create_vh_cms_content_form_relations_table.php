@@ -41,6 +41,6 @@ class CreateVhCmsContentFormRelationsTable extends Migration
     */
     public function down()
     {
-        Schema::dropIfExists('vh_cms_contentable');
+        Schema::dropIfExists('vh_cms_content_form_relations');
     }
 }
