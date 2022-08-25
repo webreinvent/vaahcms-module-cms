@@ -1,0 +1,39 @@
+[
+    {
+        "content": {
+            "name": "Pages",
+            "slug": "pages",
+            "plural": "Pages",
+            "plural_slug": "Pages",
+            "singular": "Page",
+            "singular_slug": "page",
+            "excerpt": "Web Pages",
+            "is_published": 1,
+            "is_commentable": null,
+            "content_statuses": [
+                "draft",
+                "published"
+            ]
+        },
+        "groups": [
+            {
+                "name": "Default",
+                "slug": "default",
+                "fields": [
+                    {
+                        "name": "Content",
+                        "type": {
+                            "slug": "editor"
+                        }
+                    },
+                    {
+                        "name": "SEO Meta Tags",
+                        "type": {
+                            "slug": "seo-meta-tags"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

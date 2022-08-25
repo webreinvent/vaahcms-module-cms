@@ -33,16 +33,8 @@ class ExtendController extends Controller
     //----------------------------------------------------------
     public static function getCmsContentRelations()
     {
-       /* $taxonomy_option = null;
 
-        if(!isset($exclude['Taxonomy']['options']))
-        {
-            $taxonomy_option = TaxonomyType::getListInTreeFormat();
-
-        }*/
-
-
-        $arr = [
+        $list = [
             [
                 "name" => "Taxonomy",
                 "namespace" => "WebReinvent\\VaahCms\\Entities\\Taxonomy",
@@ -67,8 +59,10 @@ class ExtendController extends Controller
             ]
         ];
 
+        $response['status'] = 'success';
+        $response['data'] = $list;
 
-        return $arr;
+        return $response;
 
     }
 
@@ -86,13 +80,6 @@ class ExtendController extends Controller
     //----------------------------------------------------------
     public static function sidebarMenu()
     {
-
-
-        /*$list[0] = [
-            'link' => self::$link."content-types/",
-            'icon' => 'file-alt',
-            'label'=> 'CMS'
-        ];*/
 
         $list[0] = [
             'link' => '#',
@@ -139,6 +126,55 @@ class ExtendController extends Controller
 
         $response['status'] = 'success';
         $response['data'] = $list;
+
+        return $response;
+    }
+    //----------------------------------------------------------
+    public function getDashboardItems()
+    {
+
+        $data = array();
+
+        $data['next_steps'] = [
+            [
+                'name' => 'View Pages',
+                'icon' => 'eye',
+                'link' => self::$link."contents/pages/list"
+            ],
+            [
+                'name' => 'Add Pages',
+                'icon' => 'plus',
+                'link' => self::$link."contents/pages/list/create"
+            ],
+            [
+                'name' => 'Add a Content Type',
+                'icon' => 'edit',
+                'link' => self::$link."content-types/create"
+            ]
+        ];
+
+
+        $data['actions'] = [
+            [
+                'name' => 'Manage Menus',
+                'icon' => 'bars',
+                'link' => self::$link."menus/"
+            ],
+            [
+                'name' => 'Manage Blocks',
+                'icon' => 'th-large',
+                'link' => self::$link."blocks/"
+            ],
+            [
+                'name' => 'Learn more about CMS',
+                'icon' => 'graduation-cap',
+                'open_in_new_tab' => true,
+                'link' => "https://docs.vaah.dev/vaahcms/cms/introduction.html"
+            ]
+        ];
+
+        $response['status'] = 'success';
+        $response['data'] = $data;
 
         return $response;
     }

@@ -23,7 +23,7 @@
     */
 
 /*!
- * FilePond 4.29.0
+ * FilePond 4.30.3
  * Licensed under MIT, https://opensource.org/licenses/MIT/
  * Please visit https://pqina.nl/filepond/ for details.
  */
@@ -35,7 +35,7 @@
  */
 
 /*!
- * FilePondPluginFileValidateSize 2.2.4
+ * FilePondPluginFileValidateSize 2.2.5
  * Licensed under MIT, https://opensource.org/licenses/MIT/
  * Please visit https://pqina.nl/filepond/ for details.
  */
@@ -59,7 +59,7 @@
  */
 
 /*!
- * FilePondPluginImagePreview 4.6.8
+ * FilePondPluginImagePreview 4.6.10
  * Licensed under MIT, https://opensource.org/licenses/MIT/
  * Please visit https://pqina.nl/filepond/ for details.
  */
@@ -107,14 +107,6 @@
  * https://jquery.org/license
  *
  * Date: 2021-03-02T17:08Z
- */
-
-/*!
- * jodit - Jodit is awesome and usefully wysiwyg editor with filebrowser
- * Author: Chupurnov <chupurnov@gmail.com> (https://xdsoft.net/)
- * Version: v3.7.2
- * Url: https://xdsoft.net/jodit/
- * License(s): MIT
  */
 
 /*!
@@ -190,4 +182,4 @@
 
 //! moment.js locale configuration
 
-//! version : 0.5.33
+//! version : 0.5.34

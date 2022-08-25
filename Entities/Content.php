@@ -470,7 +470,6 @@ class Content extends Model {
             $groups = $content->template->groups;
         }
 
-
         $arr_group = [];
 
 
@@ -550,6 +549,7 @@ class Content extends Model {
                             && (is_array($field_content->content)
                                 || is_object($field_content->content))
                             && $field->type->slug != 'seo-meta-tags'
+                            && is_array($field_content->content)
                             && count($field_content->content) <= 1) {
 
                             $content_val = null;
@@ -567,7 +567,11 @@ class Content extends Model {
 
                         $content_val = ContentFormField::getContentAsset($content_val, $field->type->slug);
 
-                        $arr_group[$i][$key]['fields'][$y]['content'] = $content_val;
+                        $arr_group[$i][$key]['fields'][$y]['content'] = json_decode(
+                            vh_translate_dynamic_strings(
+                                json_encode($content_val)
+                            )
+                        );
 
                         $arr_group[$i][$key]['fields'][$y]['content_meta'] = $field_content->meta;
                     }
@@ -700,8 +704,9 @@ class Content extends Model {
 
                         $content_val = ContentFormField::getContentAsset($content_val, $field->type->slug);
 
-
-                        $arr_group[$i][$key]['fields'][$y]['content'] = $content_val;
+                        $arr_group[$i][$key]['fields'][$y]['content'] = vh_translate_dynamic_strings(
+                            $content_val
+                        );
 
                         $arr_group[$i][$key]['fields'][$y]['content_meta'] = $field_content->meta;
 
@@ -761,7 +766,7 @@ class Content extends Model {
 
     }
     //-------------------------------------------------
-    public static function storeFormGroups(Content $content, $groups)
+    public static function storeFormGroups(Content $content, $groups, $type = null)
     {
 
         $i = 0;
@@ -786,7 +791,7 @@ class Content extends Model {
                         $stored_field = ContentFormField::where('vh_cms_form_group_id', $field['vh_cms_form_group_id'])
                             ->where('vh_cms_form_field_id', $field['id'])
                             ->where('vh_cms_content_id', $content->id)
-                            ->where('vh_cms_form_group_index', $key)
+                            ->where('vh_cms_form_group_index', $type?0:$key)
                             ->first();
 
                     }
@@ -797,7 +802,7 @@ class Content extends Model {
                         $stored_field->vh_cms_content_id = $content->id;
                         $stored_field->vh_cms_form_group_id = $group['id'];
                         $stored_field->vh_cms_form_field_id = $field['id'];
-                        $stored_field->vh_cms_form_group_index = $key;
+                        $stored_field->vh_cms_form_group_index = $type?0:$key;
 
                         $stored_field->save();
                     }
@@ -805,12 +810,14 @@ class Content extends Model {
                     if(is_array($field['content']) || is_object($field['content'])){
                         $field['content'] = json_decode(
                             vh_translate_dynamic_strings(
-                                json_encode($field['content'])
+                                json_encode($field['content']),
+                                ['has_replace_string' => true]
                             )
                         );
                     }else{
                         $field['content'] = vh_translate_dynamic_strings(
-                            $field['content']
+                            $field['content'],
+                            ['has_replace_string' => true]
                         );
                     }
 
@@ -869,7 +876,7 @@ class Content extends Model {
 
                         if(count($row_to_delete_ids) > 0)
                         {
-                           ContentFormRelation::where('vh_cms_content_form_field_id', $related_item->id)
+                            ContentFormRelation::where('vh_cms_content_form_field_id', $related_item->id)
                                 ->whereIn('relatable_id', $row_to_delete_ids)
                                 ->forceDelete();
 

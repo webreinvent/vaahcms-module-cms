@@ -355,8 +355,8 @@ class CmsSeeder{
             $content_groups = self::fillFields($content_type['groups'],$json_content);
             $template_groups = self::fillFields($template['groups'],$json_template);
 
-            Content::storeFormGroups($content, [$content_groups]);
-            Content::storeFormGroups($content, [$template_groups]);
+            Content::storeFormGroups($content, [$content_groups], 'seeds');
+            Content::storeFormGroups($content, [$template_groups] , 'seeds');
 
         }
 
@@ -728,11 +728,15 @@ class CmsSeeder{
 
             $item['vh_menu_id'] = $menu->id;
 
-            if($item['type'] = 'content'){
+            if($item['type'] == 'content'){
                 $content = DB::table('vh_cms_contents')
                     ->where('slug', $item['slug'])
                     ->where('vh_theme_id', $theme->id)
                     ->first();
+
+                if (!$content) {
+                    continue;
+                }
 
                 $item['vh_content_id'] = $content->id;
 
