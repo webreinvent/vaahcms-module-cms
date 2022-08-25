@@ -30,8 +30,10 @@ class VhCmsContentFormFieldsAddVhCmsFormGroupIndex extends Migration
     */
     public function down()
     {
-        Schema::table('vh_cms_content_form_fields', function (Blueprint $table) {
-            $table->dropColumn('vh_cms_form_group_index');
-        });
+        if (Schema::hasColumn('vh_cms_content_form_fields', 'vh_cms_form_group_index')) {
+            Schema::table('vh_cms_content_form_fields', function (Blueprint $table) {
+                $table->dropColumn('vh_cms_form_group_index');
+            });
+        }
     }
 }

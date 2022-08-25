@@ -734,6 +734,10 @@ class CmsSeeder{
                     ->where('vh_theme_id', $theme->id)
                     ->first();
 
+                if (!$content) {
+                    continue;
+                }
+
                 $item['vh_content_id'] = $content->id;
 
                 $exist = DB::table('vh_cms_menu_items')
