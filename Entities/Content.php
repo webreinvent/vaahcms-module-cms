@@ -704,9 +704,11 @@ class Content extends Model {
 
                         $content_val = ContentFormField::getContentAsset($content_val, $field->type->slug);
 
-                        $arr_group[$i][$key]['fields'][$y]['content'] = vh_translate_dynamic_strings(
-                            $content_val
-                        );
+                        if(is_string($content_val)){
+                            $arr_group[$i][$key]['fields'][$y]['content'] = vh_translate_dynamic_strings(
+                                $content_val
+                            );
+                        }
 
                         $arr_group[$i][$key]['fields'][$y]['content_meta'] = $field_content->meta;
 
