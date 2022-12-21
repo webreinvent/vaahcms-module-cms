@@ -153,7 +153,7 @@ export default {
             let new_item = {
                 parent_id: null,
                 vh_cms_content_type_id: null,
-                vh_theme_id: this.page.assets.default_theme.id,
+                vh_theme_id: this.page.assets.default_theme ? this.page.assets.default_theme.id : null,
                 vh_theme_template_id: this.page.assets.default_template?this.page.assets.default_template.id:null,
                 name: null,
                 slug: null,

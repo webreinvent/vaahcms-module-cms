@@ -117,8 +117,10 @@ export default {
                 }
 
 
-                state.new_item.vh_theme_id = assets.default_theme.id;
-                state.new_item.vh_theme_template_id = assets.default_template.id;
+
+
+                state.new_item.vh_theme_id = assets.default_theme ? assets.default_theme.id : null;
+                state.new_item.vh_theme_template_id = assets.default_template ? assets.default_template.id : null;
 
                 payload = {
                     key: 'new_item',
