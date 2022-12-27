@@ -6,7 +6,7 @@
             <AsideMenu/>
         </div>
 
-        <div class="column pl-5 pr-5">
+        <div class="column ml-5 mr-5">
             <router-view></router-view>
         </div>
     </div>
