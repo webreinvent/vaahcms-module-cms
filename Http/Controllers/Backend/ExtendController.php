@@ -33,16 +33,8 @@ class ExtendController extends Controller
     //----------------------------------------------------------
     public static function getCmsContentRelations()
     {
-       /* $taxonomy_option = null;
 
-        if(!isset($exclude['Taxonomy']['options']))
-        {
-            $taxonomy_option = TaxonomyType::getListInTreeFormat();
-
-        }*/
-
-
-        $arr = [
+        $list = [
             [
                 "name" => "Taxonomy",
                 "namespace" => "WebReinvent\\VaahCms\\Entities\\Taxonomy",
@@ -67,8 +59,10 @@ class ExtendController extends Controller
             ]
         ];
 
+        $response['status'] = 'success';
+        $response['data'] = $list;
 
-        return $arr;
+        return $response;
 
     }
 
@@ -86,13 +80,6 @@ class ExtendController extends Controller
     //----------------------------------------------------------
     public static function sidebarMenu()
     {
-
-
-        /*$list[0] = [
-            'link' => self::$link."content-types/",
-            'icon' => 'file-alt',
-            'label'=> 'CMS'
-        ];*/
 
         $list[0] = [
             'link' => '#',
