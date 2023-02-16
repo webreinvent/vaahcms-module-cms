@@ -53,7 +53,7 @@
                         <div class="card" v-if="item.groups.length > 0"
                              v-for="(group,index) in item.groups">
 
-                            <div class="card-header">
+                            <div class="card-header is-shadowless">
 
                                 <div class="card-header-title">
                                     <span>{{$vaah.limitString(group.name, 20)}}</span>
@@ -98,14 +98,14 @@
 
                             <div class="card-content is-paddingless">
 
-                                <div class="draggable" >
-                                    <draggable class="dropzone" :list="group.fields"
+                                <div class="draggable">
+                                    <draggable class="dropzone has-padding-15" :list="group.fields"
                                                :group="{name:'fields'}">
                                         <div v-if="group.fields.length>0"
                                              v-for="(field, f_index) in group.fields"
                                              :key="f_index">
-                                            <div class="dropzone-field">
-                                                <b-field class="is-marginless" >
+                                            <div class="dropzone-field has-margin-bottom-10">
+                                                <b-field class="is-marginless">
                                                     <p class="control drag">
                                                         <span class="button is-static">:::</span>
                                                     </p>
@@ -139,7 +139,7 @@
                                                     </b-tooltip>
 
                                                 </b-field>
-                                                <div class="dropzone-field-options ">
+                                                <div class="dropzone-field-options" style="display: none">
 
                                                     <table class="table">
 

@@ -50,7 +50,7 @@
                 </b-field>
 
 
-                <div class="menu-item-settings has-padding-top-15 has-padding-bottom-15 hide">
+                <div class="menu-item-settings has-padding-top-15 has-padding-bottom-15 hide" style="display: none">
 
                     <b-field label=" " :label-position="labelPosition">
                         <b-checkbox v-model="el.attr_target_blank">Open in new window</b-checkbox>
