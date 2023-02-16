@@ -18,11 +18,13 @@
 
 @section('content')
 
-    <div id="cmsApp">
+    <div id="cmsApp" class="bulma">
 
-        <router-view></router-view>
+        <section class="section has-padding-25">
+            <router-view></router-view>
 
-        <vue-progress-bar></vue-progress-bar>
+            <vue-progress-bar></vue-progress-bar>
+        </section>
 
     </div>
 
