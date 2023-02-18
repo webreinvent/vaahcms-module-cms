@@ -479,12 +479,12 @@ class Block extends BlockBase
             case 'activate':
                 self::where('id', $id)
                     ->withTrashed()
-                    ->update(['is_active' => 1]);
+                    ->update(['is_published' => 1]);
                 break;
             case 'deactivate':
                 self::where('id', $id)
                     ->withTrashed()
-                    ->update(['is_active' => null]);
+                    ->update(['is_published' => null]);
                 break;
             case 'trash':
                 self::find($id)->delete();

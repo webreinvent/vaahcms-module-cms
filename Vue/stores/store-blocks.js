@@ -431,9 +431,9 @@ export const useBlockStore = defineStore({
             }
         },
         //---------------------------------------------------------------------
-        async toggleIsActive(item)
+        async toggleIsPublished(item)
         {
-            if(item.is_active)
+            if(item.is_published)
             {
                 await this.itemAction('activate', item);
             } else{

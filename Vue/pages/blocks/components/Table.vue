@@ -23,44 +23,84 @@ const useVaah = vaah();
                     headerStyle="width: 3em">
             </Column>
 
-            <Column field="id" header="ID" :style="{width: store.getIdWidth()}" :sortable="true">
+            <Column field="id" header="ID"
+                    :style="{width: store.getIdWidth()}"
+                    :sortable="true">
             </Column>
 
-            <Column field="name" header="Name"
+             <Column field="name" header="Name"
+                     :sortable="true"
+                     class="flex align-items-center"
+             >
+                 <template #body="prop">
+                     {{ prop.data.name }}
+
+                     <Button class="p-button-tiny p-button-text"
+                             :data-testid="'block-copy_block_'+prop.data.id"
+                             v-tooltip.top="'Copy Block'"
+                             @click="useVaah.copy('{!! vh_block('+prop.data.slug+') !!}')"
+                             icon="pi pi-copy">
+                     </Button>
+
+                 </template>
+             </Column>
+
+             <Column field="theme-location" header="Theme / Location"
+                     :sortable="true"
+             >
+                 <template #body="prop">
+
+                     <div class="p-inputgroup">
+                         <Tag v-if="prop.data.theme" class="mr-0"
+                              severity="warning"
+                              :value="prop.data.theme.name"
+                              aria-label="Table Primary Tag" tabindex="0"></Tag>
+                         <Tag v-if="prop.data.theme_location" class="mr-0"
+                              :value="prop.data.theme_location.name"
+                              aria-label="Table Primary Tag" tabindex="0"></Tag>
+                         <Button class="p-button-tiny p-button-text"
+                                 :data-testid="'block-copy_block_'+prop.data.id"
+                                 v-tooltip.top="'Copy Location Blocks'"
+                                 @click="useVaah.copy('{!! vh_location_blocks('+prop.data.theme_location.slug+') !!}')"
+                                 icon="pi pi-copy">
+                         </Button>
+                     </div>
+
+                     <!--<span v-if="prop.data.theme">{{ prop.data.theme.name }}</span>
+                     <span v-if="prop.data.theme_location">{{ prop.data.theme_location.name }}</span>
+
+                     <Button class="p-button-tiny p-button-text"
+                             :data-testid="'block-copy_block_'+prop.data.id"
+                             v-tooltip.top="'Copy Block'"
+                             @click="useVaah.copy(prop.data.slug)"
+                             icon="pi pi-copy">
+                     </Button>-->
+
+                 </template>
+             </Column>
+
+            <Column field="updated_at" header="Updated"
+                    v-if="store.isViewLarge()"
+                    style="width:150px;"
                     :sortable="true">
 
                 <template #body="prop">
-                    <Badge v-if="prop.data.deleted_at"
-                           value="Trashed"
-                           severity="danger"></Badge>
-                    {{prop.data.name}}
+                    {{useVaah.ago(prop.data.updated_at)}}
                 </template>
 
             </Column>
 
-
-                <Column field="updated_at" header="Updated"
-                        v-if="store.isViewLarge()"
-                        style="width:150px;"
-                        :sortable="true">
-
-                    <template #body="prop">
-                        {{useVaah.ago(prop.data.updated_at)}}
-                    </template>
-
-                </Column>
-
-            <Column field="is_active" v-if="store.isViewLarge()"
+            <Column field="is_published" v-if="store.isViewLarge()"
                     :sortable="true"
-                    style="width:100px;"
-                    header="Is Active">
+                    style="width:150px;"
+                    header="Is Published">
 
                 <template #body="prop">
-                    <InputSwitch v-model.bool="prop.data.is_active"
-                                 data-testid="blocks-table-is-active"
+                    <InputSwitch v-model.bool="prop.data.is_published"
+                                 data-testid="blocks-is_published"
                                  v-bind:false-value="0"  v-bind:true-value="1"
                                  class="p-inputswitch-sm"
-                                 @input="store.toggleIsActive(prop.data)">
+                                 @input="store.toggleIsPublished(prop.data)">
                     </InputSwitch>
                 </template>
 
