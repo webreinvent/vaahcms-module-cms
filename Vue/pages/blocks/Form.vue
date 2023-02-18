@@ -37,6 +37,38 @@ const toggleFormMenu = (event) => {
 
                 <div class="flex flex-row">
                     <div class="p-panel-title">
+                        <span>
+                            Content
+                        </span>
+                    </div>
+
+                </div>
+
+
+            </template>
+
+            <div v-if="store.item">
+
+                <Editor name="blocks-content"
+                        data-testid="blocks-content"
+                        v-model="store.item.content"
+                        editorStyle="height: 320px">
+                </Editor>
+
+            </div>
+        </Panel>
+
+    </div>
+
+    <div class="col-3" >
+
+        <Panel >
+
+            <template class="p-1" #header>
+
+
+                <div class="flex flex-row">
+                    <div class="p-panel-title">
                         <span v-if="store.item && store.item.id">
                             Update
                         </span>
