@@ -4,8 +4,8 @@ use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
-use WebReinvent\VaahCms\Entities\TaxonomyType;
-use WebReinvent\VaahCms\Entities\User;
+use WebReinvent\VaahCms\Models\TaxonomyType;
+use WebReinvent\VaahCms\Models\User;
 use WebReinvent\VaahCms\Traits\CrudWithUuidObservantTrait;
 
 class FormGroup extends Model {

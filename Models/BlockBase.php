@@ -1,15 +1,15 @@
-<?php namespace VaahCms\Modules\Cms\Entities;
+<?php namespace VaahCms\Modules\Cms\Models;
 
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
-use WebReinvent\VaahCms\Entities\Theme;
-use WebReinvent\VaahCms\Entities\ThemeLocation;
-use WebReinvent\VaahCms\Entities\User;
+use WebReinvent\VaahCms\Models\Theme;
+use WebReinvent\VaahCms\Models\ThemeLocation;
+use WebReinvent\VaahCms\Models\User;
 use WebReinvent\VaahCms\Traits\CrudWithUuidObservantTrait;
 
-class Block extends Model {
+class BlockBase extends Model {
 
     use SoftDeletes;
     use CrudWithUuidObservantTrait;
@@ -31,7 +31,6 @@ class Block extends Model {
         'vh_theme_location_id',
         'name',
         'slug',
-        'excerpt',
         'content',
         'sort',
         'is_published',

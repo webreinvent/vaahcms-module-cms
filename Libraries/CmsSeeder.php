@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use VaahCms\Modules\Cms\Entities\Content;
 use VaahCms\Modules\Cms\Entities\ContentType;
-use WebReinvent\VaahCms\Entities\ThemeTemplate;
+use WebReinvent\VaahCms\Models\ThemeTemplate;
 use WebReinvent\VaahCms\Entities\User;
 
 class CmsSeeder{
