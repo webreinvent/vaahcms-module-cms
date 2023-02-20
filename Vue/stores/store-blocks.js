@@ -888,6 +888,21 @@ export const useBlockStore = defineStore({
 
         },
         //---------------------------------------------------------------------
+        copyLocationCode: function () {
+
+            let code = "";
+
+            let location = vaah().findInArrayByKey(this.active_theme.locations,
+                'id', this.item.vh_theme_location_id);
+
+            if(location){
+                code = "{!! vh_location_blocks('"+location.slug+"') !!}";
+            }
+
+            vaah().copy(code);
+
+        },
+        //---------------------------------------------------------------------
     }
 });
 

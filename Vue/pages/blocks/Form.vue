@@ -152,11 +152,17 @@ const toggleFormMenu = (event) => {
                 </VhField>
 
                 <VhField label="Locations">
-                    <Dropdown v-model="store.item.vh_theme_location_id"
+                    <div class="p-inputgroup">
+                        <Dropdown v-model="store.item.vh_theme_location_id"
                               name="blocks-select_location"
                               data-testid="blocks-select_location"
                               :options="store.active_theme.locations" optionLabel="name"
                               optionValue="id" placeholder="Select a Location" />
+                        <Button :disabled="!store.item.vh_theme_location_id
+                                || !store.active_theme.locations"
+                                @click="store.copyLocationCode"
+                                icon="pi pi-copy"/>
+                    </div>
 
                 </VhField>
 
