@@ -38,7 +38,7 @@ const useVaah = vaah();
                      <Button class="p-button-tiny p-button-text"
                              :data-testid="'block-copy_block_'+prop.data.id"
                              v-tooltip.top="'Copy Block'"
-                             @click="useVaah.copy('{!! vh_block('+prop.data.slug+') !!}')"
+                             @click="store.copyBlockCode(prop.data.slug)"
                              icon="pi pi-copy">
                      </Button>
 
@@ -61,7 +61,7 @@ const useVaah = vaah();
                          <Button class="p-button-tiny p-button-text"
                                  :data-testid="'block-copy_block_'+prop.data.id"
                                  v-tooltip.top="'Copy Location Blocks'"
-                                 @click="useVaah.copy('{!! vh_location_blocks('+prop.data.theme_location.slug+') !!}')"
+                                 @click="store.copyLocationCode(prop.data.theme_location.slug)"
                                  icon="pi pi-copy">
                          </Button>
                      </div>

@@ -62,6 +62,30 @@ const toggleItemMenu = (event) => {
 
             <template class="p-1" #header>
 
+
+                <div class="flex flex-row">
+                    <div class="p-panel-title">
+                        <span>
+                            Content
+                        </span>
+                    </div>
+
+                </div>
+
+
+            </template>
+
+            <div  class="content min-h-150" v-html="store.item.content"></div>
+        </Panel>
+
+    </div>
+
+    <div class="col-3" >
+
+        <Panel v-if="store && store.item">
+
+            <template class="p-1" #header>
+
                 <div class="flex flex-row">
 
                     <div class="p-panel-title">
@@ -137,7 +161,9 @@ const toggleItemMenu = (event) => {
                     <tbody class="p-datatable-tbody">
                     <template v-for="(value, column) in store.item ">
 
-                        <template v-if="column === 'created_by' || column === 'updated_by'">
+                        <template v-if="column === 'created_by'
+                        || column === 'updated_by' || column === 'theme'
+                        || column === 'theme_location'">
                         </template>
 
                         <template v-else-if="column === 'id' || column === 'uuid'">
@@ -159,6 +185,24 @@ const toggleItemMenu = (event) => {
                                        :value="value"
                                        type="yes-no"
                             />
+                        </template>
+
+                        <template v-else-if="column === 'vh_theme_id'">
+                            <tr>
+                                <td :style="{width: '150px'}"><b>Theme</b></td>
+                                <td v-if="store.item.theme" colspan="2">
+                                    <Tag :value="store.item.theme.title" severity="primary"></Tag>
+                                </td>
+                            </tr>
+                        </template>
+
+                        <template v-else-if="column === 'vh_theme_location_id'">
+                            <tr>
+                                <td :style="{width: '150px'}"><b>Theme Location</b></td>
+                                <td v-if="store.item.theme_location" colspan="2">
+                                    <Tag :value="store.item.theme_location.name" severity="primary"></Tag>
+                                </td>
+                            </tr>
                         </template>
 
                         <template v-else>

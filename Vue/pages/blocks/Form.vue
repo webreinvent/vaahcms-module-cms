@@ -5,6 +5,9 @@ import { useBlockStore } from '../../stores/store-blocks'
 import VhField from './../../vaahvue/vue-three/primeflex/VhField.vue'
 import {useRoute} from 'vue-router';
 
+import {JoditEditor} from 'jodit-ts-vue3';
+
+
 
 const store = useBlockStore();
 const route = useRoute();
@@ -48,12 +51,10 @@ const toggleFormMenu = (event) => {
             </template>
 
             <div v-if="store.item">
-
-                <Editor name="blocks-content"
-                        data-testid="blocks-content"
-                        v-model="store.item.content"
-                        editorStyle="height: 320px">
-                </Editor>
+                
+                <JoditEditor name="blocks-content"
+                             data-testid="blocks-content"
+                             v-model="store.item.content" />
 
             </div>
         </Panel>

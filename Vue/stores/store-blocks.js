@@ -226,6 +226,7 @@ export const useBlockStore = defineStore({
             }
             await this.getItemMenu();
             await this.getFormMenu();
+            await this.setActiveTheme(false);
         },
         //---------------------------------------------------------------------
         isListActionValid()
@@ -869,9 +870,11 @@ export const useBlockStore = defineStore({
 
         },
         //---------------------------------------------------------------------
-        setActiveTheme: function () {
+        setActiveTheme: function (is_null_location_id = true) {
 
-            this.item.vh_theme_location_id = '';
+            if(is_null_location_id){
+                this.item.vh_theme_location_id = '';
+            }
 
             this.active_theme = {
                 'locations':[]
@@ -888,7 +891,19 @@ export const useBlockStore = defineStore({
 
         },
         //---------------------------------------------------------------------
-        copyLocationCode: function () {
+        copyBlockCode: function (slug) {
+
+            vaah().copy("{!! vh_block('"+slug+"') !!}");
+
+        },
+        //---------------------------------------------------------------------
+        copyLocationCode: function (slug = null) {
+
+            if(slug){
+                vaah().copy("{!! vh_location_blocks('"+slug+"') !!}");
+
+                return true;
+            }
 
             let code = "";
 
