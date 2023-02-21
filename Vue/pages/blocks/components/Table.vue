@@ -46,6 +46,7 @@ const useVaah = vaah();
              </Column>
 
              <Column field="theme-location" header="Theme / Location"
+                     v-if="store.isViewLarge()"
                      :sortable="true"
              >
                  <template #body="prop">

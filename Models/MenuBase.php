@@ -1,6 +1,6 @@
 <?php
 
-namespace VaahCms\Modules\Cms\Entities;
+namespace VaahCms\Modules\Cms\Models;
 
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 use VaahCms\Modules\Cms\Http\Controllers\Backend\MenusController;
 
 
-class Menu extends Model
+class MenuBase extends Model
 {
     use SoftDeletes;
 
@@ -192,7 +192,7 @@ class Menu extends Model
         }
 
         $menu = static::getItem($menu->id);
-        $menu_items = Menu::getMenuItems($id);
+        $menu_items = MenuBase::getMenuItems($id);
 
         $menu_items = $menu_items['data']['items'];
 

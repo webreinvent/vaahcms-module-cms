@@ -47,3 +47,4 @@ include('backend/blocks.php');
 include('backend/routes-blocks.php');
 include('backend/contents.php');
 include('backend/menus.php');
+include('backend/routes-menus.php');
