@@ -36,13 +36,18 @@ export const useMenuStore = defineStore({
         assets_is_fetching: true,
         app: null,
         active_menu: null,
+        content_list: [],
         active_theme: null,
         active_location: null,
         assets: null,
         rows_per_page: [10,20,30,50,100,500],
         list: null,
         item: null,
+        new_item: {
+            name:null
+        },
         fillable:null,
+        active_menu_items:null,
         empty_query:empty_states.query,
         empty_action:empty_states.action,
         query: vaah().clone(empty_states.query),
@@ -66,7 +71,41 @@ export const useMenuStore = defineStore({
         list_bulk_menu: [],
         item_menu_list: [],
         item_menu_state: null,
-        form_menu_list: []
+        form_menu_list: [],
+        menu:[
+            {
+                "name": "Home",
+                "tasks": [
+                    {
+                        "name": "Menu Item 1",
+                        "tasks": [],
+                        menu_options:false
+                    },
+                    {
+                        "name": "Menu Item 2",
+                        "tasks": [],
+                        menu_options:false
+                    }
+                ],
+                menu_options:false
+            },
+            {
+                "name": "Solutions",
+                "tasks": [
+                    {
+                        "name": "Menu Item 1",
+                        "tasks": [],
+                        menu_options:false
+                    }
+                ],
+                menu_options:false
+            },
+            {
+                "name": "Resources",
+                "tasks": [],
+                menu_options:false
+            }
+        ],
     }),
     getters: {
 
@@ -187,9 +226,22 @@ export const useMenuStore = defineStore({
                     this.item = vaah().clone(data.empty_item);
                 }
 
+                if(this.query.vh_theme_id){
+                    this.active_theme = vaah().findInArrayByKey(this.assets.themes,
+                        'id', this.query.vh_theme_id);
+                }
 
-                this.setActiveTheme(false);
-                this.setActiveLocation(false);
+                if(this.query.vh_theme_location_id){
+
+                    this.active_location = vaah().findInArrayByKey(this.active_theme.locations,
+                        'id', this.query.vh_theme_location_id);
+
+                }
+
+                this.setActiveMenu();
+
+                this.getContentList();
+
 
             }
         },
@@ -229,10 +281,11 @@ export const useMenuStore = defineStore({
             {
                 this.item = data;
             }else{
-                this.$router.push({name: 'menus.index'});
+                this.$router.push({name: 'menus.index',query:this.query});
             }
             await this.getItemMenu();
             await this.getFormMenu();
+
         },
         //---------------------------------------------------------------------
         isListActionValid()
@@ -423,7 +476,7 @@ export const useMenuStore = defineStore({
                 case 'create-and-close':
                 case 'save-and-close':
                     this.setActiveItemAsEmpty();
-                    this.$router.push({name: 'menus.index'});
+                    this.$router.push({name: 'menus.index',query:this.query});
                     break;
                 case 'save-and-clone':
                     this.item.id = null;
@@ -594,32 +647,32 @@ export const useMenuStore = defineStore({
         //---------------------------------------------------------------------
         closeForm()
         {
-            this.$router.push({name: 'menus.index'})
+            this.$router.push({name: 'menus.index',query:this.query})
         },
         //---------------------------------------------------------------------
         toList()
         {
             this.item = vaah().clone(this.assets.empty_item);
-            this.$router.push({name: 'menus.index'})
+            this.$router.push({name: 'menus.index',query:this.query})
         },
         //---------------------------------------------------------------------
         toForm()
         {
             this.item = vaah().clone(this.assets.empty_item);
             this.getFormMenu();
-            this.$router.push({name: 'menus.form'})
+            this.$router.push({name: 'menus.form',query:this.query})
         },
         //---------------------------------------------------------------------
         toView(item)
         {
             this.item = vaah().clone(item);
-            this.$router.push({name: 'menus.view', params:{id:item.id}})
+            this.$router.push({name: 'menus.view', params:{id:item.id},query:this.query})
         },
         //---------------------------------------------------------------------
         toEdit(item)
         {
             this.item = item;
-            this.$router.push({name: 'menus.form', params:{id:item.id}})
+            this.$router.push({name: 'menus.form', params:{id:item.id},query:this.query})
         },
         //---------------------------------------------------------------------
         isViewLarge()
@@ -878,14 +931,12 @@ export const useMenuStore = defineStore({
         //---------------------------------------------------------------------
 
         //---------------------------------------------------------------------
-        setActiveTheme: function (is_null_value_set = true) {
+        setActiveTheme: function () {
 
             this.active_menu = null;
 
-            if(is_null_value_set){
-                this.query.vh_theme_location_id = null;
-                this.query.vh_menu_id = null;
-            }
+            this.query.vh_theme_location_id = null;
+            this.query.vh_menu_id = null;
 
             this.active_theme = null;
             this.active_location = null;
@@ -917,11 +968,9 @@ export const useMenuStore = defineStore({
         },
 
         //---------------------------------------------------------------------
-        setActiveLocation: function (is_null_value_set = true) {
+        setActiveLocation: function () {
 
-            if(is_null_value_set){
-                this.query.vh_menu_id = null;
-            }
+            this.query.vh_menu_id = null;
 
             this.active_location = null;
             this.active_menu = null;
@@ -963,7 +1012,7 @@ export const useMenuStore = defineStore({
             };
 
             vaah().ajax(
-                this.ajax_url+'/item/'+this.active_menu.id,
+                this.ajax_url+'/'+this.active_menu.id,
                 this.getMenuItemsAfter,
                 options
             );
@@ -972,12 +1021,63 @@ export const useMenuStore = defineStore({
         //---------------------------------------------------------------------
         getMenuItemsAfter: function (data, res) {
             if(data){
-                /*this.update('active_menu_items', data.items);
+                this.active_menu_items = data;
 
-                console.log('chek',this.page.active_menu.id);
-                this.$router.push({name: 'menus.view', params:{id:this.page.active_menu.id}})*/
+                this.$router.push({name: 'menus.form', params:{id:data.id},query:this.query})
+            }
 
-                console.log('------<> data',data);
+        },
+
+
+        //---------------------------------------------------------------------
+        createItem: function () {
+
+            this.new_item.vh_theme_location_id = this.active_location.id;
+
+            let options = {
+                params:this.new_item,
+                method:'post'
+            };
+
+            vaah().ajax(
+                this.ajax_url,
+                this.createItemAfter,
+                options
+            );
+
+        },
+        //---------------------------------------------------------------------
+        createItemAfter: function (data, res) {
+            if(data){
+                this.active_menu_items = data;
+
+                this.$router.push({name: 'menus.form', params:{id:data.id},query:this.query})
+            }
+
+        },
+
+
+        //---------------------------------------------------------------------
+        getContentList: function () {
+
+
+            let options = {
+
+            };
+
+            vaah().ajax(
+                this.ajax_url+'/content/list',
+                this.getContentListAfter,
+                options
+            );
+
+        },
+        //---------------------------------------------------------------------
+        getContentListAfter: function (data, res) {
+            if(data){
+
+                this.content_list = data;
+
             }
 
         },

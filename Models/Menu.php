@@ -5,6 +5,8 @@ use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use VaahCms\Modules\Cms\Http\Controllers\Backend\MenusController;
+use WebReinvent\VaahCms\Models\User;
 use WebReinvent\VaahCms\Traits\CrudWithUuidObservantTrait;
 
 class Menu extends MenuBase
@@ -71,39 +73,57 @@ class Menu extends MenuBase
     public static function createItem($request)
     {
 
-        $inputs = $request->all();
+        $rules = array(
+            'name' => 'required|max:255',
+        );
 
-        $validation = self::validation($inputs);
-        if (!$validation['success']) {
-            return $validation;
+        $validator = \Validator::make( $request->all(), $rules);
+        if ( $validator->fails() ) {
+
+            $errors             = errorsToArray($validator->errors());
+            $response['success'] = false;
+            $response['messages'] = $errors;
+            return $response;
         }
 
+        $user = static::where('vh_theme_location_id',$request['vh_theme_location_id'])->where('name', $request['name'])
+            ->first();
 
-        // check if name exist
-        $item = self::where('name', $inputs['name'])->withTrashed()->first();
-
-        if ($item) {
+        if($user)
+        {
             $response['success'] = false;
             $response['messages'][] = "This name is already exist.";
             return $response;
         }
 
-        // check if slug exist
-        $item = self::where('slug', $inputs['slug'])->withTrashed()->first();
 
-        if ($item) {
+        // check if slug exist
+        $user = static::where('vh_theme_location_id',$request['vh_theme_location_id'])->where('slug',$request['slug'])->first();
+
+        if($user)
+        {
             $response['success'] = false;
             $response['messages'][] = "This slug is already exist.";
             return $response;
         }
 
-        $item = new self();
-        $item->fill($inputs);
-        $item->slug = Str::slug($inputs['slug']);
+
+
+        $item = new static();
+        $item->fill($request->all());
+        $item->slug = Str::slug($request->name);
         $item->save();
 
-        $response = self::getItem($item->id);
+
+        $item = static::getItem($item->id);
+
+        $menu = new MenusController();
+
+        $response['success'] = true;
+        $response['data']['item'] =$item['data'];
+        $response['data']['assets'] = $menu->getAssets($request);
         $response['messages'][] = 'Saved successfully.';
+
         return $response;
 
     }

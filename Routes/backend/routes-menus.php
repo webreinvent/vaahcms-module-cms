@@ -3,9 +3,9 @@
 Route::group(
     [
         'prefix' => 'backend/cms/menus',
-        
+
         'middleware' => ['web', 'has.backend.access'],
-        
+
         'namespace' => 'Backend',
 ],
 function () {
@@ -64,6 +64,9 @@ function () {
     Route::any('/{id}/action/{action}', 'MenusController@itemAction')
         ->name('vh.backend.cms.menus.item.action');
 
+    //---------------------------------------------------------
+    Route::get('/content/list', 'MenusController@getContentList')
+        ->name('vh.backend.cms.menus.content.list');
     //---------------------------------------------------------
 
 });

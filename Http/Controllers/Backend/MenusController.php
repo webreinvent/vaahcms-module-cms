@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use VaahCms\Modules\Cms\Entities\Content;
 use VaahCms\Modules\Cms\Models\Menu;
 use WebReinvent\VaahCms\Models\Theme;
 
@@ -102,5 +103,29 @@ class MenusController extends Controller
     }
     //----------------------------------------------------------
 
+
+    //----------------------------------------------------------
+    public function getContentList(Request $request)
+    {
+
+        $list = Content::orderBy('created_at', 'desc');
+
+        if($request->has('q'))
+        {
+            $list->where(function ($s)use($request){
+                $s->where('name', 'LIKE', '%'.$request->q.'%')
+                    ->orWhere('id', $request->q );
+            });
+        }
+
+        $list = $list->take(10)->get();
+
+
+        $response['success'] = true;
+        $response['data'] = $list;
+
+        return response()->json($response);
+
+    }
 
 }
