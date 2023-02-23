@@ -4,6 +4,7 @@ import { useMenuStore } from '../../stores/store-menus'
 import draggable from 'vuedraggable'
 
 import VhField from './../../vaahvue/vue-three/primeflex/VhField.vue'
+import NestedDraggable from './components/NestedDraggable.vue'
 import {useRoute} from 'vue-router';
 
 
@@ -56,13 +57,15 @@ const toggleFormMenu = (event) => {
                             v-if="store.item && store.item.id"
                             data-testid="menus-save"
                             @click="store.itemAction('save')"
-                            icon="pi pi-save"/>
+                            icon="pi pi-save">
+                    </Button>
 
                     <Button label="Create & New"
                             v-else
                             @click="store.itemAction('create-and-new')"
                             data-testid="menus-create-and-new"
-                            icon="pi pi-save"/>
+                            icon="pi pi-save">
+                    </Button>
 
 
                     <!--form_menu-->
@@ -71,11 +74,13 @@ const toggleFormMenu = (event) => {
                         @click="toggleFormMenu"
                         data-testid="menus-form-menu"
                         icon="pi pi-angle-down"
-                        aria-haspopup="true"/>
+                        aria-haspopup="true">
+                    </Button>
 
                     <Menu ref="form_menu"
                           :model="store.form_menu_list"
-                          :popup="true" />
+                          :popup="true" >
+                    </Menu>
                     <!--/form_menu-->
 
 
@@ -91,41 +96,8 @@ const toggleFormMenu = (event) => {
             </template>
 
 
-            <div v-if="store.item" class="draggable-menu">
-                <draggable
-                        class="dragArea drag-list"
-                        tag="ul"
-                        :list="store.menu"
-                        :group="{ name: 'g1' }"
-                        item-key="name"
-                >
-                    <template #item="{ element,index }">
-                        <li>
-                            <div class="p-inputgroup mb-3">
-                                <InputText class="w-2" :model-value="element.name" disabled></InputText>
-                                <InputText class="w-6" placeholder="Field Name"></InputText>
-                                <Button icon="pi pi-home p-button-sm"></Button>
-                                <Button icon="pi pi-cog p-button-sm" @click="element.menu_options = !element.menu_options"></Button>
-                                <Button icon="pi pi-trash p-button-sm" @click="removeAt(index)"></Button>
-                            </div>
-                            <div class="menu-options m-3" v-if="element.menu_options">
-                                <div class="mb-5">
-                                    <Checkbox value="Test" id="check"></Checkbox>
-                                    <label for="check" class="text-xs font-semibold ml-1">Open in new Page</label>
-                                </div>
-                                <div class="p-float-label mb-5">
-                                    <InputText class="w-full p-inputtext-sm" id="item-id"></InputText>
-                                    <label for="item-id">Menu Item Id</label>
-                                </div>
-                                <div class="p-float-label mb-5">
-                                    <InputText class="w-full p-inputtext-sm" id="item-class"></InputText>
-                                    <label for="item-class">Menu Item Class</label>
-                                </div>
-                            </div>
-                            <NestedDraggable :tasks="element.tasks" />
-                        </li>
-                    </template>
-                </draggable>
+            <div v-if="store.active_menu_items" class="draggable-menu">
+                <NestedDraggable :tasks="store.active_menu_items" />
             </div>
         </Panel>
 

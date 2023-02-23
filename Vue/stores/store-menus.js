@@ -1012,7 +1012,7 @@ export const useMenuStore = defineStore({
             };
 
             vaah().ajax(
-                this.ajax_url+'/'+this.active_menu.id,
+                this.ajax_url+'/item/'+this.active_menu.id,
                 this.getMenuItemsAfter,
                 options
             );

@@ -377,11 +377,9 @@ class MenuBase extends Model
 
         \Config::set('nestable.body', $body);
 
-        $data['items'] = \Nestable::make($items)
+        $response['success'] = true;
+        $response['data'] = \Nestable::make($items)
             ->renderAsArray();
-
-        $response['status'] = 'success';
-        $response['data'] = $data;
 
         return $response;
 

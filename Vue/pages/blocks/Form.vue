@@ -3,9 +3,10 @@ import {onMounted, ref, watch} from "vue";
 import { useBlockStore } from '../../stores/store-blocks'
 
 import VhField from './../../vaahvue/vue-three/primeflex/VhField.vue'
+import VhJoditEditor from './../../vaahvue/vue-three/primeflex/VhJoditEditor.vue'
 import {useRoute} from 'vue-router';
 
-import {JoditEditor} from 'jodit-ts-vue3';
+// import { JoditEditor } from 'jodit-vue3';
 
 
 
@@ -51,8 +52,8 @@ const toggleFormMenu = (event) => {
             </template>
 
             <div v-if="store.item">
-                
-                <JoditEditor name="blocks-content"
+
+                <VhJoditEditor name="blocks-content"
                              data-testid="blocks-content"
                              v-model="store.item.content" />
 

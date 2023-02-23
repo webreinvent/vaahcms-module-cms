@@ -128,4 +128,13 @@ class MenusController extends Controller
 
     }
 
+
+
+    //----------------------------------------------------------
+    public function getMenuItems(Request $request, $id)
+    {
+        $response = Menu::getMenuItems($id);
+        return response()->json($response);
+    }
+
 }

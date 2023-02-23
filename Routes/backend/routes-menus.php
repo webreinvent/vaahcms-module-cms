@@ -42,6 +42,11 @@ function () {
     Route::get('/{id}', 'MenusController@getItem')
         ->name('vh.backend.cms.menus.read');
     /**
+     * Get Item
+     */
+    Route::get('/item/{id}', 'MenusController@getMenuItems')
+        ->name('vh.backend.cms.menus.item');
+    /**
      * Update Item
      */
     Route::match(['put', 'patch'], '/{id}', 'MenusController@updateItem')
