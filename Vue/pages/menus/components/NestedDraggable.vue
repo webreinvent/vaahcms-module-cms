@@ -3,14 +3,14 @@
         class="dragArea drag-list"
         tag="ul"
         :list="tasks"
-        :group="{ name: 'g1' }"
+        :group="{ name: 'menu_items' }"
         item-key="name"
     >
         <template #item="{ element,index }">
-            <li>
+            <li v-if="element.content">
                 <div class="p-inputgroup mb-3">
-                    <InputText class="w-2" :model-value="element.name" disabled></InputText>
-                    <InputText class="w-6" placeholder="Field Name"></InputText>
+                    <InputText class="w-2" :model-value="element.content.name" disabled></InputText>
+                    <InputText class="w-6" v-model="element.name" placeholder="Field Name"></InputText>
                     <Button icon="pi pi-home p-button-sm"></Button>
                     <Button icon="pi pi-cog p-button-sm" @click="element.menu_options = !element.menu_options"></Button>
                     <Button icon="pi pi-trash p-button-sm" @click="removeAt(index)"></Button>

@@ -55,6 +55,12 @@ class MenusController extends Controller
 
         return $response;
     }
+    //----------------------------------------------------------
+    public function postStore(Request $request, $id)
+    {
+        $response = Menu::postStore($request,$id);
+        return response()->json($response);
+    }
 
     //----------------------------------------------------------
     public function getList(Request $request)

@@ -280,12 +280,14 @@ class CmsSeeder{
             $template = ThemeTemplate::where('vh_theme_id', $theme->id)
                 ->where('slug', $item['template_slug'])
                 ->with(['groups.fields.type'])
-                ->first()->toArray();
+                ->first();
 
             if(!$template)
             {
                 continue;
             }
+
+            $template = $template->toArray();
 
             if(!isset($item['slug']) || !$item['slug']){
                 $item['slug'] = Str::slug($item['name']);
@@ -599,8 +601,8 @@ class CmsSeeder{
         $data['twitter_image'] = self::fillFieldContent(
             'https://via.placeholder.com/150',200,
             'twitter:image','text',
-            'URL of image to use in the card. 
-                                Images must be less than 5MB in size. 
+            'URL of image to use in the card.
+                                Images must be less than 5MB in size.
                                 JPG, PNG, WEBP and GIF formats are supported.');
 
         $data['twitter_site'] = self::fillFieldContent(
@@ -630,8 +632,8 @@ class CmsSeeder{
         $data['og_image'] = self::fillFieldContent(
             'https://via.placeholder.com/150',200,
             'og:image','text',
-            'URL of image to use in the card. 
-                                Images must be less than 5MB in size. 
+            'URL of image to use in the card.
+                                Images must be less than 5MB in size.
                                 JPG, PNG, WEBP and GIF formats are supported.');
 
         $data['og_title'] = self::fillFieldContent(

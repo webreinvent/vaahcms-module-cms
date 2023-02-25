@@ -72,38 +72,16 @@ export const useMenuStore = defineStore({
         item_menu_list: [],
         item_menu_state: null,
         form_menu_list: [],
-        menu:[
+        menu_types:[
             {
-                "name": "Home",
-                "tasks": [
-                    {
-                        "name": "Menu Item 1",
-                        "tasks": [],
-                        menu_options:false
-                    },
-                    {
-                        "name": "Menu Item 2",
-                        "tasks": [],
-                        menu_options:false
-                    }
-                ],
-                menu_options:false
+                name: 'Internal Link',
+                uri: "",
+                type: 'internal-link',
             },
             {
-                "name": "Solutions",
-                "tasks": [
-                    {
-                        "name": "Menu Item 1",
-                        "tasks": [],
-                        menu_options:false
-                    }
-                ],
-                menu_options:false
-            },
-            {
-                "name": "Resources",
-                "tasks": [],
-                menu_options:false
+                name: 'External Link',
+                uri: "",
+                type: 'external-link',
             }
         ],
     }),
@@ -169,13 +147,15 @@ export const useMenuStore = defineStore({
         watchRoutes(route)
         {
             //watch routes
-            watch(route, (newVal,oldVal) =>
+            watch(route.params, (newVal,oldVal) =>
                 {
-                    this.route = newVal;
-                    if(newVal.params.id){
+
+                    console.log(newVal , oldVal);
+                    /*this.route = newVal;
+                    if(newVal.params.id != oldVal.params.id){
                         this.getItem(newVal.params.id);
                     }
-                    this.setViewAndWidth(newVal.name);
+                    this.setViewAndWidth(newVal.name);*/
                 }, { deep: true }
             )
         },
@@ -222,28 +202,33 @@ export const useMenuStore = defineStore({
             {
                 this.assets = data;
 
+
+
                 if(this.route.params && !this.route.params.id){
                     this.item = vaah().clone(data.empty_item);
                 }
 
-                if(this.query.vh_theme_id){
-                    this.active_theme = vaah().findInArrayByKey(this.assets.themes,
-                        'id', this.query.vh_theme_id);
-                }
+                this.setActiveItems();
+            }
+        },
+        //---------------------------------------------------------------------
+        setActiveItems()
+        {
+            if(this.query.vh_theme_id){
+                this.active_theme = vaah().findInArrayByKey(this.assets.themes,
+                    'id', this.query.vh_theme_id);
+            }
 
-                if(this.query.vh_theme_location_id){
+            if(this.query.vh_theme_location_id){
 
-                    this.active_location = vaah().findInArrayByKey(this.active_theme.locations,
-                        'id', this.query.vh_theme_location_id);
-
-                }
-
-                this.setActiveMenu();
-
-                this.getContentList();
-
+                this.active_location = vaah().findInArrayByKey(this.active_theme.locations,
+                    'id', this.query.vh_theme_location_id);
 
             }
+
+            this.setActiveMenu();
+
+            this.getContentList();
         },
         //---------------------------------------------------------------------
         async getList() {
@@ -1020,10 +1005,11 @@ export const useMenuStore = defineStore({
         },
         //---------------------------------------------------------------------
         getMenuItemsAfter: function (data, res) {
+
             if(data){
                 this.active_menu_items = data;
 
-                this.$router.push({name: 'menus.form', params:{id:data.id},query:this.query})
+                this.$router.push({name: 'menus.view', params:{id:this.active_menu.id},query:this.query})
             }
 
         },
@@ -1048,10 +1034,44 @@ export const useMenuStore = defineStore({
         },
         //---------------------------------------------------------------------
         createItemAfter: function (data, res) {
-            if(data){
-                this.active_menu_items = data;
 
-                this.$router.push({name: 'menus.form', params:{id:data.id},query:this.query})
+            if(data){
+                this.new_item.name = null;
+                this.item = data.item;
+                this.query.vh_menu_id = data.item.id;
+
+                this.assets = data.assets.data;
+                this.setActiveItems();
+            }
+
+        },
+
+
+
+        //---------------------------------------------------------------------
+        storeItem: function () {
+
+            let params = this.active_menu;
+            params.items = this.active_menu_items;
+
+
+            let options = {
+                params:params,
+                method:'put'
+            };
+
+            vaah().ajax(
+                this.ajax_url+'/item/'+this.active_menu.id+'/store',
+                this.storeItemAfter,
+                options
+            );
+
+        },
+        //---------------------------------------------------------------------
+        storeItemAfter: function (data, res) {
+
+            if(data){
+
             }
 
         },
@@ -1080,6 +1100,45 @@ export const useMenuStore = defineStore({
 
             }
 
+        },
+
+        //---------------------------------------------------------------------
+        cloneField: function({ id, name })
+        {
+            let item = {
+                type: 'content',
+                vh_content_id: id,
+                name: name,
+                content: {
+                    name: name
+                },
+                vh_menu_id: this.active_menu.id,
+                attr_id: null,
+                attr_class: null,
+                attr_target_blank: null,
+                child: [],
+            };
+
+
+
+            return item;
+        },
+
+        //---------------------------------------------------------------------
+        customCloneField: function({ id, name, type })
+        {
+            let item = {
+                type: type,
+                name: name,
+                uri: "",
+                attr_id: null,
+                attr_class: null,
+                attr_target_blank: null,
+                vh_menu_id: this.active_menu.id,
+                child: [],
+            };
+
+            return item;
         },
     }
 });

@@ -131,7 +131,7 @@ class MenuBase extends Model
             ->withTrashed()
             ->first();
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data'] = $item;
 
         return $response;
@@ -140,8 +140,6 @@ class MenuBase extends Model
     //-------------------------------------------------
     public static function postStore($request,$id)
     {
-
-
 
         $input = $request->all();
 
@@ -154,7 +152,7 @@ class MenuBase extends Model
         if ( $validator->fails() ) {
 
             $errors             = errorsToArray($validator->errors());
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['errors'] = $errors;
             return response()->json($response);
         }
@@ -165,7 +163,7 @@ class MenuBase extends Model
 
         if($user)
         {
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['errors'][] = "This name is already exist.";
             return $response;
         }
@@ -176,7 +174,7 @@ class MenuBase extends Model
 
         if($user)
         {
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['errors'][] = "This slug is already exist.";
             return $response;
         }
@@ -195,9 +193,9 @@ class MenuBase extends Model
         $menu = static::getItem($menu->id);
         $menu_items = MenuBase::getMenuItems($id);
 
-        $menu_items = $menu_items['data']['items'];
+        $menu_items = $menu_items['data'];
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data']['menu'] =$menu['data'];
         $response['data']['menu_items'] =$menu_items;
         $response['messages'][] = 'Saved';
