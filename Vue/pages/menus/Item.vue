@@ -62,7 +62,7 @@ const toggleItemMenu = (event) => {
 
     <div class="col-6" >
 
-        <Panel >
+        <Panel class="draggable-menu">
 
             <template class="p-1" #header>
 
@@ -103,9 +103,9 @@ const toggleItemMenu = (event) => {
 
             </template>
 
-            <div v-if="store.active_menu_items" class="draggable-menu">
+            <p v-if="store.active_menu_items" >
                 <NestedDraggable :tasks="store.active_menu_items" />
-            </div>
+            </p>
         </Panel>
 
     </div>
@@ -122,6 +122,7 @@ const toggleItemMenu = (event) => {
                     <draggable :list="store.content_list"
                                class="dragArea"
                                :clone="store.cloneField"
+                               item-key="name"
                                :group="{ name: 'menu_items', pull: 'clone', put: false }"  >
                     <template #item="{element}">
                             <div class="p-inputgroup mb-3">
@@ -136,6 +137,7 @@ const toggleItemMenu = (event) => {
                     <draggable :list="store.menu_types"
                                class="dragArea"
                                :clone="store.customCloneField"
+                               item-key="name"
                                :group="{ name: 'menu_items', pull: 'clone', put: false }"  >
                         <template #item="{element}">
                             <div class="p-inputgroup mb-3">

@@ -7,9 +7,9 @@
         item-key="name"
     >
         <template #item="{ element,index }">
-            <li v-if="element.content">
+            <li >
                 <div class="p-inputgroup mb-3">
-                    <InputText class="w-2" :model-value="element.content.name" disabled></InputText>
+                    <InputText v-if="element.content" class="w-2" :model-value="element.content.name" disabled></InputText>
                     <InputText class="w-6" v-model="element.name" placeholder="Field Name"></InputText>
                     <Button icon="pi pi-home p-button-sm"></Button>
                     <Button icon="pi pi-cog p-button-sm" @click="element.menu_options = !element.menu_options"></Button>
@@ -17,15 +17,27 @@
                 </div>
                 <div class="menu-options m-3" v-if="element.menu_options">
                     <div class="mb-5">
-                        <Checkbox value="Test" id="check"></Checkbox>
-                        <label for="check" class="text-xs font-semibold ml-1">Open in new Page</label>
+                        <Checkbox v-model="element.attr_target_blank" :binary="true" :inputId="'check-'+index"></Checkbox>
+                        <label :for="'check-'+index" class="text-xs font-semibold ml-1">Open in new Page</label>
+                    </div>
+                    <div v-if="element.type == 'internal-link'" class="p-float-label mb-5">
+                        <InputText v-model="element.uri"
+                                   placeholder="/about-us"
+                                   class="w-full p-inputtext-sm" id="item-id"></InputText>
+                        <label for="item-id">URL</label>
+                    </div>
+                    <div v-if="element.type == 'external-link'" class="p-float-label mb-5">
+                        <InputText v-model="element.uri"
+                                   placeholder="https://www.google.com"
+                                   class="w-full p-inputtext-sm" id="item-id"></InputText>
+                        <label for="item-id">URL</label>
                     </div>
                     <div class="p-float-label mb-5">
-                        <InputText class="w-full p-inputtext-sm" id="item-id"></InputText>
+                        <InputText v-model="element.attr_id" class="w-full p-inputtext-sm" id="item-id"></InputText>
                         <label for="item-id">Menu Item Id</label>
                     </div>
                     <div class="p-float-label mb-5">
-                        <InputText class="w-full p-inputtext-sm" id="item-class"></InputText>
+                        <InputText v-model="element.attr_class" class="w-full p-inputtext-sm" id="item-class"></InputText>
                         <label for="item-class">Menu Item Class</label>
                     </div>
                 </div>
