@@ -188,7 +188,7 @@ class Content extends Model {
     //-------------------------------------------------
     public function contentType()
     {
-        return $this->belongsTo(ContentType::class,
+        return $this->belongsTo(ContentTypeBase::class,
             'vh_cms_content_type_id', 'id'
         );
     }
@@ -382,7 +382,7 @@ class Content extends Model {
         $data['list'] = $list->paginate(config('vaahcms.per_page'));
 
 
-        $status = ContentType::where('id', $request->content_type->id);
+        $status = ContentTypeBase::where('id', $request->content_type->id);
 
         $status_list = $status->select('content_statuses')->first();
 
@@ -1070,7 +1070,7 @@ class Content extends Model {
     //-------------------------------------------------
     public static function getContents($content_type_slug, $args)
     {
-        $content_type = ContentType::where('slug', $content_type_slug)->first();
+        $content_type = ContentTypeBase::where('slug', $content_type_slug)->first();
 
         if(!$content_type)
         {
@@ -1195,7 +1195,7 @@ class Content extends Model {
     public static function getListOfContents($content_type_slug)
     {
 
-        $content_type = ContentType::where('slug', $content_type_slug)->first();
+        $content_type = ContentTypeBase::where('slug', $content_type_slug)->first();
 
         if(!$content_type)
         {
@@ -1264,7 +1264,7 @@ class Content extends Model {
     {
 
         $group = FormGroup::where('slug', $group_slug)->whereHasMorph('groupable',
-            [ContentType::class], function ($c) use ($item){
+            [ContentTypeBase::class], function ($c) use ($item){
                 //$c->where('id', $item->vh_cms_content_id);
         })->first();
 

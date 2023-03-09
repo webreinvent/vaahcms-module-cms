@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use VaahCms\Modules\Cms\Entities\ContentType;
+use VaahCms\Modules\Cms\Entities\ContentTypeBase;
 use WebReinvent\VaahCms\Entities\TaxonomyType;
 
 class ExtendController extends Controller
@@ -86,7 +86,7 @@ class ExtendController extends Controller
             'label'=> 'CMS',
             'items' => [
                 [
-                    'url' => self::$link."content-types/",
+                    'url' => self::$link."contenttypes/",
                     'icon' => 'pi pi-book ',
                     'label'=> 'Content Types'
                 ],
@@ -108,7 +108,7 @@ class ExtendController extends Controller
             ]
         ];
 
-        $content_types = ContentType::isPublished()->get();
+        $content_types = ContentTypeBase::isPublished()->get();
 
         if($content_types->count() > 0)
         {

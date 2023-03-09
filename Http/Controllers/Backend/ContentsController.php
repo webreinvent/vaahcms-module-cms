@@ -5,7 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use VaahCms\Modules\Cms\Entities\Content;
-use VaahCms\Modules\Cms\Entities\ContentType;
+use VaahCms\Modules\Cms\Entities\ContentTypeBase;
 use WebReinvent\VaahCms\Entities\Taxonomy;
 use WebReinvent\VaahCms\Entities\Theme;
 use WebReinvent\VaahCms\Entities\User;
@@ -41,7 +41,7 @@ class ContentsController extends Controller
         $data['non_repeatable_fields'] = Content::getNonRepeatableFields();
 
         $data['content_type'] = $request->content_type;
-        $form_groups = ContentType::getItemWithRelations($request->content_type->id);
+        $form_groups = ContentTypeBase::getItemWithRelations($request->content_type->id);
 
         if($form_groups['status'] == 'success')
         {
