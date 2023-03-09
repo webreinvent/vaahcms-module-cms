@@ -86,7 +86,7 @@ class ExtendController extends Controller
             'label'=> 'CMS',
             'items' => [
                 [
-                    'url' => self::$link."content-types/",
+                    'url' => self::$link."contenttypes/",
                     'icon' => 'pi pi-book ',
                     'label'=> 'Content Types'
                 ],

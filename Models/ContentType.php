@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 use WebReinvent\VaahCms\Traits\CrudWithUuidObservantTrait;
 use WebReinvent\VaahCms\Models\User;
+//use WebReinvent\VaahCms\Models\ContentTypeBase;
 
-class ContentType extends ContentTypeBase
+class ContentType extends Model
 {
 
     use SoftDeletes;
@@ -27,7 +28,7 @@ class ContentType extends ContentTypeBase
         'uuid',
         'name',
         'slug',
-        'is_published',
+        'is_active',
         'created_by',
         'updated_by',
         'deleted_by',
@@ -130,15 +131,10 @@ class ContentType extends ContentTypeBase
             $response['messages'][] = "This slug is already exist.";
             return $response;
         }
+
         $item = new self();
         $item->fill($inputs);
         $item->slug = Str::slug($inputs['slug']);
-        $item->plural = Str::slug($inputs['plural']);
-        $item->plural_slug = Str::slug($inputs['plural_slug']);
-        $item->singular = Str::slug($inputs['singular']);
-        $item->singular_slug = Str::slug($inputs['singular_slug']);
-        $item->excerpt = Str::slug($inputs['excerpt']);
-        $item->content_statuses = $inputs['content_statuses'];
         $item->save();
 
         $response = self::getItem($item->id);
@@ -174,20 +170,20 @@ class ContentType extends ContentTypeBase
     public function scopeIsActiveFilter($query, $filter)
     {
 
-        if(!isset($filter['is_published'])
-            || is_null($filter['is_published'])
-            || $filter['is_published'] === 'null'
+        if(!isset($filter['is_active'])
+            || is_null($filter['is_active'])
+            || $filter['is_active'] === 'null'
         )
         {
             return $query;
         }
-        $is_published = $filter['is_published'];
+        $is_active = $filter['is_active'];
 
-        if($is_published === 'true' || $is_published === true)
+        if($is_active === 'true' || $is_active === true)
         {
-            return $query->whereNotNull('is_published');
+            return $query->whereNotNull('is_active');
         } else{
-            return $query->whereNull('is_published');
+            return $query->whereNull('is_active');
         }
 
     }
@@ -286,10 +282,10 @@ class ContentType extends ContentTypeBase
 
         switch ($inputs['type']) {
             case 'deactivate':
-                $items->update(['is_published' => null]);
+                $items->update(['is_active' => null]);
                 break;
             case 'activate':
-                $items->update(['is_published' => 1]);
+                $items->update(['is_active' => 1]);
                 break;
             case 'trash':
                 self::whereIn('id', $items_id)->delete();
@@ -358,12 +354,12 @@ class ContentType extends ContentTypeBase
         switch ($type) {
             case 'deactivate':
                 if($items->count() > 0) {
-                    $items->update(['is_published' => null]);
+                    $items->update(['is_active' => null]);
                 }
                 break;
             case 'activate':
                 if($items->count() > 0) {
-                    $items->update(['is_published' => 1]);
+                    $items->update(['is_active' => 1]);
                 }
                 break;
             case 'trash':
@@ -382,10 +378,10 @@ class ContentType extends ContentTypeBase
                 }
                 break;
             case 'activate-all':
-                self::query()->update(['is_published' => 1]);
+                self::query()->update(['is_active' => 1]);
                 break;
             case 'deactivate-all':
-                self::query()->update(['is_published' => null]);
+                self::query()->update(['is_active' => null]);
                 break;
             case 'trash-all':
                 self::query()->delete();
@@ -456,15 +452,10 @@ class ContentType extends ContentTypeBase
             $response['messages'][] = "This slug is already exist.";
             return $response;
         }
+
         $item = self::where('id', $id)->withTrashed()->first();
         $item->fill($inputs);
         $item->slug = Str::slug($inputs['slug']);
-        $item->plural = Str::slug($inputs['plural']);
-        $item->plural_slug = Str::slug($inputs['plural_slug']);
-        $item->singular = Str::slug($inputs['singular']);
-        $item->singular_slug = Str::slug($inputs['singular_slug']);
-        $item->excerpt = Str::slug($inputs['excerpt']);
-        $item->content_statuses = $inputs['content_statuses'];
         $item->save();
 
         $response = self::getItem($item->id);
@@ -497,12 +488,12 @@ class ContentType extends ContentTypeBase
             case 'activate':
                 self::where('id', $id)
                     ->withTrashed()
-                    ->update(['is_published' => 1]);
+                    ->update(['is_active' => 1]);
                 break;
             case 'deactivate':
                 self::where('id', $id)
                     ->withTrashed()
-                    ->update(['is_published' => null]);
+                    ->update(['is_active' => null]);
                 break;
             case 'trash':
                 self::find($id)->delete();
@@ -542,7 +533,7 @@ class ContentType extends ContentTypeBase
     //-------------------------------------------------
     public static function getActiveItems()
     {
-        $item = self::where('is_published', 1)
+        $item = self::where('is_active', 1)
             ->first();
         return $item;
     }

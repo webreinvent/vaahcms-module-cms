@@ -17,12 +17,13 @@ const useVaah = vaah();
                    v-model:selection="store.action.items"
                    stripedRows
                    responsiveLayout="scroll">
-             <Column selectionMode="multiple"
+
+            <Column selectionMode="multiple"
                     v-if="store.isViewLarge()"
                     headerStyle="width: 3em">
             </Column>
 
-            <Column field="id" header="ID" :style="{width: '90px'}" :sortable="true">
+            <Column field="id" header="ID" :style="{width: store.getIdWidth()}" :sortable="true">
             </Column>
 
             <Column field="name" header="Name"
@@ -37,47 +38,25 @@ const useVaah = vaah();
 
             </Column>
 
-             <Column field="plural" header="Plural"
-                     :sortable="true">
 
-                 <template #body="prop">
-                     <Badge v-if="prop.data.deleted_at"
-                            value="Trashed"
-                            severity="danger"></Badge>
-                     {{prop.data.plural}}
-                 </template>
+                <Column field="updated_at" header="Updated"
+                        v-if="store.isViewLarge()"
+                        style="width:150px;"
+                        :sortable="true">
 
-             </Column>
+                    <template #body="prop">
+                        {{useVaah.ago(prop.data.updated_at)}}
+                    </template>
 
-             <Column field="singular" header="Singular"
-                     :sortable="true">
+                </Column>
 
-                 <template #body="prop">
-                     <Badge v-if="prop.data.deleted_at"
-                            value="Trashed"
-                            severity="danger"></Badge>
-                     {{prop.data.singular}}
-                 </template>
-
-             </Column>
-
-
-             <Column field="updated_at" header="Updated"
-                     v-if="store.isViewLarge()"
-                     style="width:90px;"
-                     :sortable="true">
-                 <template #body="prop">
-                     {{useVaah.ago(prop.data.updated_at)}}
-                 </template>
-             </Column>
-
-            <Column field="is_published" v-if="store.isViewLarge()"
+            <Column field="is_active" v-if="store.isViewLarge()"
                     :sortable="true"
-                    style="width:150px;"
-                    header="Is Published">
+                    style="width:100px;"
+                    header="Is Active">
 
                 <template #body="prop">
-                    <InputSwitch v-model.bool="prop.data.is_published"
+                    <InputSwitch v-model.bool="prop.data.is_active"
                                  data-testid="contenttypes-table-is-active"
                                  v-bind:false-value="0"  v-bind:true-value="1"
                                  class="p-inputswitch-sm"
@@ -94,11 +73,6 @@ const useVaah = vaah();
                 <template #body="prop">
                     <div class="p-inputgroup ">
 
-                        <Button class="p-button-tiny p-button-text"
-                                data-testid="contenttypes-table-to-view"
-                                v-tooltip.top="'Content Structure'"
-                                @click="store.toContentStructure(prop.data)"
-                                icon="pi pi-align-left" />
                         <Button class="p-button-tiny p-button-text"
                                 data-testid="contenttypes-table-to-view"
                                 v-tooltip.top="'View'"

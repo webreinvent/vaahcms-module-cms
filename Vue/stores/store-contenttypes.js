@@ -15,7 +15,7 @@ let empty_states = {
         rows: null,
         filter: {
             q: null,
-            is_published: null,
+            is_active: null,
             trashed: null,
             sort: null,
         },
@@ -64,20 +64,7 @@ export const useContentTypeStore = defineStore({
         list_bulk_menu: [],
         item_menu_list: [],
         item_menu_state: null,
-        new_status: [
-            'draft',
-            'published',
-            'protected',
-        ],
-        new_status_item: null,
-        edit_status_index: null,
-        disable_status_editing: true,
-        form_menu_list: [],
-        new_group:{
-            name:null,
-            fields:[
-            ]
-        },
+        form_menu_list: []
     }),
     getters: {
 
@@ -109,10 +96,6 @@ export const useContentTypeStore = defineStore({
                 case 'contenttypes.index':
                     this.view = 'large';
                     this.list_view_width = 12;
-                    break;
-                case 'contenttypes.contentstructure':
-                    this.view = 'large';
-                    this.list_view_width = 4;
                     break;
                 default:
                     this.view = 'small';
@@ -172,31 +155,16 @@ export const useContentTypeStore = defineStore({
         watchItem()
         {
             if(this.item){
-                watch(() => this.item.name, (newVal,oldVal) =>
-                    {
-                        if(newVal && newVal !== "")
+                    watch(() => this.item.name, (newVal,oldVal) =>
                         {
-                            this.item.slug = vaah().strToSlug(newVal);
-                        }
-                    },{deep: true}
-                );
-                watch(() => this.item.plural, (newVal,oldVal) =>
-                    {
-                        if(newVal && newVal !== "")
-                        {
-                            this.item.plural_slug = vaah().strToSlug(newVal);
-                        }
-                    },{deep: true}
-                );
-                watch(() => this.item.singular, (newVal,oldVal) =>
-                    {
-                        if(newVal && newVal !== "")
-                        {
-                            this.item.singular_slug = vaah().strToSlug(newVal);
-                        }
-                    },{deep: true}
-                );
-            }
+                            if(newVal && newVal !== "")
+                            {
+                                this.item.name = vaah().capitalising(newVal);
+                                this.item.slug = vaah().strToSlug(newVal);
+                            }
+                        },{deep: true}
+                    )
+                }
         },
         //---------------------------------------------------------------------
         async getAssets() {
@@ -255,49 +223,6 @@ export const useContentTypeStore = defineStore({
                     this.getItemAfter
                 );
             }
-        },
-        //---------------------------------------------------------------------
-        async getContentStrucutre(id){
-            if(id){
-                await vaah().ajax(
-                    ajax_url+'/relations/'+id,
-                    this.getContentStrucutreAfter
-                );
-            }
-        },
-        //---------------------------------------------------------------------
-        getContentStrucutreAfter(data, res) {
-            if(data){
-                if(data.groups.length == 0){
-                    data.groups[0] = {
-                        'name' : 'Default',
-                        'slug' : 'default',
-                        'fields' : [],
-                    };
-                }
-                this.item = data;
-            }
-
-        },
-        //---------------------------------------------------------------------
-        async storeGroups(id) {
-            let options = {
-                method:'post',
-                params:this.item.groups,
-            };
-
-            await vaah().ajax(
-                this.ajax_url+'/store/'+id+'/groups',
-                this.storeGroupsAfter,
-                options
-            );
-        },
-        //---------------------------------------------------------------------
-        storeGroupsAfter(data, res) {
-            if(data){
-                this.getContentStrucutre();
-            }
-
         },
         //---------------------------------------------------------------------
         async getItemAfter(data, res)
@@ -436,7 +361,6 @@ export const useContentTypeStore = defineStore({
                 case 'create-and-new':
                 case 'create-and-close':
                 case 'create-and-clone':
-                    this.item.content_statuses = JSON.stringify(this.new_status);
                     options.method = 'POST';
                     options.params = item;
                     break;
@@ -448,7 +372,6 @@ export const useContentTypeStore = defineStore({
                 case 'save':
                 case 'save-and-close':
                 case 'save-and-clone':
-                    this.item.content_statuses = JSON.stringify(this.new_status);
                     options.method = 'PUT';
                     options.params = item;
                     ajax_url += '/'+item.id
@@ -519,7 +442,7 @@ export const useContentTypeStore = defineStore({
         //---------------------------------------------------------------------
         async toggleIsActive(item)
         {
-            if(item.is_published)
+            if(item.is_active)
             {
                 await this.itemAction('activate', item);
             } else{
@@ -745,13 +668,13 @@ export const useContentTypeStore = defineStore({
         {
             this.list_selected_menu = [
                 {
-                    label: 'Publish',
+                    label: 'Activate',
                     command: async () => {
                         await this.updateList('activate')
                     }
                 },
                 {
-                    label: 'Unpublished',
+                    label: 'Deactivate',
                     command: async () => {
                         await this.updateList('deactivate')
                     }
@@ -788,13 +711,13 @@ export const useContentTypeStore = defineStore({
         {
             this.list_bulk_menu = [
                 {
-                    label: 'Mark all as published',
+                    label: 'Mark all as active',
                     command: async () => {
                         await this.listAction('activate-all')
                     }
                 },
                 {
-                    label: 'Mark all as unpublished',
+                    label: 'Mark all as inactive',
                     command: async () => {
                         await this.listAction('deactivate-all')
                     }
@@ -954,70 +877,6 @@ export const useContentTypeStore = defineStore({
             this.form_menu_list = form_menu;
 
         },
-        //---------------------------------------------------------------------
-        getNewStatus(){
-            if(this.item.id){
-                this.new_status = JSON.parse(this.item.content_statuses);
-            }
-        },
-        //---------------------------------------------------------------------
-        addStatus(){
-            this.item.content_statuses = null;
-            this.new_status.push(this.new_status_item);
-            this.new_status_item = null;
-        },
-        //---------------------------------------------------------------------
-        toggleEditStatus(status_index)
-        {
-            this.edit_status_index = status_index;
-            if(this.disable_status_editing)
-            {
-                this.disable_status_editing = false;
-            } else
-            {
-                this.disable_status_editing = true;
-            }
-        },
-        //---------------------------------------------------------------------
-        toContentStructure(item) {
-            this.item = vaah().clone(item);
-            this.$router.push({name: 'contenttypes.contentstructure', params: {id: item.id}});
-
-        },
-        //---------------------------------------------------------------------
-        removeGroup(item,index){
-
-            this.item.groups.splice(index, 1);
-            vaah().toastErrors(['Removed']);
-        },
-        //---------------------------------------------------------------------
-        removeField(idx,i) {
-            this.item.groups[i].content_types.splice(idx, 1);
-        },
-        //---------------------------------------------------------------------
-        getCopy(value)
-        {
-            navigator.clipboard.writeText(value);
-            vaah().toastSuccess(['Copied']);
-        },
-        //---------------------------------------------------------------------
-        addNewGroup() {
-            if (this.new_group.name) {
-                if (this.new_group.name.length > 100) {
-                    vaah().toastErrors(['Group may not be greater than 100 characters.']);
-                } else {
-                    this.item.groups.push(this.new_group);
-                    this.new_group = {
-                        name: null,
-                        fields: [
-                        ],
-                    }
-                }
-            } else {
-                vaah().toastErrors(['Group Field is required.']);
-            }
-        },
-        //---------------------------------------------------------------------
         //---------------------------------------------------------------------
     }
 });

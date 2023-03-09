@@ -4,11 +4,10 @@ let routes_list= [];
 import List from '../pages/contenttypes/List.vue'
 import Form from '../pages/contenttypes/Form.vue'
 import Item from '../pages/contenttypes/Item.vue'
-import Contentstructure from '../pages/contenttypes/Contentstructure.vue'
 
 routes_list = {
 
-    path: '/content-types',
+    path: '/contenttypes',
     name: 'contenttypes.index',
     component: List,
     props: true,
@@ -23,12 +22,6 @@ routes_list = {
             path: 'view/:id?',
             name: 'contenttypes.view',
             component: Item,
-            props: true,
-        },
-        {
-            path: 'content-structure/:id?',
-            name: 'contenttypes.contentstructure',
-            component: Contentstructure,
             props: true,
         }
     ]

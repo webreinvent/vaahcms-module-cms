@@ -325,9 +325,9 @@ class ContentTypeBase extends Model {
             ->with(['createdByUser', 'updatedByUser',
                 'deletedByUser',
                 'groups'=>function($g){
-                $g->orderBy('sort', 'asc')->with(['fields' => function($f){
-                    $f->orderBy('sort', 'asc')->with(['type']);
-                }]);
+                    $g->orderBy('sort', 'asc')->with(['fields' => function($f){
+                        $f->orderBy('sort', 'asc')->with(['type']);
+                    }]);
                 }])
             ->withTrashed()
             ->first();
