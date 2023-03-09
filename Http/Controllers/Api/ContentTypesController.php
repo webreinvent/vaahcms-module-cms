@@ -5,7 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use VaahCms\Modules\Cms\Entities\Content;
-use VaahCms\Modules\Cms\Entities\ContentType;
+use VaahCms\Modules\Cms\Entities\ContentTypeBase;
 use VaahCms\Modules\Cms\Entities\FieldType;
 
 class ContentTypesController extends Controller
@@ -24,7 +24,7 @@ class ContentTypesController extends Controller
     public static function getContentTypeList(Request $request)
     {
 
-        $content_types = ContentType::paginate(5);
+        $content_types = ContentTypeBase::paginate(5);
 
         foreach ($content_types as $content_type){
 
@@ -63,7 +63,7 @@ class ContentTypesController extends Controller
     public static function getContentTypeItem(Request $request, $slug)
     {
 
-        $content_type = ContentType::where('slug', $slug)->first();
+        $content_type = ContentTypeBase::where('slug', $slug)->first();
 
         $arr = array();
 

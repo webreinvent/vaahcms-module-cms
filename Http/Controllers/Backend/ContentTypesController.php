@@ -1,146 +1,224 @@
-<?php namespace VaahCms\Modules\Cms\Http\Controllers\Backend;
+<?php namespace VaahCms\Modules\cms\Http\Controllers\Backend;
 
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use VaahCms\Modules\Cms\Entities\Content;
-use VaahCms\Modules\Cms\Entities\ContentType;
-use VaahCms\Modules\Cms\Entities\FieldType;
-use WebReinvent\VaahCms\Entities\TaxonomyType;
+use VaahCms\Modules\cms\Models\ContentType;
+
 
 class ContentTypesController extends Controller
 {
 
-    public $theme;
 
     //----------------------------------------------------------
     public function __construct()
     {
-        $this->theme = vh_get_backend_theme();
+
     }
+
+    //----------------------------------------------------------
 
     public function getAssets(Request $request)
     {
 
-        $data['field_types'] = FieldType::select('id', 'name', 'slug', 'meta')
-            ->get();
+        try{
 
-        $data['non_repeatable_fields'] = Content::getNonRepeatableFields();
+            $data = [];
 
-        $data['bulk_actions'] = vh_general_bulk_actions();
+            $data['permission'] = [];
+            $data['rows'] = config('vaahcms.per_page');
 
-        $data['content_relations'] = vh_content_relations();
+            $data['fillable']['except'] = [
+                'uuid',
+                'created_by',
+                'updated_by',
+                'deleted_by',
+            ];
 
-        $data['taxonomy_types'] = TaxonomyType::whereNotNull('is_active')
-            ->whereNull('parent_id')->with(['children'])
-            ->select('id', 'name', 'slug')->get();
+            $model = new ContentType();
+            $fillable = $model->getFillable();
+            $data['fillable']['columns'] = array_diff(
+                $fillable, $data['fillable']['except']
+            );
 
-        $response['status'] = 'success';
-        $response['data'] = $data;
+            foreach ($fillable as $column)
+            {
+                $data['empty_item'][$column] = null;
+            }
 
-        return response()->json($response);
+            $data['actions'] = [];
+
+            $response['success'] = true;
+            $response['data'] = $data;
+
+        }catch (\Exception $e){
+            $response = [];
+            $response['status'] = 'failed';
+            if(env('APP_DEBUG')){
+                $response['errors'][] = $e->getMessage();
+                $response['hint'] = $e->getTrace();
+            } else{
+                $response['errors'][] = 'Something went wrong.';
+            }
+        }
+
+        return $response;
     }
-    //----------------------------------------------------------
-    public function postCreate(Request $request)
-    {
-        $response = ContentType::postCreate($request);
-        return response()->json($response);
-    }
+
     //----------------------------------------------------------
     public function getList(Request $request)
     {
-        $response = ContentType::getList($request);
-        return response()->json($response);
+        try{
+            return ContentType::getList($request);
+        }catch (\Exception $e){
+            $response = [];
+            $response['status'] = 'failed';
+            if(env('APP_DEBUG')){
+                $response['errors'][] = $e->getMessage();
+                $response['hint'] = $e->getTrace();
+            } else{
+                $response['errors'][] = 'Something went wrong.';
+                return $response;
+            }
+        }
+    }
+    //----------------------------------------------------------
+    public function updateList(Request $request)
+    {
+        try{
+            return ContentType::updateList($request);
+        }catch (\Exception $e){
+            $response = [];
+            $response['status'] = 'failed';
+            if(env('APP_DEBUG')){
+                $response['errors'][] = $e->getMessage();
+                $response['hint'] = $e->getTrace();
+            } else{
+                $response['errors'][] = 'Something went wrong.';
+                return $response;
+            }
+        }
+    }
+    //----------------------------------------------------------
+    public function listAction(Request $request, $type)
+    {
+
+
+        try{
+            return ContentType::listAction($request, $type);
+        }catch (\Exception $e){
+            $response = [];
+            $response['status'] = 'failed';
+            if(env('APP_DEBUG')){
+                $response['errors'][] = $e->getMessage();
+                $response['hint'] = $e->getTrace();
+            } else{
+                $response['errors'][] = 'Something went wrong.';
+                return $response;
+            }
+        }
+    }
+    //----------------------------------------------------------
+    public function deleteList(Request $request)
+    {
+        try{
+            return ContentType::deleteList($request);
+        }catch (\Exception $e){
+            $response = [];
+            $response['status'] = 'failed';
+            if(env('APP_DEBUG')){
+                $response['errors'][] = $e->getMessage();
+                $response['hint'] = $e->getTrace();
+            } else{
+                $response['errors'][] = 'Something went wrong.';
+                return $response;
+            }
+        }
+    }
+    //----------------------------------------------------------
+    public function createItem(Request $request)
+    {
+        try{
+            return ContentType::createItem($request);
+        }catch (\Exception $e){
+            $response = [];
+            $response['status'] = 'failed';
+            if(env('APP_DEBUG')){
+                $response['errors'][] = $e->getMessage();
+                $response['hint'] = $e->getTrace();
+            } else{
+                $response['errors'][] = 'Something went wrong.';
+                return $response;
+            }
+        }
     }
     //----------------------------------------------------------
     public function getItem(Request $request, $id)
     {
-
-        $response = ContentType::getItem($id);
-        return response()->json($response);
-
-    }
-    //----------------------------------------------------------
-    public function getItemRelations(Request $request, $id)
-    {
-
-        $response = ContentType::getItemWithRelations($id);
-        return response()->json($response);
-
-    }
-    //----------------------------------------------------------
-    public function postStoreGroups(Request $request, $id)
-    {
-        $response = ContentType::postStoreGroups($request, $id);
-        return response()->json($response);
-    }
-    //----------------------------------------------------------
-    public function postStore(Request $request,$id)
-    {
-        $response = ContentType::postStore($request,$id);
-        return response()->json($response);
-    }
-
-    //----------------------------------------------------------
-    //----------------------------------------------------------
-    public function postActions(Request $request, $action)
-    {
-        $rules = array(
-            'inputs' => 'required',
-        );
-
-        $validator = \Validator::make( $request->all(), $rules);
-        if ( $validator->fails() ) {
-
-            $errors             = errorsToArray($validator->errors());
+        try{
+            return ContentType::getItem($id);
+        }catch (\Exception $e){
+            $response = [];
             $response['status'] = 'failed';
-            $response['errors'] = $errors;
-            return response()->json($response);
+            if(env('APP_DEBUG')){
+                $response['errors'][] = $e->getMessage();
+                $response['hint'] = $e->getTrace();
+            } else{
+                $response['errors'][] = 'Something went wrong.';
+                return $response;
+            }
         }
-
-        $response = [];
-
-        $response['status'] = 'success';
-
-        $inputs = $request->all();
-
-        switch ($action)
-        {
-
-            //------------------------------------
-            case 'bulk-change-status':
-                $response = ContentType::bulkStatusChange($request);
-                break;
-            //------------------------------------
-            case 'bulk-trash':
-
-                $response = ContentType::bulkTrash($request);
-
-                break;
-            //------------------------------------
-            case 'bulk-restore':
-
-                $response = ContentType::bulkRestore($request);
-
-                break;
-
-            //------------------------------------
-            case 'bulk-delete':
-
-                $response = ContentType::bulkDelete($request);
-
-                break;
-
-            //------------------------------------
-        }
-
-        return response()->json($response);
-
     }
-
     //----------------------------------------------------------
+    public function updateItem(Request $request,$id)
+    {
+        try{
+            return ContentType::updateItem($request,$id);
+        }catch (\Exception $e){
+            $response = [];
+            $response['status'] = 'failed';
+            if(env('APP_DEBUG')){
+                $response['errors'][] = $e->getMessage();
+                $response['hint'] = $e->getTrace();
+            } else{
+                $response['errors'][] = 'Something went wrong.';
+                return $response;
+            }
+        }
+    }
     //----------------------------------------------------------
+    public function deleteItem(Request $request,$id)
+    {
+        try{
+            return ContentType::deleteItem($request,$id);
+        }catch (\Exception $e){
+            $response = [];
+            $response['status'] = 'failed';
+            if(env('APP_DEBUG')){
+                $response['errors'][] = $e->getMessage();
+                $response['hint'] = $e->getTrace();
+            } else{
+                $response['errors'][] = 'Something went wrong.';
+                return $response;
+            }
+        }
+    }
+    //----------------------------------------------------------
+    public function itemAction(Request $request,$id,$action)
+    {
+        try{
+            return ContentType::itemAction($request,$id,$action);
+        }catch (\Exception $e){
+            $response = [];
+            $response['status'] = 'failed';
+            if(env('APP_DEBUG')){
+                $response['errors'][] = $e->getMessage();
+                $response['hint'] = $e->getTrace();
+            } else{
+                $response['errors'][] = 'Something went wrong.';
+                return $response;
+            }
+        }
+    }
     //----------------------------------------------------------
 
 
