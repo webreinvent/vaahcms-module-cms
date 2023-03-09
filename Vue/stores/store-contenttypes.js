@@ -64,6 +64,7 @@ export const useContentTypeStore = defineStore({
         list_bulk_menu: [],
         item_menu_list: [],
         item_menu_state: null,
+        new_status: null,
         form_menu_list: []
     }),
     getters: {
@@ -876,6 +877,11 @@ export const useContentTypeStore = defineStore({
 
             this.form_menu_list = form_menu;
 
+        },
+        //---------------------------------------------------------------------
+        addStatus(){
+            this.item.content_statuses.push(this.new_status);
+            this.new_status = null;
         },
         //---------------------------------------------------------------------
     }
