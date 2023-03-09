@@ -159,6 +159,27 @@ const toggleFormMenu = (event) => {
                                  data-testid="contenttypes-is_commentable"
                                  v-model="store.item.is_commentable"/>
                 </VhField>
+                <draggable
+                    v-model="store.item.content_statuses"
+                    class="dragArea list-group"
+                    :group="{ name: 'content-types', pull: 'clone', put: false }"
+                    @start="drag=true"
+                    @end="drag=false"
+                    item-key="id">
+                    <template #item="{element}">
+                        <div class="p-inputgroup mb-3">
+                            <Button icon="pi pi-bars" class="p-button-sm p-button-secondary"></Button>
+                            <Button :label="element.title" class="p-button-secondary p-button-sm"></Button>
+                        </div>
+                    </template>
+                </draggable>
+                <VhField label="New Status">
+                    <InputText class="w-full"
+                               name="contenttypes-new_status"
+                               data-testid="contenttypes-new_status"
+                               v-model="store.new_status"
+                               @input="store.addStatus"/>
+                </VhField>
 
             </div>
         </Panel>
