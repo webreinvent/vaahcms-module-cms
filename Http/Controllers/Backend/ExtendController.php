@@ -82,30 +82,28 @@ class ExtendController extends Controller
     {
 
         $list[0] = [
-            'link' => '#',
-            'icon'=> 'file-alt',
+            'icon'=> 'pi pi-copy',
             'label'=> 'CMS',
-            'child' => [
+            'items' => [
                 [
-                    'link' => self::$link."content-types/",
-                    'icon' => 'paste',
+                    'url' => self::$link."content-types/",
+                    'icon' => 'pi pi-book ',
                     'label'=> 'Content Types'
                 ],
                 [
-                    'link' => self::$link."menus/",
-                    'icon' => 'bars',
+                    'url' => self::$link."menus/",
+                    'icon' => 'pi pi-bars',
                     'label'=> 'Menus'
                 ],
                 [
-                    'link' => self::$link."blocks/",
-                    'icon' => 'th-large',
+                    'url' => self::$link."blocks/",
+                    'icon' => 'pi pi-th-large',
                     'label'=> 'Blocks'
                 ],
                 [
-                    'link' => '#',
-                    'icon'=> 'file',
+                    'icon'=> 'pi pi-file',
                     'label'=> 'Content',
-                    'child' => []
+                    'items' => []
                 ]
             ]
         ];
@@ -116,7 +114,7 @@ class ExtendController extends Controller
         {
             foreach ($content_types as $content_type)
             {
-                $list[0]['child'][3]['child'][] =  [
+                $list[0]['items'][3]['items'][] =  [
                     'link' => self::$link."contents/".$content_type->slug."/list",
                     'label'=> $content_type->name
                 ];
@@ -124,7 +122,7 @@ class ExtendController extends Controller
         }
 
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data'] = $list;
 
         return $response;

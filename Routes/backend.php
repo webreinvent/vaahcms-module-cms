@@ -44,5 +44,7 @@ Route::get( '/backend/json/getUserById/{id}', 'Backend\ContentsController@getUse
 
 include('backend/content-types.php');
 include('backend/blocks.php');
+include('backend/routes-blocks.php');
 include('backend/contents.php');
 include('backend/menus.php');
+include('backend/routes-menus.php');

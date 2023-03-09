@@ -4,10 +4,10 @@ use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
-use WebReinvent\VaahCms\Entities\Taxonomy;
-use WebReinvent\VaahCms\Entities\Theme;
-use WebReinvent\VaahCms\Entities\ThemeTemplate;
-use WebReinvent\VaahCms\Entities\User;
+use WebReinvent\VaahCms\Models\Taxonomy;
+use WebReinvent\VaahCms\Models\Theme;
+use WebReinvent\VaahCms\Models\ThemeTemplate;
+use WebReinvent\VaahCms\Models\User;
 use WebReinvent\VaahCms\Traits\CrudWithUuidObservantTrait;
 
 class Content extends Model {
@@ -229,7 +229,7 @@ class Content extends Model {
         if($name_exist)
         {
             $response['status'] = 'failed';
-            $response['errors'][] = "This name is already exist.";
+            $response['messages'][] = "This name is already exist.";
             return $response;
         }
 
@@ -418,7 +418,7 @@ class Content extends Model {
 
             $errors             = errorsToArray($validator->errors());
             $response['status'] = 'failed';
-            $response['errors'] = $errors;
+            $response['messages'] = $errors;
             return $response;
         }
 
@@ -743,7 +743,7 @@ class Content extends Model {
         if($name_exist)
         {
             $response['status'] = 'failed';
-            $response['errors'][] = "This name is already exist.";
+            $response['messages'][] = "This name is already exist.";
             return $response;
         }
 
@@ -898,7 +898,7 @@ class Content extends Model {
                     {
                         $response['status'] = 'failed';
                         $response['inputs'] = $field;
-                        $response['errors'][] = $e->getMessage();
+                        $response['messages'][] = $e->getMessage();
                         return $response;
                     }
 
@@ -919,14 +919,14 @@ class Content extends Model {
         if(!$request->has('inputs'))
         {
             $response['status'] = 'failed';
-            $response['errors'][] = 'Select IDs';
+            $response['messages'][] = 'Select IDs';
             return $response;
         }
 
         if(!$request->has('data'))
         {
             $response['status'] = 'failed';
-            $response['errors'][] = 'Select Status';
+            $response['messages'][] = 'Select Status';
             return $response;
         }
 
@@ -965,7 +965,7 @@ class Content extends Model {
         if(!$request->has('inputs'))
         {
             $response['status'] = 'failed';
-            $response['errors'][] = 'Select IDs';
+            $response['messages'][] = 'Select IDs';
             return $response;
         }
 
@@ -995,7 +995,7 @@ class Content extends Model {
         if(!$request->has('inputs'))
         {
             $response['status'] = 'failed';
-            $response['errors'][] = 'Select IDs';
+            $response['messages'][] = 'Select IDs';
             return $response;
         }
 
@@ -1022,14 +1022,14 @@ class Content extends Model {
         if(!$request->has('inputs'))
         {
             $response['status'] = 'failed';
-            $response['errors'][] = 'Select IDs';
+            $response['messages'][] = 'Select IDs';
             return $response;
         }
 
         if(!$request->has('data'))
         {
             $response['status'] = 'failed';
-            $response['errors'][] = 'Select Status';
+            $response['messages'][] = 'Select Status';
             return $response;
         }
 
@@ -1075,7 +1075,7 @@ class Content extends Model {
         if(!$content_type)
         {
             $response['status']     = 'failed';
-            $response['errors']     = 'Content Type not found.';
+            $response['messages']     = 'Content Type not found.';
             return $response;
         }
 
@@ -1139,7 +1139,7 @@ class Content extends Model {
         if(!$contents)
         {
             $response['status']     = 'failed';
-            $response['errors']     = 'Content not found.';
+            $response['messages']     = 'Content not found.';
             return $response;
         }
 
@@ -1200,7 +1200,7 @@ class Content extends Model {
         if(!$content_type)
         {
             $response['status']     = 'failed';
-            $response['errors']     = 'Content Type not found.';
+            $response['messages']     = 'Content Type not found.';
             return $response;
         }
 

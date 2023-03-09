@@ -4,10 +4,10 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use VaahCms\Modules\Cms\Entities\Block;
+use VaahCms\Modules\Cms\Models\BlockBase;
 use VaahCms\Modules\Cms\Entities\ContentType;
 use VaahCms\Modules\Cms\Entities\FieldType;
-use WebReinvent\VaahCms\Entities\Theme;
+use WebReinvent\VaahCms\Models\Theme;
 
 class MediaController extends Controller
 {

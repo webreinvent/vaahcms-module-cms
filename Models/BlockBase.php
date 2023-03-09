@@ -1,19 +1,21 @@
-<?php namespace VaahCms\Modules\Cms\Entities;
+<?php namespace VaahCms\Modules\Cms\Models;
 
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use WebReinvent\VaahCms\Models\Theme;
+use WebReinvent\VaahCms\Models\ThemeLocation;
 use WebReinvent\VaahCms\Models\User;
 use WebReinvent\VaahCms\Traits\CrudWithUuidObservantTrait;
 
-class ContentType extends Model {
+class BlockBase extends Model {
 
     use SoftDeletes;
     use CrudWithUuidObservantTrait;
 
     //-------------------------------------------------
-    protected $table = 'vh_cms_content_types';
+    protected $table = 'vh_cms_blocks';
     //-------------------------------------------------
     protected $dates = [
         'created_at',
@@ -25,19 +27,13 @@ class ContentType extends Model {
     //-------------------------------------------------
     protected $fillable = [
         'uuid',
+        'vh_theme_id',
+        'vh_theme_location_id',
         'name',
         'slug',
-        'plural',
-        'plural_slug',
-        'singular',
-        'singular_slug',
-        'excerpt',
+        'content',
+        'sort',
         'is_published',
-        'is_commentable',
-        'content_statuses',
-        'total_records',
-        'published_records',
-        'total_comments',
         'meta',
         'created_by',
         'updated_by',
@@ -81,25 +77,26 @@ class ContentType extends Model {
         return null;
     }
     //-------------------------------------------------
-
-    //-------------------------------------------------
-    public function setContentStatusesAttribute($value)
+    public function setContentAttribute($value)
     {
         if($value)
         {
-            $this->attributes['content_statuses'] = json_encode($value);
+            $this->attributes['content'] = vh_translate_dynamic_strings($value,['has_replace_string' => true]);
         } else{
-            $this->attributes['content_statuses'] = null;
+            $this->attributes['content'] = null;
         }
+
     }
     //-------------------------------------------------
-    public function getContentStatusesAttribute($value)
+    public function getContentAttribute($value)
     {
         if($value)
         {
-            return json_decode($value);
+            return vh_translate_dynamic_strings($value);
         }
+
         return null;
+
     }
     //-------------------------------------------------
     public function setMetaAttribute($value)
@@ -158,16 +155,18 @@ class ContentType extends Model {
         )->select('id', 'uuid', 'first_name', 'last_name', 'email');
     }
     //-------------------------------------------------
-    public function contents()
+    public function theme()
     {
-        return $this->hasMany(Content::class,
-            'vh_cms_content_type_id', 'id');
+        return $this->belongsTo(Theme::class,
+            'vh_theme_id', 'id'
+        );
     }
     //-------------------------------------------------
-    public function groups()
+    public function themeLocation()
     {
-        return $this->morphMany(FormGroup::class, 'groupable')
-            ->orderBy('sort', 'asc');
+        return $this->belongsTo(ThemeLocation::class,
+            'vh_theme_location_id', 'id'
+        );
     }
     //-------------------------------------------------
     public static function postCreate($request)
@@ -177,6 +176,19 @@ class ContentType extends Model {
         if(isset($validation['status']) && $validation['status'] == 'failed')
         {
             return $validation;
+        }
+
+        // check if sort number exist
+        $sort_number_exist = static::where('vh_theme_id',$request['vh_theme_id'])
+            ->where('vh_theme_location_id',$request['vh_theme_location_id'])
+            ->where('sort',$request['sort'])
+            ->first();
+
+        if($sort_number_exist)
+        {
+            $response['status'] = 'failed';
+            $response['errors'][] = "Select different sort number.";
+            return $response;
         }
 
         $item = new static();
@@ -193,34 +205,44 @@ class ContentType extends Model {
     //-------------------------------------------------
     public static function getList($request)
     {
-        if($request['sort_by'])
+        if($request->has('sort_by') && $request['sort_by'])
         {
             $list = static::orderBy($request['sort_by'], $request['sort_order']);
         }else{
             $list = static::orderBy('id', $request['sort_order']);
         }
 
-        if($request['trashed'] == 'true')
+        $list->with([ 'themeLocation','theme']);
+
+        if($request->has('trashed') && $request['trashed'] == 'true')
         {
 
             $list->withTrashed();
         }
 
-        if(isset($request->from) && isset($request->to))
+        if($request->has('from') && $request->from
+            && $request->has('to') && $request->to)
         {
             $list->whereBetween('updated_at',[$request->from." 00:00:00",$request->to." 23:59:59"]);
         }
 
-        if($request['filter'] && $request['filter'] == '1')
+        if($request->has('filter') &&  $request['filter'])
         {
+            if($request['filter'] == '1')
+            {
+                $list->where('is_published',$request['filter']);
+            }elseif($request['filter'] == '10'){
+                $list->whereNull('is_published')->orWhere('is_published',0);
+            }else{
+                $list->with(['themeLocation'])
+                    ->whereHas('themeLocation', function ($q) use ($request){
+                        $q->where('slug', $request['filter']);
+                    });
 
-            $list->where('is_published',$request['filter']);
-        }elseif($request['filter'] == '10'){
-
-            $list->whereNull('is_published')->orWhere('is_published',0);
+            }
         }
 
-        if(isset($request->q))
+        if($request->has('q') && $request->q)
         {
             $search_array = explode(" ",$request->q);
 
@@ -236,8 +258,6 @@ class ContentType extends Model {
 
         $data['list'] = $list->paginate(config('vaahcms.per_page'));
 
-
-
         $response['status'] = 'success';
         $response['data'] = $data;
 
@@ -249,15 +269,19 @@ class ContentType extends Model {
     public static function validation($request)
     {
         $rules = array(
-            'name' => 'required|unique:vh_cms_content_types|max:60',
-            'slug' => 'required|unique:vh_cms_content_types|max:60',
-            'plural' => 'required|max:60',
-            'plural_slug' => 'required|unique:vh_cms_content_types|max:60',
-            'singular' => 'required|max:60',
-            'singular_slug' => 'required|unique:vh_cms_content_types|max:60',
+            'name' => 'required|unique:vh_cms_blocks|max:60',
+            'slug' => 'required|unique:vh_cms_blocks|max:60',
+            'content' => 'required',
+            'vh_theme_id' => 'required',
+            'vh_theme_location_id' => 'required',
+            'sort' => 'required|numeric|min:0|regex:/^\d{1,13}?$/',
+        );
+        $messages = array(
+            'vh_theme_id.required' => 'Select a theme.',
+            'vh_theme_location_id.required' => 'Select a theme location.',
         );
 
-        $validator = \Validator::make( $request->all(), $rules);
+        $validator = \Validator::make( $request->all(), $rules, $messages);
         if ( $validator->fails() ) {
 
             $errors             = errorsToArray($validator->errors());
@@ -265,8 +289,6 @@ class ContentType extends Model {
             $response['errors'] = $errors;
             return $response;
         }
-
-        $data = [];
 
         $response['status'] = 'success';
 
@@ -279,13 +301,17 @@ class ContentType extends Model {
         $rules = array(
             'name' => 'required|max:60',
             'slug' => 'required|max:60',
-            'plural' => 'required|max:60',
-            'plural_slug' => 'required|max:60',
-            'singular' => 'required|max:60',
-            'singular_slug' => 'required|max:60',
+            'content' => 'required',
+            'vh_theme_id' => 'required',
+            'vh_theme_location_id' => 'required',
+            'sort' => 'required|numeric|min:0|regex:/^\d{1,13}?$/',
+        );
+        $messages = array(
+            'vh_theme_id.required' => 'Select a theme.',
+            'vh_theme_location_id.required' => 'Select a theme location.',
         );
 
-        $validator = \Validator::make( $request->all(), $rules);
+        $validator = \Validator::make( $request->all(), $rules, $messages);
         if ( $validator->fails() ) {
 
             $errors             = errorsToArray($validator->errors());
@@ -293,8 +319,6 @@ class ContentType extends Model {
             $response['errors'] = $errors;
             return $response;
         }
-
-        $data = [];
 
         $response['status'] = 'success';
 
@@ -307,28 +331,12 @@ class ContentType extends Model {
     public static function getItem($id)
     {
 
-        $item = static::where('id', $id)->with(['createdByUser', 'updatedByUser', 'deletedByUser'])
-            ->withTrashed()
-            ->first();
-
-        $response['status'] = 'success';
-        $response['data'] = $item;
-
-        return $response;
-
-    }
-    //-------------------------------------------------
-    public static function getItemWithRelations($id)
-    {
-
         $item = static::where('id', $id)
-            ->with(['createdByUser', 'updatedByUser',
+            ->with([
+                'theme', 'themeLocation',
+                'createdByUser', 'updatedByUser',
                 'deletedByUser',
-                'groups'=>function($g){
-                $g->orderBy('sort', 'asc')->with(['fields' => function($f){
-                    $f->orderBy('sort', 'asc')->with(['type']);
-                }]);
-                }])
+            ])
             ->withTrashed()
             ->first();
 
@@ -336,92 +344,6 @@ class ContentType extends Model {
         $response['data'] = $item;
 
         return $response;
-
-    }
-    //-------------------------------------------------
-    public static function syncWithFormGroups(ContentType $content_type, $groups_array)
-    {
-
-        $stored_groups = $content_type->groups()->get()->pluck('slug','id')->toArray();
-
-        $input_groups = collect($groups_array)->pluck('slug')->toArray();
-        $groups_to_delete = array_diff($stored_groups, $input_groups);
-
-        if(count($groups_to_delete) > 0)
-        {
-            $groups_to_delete = array_flip($groups_to_delete);
-
-            FormGroup::deleteItems($groups_to_delete);
-        }
-
-        foreach($groups_array as $g_index => $group)
-        {
-
-            $group['sort'] = $g_index;
-            $group['slug'] = Str::slug($group['name']);
-
-            $stored_group = $content_type->groups()->where('slug', $group['slug'])->first();
-
-            $group_fillable = $group;
-            unset($group_fillable['fields']);
-
-
-            if($stored_group)
-            {
-                $stored_group->fill($group_fillable);
-                $stored_group =$content_type->groups()->save($stored_group);
-            } else{
-                $stored_group = $content_type->groups()->create($group_fillable);
-            }
-
-            foreach ($group['fields'] as $key => $field){
-                if(!isset($field['slug']) || !$field['slug']){
-                    $group['fields'][$key]['slug'] = Str::slug($field['name']);
-                }
-            }
-
-            FormGroup::syncWithFormFields($stored_group, $group['fields']);
-
-        }
-
-
-    }
-    //-------------------------------------------------
-    public static function postStoreGroups($request,$id)
-    {
-
-        $rules = array(
-            '*.fields' => 'array',
-            '*.fields.*.name' => 'required|max:100',
-        );
-
-        $validator = \Validator::make( $request->all(), $rules);
-        if ( $validator->fails() ) {
-
-            $errors             = errorsToArray($validator->errors());
-            $response['status'] = 'failed';
-            $response['errors'] = $errors;
-            return $response;
-        }
-
-
-        $content_type = static::find($id);
-
-        //find delete groups
-        static::syncWithFormGroups($content_type, $request->all());
-
-
-        $response = [];
-
-        $response['status'] = 'success';
-        $response['data'][] = '';
-        $response['messages'][] = 'Action was successful';
-        if(env('APP_DEBUG'))
-        {
-            $response['hint'][] = '';
-        }
-        return $response;
-
 
     }
     //-------------------------------------------------
@@ -434,8 +356,11 @@ class ContentType extends Model {
             return $validation;
         }
 
+
         // check if name exist
-        $name_exist = static::where('id','!=',$request['id'])->where('name',$request['name'])->first();
+        $name_exist = static::where('id','!=',$request['id'])
+            ->where('name',$request['name'])
+            ->first();
 
         if($name_exist)
         {
@@ -446,12 +371,29 @@ class ContentType extends Model {
 
 
         // check if slug exist
-        $slug_exist = static::where('id','!=',$request['id'])->where('slug',$request['slug'])->first();
+        $slug_exist = static::where('id','!=',$request['id'])
+            ->where('slug',$request['slug'])
+            ->first();
 
         if($slug_exist)
         {
             $response['status'] = 'failed';
             $response['errors'][] = "This slug is already exist.";
+            return $response;
+        }
+
+
+        // check if sort number exist
+        $sort_number_exist = static::where('id','!=',$request['id'])
+            ->where('vh_theme_id',$request['vh_theme_id'])
+            ->where('vh_theme_location_id',$request['vh_theme_location_id'])
+            ->where('sort',$request['sort'])
+            ->first();
+
+        if($sort_number_exist)
+        {
+            $response['status'] = 'failed';
+            $response['errors'][] = "Select different sort number.";
             return $response;
         }
 
@@ -596,11 +538,7 @@ class ContentType extends Model {
             $item = static::where('id', $id)->withTrashed()->first();
             if($item)
             {
-
-                $item->contents()->forceDelete();
-
                 $item->forceDelete();
-
             }
         }
 
@@ -609,6 +547,58 @@ class ContentType extends Model {
         $response['messages'][] = 'Action was successful';
 
         return $response;
+    }
+
+    //---------------------------------------------------------------------------
+    public static function getBlock($block_slug)
+    {
+
+        if(!$block_slug){
+            return false;
+        }
+
+
+        $block = self::where('is_published',1)
+            ->where('slug',$block_slug)
+            ->where('vh_theme_id',vh_get_theme_id())
+            ->first();
+
+        if(!$block)
+        {
+            return false;
+        }
+
+        return vh_translate_dynamic_strings($block->content);
+    }
+
+    //---------------------------------------------------------------------------
+    public static function getBlocksByLocation($location)
+    {
+
+
+        if(!$location)
+        {
+            return false;
+        }
+
+        $blocks = self::where('vh_theme_location_id', $location->id)
+            ->where('is_published',1)
+            ->orderBy('sort','asc')
+            ->get();
+
+        if(count($blocks) < 1)
+        {
+            return false;
+        }
+
+        $data = "";
+
+        foreach ($blocks as $block){
+            $data .= vh_translate_dynamic_strings($block->content);
+        }
+
+
+        return $data;
     }
     //-------------------------------------------------
     //-------------------------------------------------
