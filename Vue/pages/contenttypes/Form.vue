@@ -109,12 +109,55 @@ const toggleFormMenu = (event) => {
                                v-model="store.item.slug"/>
                 </VhField>
 
-                <VhField label="Is Active">
+                <VhField label="Content Plural Name">
+                    <InputText class="w-full"
+                               name="contenttypes-plural_name"
+                               data-testid="contenttypes-plural_name"
+                               v-model="store.item.plural"/>
+                </VhField>
+
+                <VhField label="Content Plural Slug">
+                    <InputText class="w-full"
+                               name="contenttypes-plural_slug"
+                               data-testid="contenttypes-plural_slug"
+                               v-model="store.item.plural_slug"/>
+                </VhField>
+
+                <VhField label="Content Singular Name">
+                    <InputText class="w-full"
+                               name="contenttypes-singular"
+                               data-testid="contenttypes-singular_name"
+                               v-model="store.item.singular"/>
+                </VhField>
+
+                <VhField label="Content Singular Slug">
+                    <InputText class="w-full"
+                               name="contenttypes-singular_slug"
+                               data-testid="contenttypes-singular_slug"
+                               v-model="store.item.singular_slug"/>
+                </VhField>
+
+                <VhField label="Excerpt">
+                    <Textarea  class="w-full"
+                               rows="5" cols="30"
+                               name="contenttypes-excerpt"
+                               data-testid="contenttypes-excerpt"
+                               v-model="store.item.excerpt"/>
+                </VhField>
+
+                <VhField label="Is Published">
                     <InputSwitch v-bind:false-value="0"
                                  v-bind:true-value="1"
-                                 name="contenttypes-active"
-                                 data-testid="contenttypes-active"
-                                 v-model="store.item.is_active"/>
+                                 name="contenttypes-is_published"
+                                 data-testid="contenttypes-is_published"
+                                 v-model="store.item.is_published"/>
+                </VhField>
+                <VhField label="Is Comments Allowed">
+                    <InputSwitch v-bind:false-value="0"
+                                 v-bind:true-value="1"
+                                 name="contenttypes-is_commentable"
+                                 data-testid="contenttypes-is_commentable"
+                                 v-model="store.item.is_commentable"/>
                 </VhField>
 
             </div>
