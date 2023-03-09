@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 use WebReinvent\VaahCms\Models\User;
 use WebReinvent\VaahCms\Traits\CrudWithUuidObservantTrait;
 
-class ContentType extends Model {
+class ContentTypeBase extends Model {
 
     use SoftDeletes;
     use CrudWithUuidObservantTrait;
@@ -339,7 +339,7 @@ class ContentType extends Model {
 
     }
     //-------------------------------------------------
-    public static function syncWithFormGroups(ContentType $content_type, $groups_array)
+    public static function syncWithFormGroups(ContentTypeBase $content_type, $groups_array)
     {
 
         $stored_groups = $content_type->groups()->get()->pluck('slug','id')->toArray();
