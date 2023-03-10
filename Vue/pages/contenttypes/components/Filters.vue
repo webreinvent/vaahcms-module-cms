@@ -46,29 +46,29 @@ const store = useContentTypeStore();
 
             <VhFieldVertical >
                 <template #label>
-                    <b>Is Active:</b>
+                    <b>Is Published:</b>
                 </template>
 
                 <div class="field-radiobutton">
                     <RadioButton name="active-all"
                                  value="null"
                                  data-testid="contenttypes-filters-active-all"
-                                 v-model="store.query.filter.is_active" />
+                                 v-model="store.query.filter.is_published" />
                     <label for="active-all">All</label>
                 </div>
                 <div class="field-radiobutton">
                     <RadioButton name="active-true"
                                  data-testid="contenttypes-filters-active-true"
                                  value="true"
-                                 v-model="store.query.filter.is_active" />
-                    <label for="active-true">Only Active</label>
+                                 v-model="store.query.filter.is_published" />
+                    <label for="active-true">Only Published</label>
                 </div>
                 <div class="field-radiobutton">
                     <RadioButton name="active-false"
                                  data-testid="contenttypes-filters-active-false"
                                  value="false"
-                                 v-model="store.query.filter.is_active" />
-                    <label for="active-false">Only Inactive</label>
+                                 v-model="store.query.filter.is_published" />
+                    <label for="active-false">Only Unpublished</label>
                 </div>
 
             </VhFieldVertical>
