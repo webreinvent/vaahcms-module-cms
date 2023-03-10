@@ -15,7 +15,7 @@ let empty_states = {
         rows: null,
         filter: {
             q: null,
-            is_active: null,
+            is_published: null,
             trashed: null,
             sort: null,
         },
@@ -64,7 +64,14 @@ export const useContentTypeStore = defineStore({
         list_bulk_menu: [],
         item_menu_list: [],
         item_menu_state: null,
-        new_status: null,
+        new_status: [
+            'draft',
+            'published',
+            'protected',
+        ],
+        new_status_item: null,
+        edit_status_index: null,
+        disable_status_editing: true,
         form_menu_list: []
     }),
     getters: {
@@ -156,16 +163,31 @@ export const useContentTypeStore = defineStore({
         watchItem()
         {
             if(this.item){
-                    watch(() => this.item.name, (newVal,oldVal) =>
+                watch(() => this.item.name, (newVal,oldVal) =>
+                    {
+                        if(newVal && newVal !== "")
                         {
-                            if(newVal && newVal !== "")
-                            {
-                                this.item.name = vaah().capitalising(newVal);
-                                this.item.slug = vaah().strToSlug(newVal);
-                            }
-                        },{deep: true}
-                    )
-                }
+                            this.item.slug = vaah().strToSlug(newVal);
+                        }
+                    },{deep: true}
+                );
+                watch(() => this.item.plural, (newVal,oldVal) =>
+                    {
+                        if(newVal && newVal !== "")
+                        {
+                            this.item.plural_slug = vaah().strToSlug(newVal);
+                        }
+                    },{deep: true}
+                );
+                watch(() => this.item.singular, (newVal,oldVal) =>
+                    {
+                        if(newVal && newVal !== "")
+                        {
+                            this.item.singular_slug = vaah().strToSlug(newVal);
+                        }
+                    },{deep: true}
+                );
+            }
         },
         //---------------------------------------------------------------------
         async getAssets() {
@@ -362,6 +384,7 @@ export const useContentTypeStore = defineStore({
                 case 'create-and-new':
                 case 'create-and-close':
                 case 'create-and-clone':
+                    this.item.content_statuses = JSON.stringify(this.new_status);
                     options.method = 'POST';
                     options.params = item;
                     break;
@@ -373,6 +396,7 @@ export const useContentTypeStore = defineStore({
                 case 'save':
                 case 'save-and-close':
                 case 'save-and-clone':
+                    this.item.content_statuses = JSON.stringify(this.new_status);
                     options.method = 'PUT';
                     options.params = item;
                     ajax_url += '/'+item.id
@@ -443,7 +467,7 @@ export const useContentTypeStore = defineStore({
         //---------------------------------------------------------------------
         async toggleIsActive(item)
         {
-            if(item.is_active)
+            if(item.is_published)
             {
                 await this.itemAction('activate', item);
             } else{
@@ -669,13 +693,13 @@ export const useContentTypeStore = defineStore({
         {
             this.list_selected_menu = [
                 {
-                    label: 'Activate',
+                    label: 'Publish',
                     command: async () => {
                         await this.updateList('activate')
                     }
                 },
                 {
-                    label: 'Deactivate',
+                    label: 'Unpublished',
                     command: async () => {
                         await this.updateList('deactivate')
                     }
@@ -712,13 +736,13 @@ export const useContentTypeStore = defineStore({
         {
             this.list_bulk_menu = [
                 {
-                    label: 'Mark all as active',
+                    label: 'Mark all as published',
                     command: async () => {
                         await this.listAction('activate-all')
                     }
                 },
                 {
-                    label: 'Mark all as inactive',
+                    label: 'Mark all as unpublished',
                     command: async () => {
                         await this.listAction('deactivate-all')
                     }
@@ -879,9 +903,28 @@ export const useContentTypeStore = defineStore({
 
         },
         //---------------------------------------------------------------------
+        getNewStatus(){
+            if(this.item.id){
+                this.new_status = JSON.parse(this.item.content_statuses);
+            }
+        },
+        //---------------------------------------------------------------------
         addStatus(){
-            this.item.content_statuses.push(this.new_status);
-            this.new_status = null;
+            this.item.content_statuses = null;
+            this.new_status.push(this.new_status_item);
+            this.new_status_item = null;
+        },
+        //---------------------------------------------------------------------
+        toggleEditStatus(status_index)
+        {
+            this.edit_status_index = status_index;
+            if(this.disable_status_editing)
+            {
+                this.disable_status_editing = false;
+            } else
+            {
+                this.disable_status_editing = true;
+            }
         },
         //---------------------------------------------------------------------
     }
