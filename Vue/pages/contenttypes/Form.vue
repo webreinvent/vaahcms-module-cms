@@ -1,7 +1,7 @@
 <script setup>
 import {onMounted, ref, watch} from "vue";
 import { useContentTypeStore } from '../../stores/store-contenttypes'
-
+import draggable from 'vuedraggable'
 import VhField from './../../vaahvue/vue-three/primeflex/VhField.vue'
 import {useRoute} from 'vue-router';
 
@@ -16,6 +16,7 @@ onMounted(async () => {
     }
 
     await store.watchItem();
+    store.getNewStatus();
 });
 
 //--------form_menu
@@ -93,7 +94,7 @@ const toggleFormMenu = (event) => {
             </template>
 
 
-            <div v-if="store.item">
+            <div v-if="store.item" >
 
                 <VhField label="Name">
                     <InputText class="w-full"
@@ -160,16 +161,30 @@ const toggleFormMenu = (event) => {
                                  v-model="store.item.is_commentable"/>
                 </VhField>
                 <draggable
-                    v-model="store.item.content_statuses"
+                    v-model="store.new_status"
                     class="dragArea list-group"
                     :group="{ name: 'content-types', pull: 'clone', put: false }"
                     @start="drag=true"
                     @end="drag=false"
                     item-key="id">
-                    <template #item="{element}">
+                    <template #item="{element,index}">
                         <div class="p-inputgroup mb-3">
-                            <Button icon="pi pi-bars" class="p-button-sm p-button-secondary"></Button>
-                            <Button :label="element.title" class="p-button-secondary p-button-sm"></Button>
+                            <Button icon="pi pi-bars" class="p-button-sm p-button-secondary"/>
+                            <InputText class="w-full"
+                                       v-if="index == store.edit_status_index && !store.disable_status_editing"
+                                       name="contenttypes-statuses_name"
+                                       data-testid="contenttypes-statuses_name"
+                                       v-model="store.new_status[index]"/>
+                            <InputText class="w-full"
+                                       v-else
+                                       name="contenttypes-statuses_name"
+                                       data-testid="contenttypes-statuses_name"
+                                       :disabled="true"
+                                       v-model="store.new_status[index]"/>
+                            <Button icon="pi pi-pencil"
+                                    data-testid="contenttypes-statuses_name_edit"
+                                    @click="store.toggleEditStatus(index)"
+                                    class="p-button-sm p-button-secondary"/>
                         </div>
                     </template>
                 </draggable>
@@ -177,8 +192,8 @@ const toggleFormMenu = (event) => {
                     <InputText class="w-full"
                                name="contenttypes-new_status"
                                data-testid="contenttypes-new_status"
-                               v-model="store.new_status"
-                               @input="store.addStatus"/>
+                               v-model="store.new_status_item"
+                               @blur="store.addStatus"/>
                 </VhField>
 
             </div>
