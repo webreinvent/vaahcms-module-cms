@@ -96,6 +96,11 @@ const useVaah = vaah();
 
                         <Button class="p-button-tiny p-button-text"
                                 data-testid="contenttypes-table-to-view"
+                                v-tooltip.top="'Content Structure'"
+                                @click="store.toContentStructure(prop.data)"
+                                icon="pi pi-align-left" />
+                        <Button class="p-button-tiny p-button-text"
+                                data-testid="contenttypes-table-to-view"
                                 v-tooltip.top="'View'"
                                 @click="store.toView(prop.data)"
                                 icon="pi pi-eye" />

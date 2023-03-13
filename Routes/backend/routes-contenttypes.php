@@ -3,9 +3,9 @@
 Route::group(
     [
         'prefix' => 'backend/cms/contenttypes',
-        
+
         'middleware' => ['web', 'has.backend.access'],
-        
+
         'namespace' => 'Backend',
 ],
 function () {
@@ -42,6 +42,11 @@ function () {
     Route::get('/{id}', 'ContentTypesController@getItem')
         ->name('vh.backend.cms.contenttypes.read');
     /**
+     * Get Content Structure
+     */
+    Route::get('/relations/{id}', 'ContentTypesController@getItemRelations')
+        ->name('backend.cms.content.types.item.relations');
+    /**
      * Update Item
      */
     Route::match(['put', 'patch'], '/{id}', 'ContentTypesController@updateItem')
@@ -63,6 +68,11 @@ function () {
      */
     Route::any('/{id}/action/{action}', 'ContentTypesController@itemAction')
         ->name('vh.backend.cms.contenttypes.item.action');
+    /**
+     * Store group
+     */
+    Route::post('/store/{id}/groups', 'ContentTypesController@postStoreGroups')
+        ->name('backend.cms.content.types.store.groups');
 
     //---------------------------------------------------------
 

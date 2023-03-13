@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 use WebReinvent\VaahCms\Traits\CrudWithUuidObservantTrait;
 use WebReinvent\VaahCms\Models\User;
 
-class ContentType extends Model
+class ContentType extends ContentTypeBase
 {
 
     use SoftDeletes;
