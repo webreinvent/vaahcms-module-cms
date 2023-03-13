@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use VaahCms\Modules\Cms\Entities\Content;
+use VaahCms\Modules\Cms\Entities\FieldType;
 use VaahCms\Modules\cms\Models\ContentType;
 
 
@@ -44,6 +46,11 @@ class ContentTypesController extends Controller
             {
                 $data['empty_item'][$column] = null;
             }
+
+            $data['field_types'] = FieldType::select('id', 'name', 'slug', 'meta')
+                ->get();
+
+            $data['non_repeatable_fields'] = Content::getNonRepeatableFields();
 
             $data['actions'] = [];
 
@@ -152,6 +159,12 @@ class ContentTypesController extends Controller
         }
     }
     //----------------------------------------------------------
+    public function postStoreGroups(Request $request, $id)
+    {
+        $response = ContentType::postStoreGroups($request, $id);
+        return response()->json($response);
+    }
+    //----------------------------------------------------------
     public function getItem(Request $request, $id)
     {
         try{
@@ -218,6 +231,24 @@ class ContentTypesController extends Controller
                 return $response;
             }
         }
+    }
+    //----------------------------------------------------------
+    public function getItemRelations(Request $request, $id)
+    {
+        try{
+            return ContentType::getItemWithRelations($id);
+        }catch (\Exception $e){
+            $response = [];
+            $response['status'] = 'failed';
+            if(env('APP_DEBUG')){
+                $response['errors'][] = $e->getMessage();
+                $response['hint'] = $e->getTrace();
+            } else{
+                $response['errors'][] = 'Something went wrong.';
+                return $response;
+            }
+        }
+
     }
     //----------------------------------------------------------
 
