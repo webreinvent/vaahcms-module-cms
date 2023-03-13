@@ -72,7 +72,12 @@ export const useContentTypeStore = defineStore({
         new_status_item: null,
         edit_status_index: null,
         disable_status_editing: true,
-        form_menu_list: []
+        form_menu_list: [],
+        new_group:{
+            name:null,
+            fields:[
+            ]
+        },
     }),
     getters: {
 
@@ -104,6 +109,10 @@ export const useContentTypeStore = defineStore({
                 case 'contenttypes.index':
                     this.view = 'large';
                     this.list_view_width = 12;
+                    break;
+                case 'contenttypes.contentstructure':
+                    this.view = 'large';
+                    this.list_view_width = 4;
                     break;
                 default:
                     this.view = 'small';
@@ -246,6 +255,49 @@ export const useContentTypeStore = defineStore({
                     this.getItemAfter
                 );
             }
+        },
+        //---------------------------------------------------------------------
+        async getContentStrucutre(id){
+            if(id){
+                await vaah().ajax(
+                    ajax_url+'/relations/'+id,
+                    this.getContentStrucutreAfter
+                );
+            }
+        },
+        //---------------------------------------------------------------------
+        getContentStrucutreAfter(data, res) {
+            if(data){
+                if(data.groups.length == 0){
+                    data.groups[0] = {
+                        'name' : 'Default',
+                        'slug' : 'default',
+                        'fields' : [],
+                    };
+                }
+                this.item = data;
+            }
+
+        },
+        //---------------------------------------------------------------------
+        async storeGroups(id) {
+            let options = {
+                method:'post',
+                params:this.item.groups,
+            };
+
+            await vaah().ajax(
+                this.ajax_url+'/store/'+id+'/groups',
+                this.storeGroupsAfter,
+                options
+            );
+        },
+        //---------------------------------------------------------------------
+        storeGroupsAfter(data, res) {
+            if(data){
+                this.getContentStrucutre();
+            }
+
         },
         //---------------------------------------------------------------------
         async getItemAfter(data, res)
@@ -926,6 +978,46 @@ export const useContentTypeStore = defineStore({
                 this.disable_status_editing = true;
             }
         },
+        //---------------------------------------------------------------------
+        toContentStructure(item) {
+            this.item = vaah().clone(item);
+            this.$router.push({name: 'contenttypes.contentstructure', params: {id: item.id}});
+
+        },
+        //---------------------------------------------------------------------
+        removeGroup(item,index){
+
+            this.item.groups.splice(index, 1);
+            vaah().toastErrors(['Removed']);
+        },
+        //---------------------------------------------------------------------
+        removeField(idx,i) {
+            this.item.groups[i].content_types.splice(idx, 1);
+        },
+        //---------------------------------------------------------------------
+        getCopy(value)
+        {
+            navigator.clipboard.writeText(value);
+            vaah().toastSuccess(['Copied']);
+        },
+        //---------------------------------------------------------------------
+        addNewGroup() {
+            if (this.new_group.name) {
+                if (this.new_group.name.length > 100) {
+                    vaah().toastErrors(['Group may not be greater than 100 characters.']);
+                } else {
+                    this.item.groups.push(this.new_group);
+                    this.new_group = {
+                        name: null,
+                        fields: [
+                        ],
+                    }
+                }
+            } else {
+                vaah().toastErrors(['Group Field is required.']);
+            }
+        },
+        //---------------------------------------------------------------------
         //---------------------------------------------------------------------
     }
 });
