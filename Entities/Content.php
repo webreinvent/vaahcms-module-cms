@@ -281,7 +281,10 @@ class Content extends Model {
 
                             $relation =  vh_content_relations_by_name($field['meta']['type']);
 
-                            if($relation && isset($relation['namespace']) && $relation['namespace']){
+                            if($relation && isset($relation['namespace'])
+                                && $relation['namespace']
+                                && $field && isset($field['content'])
+                                && is_array($field['content'])){
                                 foreach ($field['content'] as $id){
                                     $data = [
                                         'relatable_id' => $id,
