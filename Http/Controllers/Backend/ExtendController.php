@@ -104,18 +104,17 @@ class ExtendController extends Controller
                     'icon'=> 'pi pi-file',
                     'label'=> 'Content',
                     'items' => []
-                ]
+                ],
             ]
         ];
 
         $content_types = ContentType::isPublished()->get();
-
         if($content_types->count() > 0)
         {
             foreach ($content_types as $content_type)
             {
                 $list[0]['items'][3]['items'][] =  [
-                    'link' => self::$link."contents/".$content_type->slug."/list",
+                    'url' => self::$link."contents/".$content_type->slug."/list",
                     'label'=> $content_type->name
                 ];
             }
