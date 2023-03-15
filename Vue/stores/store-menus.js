@@ -37,6 +37,7 @@ export const useMenuStore = defineStore({
         app: null,
         active_menu: null,
         content_list: [],
+        filtered_content_list: [],
         active_theme: null,
         active_location: null,
         assets: null,
@@ -71,6 +72,7 @@ export const useMenuStore = defineStore({
         list_bulk_menu: [],
         item_menu_list: [],
         item_menu_state: null,
+        content_search: null,
         form_menu_list: [],
         menu_types:[
             {
@@ -1097,6 +1099,7 @@ export const useMenuStore = defineStore({
             if(data){
 
                 this.content_list = data;
+                this.filtered_content_list = data;
 
             }
 
@@ -1139,6 +1142,18 @@ export const useMenuStore = defineStore({
             };
 
             return item;
+        },
+        searchContent(){
+
+            if (this.content_search.trim().length == 0) {
+                console.log(this.content_search.trim().length);
+                this.filtered_content_list = this.content_list;
+            }
+            else {
+                this.filtered_content_list = this.content_list.filter((list) => {
+                    return list.name.toLowerCase().startsWith(this.content_search.toLowerCase());
+                });
+            }
         },
     }
 });
