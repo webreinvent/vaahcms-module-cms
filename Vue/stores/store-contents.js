@@ -66,6 +66,8 @@ export const useContentStore = defineStore({
         form_menu_list: [],
         users:null,
         user_list:null,
+        active_theme:null,
+        active_index:[],
     }),
     getters: {
 
@@ -193,6 +195,8 @@ export const useContentStore = defineStore({
                 if(this.route.params && !this.route.params.id){
                     this.item = vaah().clone(data.empty_item);
                 }
+                // this.active_theme = this.assets.default_theme;
+
                 // this.getUser();
             }
         },
@@ -904,9 +908,17 @@ export const useContentStore = defineStore({
             }
         },
         //---------------------------------------------------------------------
-        setAuthor(user)
-        {
-            this.item.author = user.id;
+        expandAll() {
+            this.active_index = [0,1];
+        },
+        collapseAll() {
+            this.active_index = [];
+        },
+        //---------------------------------------------------------------------
+        setActiveTheme () {
+            let theme = vaah().findInArrayByKey(this.assets.themes,
+                'id', this.item.vh_theme_id);
+            this.active_theme = theme;
         },
         //---------------------------------------------------------------------
     }
