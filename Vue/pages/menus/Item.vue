@@ -91,11 +91,13 @@ const toggleItemMenu = (event) => {
                     <!--/form_menu-->
                     <Button class="p-button-primary"
                             icon="pi pi-cog"
+                            v-tooltip.top="'Settings'"
                             data-testid="menus-item_delete"
                             @click="store.menu_settings = !store.menu_settings"/>
 
                     <Button class="p-button-primary"
                             icon="pi pi-trash"
+                            v-tooltip.top="'Delete'"
                             data-testid="menus-item_delete"
                             @click="store.deleteItem()"/>
                 </div>
@@ -145,8 +147,10 @@ const toggleItemMenu = (event) => {
                                :group="{ name: 'menu_items', pull: 'clone', put: false }"  >
                     <template #item="{element}">
                             <div class="p-inputgroup mb-3">
-                                <Button icon="pi pi-bars" class="p-button-secondary p-button-sm"></Button>
-                                <Button :label="element.name" class="p-button-secondary p-button-sm"></Button>
+                                <Button icon="pi pi-bars"
+                                        class="p-button-secondary p-button-sm"/>
+                                <Button :label="element.name"
+                                        class="p-button-secondary p-button-sm"/>
                             </div>
                         </template>
                     </draggable>
@@ -160,8 +164,10 @@ const toggleItemMenu = (event) => {
                                :group="{ name: 'menu_items', pull: 'clone', put: false }"  >
                         <template #item="{element}">
                             <div class="p-inputgroup mb-3">
-                                <Button icon="pi pi-bars" class="p-button-secondary p-button-sm"></Button>
-                                <Button :label="element.name" class="p-button-secondary p-button-sm"></Button>
+                                <Button icon="pi pi-bars"
+                                        class="p-button-secondary p-button-sm"/>
+                                <Button :label="element.name"
+                                        class="p-button-secondary p-button-sm"/>
                             </div>
                         </template>
                     </draggable>
