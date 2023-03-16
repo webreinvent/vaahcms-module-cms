@@ -1176,8 +1176,9 @@ export const useMenuStore = defineStore({
         //---------------------------------------------------------------------
         deleteItemAfter (data, res) {
             if(data){
-                this.setActiveLocation();
-                this.toList()
+                this.query.vh_menu_id = null;
+                this.toList();
+
             }
 
         },
