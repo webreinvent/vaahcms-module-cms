@@ -86,6 +86,7 @@ export const useMenuStore = defineStore({
                 type: 'external-link',
             }
         ],
+        menu_settings:true,
     }),
     getters: {
 
@@ -984,7 +985,7 @@ export const useMenuStore = defineStore({
                 this.active_menu = vaah().findInArrayByKey(this.active_location.menus,
                     'id', this.query.vh_menu_id);
 
-
+                this.getItem(this.active_menu.id);
                 this.getMenuItems();
             }
 
@@ -1073,7 +1074,7 @@ export const useMenuStore = defineStore({
         storeItemAfter: function (data, res) {
 
             if(data){
-
+                this.getMenuItems();
             }
 
         },
@@ -1143,6 +1144,7 @@ export const useMenuStore = defineStore({
 
             return item;
         },
+        //---------------------------------------------------------------------
         searchContent(){
 
             if (this.content_search.trim().length == 0) {
@@ -1151,9 +1153,62 @@ export const useMenuStore = defineStore({
             }
             else {
                 this.filtered_content_list = this.content_list.filter((list) => {
-                    return list.name.toLowerCase().startsWith(this.content_search.toLowerCase());
+                    return list.name.toLowerCase().match(this.content_search.toLowerCase());
                 });
             }
+        },
+        //---------------------------------------------------------------------
+        deleteItem () {
+
+            let options = {
+                method:'post',
+                params:{
+                    inputs:[this.item.id]
+                }
+            };
+
+            vaah().ajax(
+                this.ajax_url+'/actions/bulk-delete',
+                this.deleteItemAfter,
+                options
+            );
+        },
+        //---------------------------------------------------------------------
+        deleteItemAfter (data, res) {
+            if(data){
+                this.query.vh_menu_id = null;
+                this.toList();
+
+            }
+
+        },
+        //---------------------------------------------------------------------
+        setAsHomePage (id) {
+
+            let options = {
+                method:'post',
+                params:{
+                    inputs:id
+                }
+            };
+
+            vaah().ajax(
+                this.ajax_url+'/actions/set-as-home-page',
+                this.setAsHomePageAfter,
+                options
+            );
+        },
+        //---------------------------------------------------------------------
+        setAsHomePageAfter (data, res) {
+            if(data){
+                this.getMenuItems();
+
+            }
+
+        },
+        //---------------------------------------------------------------------
+        removeAt(item,idx) {
+            item.splice(idx, 1);
         },
     }
 });
