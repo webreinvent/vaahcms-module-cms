@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use VaahCms\Modules\Cms\Entities\ContentType;
+use VaahCms\Modules\Cms\Entities\ContentTypeBase;
 
 class JsonController extends Controller
 {
@@ -64,7 +64,7 @@ class JsonController extends Controller
         ];
 
 
-        $contents = ContentType::isPublished()->get();
+        $contents = ContentTypeBase::isPublished()->get();
 
         if($contents)
         {

@@ -1,8 +1,7 @@
-@extends("vaahcms::backend.vaahone.layouts.backend")
+@extends("vaahcms::backend.vaahtwo.layouts.backend")
 
 @section('vaahcms_extend_backend_css')
     <!--CSS Support for Bulma & Buefy-->
-    <link href="{{vh_get_backend_assets_url()}}/build/vaahone.css" rel="stylesheet" media="screen">
 
     <!--CSS Support for PrimeVue-->
     <link href="{{vh_get_backend_assets_url()}}/build/vaahtwo.css" rel="stylesheet" media="screen">

@@ -3,7 +3,7 @@
 use Closure;
 use Illuminate\Http\Request;
 use VaahCms\Modules\Cms\Entities\Content;
-use VaahCms\Modules\Cms\Entities\ContentType;
+use VaahCms\Modules\Cms\Entities\ContentTypeBase;
 
 class SetContent
 {
@@ -32,7 +32,7 @@ class SetContent
             $content_type = 'pages';
         }
 
-        $content_type = ContentType::where('slug', $content_type)->first();
+        $content_type = ContentTypeBase::where('slug', $content_type)->first();
 
 
         if(!$content_type)

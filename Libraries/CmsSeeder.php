@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use VaahCms\Modules\Cms\Entities\Content;
-use VaahCms\Modules\Cms\Entities\ContentType;
+use VaahCms\Modules\Cms\Entities\ContentTypeBase;
 use WebReinvent\VaahCms\Models\ThemeTemplate;
 use WebReinvent\VaahCms\Entities\User;
 
@@ -235,11 +235,11 @@ class CmsSeeder{
                 ->where('slug', $content_type['content']['slug'])
                 ->first();
 
-            $stored = ContentType::find($stored->id);
+            $stored = ContentTypeBase::find($stored->id);
 
 
             //template groups
-            ContentType::syncWithFormGroups($stored, $content_type['groups']);
+            ContentTypeBase::syncWithFormGroups($stored, $content_type['groups']);
 
 
         }
@@ -265,7 +265,7 @@ class CmsSeeder{
             return false;
         }
 
-        $content_type = ContentType::where('slug', $content_type_slug)
+        $content_type = ContentTypeBase::where('slug', $content_type_slug)
             ->with(['groups.fields.type'])
             ->first()->toArray();
 

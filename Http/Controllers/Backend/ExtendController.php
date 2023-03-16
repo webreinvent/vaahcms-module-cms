@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use VaahCms\Modules\Cms\Entities\ContentType;
+use VaahCms\Modules\Cms\Entities\ContentTypeBase;
 use WebReinvent\VaahCms\Entities\TaxonomyType;
 
 class ExtendController extends Controller
@@ -108,7 +108,8 @@ class ExtendController extends Controller
             ]
         ];
 
-        $content_types = ContentType::isPublished()->get();
+        $content_types = ContentTypeBase::isPublished()->get();
+
         if($content_types->count() > 0)
         {
             foreach ($content_types as $content_type)
