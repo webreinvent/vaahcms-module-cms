@@ -984,7 +984,7 @@ export const useMenuStore = defineStore({
                 this.active_menu = vaah().findInArrayByKey(this.active_location.menus,
                     'id', this.query.vh_menu_id);
 
-
+                this.getItem(this.active_menu.id);
                 this.getMenuItems();
             }
 

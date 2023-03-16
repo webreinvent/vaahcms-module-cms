@@ -118,13 +118,11 @@ const toggleItemMenu = (event) => {
             <template #content>
                 <Panel header="Contents" :toggleable="true" class="mb-4">
 
-                    <AutoComplete input-class="w-full"
-                                  v-model="store.content_search"
-                                  :suggestions="store.content_list"
-                                  data-testid="menus-content_search"
-                                  class="w-full mb-3"
-                                  @complete="store.searchContent($event)"
-                                  placeholder="Search"/>
+                    <InputText class="w-full mb-3"
+                               v-model="store.content_search"
+                               data-testid="menus-content_search"
+                               @input="store.searchContent()"
+                               placeholder="Search content"/>
 
                     <draggable :list="store.filtered_content_list"
                                class="dragArea"
