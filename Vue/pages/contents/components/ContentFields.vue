@@ -1,0 +1,34 @@
+<script  setup>
+import {reactive, ref, watch } from 'vue';
+import {vaah} from '../../../vaahvue/pinia/vaah'
+import { useContentStore } from '../../../stores/store-contents'
+
+
+const store = useContentStore();
+
+
+const props = defineProps({
+    groups: {
+        type: Array,
+        required: true
+    },
+});
+</script>
+
+<template>
+    <div v-if="groups.length > 0"
+         v-for="(arr_groups,g_index) in groups">
+        <div  v-for="(group,index) in arr_groups">
+            <div class="flex justify-content-between align-items-center w-full">
+                <h2 class="font-semibold text-lg">{{group.name}}</h2>
+                <div class="p-inputgroup w-max">
+                    <Button
+                            @click="store.copyGroupCode(group,index)"
+                            icon="pi pi-copy"
+                            data-testid="content-copy_group_code"
+                            class="p-button-sm "/>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

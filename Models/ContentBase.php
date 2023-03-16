@@ -1,4 +1,4 @@
-<?php namespace VaahCms\Modules\Cms\Entities;
+<?php namespace VaahCms\Modules\Cms\Models;
 
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
@@ -10,7 +10,7 @@ use WebReinvent\VaahCms\Models\ThemeTemplate;
 use WebReinvent\VaahCms\Models\User;
 use WebReinvent\VaahCms\Traits\CrudWithUuidObservantTrait;
 
-class Content extends Model {
+class ContentBase extends Model {
 
     use SoftDeletes;
     use CrudWithUuidObservantTrait;
