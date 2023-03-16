@@ -1074,7 +1074,7 @@ export const useMenuStore = defineStore({
         storeItemAfter: function (data, res) {
 
             if(data){
-
+                this.getMenuItems();
             }
 
         },
@@ -1183,6 +1183,33 @@ export const useMenuStore = defineStore({
 
         },
         //---------------------------------------------------------------------
+        setAsHomePage (id) {
+
+            let options = {
+                method:'post',
+                params:{
+                    inputs:id
+                }
+            };
+
+            vaah().ajax(
+                this.ajax_url+'/actions/set-as-home-page',
+                this.setAsHomePageAfter,
+                options
+            );
+        },
+        //---------------------------------------------------------------------
+        setAsHomePageAfter (data, res) {
+            if(data){
+                this.getMenuItems();
+
+            }
+
+        },
+        //---------------------------------------------------------------------
+        removeAt(item,idx) {
+            item.splice(idx, 1);
+        },
     }
 });
 

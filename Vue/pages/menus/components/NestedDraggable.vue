@@ -16,6 +16,9 @@
                                data-testid="menus-item_field_name"
                                placeholder="Field Name"/>
                     <Button icon="pi pi-home p-button-sm"
+                            :severity="element.is_home ?'success':''"
+                            :disabled="!element.id"
+                            @click="store.setAsHomePage(element.id)"
                             v-tooltip.top="'Set as Home Page'"
                             data-testid="menus-item_field_name"/>
                     <Button icon="pi pi-cog p-button-sm"
@@ -25,7 +28,7 @@
                     <Button icon="pi pi-trash p-button-sm"
                             v-tooltip.top="'Delete'"
                             data-testid="menus-item_field_remove"
-                            @click="removeAt(index)"/>
+                            @click="store.removeAt(this.tasks,index)"/>
                 </div>
                 <div class="menu-options m-3" v-if="element.menu_options">
                     <div class="mb-5">
@@ -68,25 +71,21 @@
     </draggable>
 </template>
 
-<script>
+<script setup>
+import {reactive, ref, watch } from 'vue';
+import {vaah} from '../../../vaahvue/pinia/vaah'
+import { useMenuStore} from '../../../stores/store-menus'
+
 import draggable from 'vuedraggable'
-export default {
-    name: "NestedDraggable",
-    props: {
-        tasks: {
-            required: true,
-            type: Array
-        }
-    },
-    components: {
-        draggable
-    },
-    methods:{
-        removeAt(idx) {
-            this.tasks.splice(idx, 1);
-        },
+
+const store = useMenuStore();
+const props = defineProps({
+    tasks: {
+        required: true,
+        type: Array
     }
-}
+});
+
 </script>
 
 <style scoped>

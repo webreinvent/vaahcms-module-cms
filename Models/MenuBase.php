@@ -385,7 +385,6 @@ class MenuBase extends Model
     //-------------------------------------------------
     public static function setAsHomePage($request)
     {
-
         MenuItem::where('is_home', '!=', null)->update(['is_home' => null]);
 
         $menu_item = MenuItem::find($request->inputs);
