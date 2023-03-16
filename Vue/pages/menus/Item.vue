@@ -60,7 +60,7 @@ const toggleItemMenu = (event) => {
 <template>
 
 
-    <div class="col-6" >
+    <div class="col-6 " >
 
         <Panel class="draggable-menu">
 
@@ -87,36 +87,39 @@ const toggleItemMenu = (event) => {
                             v-if="store.item && store.item.id"
                             data-testid="menus-save"
                             @click="store.storeItem"
-                            icon="pi pi-save">
-                    </Button>
+                            icon="pi pi-save"/>
                     <!--/form_menu-->
-
+                    <Button class="p-button-primary"
+                            icon="pi pi-cog"
+                            data-testid="menus-item_delete"
+                            @click="store.menu_settings = !store.menu_settings"/>
 
                     <Button class="p-button-primary"
-                            icon="pi pi-times"
-                            data-testid="menus-to-list"
-                            @click="store.toList()">
-                    </Button>
+                            icon="pi pi-trash"
+                            data-testid="menus-item_delete"
+                            @click="store.deleteItem()"/>
                 </div>
             </template>
+            <div v-if="store.menu_settings">
+                <div class="col-12 mb-2" v-if="store.item && store.item.id">
+                    <InputText class="w-full mb-1"
+                               v-model="store.item.name"
+                               Placeholder="Name"
+                               data-testid="menus-item_name"/>
+                    <InputText class="w-full mb-1"
+                               v-model="store.item.attr_id"
+                               Placeholder="Menu Id"
+                               data-testid="menus-item_id"/>
+                    <InputText class="w-full mb-1"
+                               v-model="store.item.attr_class"
+                               Placeholder="Menu Class"
+                               data-testid="menus-item_class"/>
+                </div>
+                <div v-if="store.active_menu_items" >
+                    <NestedDraggable :tasks="store.active_menu_items" />
+                </div>
+            </div>
 
-            <div class="col-12 mb-2" v-if="store.item && store.item.id">
-                <InputText class="w-full mb-1"
-                           v-model="store.item.name"
-                           Placeholder="Name"
-                           data-testid="menus-item_name"/>
-                <InputText class="w-full mb-1"
-                           v-model="store.item.attr_id"
-                           Placeholder="Menu Id"
-                           data-testid="menus-item_id"/>
-                <InputText class="w-full mb-1"
-                           v-model="store.item.attr_class"
-                           Placeholder="Menu Class"
-                           data-testid="menus-item_class"/>
-            </div>
-            <div v-if="store.active_menu_items" >
-                <NestedDraggable :tasks="store.active_menu_items" />
-            </div>
         </Panel>
 
     </div>

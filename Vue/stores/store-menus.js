@@ -86,6 +86,7 @@ export const useMenuStore = defineStore({
                 type: 'external-link',
             }
         ],
+        menu_settings:true,
     }),
     getters: {
 
@@ -1143,6 +1144,7 @@ export const useMenuStore = defineStore({
 
             return item;
         },
+        //---------------------------------------------------------------------
         searchContent(){
 
             if (this.content_search.trim().length == 0) {
@@ -1155,6 +1157,31 @@ export const useMenuStore = defineStore({
                 });
             }
         },
+        //---------------------------------------------------------------------
+        deleteItem () {
+
+            let options = {
+                method:'post',
+                params:{
+                    inputs:[this.item.id]
+                }
+            };
+
+            vaah().ajax(
+                this.ajax_url+'/actions/bulk-delete',
+                this.deleteItemAfter,
+                options
+            );
+        },
+        //---------------------------------------------------------------------
+        deleteItemAfter (data, res) {
+            if(data){
+                this.setActiveLocation();
+                this.toList()
+            }
+
+        },
+        //---------------------------------------------------------------------
     }
 });
 
