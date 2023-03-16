@@ -1153,7 +1153,7 @@ export const useMenuStore = defineStore({
             }
             else {
                 this.filtered_content_list = this.content_list.filter((list) => {
-                    return list.name.toLowerCase().startsWith(this.content_search.toLowerCase());
+                    return list.name.toLowerCase().match(this.content_search.toLowerCase());
                 });
             }
         },
