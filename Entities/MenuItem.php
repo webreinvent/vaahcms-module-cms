@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 use Nestable\NestableTrait;
+use VaahCms\Modules\Cms\Models\Content;
 
 class MenuItem extends Model
 {

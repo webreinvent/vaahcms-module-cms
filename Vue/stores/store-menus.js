@@ -36,6 +36,7 @@ export const useMenuStore = defineStore({
         assets_is_fetching: true,
         app: null,
         active_menu: null,
+        title: null,
         content_list: [],
         filtered_content_list: [],
         active_theme: null,
@@ -268,6 +269,7 @@ export const useMenuStore = defineStore({
             if(data)
             {
                 this.item = data;
+                this.title = this.item.name;
             }else{
                 this.$router.push({name: 'menus.index',query:this.query});
             }
@@ -1054,9 +1056,8 @@ export const useMenuStore = defineStore({
         //---------------------------------------------------------------------
         storeItem: function () {
 
-            let params = this.active_menu;
+            let params = this.item;
             params.items = this.active_menu_items;
-
 
             let options = {
                 params:params,
@@ -1074,7 +1075,11 @@ export const useMenuStore = defineStore({
         storeItemAfter: function (data, res) {
 
             if(data){
+                this.getItem(data.menu.id);
                 this.getMenuItems();
+
+                this.assets_is_fetching = true;
+                this.getAssets();
             }
 
         },

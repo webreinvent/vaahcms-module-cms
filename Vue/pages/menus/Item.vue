@@ -69,8 +69,8 @@ const toggleItemMenu = (event) => {
 
                 <div class="flex flex-row">
                     <div class="p-panel-title">
-                        <span v-if="store.item && store.item.id">
-                            {{ store.item.name }}
+                        <span v-if="store.item && store.item.id && store.title">
+                            {{ store.title }}
                         </span>
                     </div>
 
