@@ -15,14 +15,14 @@
     @if(env('MODULE_CMS_ENV') == 'develop')
         <script type="module" src="http://localhost:8367/Vue/main.js"></script>
     @else
-        <script type="module" src="{{vh_module_assets_url("Cms", "build/index.js")}}"></script>
+        <script type="module" src="{{vh_module_assets_url("Cms", "build/main.js")}}"></script>
     @endif
 
 @endsection
 
 @section('content')
 
-    <div id="appCms" class="bulma">
+    <div id="cmsApp" class="bulma">
 
         <section class="section has-padding-25">
             <router-view></router-view>
