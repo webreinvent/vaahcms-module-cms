@@ -58,7 +58,7 @@ const toggleItemMenu = (event) => {
                 </div>
             </template>
             <template #content>
-                <Card v-if="store.item.groups && store.item.groups.length > 0"
+                <Card v-if="store.item && store.item.groups && store.item.groups.length > 0"
                       v-for="(item,idx) in store.item.groups" class="mb-3">
                     <template #content>
                         <div class="w-full flex justify-content-between align-items-center mb-4">
@@ -78,76 +78,134 @@ const toggleItemMenu = (event) => {
                                         data-testid="contetntypes-remove_group"
                                         @click="store.removeGroup(item,idx)"/>
                             </div>
-                            <draggable
-                                v-model="item.fields"
-                                class="dragArea list-group"
-                                group="content-types"
-                                @start="drag=true"
-                                @end="drag=false"
-                                item-key="id">
-                                <template #item="{element,index}">
-                                    <div>
-                                        <div class="p-inputgroup mb-3">
-                                            <InputText class="w-2" :model-value="element.type.name" disabled/>
-                                            <InputText class="w-6"
-                                                       v-model="element.name"
-                                                       data-testid="contenttype-group_field_name"
-                                                       placeholder="Field Name"/>
-                                            <Button icon="pi pi-hashtag p-button-sm"
-                                                    @click="store.getCopy(element.slug)"
-                                                    data-testid="contenttype-group_field_slug"/>
-                                            <Button icon="pi pi-cog p-button-sm"
-                                                    data-testid="contenttype-group_field_cog"
-                                                    @click="element.content_settings_status = !element.content_settings_status"></Button>
-                                            <Button icon="pi pi-trash p-button-sm"
-                                                    data-testid="contenttype-group_field_remove"
-                                                    @click="store.removeField(index,idx)"/>
-                                        </div>
-                                        <div v-if="element.content_settings_status">
-                                            <DataTable :value="element.content_settings" stripedRows class="p-datatable-sm">
-                                                <Column>
-                                                    <template #body="slotProps">
-                                                        {{slotProps.data.label}}
-                                                    </template>
-                                                </Column>
-                                                <Column>
-                                                    <template #body="slotProps">
-                                                        <InputSwitch v-if="slotProps.data.is_repeatable === 'repeatable'"
-                                                                     v-bind:false-value="0"
-                                                                     v-bind:true-value="1"
-                                                                     data-testid="contenttype-group_field_repeatable"
-                                                                     v-model="slotProps.data.is_repeatable"/>
-                                                        <InputSwitch v-if="slotProps.data.is_searchable === 'searchable'"
-                                                                     v-bind:false-value="0"
-                                                                     v-bind:true-value="1"
-                                                                     data-testid="contenttype-group_field_searchable"
-                                                                     v-model="slotProps.data.is_searchable"/>
-                                                        <Textarea v-if="slotProps.data.excerpt === 'excerpt'"
-                                                                  data-testid="contenttype-group_field_excerpt"
-                                                                  v-model="slotProps.data.excerpt"
-                                                                  class="w-full"/>
-                                                        <InputText v-if="slotProps.data.container_opening_tag === 'opening-tag'"
-                                                                   data-testid="contenttype-group_field_opening_tag"
-                                                                   v-model="slotProps.data.container_opening_tag"
-                                                                   class="w-full"/>
-                                                        <InputText v-if="slotProps.data.container_closing_tag === 'closing-tag'"
-                                                                   data-testid="contenttype-group_field_closing_tag"
-                                                                   v-model="slotProps.data.container_closing_tag"
-                                                                   class="w-full"/>
-                                                        <div v-if="slotProps.data.display_column === 'hidden'">
-                                                            <Checkbox id="hidden"
-                                                                      data-testid="contenttype-group_field_hidden"
-                                                                      v-model="slotProps.data.display_column"/>
-                                                            <label for="hidden" class="font-semibold text-xs ml-1">Is Hidden</label>
-                                                        </div>
-                                                    </template>
-                                                </Column>
-                                            </DataTable>
+                        </div>
+                        <draggable
+                            v-model="item.fields"
+                            class="dragArea list-group"
+                            group="content-types"
+                            @start="drag=true"
+                            @end="drag=false"
+                            item-key="id">
+                            <template #item="{element,index}">
+                                <div>
+                                    <div class="p-inputgroup mb-3">
+                                        <InputText class="w-2" :model-value="element.type.name" disabled/>
+                                        <InputText class="w-6"
+                                                   v-model="element.name"
+                                                   data-testid="contenttype-group_field_name"
+                                                   placeholder="Field Name"/>
+                                        <Button icon="pi pi-hashtag p-button-sm"
+                                                @click="store.getCopy(element.slug)"
+                                                data-testid="contenttype-group_field_slug"/>
+                                        <Button icon="pi pi-cog p-button-sm"
+                                                data-testid="contenttype-group_field_cog"
+                                                @click="element.content_settings_status = !element.content_settings_status"></Button>
+                                        <Button icon="pi pi-trash p-button-sm"
+                                                data-testid="contenttype-group_field_remove"
+                                                @click="store.removeField(index,idx)"/>
+                                    </div>
+                                    <div v-if="element.content_settings_status">
+                                        <div class="p-datatable p-component p-datatable-responsive-stack
+                                            p-datatable-striped p-datatable-sm"
+                                             data-scrollselectors=".p-datatable-wrapper" pv_id_6="">
+                                            <!----><!----><!----><!----><!---->
+                                            <div class="p-datatable-wrapper">
+                                                <table role="table" class="p-datatable-table">
+                                                    <thead class="p-datatable-thead" role="rowgroup">
+                                                    <tr role="row">
+                                                        <th class="" role="cell"><!---->
+                                                            <div class="p-column-header-content"><!----><!---->
+                                                                <!----><!----><!----><!----></div>
+                                                        </th>
+                                                        <th class="" role="cell"><!---->
+                                                            <div class="p-column-header-content"><!----><!---->
+                                                                <!----><!----><!----><!----></div>
+                                                        </th>
+                                                    </tr><!----></thead><!---->
+                                                    <tbody class="p-datatable-tbody" role="rowgroup"><!---->
+                                                    <tr class="" role="row" draggable="false">
+                                                        <td class="" role="cell"><span
+                                                            class="p-column-title"></span>Is repeatable
+                                                        </td>
+                                                        <td class="" role="cell"><span
+                                                            class="p-column-title"></span>
+                                                            <div class="p-inputswitch p-component">
+                                                                <div class="p-hidden-accessible"><input
+                                                                    type="checkbox" role="switch" class=""
+                                                                    aria-checked="false"></div>
+                                                                <span class="p-inputswitch-slider"></span></div>
+                                                            <!--v-if--><!--v-if--><!--v-if--><!--v-if--><!--v-if-->
+                                                        </td>
+                                                    </tr><!----><!----><!---->
+                                                    <tr class="" role="row">
+                                                        <td class="" role="cell"><span
+                                                            class="p-column-title"></span>Is Searchable
+                                                        </td>
+                                                        <td class="" role="cell"><span
+                                                            class="p-column-title"></span><!--v-if-->
+                                                            <div class="p-inputswitch p-component">
+                                                                <div class="p-hidden-accessible"><input
+                                                                    type="checkbox" role="switch" class=""
+                                                                    aria-checked="false"></div>
+                                                                <span class="p-inputswitch-slider"></span></div>
+                                                            <!--v-if--><!--v-if--><!--v-if--><!--v-if--></td>
+                                                    </tr><!----><!----><!---->
+                                                    <tr class="" role="row">
+                                                        <td class="" role="cell"><span
+                                                            class="p-column-title"></span>Excerpt
+                                                        </td>
+                                                        <td class="" role="cell"><span
+                                                            class="p-column-title"></span><!--v-if-->
+                                                            <!--v-if--><textarea
+                                                                class="p-inputtextarea p-inputtext p-component w-full"></textarea>
+                                                            <!--v-if--><!--v-if--><!--v-if--></td>
+                                                    </tr><!----><!----><!---->
+                                                    <tr class="" role="row">
+                                                        <td class="" role="cell"><span
+                                                            class="p-column-title"></span>Opening Tag
+                                                        </td>
+                                                        <td class="" role="cell"><span
+                                                            class="p-column-title"></span><!--v-if--><!--v-if-->
+                                                            <!--v-if--><input
+                                                                class="p-inputtext p-component w-full"><!--v-if-->
+                                                            <!--v-if--></td>
+                                                    </tr><!----><!----><!---->
+                                                    <tr class="" role="row">
+                                                        <td class="" role="cell"><span
+                                                            class="p-column-title"></span>Closing Tag
+                                                        </td>
+                                                        <td class="" role="cell"><span
+                                                            class="p-column-title"></span><!--v-if--><!--v-if-->
+                                                            <!--v-if--><!--v-if--><input
+                                                                class="p-inputtext p-component w-full"><!--v-if-->
+                                                        </td>
+                                                    </tr><!----><!----><!---->
+                                                    <tr class="" role="row">
+                                                        <td class="" role="cell"><span
+                                                            class="p-column-title"></span>Is Hidden
+                                                        </td>
+                                                        <td class="" role="cell"><span
+                                                            class="p-column-title"></span><!--v-if--><!--v-if-->
+                                                            <!--v-if--><!--v-if--><!--v-if-->
+                                                            <div>
+                                                                <div class="p-checkbox p-component" id="hidden">
+                                                                    <div class="p-hidden-accessible"><input
+                                                                        type="checkbox" class=""></div>
+                                                                    <div class="p-checkbox-box"><span
+                                                                        class="p-checkbox-icon"></span></div>
+                                                                </div>
+                                                                <label for="hidden"
+                                                                       class="font-semibold text-xs ml-1">Is
+                                                                    Hidden</label></div>
+                                                        </td>
+                                                    </tr><!----><!----></tbody><!----></table>
+                                            </div><!----><!---->
+                                            <div class="p-column-resizer-helper" style="display: none;"></div>
                                         </div>
                                     </div>
-                                </template>
-                            </draggable>
-                        </div>
+                                </div>
+                            </template>
+                        </draggable>
                     </template>
                 </Card>
             </template>
@@ -176,6 +234,7 @@ const toggleItemMenu = (event) => {
                         :group="{ name: 'content-types', pull: 'clone', put: false }"
                         @start="drag=true"
                         @end="drag=false"
+                        :clone="store.cloneField"
                         item-key="id">
                         <template #item="{element,index}">
                             <div class="p-inputgroup mb-3">

@@ -1018,6 +1018,28 @@ export const useContentTypeStore = defineStore({
             }
         },
         //---------------------------------------------------------------------
+
+
+        //---------------------------------------------------------------------
+        cloneField: function({ id, name, slug, meta })
+        {
+            let item = {
+                name: null,
+                slug: null,
+                vh_cms_field_type_id: id,
+                meta: meta,
+                type: {
+                    id: id,
+                    name: name,
+                    slug: slug,
+                    meta: meta,
+                }
+            };
+
+
+
+            return item;
+        },
         //---------------------------------------------------------------------
     }
 });
