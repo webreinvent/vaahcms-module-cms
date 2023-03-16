@@ -98,14 +98,25 @@ const toggleItemMenu = (event) => {
                             @click="store.toList()">
                     </Button>
                 </div>
-
-
-
             </template>
 
-            <p v-if="store.active_menu_items" >
+            <div class="col-12 mb-2" v-if="store.item && store.item.id">
+                <InputText class="w-full mb-1"
+                           v-model="store.item.name"
+                           Placeholder="Name"
+                           data-testid="menus-item_name"/>
+                <InputText class="w-full mb-1"
+                           v-model="store.item.attr_id"
+                           Placeholder="Menu Id"
+                           data-testid="menus-item_id"/>
+                <InputText class="w-full mb-1"
+                           v-model="store.item.attr_class"
+                           Placeholder="Menu Class"
+                           data-testid="menus-item_class"/>
+            </div>
+            <div v-if="store.active_menu_items" >
                 <NestedDraggable :tasks="store.active_menu_items" />
-            </p>
+            </div>
         </Panel>
 
     </div>
