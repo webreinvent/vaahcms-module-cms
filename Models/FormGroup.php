@@ -205,7 +205,6 @@ class FormGroup extends Model {
                     ->first();
 
 
-
                 if(isset($field['type']) && isset($field['type']['slug']) )
                 {
                     $type = FieldType::where('slug', $field['type']['slug'])->first();

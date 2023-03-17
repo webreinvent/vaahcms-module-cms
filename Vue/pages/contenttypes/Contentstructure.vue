@@ -28,6 +28,7 @@ onMounted(async () => {
         await store.getContentStrucutre(route.params.id);
     // }
 
+    await store.watchFields();
 
 });
 
@@ -71,6 +72,7 @@ const toggleItemMenu = (event) => {
                                              data-testid="contetntypes-is_repeatable"/>
                                 <p class="ml-1 mr-3 text-xs font-semibold">Is Repeatable</p>
                                 <Button icon="pi pi-hashtag"
+                                        :label="item.id"
                                         @click="store.getCopy(item.slug)"
                                         data-testid="contetntypes-copy_slug"
                                         class="p-button-sm"/>
@@ -93,9 +95,12 @@ const toggleItemMenu = (event) => {
                                         <InputText class="w-2" :model-value="element.type.name" disabled/>
                                         <InputText class="w-6"
                                                    v-model="element.name"
+                                                   @input="store.groupsFieldsSlug(element)"
                                                    data-testid="contenttype-group_field_name"
                                                    placeholder="Field Name"/>
                                         <Button icon="pi pi-hashtag p-button-sm"
+                                                :label="element.id"
+                                                :disabled="!element.id"
                                                 @click="store.getCopy(element.slug)"
                                                 data-testid="contenttype-group_field_slug"/>
                                         <Button icon="pi pi-cog p-button-sm"
