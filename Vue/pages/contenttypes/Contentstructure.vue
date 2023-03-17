@@ -89,6 +89,7 @@ const toggleItemMenu = (event) => {
                             <template #item="{element,index}">
                                 <div>
                                     <div class="p-inputgroup mb-3">
+                                        {{element}}
                                         <InputText class="w-2" :model-value="element.type.name" disabled/>
                                         <InputText class="w-6"
                                                    v-model="element.name"
