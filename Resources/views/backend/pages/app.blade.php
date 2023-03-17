@@ -22,7 +22,7 @@
 
 @section('content')
 
-    <div id="cmsApp" class="bulma">
+    <div id="appCms" class="bulma">
 
         <section class="section has-padding-25">
             <router-view></router-view>
