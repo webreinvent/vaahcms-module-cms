@@ -2,7 +2,6 @@
 import {onMounted, ref, watch} from "vue";
 import {useRoute} from 'vue-router';
 import draggable from 'vuedraggable'
-
 import { useContentTypeStore } from '../../stores/store-contenttypes'
 
 import VhViewRow from '../../vaahvue/vue-three/primeflex/VhViewRow.vue';
@@ -151,38 +150,73 @@ const toggleItemMenu = (event) => {
 
                                                         </td>
                                                     </tr>
-                                                    <tr>
-                                                        <td >
-                                                            Opening tag
-                                                        </td>
-                                                        <td>
-                                                            <InputText data-testid="contenttype-group_field_opening_tag"
-                                                                       v-model="element.container_opening_tag"
-                                                                       class="w-full"/>
-                                                        </td>
-                                                    </tr>
+<!--                                                    <tr>-->
+<!--                                                        <td >-->
+<!--                                                            Opening tag-->
+<!--                                                        </td>-->
+<!--                                                        <td>-->
+<!--                                                            <InputText data-testid="contenttype-group_field_opening_tag"-->
+<!--                                                                       v-model="element.container_opening_tag"-->
+<!--                                                                       class="w-full"/>-->
+<!--                                                        </td>-->
+<!--                                                    </tr>-->
+<!--                                                    <tr>-->
+<!--                                                        <td >-->
+<!--                                                            Closing tag-->
+<!--                                                        </td>-->
+<!--                                                        <td>-->
+<!--                                                            <InputText data-testid="contenttype-group_field_closing_tag"-->
+<!--                                                                       v-model="element.container_closing_tag"-->
+<!--                                                                       class="w-full"/>-->
+<!--                                                        </td>-->
+<!--                                                    </tr>-->
+<!--                                                    <tr>-->
+<!--                                                        <td >-->
+<!--                                                            Is hidden-->
+<!--                                                        </td>-->
+<!--                                                        <td>-->
+<!--                                                            <Checkbox id="hidden"-->
+<!--                                                                      data-testid="contenttype-group_field_hidden"-->
+<!--                                                                      v-model="element.display_column"/>-->
+<!--                                                        </td>-->
+<!--                                                    </tr>-->
 
-                                                    <tr>
-                                                        <td >
-                                                            Closing tag
-                                                        </td>
-                                                        <td>
-                                                            <InputText data-testid="contenttype-group_field_closing_tag"
-                                                                       v-model="element.container_closing_tag"
-                                                                       class="w-full"/>
-                                                        </td>
-                                                    </tr>
+                                                    <div v-if="element.meta">
+                                                        <tr v-for="(meta_item, meta_index) in element.meta"
+                                                            v-if="(meta_index !== 'container_opening_tag'
+                                                                    && meta_index !== 'container_closing_tag')
+                                                                    || store.assets.non_repeatable_fields.includes(element.type.slug)
+                                                                    || element.is_repeatable">
+                                                            <td v-if="meta_index !== 'filter_id'
+                                                                && meta_index !== 'display_column'
+                                                                && meta_index !== 'options'"
+                                                                v-html="vaah().toLabel(meta_index)"></td>
+                                                            <td v-if="meta_index !== 'filter_id'
+                                                                && meta_index !== 'display_column'
+                                                                && meta_index !== 'options'">
+                                                                <div v-if="meta_index.includes('is_')">
+                                                                    <Checkbox :id="meta_index"
+                                                                              :data-testid="'contenttype-group_field_meta_'+meta_index"
+                                                                              v-model="element.meta[meta_index]"/>
+                                                                    <label :for="meta_index" class="ml-2"> {{meta_index}} </label>
+                                                                </div>
 
-                                                    <tr>
-                                                        <td >
-                                                            Is hidden
-                                                        </td>
-                                                        <td>
-                                                            <Checkbox id="hidden"
-                                                                      data-testid="contenttype-group_field_hidden"
-                                                                      v-model="element.display_column"/>
-                                                        </td>
-                                                    </tr>
+                                                                <div v-else-if="meta_index === 'option'">
+                                                                    <tag
+                                                                        :value="element.meta[meta_index]"
+                                                                        rounded>
+                                                                    </tag>
+                                                                </div>
+
+                                                                <div v-else>
+                                                                    <InputText :data-testid="'contenttype-group_'+ meta[meta_index]"
+                                                                               v-model="element.meta[meta_index]"
+                                                                               class="w-full"/>
+                                                                </div>
+                                                            </td>
+
+                                                        </tr>
+                                                    </div>
                                                 </table>
                                             </div>
                                         </div>

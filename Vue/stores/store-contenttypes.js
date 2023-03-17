@@ -985,8 +985,9 @@ export const useContentTypeStore = defineStore({
             }
         },
         //---------------------------------------------------------------------
-        toContentStructure(item) {
+        async toContentStructure(item) {
             this.item = vaah().clone(item);
+            await this.getContentStrucutre(this.item.id);
             this.$router.push({name: 'contenttypes.contentstructure', params: {id: item.id}});
 
         },
