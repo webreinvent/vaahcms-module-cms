@@ -197,6 +197,30 @@ export const useContentTypeStore = defineStore({
                     },{deep: true}
                 );
             }
+            if(this.item.fields){
+                watch(() => this.item.fields.name, (newVal,oldVal) =>
+                    {
+                        if(newVal && newVal !== "")
+                        {
+                            this.item.fields.slug = vaah().strToSlug(newVal);
+                        }
+                    },{deep: true}
+                )
+            }
+        },
+        //---------------------------------------------------------------------
+        watchFields(){
+            console.log('sdf');
+            if(this.item.fields){
+                watch(() => this.item.fields.name, (newVal,oldVal) =>
+                    {
+                        if(newVal && newVal !== "")
+                        {
+                            this.item.fields.slug = vaah().strToSlug(newVal);
+                        }
+                    },{deep: true}
+                )
+            }
         },
         //---------------------------------------------------------------------
         async getAssets() {

@@ -28,6 +28,7 @@ onMounted(async () => {
         await store.getContentStrucutre(route.params.id);
     // }
 
+
 });
 
 //--------toggle item menu
@@ -89,7 +90,6 @@ const toggleItemMenu = (event) => {
                             <template #item="{element,index}">
                                 <div>
                                     <div class="p-inputgroup mb-3">
-                                        {{element}}
                                         <InputText class="w-2" :model-value="element.type.name" disabled/>
                                         <InputText class="w-6"
                                                    v-model="element.name"
@@ -109,99 +109,78 @@ const toggleItemMenu = (event) => {
                                         <div class="p-datatable p-component p-datatable-responsive-stack
                                             p-datatable-striped p-datatable-sm"
                                              data-scrollselectors=".p-datatable-wrapper" pv_id_6="">
-                                            <!----><!----><!----><!----><!---->
                                             <div class="p-datatable-wrapper">
                                                 <table role="table" class="p-datatable-table">
-                                                    <thead class="p-datatable-thead" role="rowgroup">
-                                                    <tr role="row">
-                                                        <th class="" role="cell"><!---->
-                                                            <div class="p-column-header-content"><!----><!---->
-                                                                <!----><!----><!----><!----></div>
-                                                        </th>
-                                                        <th class="" role="cell"><!---->
-                                                            <div class="p-column-header-content"><!----><!---->
-                                                                <!----><!----><!----><!----></div>
-                                                        </th>
-                                                    </tr><!----></thead><!---->
-                                                    <tbody class="p-datatable-tbody" role="rowgroup"><!---->
-                                                    <tr class="" role="row" draggable="false">
-                                                        <td class="" role="cell"><span
-                                                            class="p-column-title"></span>Is repeatable
+
+                                                    <tr v-if="!store.assets.non_repeatable_fields.includes(element.type.slug)">
+                                                        <td >
+                                                            Is repeatable
                                                         </td>
-                                                        <td class="" role="cell"><span
-                                                            class="p-column-title"></span>
-                                                            <div class="p-inputswitch p-component">
-                                                                <div class="p-hidden-accessible"><input
-                                                                    type="checkbox" role="switch" class=""
-                                                                    aria-checked="false"></div>
-                                                                <span class="p-inputswitch-slider"></span></div>
-                                                            <!--v-if--><!--v-if--><!--v-if--><!--v-if--><!--v-if-->
+                                                        <td>
+                                                            <InputSwitch v-model="element.is_repeatable"
+                                                                         v-bind:false-value="0"
+                                                                         v-bind:true-value="1"
+                                                                         data-testid="contenttype-group_field_repeatable"/>
+
                                                         </td>
-                                                    </tr><!----><!----><!---->
-                                                    <tr class="" role="row">
-                                                        <td class="" role="cell"><span
-                                                            class="p-column-title"></span>Is Searchable
+                                                    </tr>
+                                                    <tr>
+                                                        <td >
+                                                            Is searchable
                                                         </td>
-                                                        <td class="" role="cell"><span
-                                                            class="p-column-title"></span><!--v-if-->
-                                                            <div class="p-inputswitch p-component">
-                                                                <div class="p-hidden-accessible"><input
-                                                                    type="checkbox" role="switch" class=""
-                                                                    aria-checked="false"></div>
-                                                                <span class="p-inputswitch-slider"></span></div>
-                                                            <!--v-if--><!--v-if--><!--v-if--><!--v-if--></td>
-                                                    </tr><!----><!----><!---->
-                                                    <tr class="" role="row">
-                                                        <td class="" role="cell"><span
-                                                            class="p-column-title"></span>Excerpt
+                                                        <td>
+                                                            <InputSwitch v-bind:false-value="0"
+                                                                         v-bind:true-value="1"
+                                                                         data-testid="contenttype-group_field_searchable"
+                                                                         v-model="element.is_searchable"/>
+
                                                         </td>
-                                                        <td class="" role="cell"><span
-                                                            class="p-column-title"></span><!--v-if-->
-                                                            <!--v-if--><textarea
-                                                                class="p-inputtextarea p-inputtext p-component w-full"></textarea>
-                                                            <!--v-if--><!--v-if--><!--v-if--></td>
-                                                    </tr><!----><!----><!---->
-                                                    <tr class="" role="row">
-                                                        <td class="" role="cell"><span
-                                                            class="p-column-title"></span>Opening Tag
+                                                    </tr>
+                                                    <tr>
+                                                        <td >
+                                                            Excerpt
                                                         </td>
-                                                        <td class="" role="cell"><span
-                                                            class="p-column-title"></span><!--v-if--><!--v-if-->
-                                                            <!--v-if--><input
-                                                                class="p-inputtext p-component w-full"><!--v-if-->
-                                                            <!--v-if--></td>
-                                                    </tr><!----><!----><!---->
-                                                    <tr class="" role="row">
-                                                        <td class="" role="cell"><span
-                                                            class="p-column-title"></span>Closing Tag
+                                                        <td>
+                                                            <Textarea data-testid="contenttype-group_field_excerpt"
+                                                                      v-model="element.excerpt"
+                                                                      class="w-full"/>
+
                                                         </td>
-                                                        <td class="" role="cell"><span
-                                                            class="p-column-title"></span><!--v-if--><!--v-if-->
-                                                            <!--v-if--><!--v-if--><input
-                                                                class="p-inputtext p-component w-full"><!--v-if-->
+                                                    </tr>
+                                                    <tr>
+                                                        <td >
+                                                            Opening tag
                                                         </td>
-                                                    </tr><!----><!----><!---->
-                                                    <tr class="" role="row">
-                                                        <td class="" role="cell"><span
-                                                            class="p-column-title"></span>Is Hidden
+                                                        <td>
+                                                            <InputText data-testid="contenttype-group_field_opening_tag"
+                                                                       v-model="element.container_opening_tag"
+                                                                       class="w-full"/>
                                                         </td>
-                                                        <td class="" role="cell"><span
-                                                            class="p-column-title"></span><!--v-if--><!--v-if-->
-                                                            <!--v-if--><!--v-if--><!--v-if-->
-                                                            <div>
-                                                                <div class="p-checkbox p-component" id="hidden">
-                                                                    <div class="p-hidden-accessible"><input
-                                                                        type="checkbox" class=""></div>
-                                                                    <div class="p-checkbox-box"><span
-                                                                        class="p-checkbox-icon"></span></div>
-                                                                </div>
-                                                                <label for="hidden"
-                                                                       class="font-semibold text-xs ml-1">Is
-                                                                    Hidden</label></div>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td >
+                                                            Closing tag
                                                         </td>
-                                                    </tr><!----><!----></tbody><!----></table>
-                                            </div><!----><!---->
-                                            <div class="p-column-resizer-helper" style="display: none;"></div>
+                                                        <td>
+                                                            <InputText data-testid="contenttype-group_field_closing_tag"
+                                                                       v-model="element.container_closing_tag"
+                                                                       class="w-full"/>
+                                                        </td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td >
+                                                            Is hidden
+                                                        </td>
+                                                        <td>
+                                                            <Checkbox id="hidden"
+                                                                      data-testid="contenttype-group_field_hidden"
+                                                                      v-model="element.display_column"/>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
