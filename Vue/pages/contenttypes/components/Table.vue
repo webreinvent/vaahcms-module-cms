@@ -18,11 +18,11 @@ const useVaah = vaah();
                    stripedRows
                    responsiveLayout="scroll">
              <Column selectionMode="multiple"
-                    v-if="store.isViewLarge()"
+                    v-if="store.isContentStructure()"
                     headerStyle="width: 3em">
             </Column>
 
-            <Column field="id" header="ID" :style="{width: '90px'}" :sortable="true">
+            <Column field="id" v-if="store.isContentStructure()" header="ID" :style="{width: '90px'}" :sortable="true">
             </Column>
 
             <Column field="name" header="Name"
@@ -38,6 +38,7 @@ const useVaah = vaah();
             </Column>
 
              <Column field="plural" header="Plural"
+                     v-if="store.isContentStructure()"
                      :sortable="true">
 
                  <template #body="prop">
@@ -50,6 +51,7 @@ const useVaah = vaah();
              </Column>
 
              <Column field="singular" header="Singular"
+                     v-if="store.isContentStructure()"
                      :sortable="true">
 
                  <template #body="prop">
@@ -63,7 +65,7 @@ const useVaah = vaah();
 
 
              <Column field="updated_at" header="Updated"
-                     v-if="store.isViewLarge()"
+                     v-if="store.isContentStructure()"
                      style="width:90px;"
                      :sortable="true">
                  <template #body="prop">
@@ -71,7 +73,7 @@ const useVaah = vaah();
                  </template>
              </Column>
 
-            <Column field="is_published" v-if="store.isViewLarge()"
+            <Column field="is_published" v-if="store.isContentStructure()"
                     :sortable="true"
                     style="width:150px;"
                     header="Is Published">
@@ -106,6 +108,7 @@ const useVaah = vaah();
                                 icon="pi pi-eye" />
 
                         <Button class="p-button-tiny p-button-text"
+                                v-if="store.isContentStructure()"
                                 data-testid="contenttypes-table-to-edit"
                                 v-tooltip.top="'Update'"
                                 @click="store.toEdit(prop.data)"
