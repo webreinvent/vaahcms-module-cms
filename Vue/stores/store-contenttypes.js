@@ -197,6 +197,7 @@ export const useContentTypeStore = defineStore({
                     },{deep: true}
                 );
             }
+
         },
         //---------------------------------------------------------------------
         async getAssets() {
@@ -1044,6 +1045,11 @@ export const useContentTypeStore = defineStore({
 
 
             return item;
+        },
+        //---------------------------------------------------------------------
+        groupsFieldsSlug(item){
+            console.log(item.name);
+            item.slug = vaah().strToSlug(item.name);
         },
         //---------------------------------------------------------------------
     }

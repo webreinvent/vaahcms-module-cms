@@ -331,7 +331,6 @@ class ContentTypeBase extends Model {
                 }])
             ->withTrashed()
             ->first();
-
         $response['status'] = 'success';
         $response['data'] = $item;
 
