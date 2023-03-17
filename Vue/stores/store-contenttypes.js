@@ -998,7 +998,8 @@ export const useContentTypeStore = defineStore({
         },
         //---------------------------------------------------------------------
         removeField(idx,i) {
-            this.item.groups[i].content_types.splice(idx, 1);
+            this.item.groups[i].fields.splice(idx, 1);
+            vaah().toastErrors(['Removed']);
         },
         //---------------------------------------------------------------------
         getCopy(value)

@@ -28,7 +28,6 @@ onMounted(async () => {
         await store.getContentStrucutre(route.params.id);
     // }
 
-    await store.watchFields();
 
 });
 
