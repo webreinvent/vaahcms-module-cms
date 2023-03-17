@@ -220,8 +220,8 @@ const toggleItemMenu = (event) => {
             </template>
         </Card>
     </div>
-    <div class="col-2" >
-        <Card>
+    <div class="col-3" >
+        <Card style="height:570px; overflow-y: auto">
             <template #header>
                 <h2 class="font-semibold text-lg">Content Fields</h2>
             </template>

@@ -111,8 +111,8 @@ export const useContentTypeStore = defineStore({
                     this.list_view_width = 12;
                     break;
                 case 'contenttypes.contentstructure':
-                    this.view = 'large';
-                    this.list_view_width = 4;
+                    this.view = 'content structure';
+                    this.list_view_width = 3;
                     break;
                 default:
                     this.view = 'small';
@@ -704,6 +704,11 @@ export const useContentTypeStore = defineStore({
         isViewLarge()
         {
             return this.view === 'large';
+        },
+        //---------------------------------------------------------------------
+        isContentStructure()
+        {
+            return this.view !== 'content structure';
         },
         //---------------------------------------------------------------------
         getIdWidth()
