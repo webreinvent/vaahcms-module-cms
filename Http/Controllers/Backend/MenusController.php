@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use VaahCms\Modules\Cms\Entities\Content;
+use VaahCms\Modules\Cms\Models\Content;
 use VaahCms\Modules\Cms\Models\Menu;
 use WebReinvent\VaahCms\Models\Theme;
 
@@ -23,35 +23,46 @@ class MenusController extends Controller
     public function getAssets(Request $request)
     {
 
-        $data = [];
+        try {
+            $data = [];
 
-        $data['themes'] = Theme::getActiveThemesWithMenuLocations();
+            $data['themes'] = Theme::getActiveThemesWithMenuLocations();
 
-        $data['permission'] = [];
-        $data['rows'] = config('vaahcms.per_page');
+            $data['permission'] = [];
+            $data['rows'] = config('vaahcms.per_page');
 
-        $data['fillable']['except'] = [
-            'uuid',
-            'created_by',
-            'updated_by',
-            'deleted_by',
-        ];
+            $data['fillable']['except'] = [
+                'uuid',
+                'created_by',
+                'updated_by',
+                'deleted_by',
+            ];
 
-        $model = new Menu();
-        $fillable = $model->getFillable();
-        $data['fillable']['columns'] = array_diff(
-            $fillable, $data['fillable']['except']
-        );
+            $model = new Menu();
+            $fillable = $model->getFillable();
+            $data['fillable']['columns'] = array_diff(
+                $fillable, $data['fillable']['except']
+            );
 
-        foreach ($fillable as $column)
-        {
-            $data['empty_item'][$column] = null;
+            foreach ($fillable as $column) {
+                $data['empty_item'][$column] = null;
+            }
+
+            $data['actions'] = [];
+
+            $response['success'] = true;
+            $response['data'] = $data;
+
+        } catch (\Exception $e) {
+            $response = [];
+            $response['status'] = 'failed';
+            if (env('APP_DEBUG')) {
+                $response['errors'][] = $e->getMessage();
+                $response['hint'] = $e->getTrace();
+            } else {
+                $response['errors'][] = 'Something went wrong.';
+            }
         }
-
-        $data['actions'] = [];
-
-        $response['success'] = true;
-        $response['data'] = $data;
 
         return $response;
     }
@@ -109,7 +120,67 @@ class MenusController extends Controller
     }
     //----------------------------------------------------------
 
+    //----------------------------------------------------------
+    public function postActions(Request $request, $action)
+    {
+        $rules = array(
+            'inputs' => 'required',
+        );
 
+        $validator = \Validator::make( $request->all(), $rules);
+        if ( $validator->fails() ) {
+
+            $errors             = errorsToArray($validator->errors());
+            $response['status'] = 'failed';
+            $response['errors'] = $errors;
+            return response()->json($response);
+        }
+
+        $response = [];
+
+        $response['status'] = 'success';
+
+        $inputs = $request->all();
+
+        switch ($action)
+        {
+
+            //------------------------------------
+            case 'bulk-change-status':
+                $response = Menu::bulkStatusChange($request);
+                break;
+            //------------------------------------
+            case 'bulk-trash':
+
+                $response = Menu::bulkTrash($request);
+
+                break;
+            //------------------------------------
+            case 'bulk-restore':
+
+                $response = Menu::bulkRestore($request);
+
+                break;
+
+            //------------------------------------
+            case 'bulk-delete':
+
+                $response = Menu::bulkDelete($request);
+
+                break;
+
+            //------------------------------------
+            case 'set-as-home-page':
+
+                $response = Menu::setAsHomePage($request);
+
+                break;
+            //------------------------------------
+        }
+
+        return response()->json($response);
+
+    }
     //----------------------------------------------------------
     public function getContentList(Request $request)
     {

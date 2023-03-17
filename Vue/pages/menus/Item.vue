@@ -60,7 +60,7 @@ const toggleItemMenu = (event) => {
 <template>
 
 
-    <div class="col-6" >
+    <div class="col-6 " >
 
         <Panel class="draggable-menu">
 
@@ -69,8 +69,8 @@ const toggleItemMenu = (event) => {
 
                 <div class="flex flex-row">
                     <div class="p-panel-title">
-                        <span v-if="store.item && store.item.id">
-                            {{ store.item.name }}
+                        <span v-if="store.item && store.item.id && store.title">
+                            {{ store.title }}
                         </span>
                     </div>
 
@@ -87,25 +87,41 @@ const toggleItemMenu = (event) => {
                             v-if="store.item && store.item.id"
                             data-testid="menus-save"
                             @click="store.storeItem"
-                            icon="pi pi-save">
-                    </Button>
+                            icon="pi pi-save"/>
                     <!--/form_menu-->
-
+                    <Button class="p-button-primary"
+                            icon="pi pi-cog"
+                            v-tooltip.top="'Settings'"
+                            data-testid="menus-item_delete"
+                            @click="store.menu_settings = !store.menu_settings"/>
 
                     <Button class="p-button-primary"
-                            icon="pi pi-times"
-                            data-testid="menus-to-list"
-                            @click="store.toList()">
-                    </Button>
+                            icon="pi pi-trash"
+                            v-tooltip.top="'Delete'"
+                            data-testid="menus-item_delete"
+                            @click="store.deleteItem()"/>
                 </div>
-
-
-
             </template>
+            <div v-if="store.menu_settings">
+                <div class="col-12 mb-2" v-if="store.item && store.item.id">
+                    <InputText class="w-full mb-1"
+                               v-model="store.item.name"
+                               Placeholder="Name"
+                               data-testid="menus-item_name"/>
+                    <InputText class="w-full mb-1"
+                               v-model="store.item.attr_id"
+                               Placeholder="Menu Id"
+                               data-testid="menus-item_id"/>
+                    <InputText class="w-full mb-1"
+                               v-model="store.item.attr_class"
+                               Placeholder="Menu Class"
+                               data-testid="menus-item_class"/>
+                </div>
+                <div v-if="store.active_menu_items" >
+                    <NestedDraggable :tasks="store.active_menu_items" />
+                </div>
+            </div>
 
-            <p v-if="store.active_menu_items" >
-                <NestedDraggable :tasks="store.active_menu_items" />
-            </p>
         </Panel>
 
     </div>
@@ -118,16 +134,23 @@ const toggleItemMenu = (event) => {
             <template #content>
                 <Panel header="Contents" :toggleable="true" class="mb-4">
 
-                    <AutoComplete input-class="w-full" class="w-full mb-3" placeholder="Search"></AutoComplete>
-                    <draggable :list="store.content_list"
+                    <InputText class="w-full mb-3"
+                               v-model="store.content_search"
+                               data-testid="menus-content_search"
+                               @input="store.searchContent()"
+                               placeholder="Search content"/>
+
+                    <draggable :list="store.filtered_content_list"
                                class="dragArea"
                                :clone="store.cloneField"
                                item-key="name"
                                :group="{ name: 'menu_items', pull: 'clone', put: false }"  >
                     <template #item="{element}">
                             <div class="p-inputgroup mb-3">
-                                <Button icon="pi pi-bars" class="p-button-secondary p-button-sm"></Button>
-                                <Button :label="element.name" class="p-button-secondary p-button-sm"></Button>
+                                <Button icon="pi pi-bars"
+                                        class="p-button-secondary p-button-sm"/>
+                                <Button :label="element.name"
+                                        class="p-button-secondary p-button-sm"/>
                             </div>
                         </template>
                     </draggable>
@@ -141,8 +164,10 @@ const toggleItemMenu = (event) => {
                                :group="{ name: 'menu_items', pull: 'clone', put: false }"  >
                         <template #item="{element}">
                             <div class="p-inputgroup mb-3">
-                                <Button icon="pi pi-bars" class="p-button-secondary p-button-sm"></Button>
-                                <Button :label="element.name" class="p-button-secondary p-button-sm"></Button>
+                                <Button icon="pi pi-bars"
+                                        class="p-button-secondary p-button-sm"/>
+                                <Button :label="element.name"
+                                        class="p-button-secondary p-button-sm"/>
                             </div>
                         </template>
                     </draggable>

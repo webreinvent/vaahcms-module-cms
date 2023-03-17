@@ -68,6 +68,7 @@ onMounted(async () => {
                     <Dropdown v-model="store.query.vh_theme_id"
                               :options="store.assets.themes"
                               optionLabel="name" optionValue="id"
+                              data-testid="menus-theme"
                               class="is-full-width"
                               @change="store.setActiveTheme"
                               placeholder="Select a Theme" >
@@ -85,11 +86,14 @@ onMounted(async () => {
                                   :options="store.active_theme.locations"
                                   optionLabel="name" optionValue="id"
                                   @change="store.setActiveLocation"
+                                  data-testid="menus-item_location"
                                   placeholder="Select a Location" >
                         </Dropdown>
                         <Button :disabled="!store.query.vh_theme_location_id
                                 || !store.active_theme.locations"
                                 @click="store.copyLocationCode"
+                                v-tooltip.top="'Copy Code'"
+                                data-testid="menus-item_location_copy"
                                 icon="pi pi-copy">
                         </Button>
                     </div>
@@ -107,6 +111,7 @@ onMounted(async () => {
                               :options="store.active_location.menus"
                               optionLabel="name" optionValue="id"
                               class="is-full-width"
+                              data-testid="menus-menu_item"
                               @change="store.setActiveMenu"
                               placeholder="Select a Theme" >
                     </Dropdown>
@@ -118,9 +123,12 @@ onMounted(async () => {
                     <h5>Create New Menu</h5>
 
                     <div class="p-inputgroup">
-                        <InputText type="text" v-model="store.new_item.name" >
+                        <InputText type="text"
+                                   data-testid="menus-create_menu_item"
+                                   v-model="store.new_item.name" >
                         </InputText>
                         <Button @click="store.createItem"
+                                data-testid="menus-save_menu_item"
                                 label="Create">
                         </Button>
                     </div>
