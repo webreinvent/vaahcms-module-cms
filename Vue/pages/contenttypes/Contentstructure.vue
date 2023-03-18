@@ -38,7 +38,12 @@ const toggleItemMenu = (event) => {
 };
 //--------/toggle item menu
 
+const onSelectType = (field,data,group_index,field_index) => {
+    field.meta['filter_id'] = null;
+}
+
 </script>
+
 <template>
     <div class="col-6" >
         <Card>
@@ -68,19 +73,25 @@ const toggleItemMenu = (event) => {
                                 <InputSwitch v-model="item.is_repeatable"
                                              v-bind:false-value="0"
                                              v-bind:true-value="1"
-                                             data-testid="contetntypes-is_repeatable"/>
+                                             data-testid="contetntypes-is_repeatable"
+                                />
+
                                 <p class="ml-1 mr-3 text-xs font-semibold">Is Repeatable</p>
                                 <Button icon="pi pi-hashtag"
                                         :label="item.id"
                                         @click="store.getCopy(item.slug)"
                                         data-testid="contetntypes-copy_slug"
-                                        class="p-button-sm"/>
+                                        class="p-button-sm"
+                                />
+
                                 <Button icon="pi pi-trash"
                                         class="p-button-sm"
                                         data-testid="contetntypes-remove_group"
-                                        @click="store.removeGroup(item,idx)"/>
+                                        @click="store.removeGroup(item,idx)"
+                                />
                             </div>
                         </div>
+
                         <draggable
                             v-model="item.fields"
                             class="dragArea list-group"
@@ -117,107 +128,97 @@ const toggleItemMenu = (event) => {
                                                 <table role="table" class="p-datatable-table">
 
                                                     <tr v-if="!store.assets.non_repeatable_fields.includes(element.type.slug)">
-                                                        <td >
+                                                        <td>
                                                             Is repeatable
                                                         </td>
+
                                                         <td>
                                                             <InputSwitch v-model="element.is_repeatable"
                                                                          v-bind:false-value="0"
                                                                          v-bind:true-value="1"
-                                                                         data-testid="contenttype-group_field_repeatable"/>
-
+                                                                         data-testid="contenttype-group_field_repeatable"
+                                                            />
                                                         </td>
                                                     </tr>
+
                                                     <tr>
-                                                        <td >
+                                                        <td>
                                                             Is searchable
                                                         </td>
+
                                                         <td>
                                                             <InputSwitch v-bind:false-value="0"
                                                                          v-bind:true-value="1"
                                                                          data-testid="contenttype-group_field_searchable"
-                                                                         v-model="element.is_searchable"/>
-
+                                                                         v-model="element.is_searchable"
+                                                            />
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td >
+                                                        <td>
                                                             Excerpt
                                                         </td>
+
                                                         <td>
                                                             <Textarea data-testid="contenttype-group_field_excerpt"
                                                                       v-model="element.excerpt"
-                                                                      class="w-full"/>
-
+                                                                      class="w-full"
+                                                            />
                                                         </td>
                                                     </tr>
-<!--                                                    <tr>-->
-<!--                                                        <td >-->
-<!--                                                            Opening tag-->
-<!--                                                        </td>-->
-<!--                                                        <td>-->
-<!--                                                            <InputText data-testid="contenttype-group_field_opening_tag"-->
-    <!--                                                                       v-model="element.container_opening_tag"-->
-<!--                                                                       class="w-full"/>-->
-<!--                                                        </td>-->
-<!--                                                    </tr>-->
-<!--                                                    <tr>-->
-<!--                                                        <td >-->
-<!--                                                            Closing tag-->
-<!--                                                        </td>-->
-<!--                                                        <td>-->
-<!--                                                            <InputText data-testid="contenttype-group_field_closing_tag"-->
-<!--                                                                       v-model="element.container_closing_tag"-->
-<!--                                                                       class="w-full"/>-->
-<!--                                                        </td>-->
-<!--                                                    </tr>-->
-<!--                                                    <tr>-->
-<!--                                                        <td >-->
-<!--                                                            Is hidden-->
-<!--                                                        </td>-->
-<!--                                                        <td>-->
-<!--                                                            <Checkbox id="hidden"-->
-<!--                                                                      data-testid="contenttype-group_field_hidden"-->
-<!--                                                                      v-model="element.display_column"/>-->
-<!--                                                        </td>-->
-<!--                                                    </tr>-->
 
-                                                    <div v-if="element.meta">
+                                                    <template v-if="element.meta">
                                                         <tr v-for="(meta_item, meta_index) in element.meta"
                                                             v-if="(meta_index !== 'container_opening_tag'
                                                                     && meta_index !== 'container_closing_tag')
                                                                     || store.assets.non_repeatable_fields.includes(element.type.slug)
-                                                                    || element.is_repeatable">
-<!--                                                            <td v-if="meta_index !== 'filter_id'
-                                                                && meta_index !== 'display_column'
-                                                                && meta_index !== 'options'"
-                                                                v-html="vaah().toLabel(meta_index)"></td>
+                                                                    || field.is_repeatable"
+                                                        >
                                                             <td v-if="meta_index !== 'filter_id'
                                                                 && meta_index !== 'display_column'
-                                                                && meta_index !== 'options'">
-                                                                <div v-if="meta_index.includes('is_')">
+                                                                && meta_index !== 'options'"
+                                                            >
+                                                                <span v-html="vaah().toLabel(meta_index)"></span>
+                                                            </td>
+
+                                                            <td v-if="meta_index !== 'filter_id'
+                                                                    && meta_index !== 'display_column'
+                                                                    && meta_index !== 'options'"
+                                                            >
+                                                                <template v-if="meta_index.includes('is_')">
                                                                     <Checkbox :id="meta_index"
-                                                                              :data-testid="'contenttype-group_field_meta_'+meta_index"
-                                                                              v-model="element.meta[meta_index]"/>
-                                                                    <label :for="meta_index" class="ml-2"> {{meta_index}} </label>
-                                                                </div>
+                                                                              :data-testid="'contenttype-group_field_meta_' + meta_index"
+                                                                              v-model="element.meta[meta_index]"
+                                                                              class="mt-2"
+                                                                    />
 
-                                                                <div v-else-if="meta_index === 'option'">
-                                                                    <tag
-                                                                        :value="element.meta[meta_index]"
-                                                                        rounded>
-                                                                    </tag>
-                                                                </div>
+                                                                    <label :for="meta_index" class="ml-2"> {{ meta_index }} </label>
+                                                                </template>
 
-                                                                <div v-else>
-                                                                    <InputText :data-testid="'contenttype-group_'+ meta[meta_index]"
-                                                                               v-model="element.meta[meta_index]"
-                                                                               class="w-full"/>
-                                                                </div>
-                                                            </td>-->
+                                                                <template v-else-if="meta_index === 'option'">
+                                                                    <Chips  v-model="element.meta[meta_index]"
+                                                                            placeholder="Add a tag"
+                                                                            aria-close-label="Delete this tag"
+                                                                    />
+                                                                </template>
 
+                                                                <template v-else-if="meta_index === 'type'">
+                                                                    <Dropdown v-model="selectedCity"
+                                                                              :options="cities"
+                                                                              optionLabel="name"
+                                                                              placeholder="Select a City"
+                                                                              class="w-full md:w-14rem" />
+                                                                </template>
+
+                                                                <template v-else>
+                                                                    <InputText v-model="element.meta[meta_index]"
+                                                                               type="text"
+                                                                               class="mt-2 w-full"
+                                                                    />
+                                                                </template>
+                                                            </td>
                                                         </tr>
-                                                    </div>
+                                                    </template>
                                                 </table>
                                             </div>
                                         </div>
