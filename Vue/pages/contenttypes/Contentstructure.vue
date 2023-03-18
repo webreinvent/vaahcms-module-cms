@@ -1,6 +1,7 @@
 <script setup>
 import {onMounted, ref, watch} from "vue";
 import {useRoute} from 'vue-router';
+import {vaah} from '../../vaahvue/pinia/vaah'
 import draggable from 'vuedraggable'
 import { useContentTypeStore } from '../../stores/store-contenttypes'
 
@@ -156,7 +157,7 @@ const toggleItemMenu = (event) => {
 <!--                                                        </td>-->
 <!--                                                        <td>-->
 <!--                                                            <InputText data-testid="contenttype-group_field_opening_tag"-->
-<!--                                                                       v-model="element.container_opening_tag"-->
+    <!--                                                                       v-model="element.container_opening_tag"-->
 <!--                                                                       class="w-full"/>-->
 <!--                                                        </td>-->
 <!--                                                    </tr>-->
@@ -187,7 +188,7 @@ const toggleItemMenu = (event) => {
                                                                     && meta_index !== 'container_closing_tag')
                                                                     || store.assets.non_repeatable_fields.includes(element.type.slug)
                                                                     || element.is_repeatable">
-                                                            <td v-if="meta_index !== 'filter_id'
+<!--                                                            <td v-if="meta_index !== 'filter_id'
                                                                 && meta_index !== 'display_column'
                                                                 && meta_index !== 'options'"
                                                                 v-html="vaah().toLabel(meta_index)"></td>
@@ -213,7 +214,7 @@ const toggleItemMenu = (event) => {
                                                                                v-model="element.meta[meta_index]"
                                                                                class="w-full"/>
                                                                 </div>
-                                                            </td>
+                                                            </td>-->
 
                                                         </tr>
                                                     </div>
