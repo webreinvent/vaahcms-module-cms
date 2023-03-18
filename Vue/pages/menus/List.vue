@@ -69,7 +69,7 @@ onMounted(async () => {
                               :options="store.assets.themes"
                               optionLabel="name" optionValue="id"
                               data-testid="menus-theme"
-                              class="is-full-width"
+                              class="w-full"
                               @change="store.setActiveTheme"
                               placeholder="Select a Theme" >
                     </Dropdown>
@@ -110,7 +110,7 @@ onMounted(async () => {
                     <Dropdown v-model="store.query.vh_menu_id"
                               :options="store.active_location.menus"
                               optionLabel="name" optionValue="id"
-                              class="is-full-width"
+                              class="w-full"
                               data-testid="menus-menu_item"
                               @change="store.setActiveMenu"
                               placeholder="Select a Theme" >
