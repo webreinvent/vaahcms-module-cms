@@ -1,12 +1,28 @@
-<script setup>
-import {reactive, ref, watch } from 'vue';
-import {vaah} from '../../../pinia/vaah'
-import VhField from './../../primeflex/VhField.vue'
+<template>
 
-const props = defineProps({
+    <b-field :label="label"
+             :labelPosition="labelPosition">
+        <InputText
+                 :value="content"
+                 :size="size"
+                 :class="custom_class"
+                 :placeholder="placeholder"
+                 @input="emitOnInput"
+        />
+    </b-field>
+
+
+</template>
+
+<script>
+
+export default {
+    props:{
         content: {
-            type: String||Number,
-            default: null
+            type: String|Number,
+            default: function () {
+                return null
+            }
         },
         type: {
             type: String,
@@ -32,18 +48,32 @@ const props = defineProps({
             type: String,
             default: null,
         },
-    });
-function emitOnInput (data) {
-    this.$emit('input', data);
+    },
+    data()
+    {
+        let obj = {
+
+        };
+
+        return obj;
+    },
+
+    created() {
+
+    },
+    watch: {
+    },
+    mounted() {
+        //----------------------------------------------------
+        //----------------------------------------------------
+    },
+    methods: {
+        //----------------------------------------------------
+        emitOnInput: function (data) {
+            this.$emit('input', data);
+        },
+        //----------------------------------------------------
+    },
 }
 </script>
-<template>
-    <div class="col-12">
-        <InputText v-model="props.content"
-                   :class="custom_class"
-                   :placeholder="placeholder"
-                   @input="emitOnInput"/>
-    </div>
-
-</template>
 
