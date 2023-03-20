@@ -180,7 +180,7 @@ const toggleFormMenu = (event) => {
                               optionValue="id"
                               placeholder="Select Theme"
                               data-testid="contents-theme"
-                              @select="store.setActiveTheme"
+                              @change="store.setActiveTheme"
                               class="w-full md:w-14rem" />
                 </VhField>
                 <VhField label="Template" v-if="store.active_theme">
