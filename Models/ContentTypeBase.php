@@ -320,7 +320,6 @@ class ContentTypeBase extends Model {
     //-------------------------------------------------
     public static function getItemWithRelations($id)
     {
-
         $item = static::where('id', $id)
             ->with(['createdByUser', 'updatedByUser',
                 'deletedByUser',
