@@ -1,8 +1,29 @@
-<script setup>
-import {reactive, ref, watch, onMounted } from 'vue';
-import {vaah} from '../../../pinia/vaah'
+<template>
 
-const props = defineProps({
+    <div>
+        <h5 class="title is-5">Address</h5>
+        <VhField  v-for="(item, index) in list"
+                  :label="list[index].name"
+                  :message="list[index].message"
+                  :key="index"
+                  :labelPosition="labelPosition" >
+            <InputText :type="list[index].type"
+                     v-model="list[index].content"
+                     :maxlength="list[index].maxlength"
+                     :size="size"
+                     :class="custom_class"
+                     :placeholder="list[index].name"
+                     @input="emitOnInput"
+            ></InputText>
+        </VhField>
+    </div>
+
+</template>
+
+<script>
+
+export default {
+    props:{
         content: {
             type: Object,
             default: function () {
@@ -33,225 +54,136 @@ const props = defineProps({
             type: String,
             default: null,
         },
-    });
+    },
+    data()
+    {
+        let obj = {
 
-// data() {
-//     return {
-//         list:{
-//             "address_line_1": {
-//                 name: "Address Line 1",
-//                 type: 'text',
-//                 maxlength: 50,
-//                 content: null
-//             },
-//             "address_line_2":{
-//                 name: "Address Line 2",
-//                 type: 'text',
-//                 maxlength: 50,
-//                 content: null
-//             },
-//             "landmark":{
-//                 name: "Landmark",
-//                 type: 'text',
-//                 maxlength: 50,
-//                 content: null
-//             },
-//             "city":{
-//                 name: "City",
-//                 type: 'text',
-//                 maxlength: 50,
-//                 content: null
-//             },
-//             "state":{
-//                 name: "State",
-//                 type: 'text',
-//                 maxlength: 50,
-//                 content: null
-//             },
-//             "country":{
-//                 name: "Country",
-//                 type: 'text',
-//                 maxlength: 20,
-//                 content: null
-//             },
-//             "zip_code": {
-//                 name: "Zip Code",
-//                 type: 'text',
-//                 maxlength: 20,
-//                 content: null
-//             }
-//
-//         }
-//
-//     }
-// }
+            list:{
+                "address_line_1": {
+                    name: "Address Line 1",
+                    type: 'text',
+                    maxlength: 50,
+                    content: null
+                },
+                "address_line_2":{
+                    name: "Address Line 2",
+                    type: 'text',
+                    maxlength: 50,
+                    content: null
+                },
+                "landmark":{
+                    name: "Landmark",
+                    type: 'text',
+                    maxlength: 50,
+                    content: null
+                },
+                "city":{
+                    name: "City",
+                    type: 'text',
+                    maxlength: 50,
+                    content: null
+                },
+                "state":{
+                    name: "State",
+                    type: 'text',
+                    maxlength: 50,
+                    content: null
+                },
+                "country":{
+                    name: "Country",
+                    type: 'text',
+                    maxlength: 20,
+                    content: null
+                },
+                "zip_code": {
+                    name: "Zip Code",
+                    type: 'text',
+                    maxlength: 20,
+                    content: null
+                }
+
+            },
 
 
+        };
 
-// watch(content, (newVal, oldVal) => {
-//     if(!newVal){
-//         this.list = {
-//             "address_line_1": {
-//                 name: "Address Line 1",
-//                 type: 'text',
-//                 maxlength: 50,
-//                 content: null
-//             },
-//             "address_line_2":{
-//                 name: "Address Line 2",
-//                 type: 'text',
-//                 maxlength: 50,
-//                 content: null
-//             },
-//             "landmark":{
-//                 name: "Landmark",
-//                 type: 'text',
-//                 maxlength: 50,
-//                 content: null
-//             },
-//             "city":{
-//                 name: "City",
-//                 type: 'text',
-//                 maxlength: 50,
-//                 content: null
-//             },
-//             "state":{
-//                 name: "State",
-//                 type: 'text',
-//                 maxlength: 50,
-//                 content: null
-//             },
-//             "country":{
-//                 name: "Country",
-//                 type: 'text',
-//                 maxlength: 20,
-//                 content: null
-//             },
-//             "zip_code": {
-//                 name: "Zip Code",
-//                 type: 'text',
-//                 maxlength: 20,
-//                 content: null
-//             }
-//
-//         };
-//     }else{
-//         this.list = newVal;
-//     }
-// });
-let data = {
-    "address_line_1": {
-        name: "Address Line 1",
-        type: 'text',
-        maxlength: 50,
-        content: null
+        return obj;
     },
-    "address_line_2":{
-        name: "Address Line 2",
-        type: 'text',
-        maxlength: 50,
-        content: null
+
+    created() {
+
     },
-    "landmark":{
-        name: "Landmark",
-        type: 'text',
-        maxlength: 50,
-        content: null
+    watch: {
+        content(newVal, oldVal) {
+
+            if(!newVal){
+                this.list = {
+                    "address_line_1": {
+                        name: "Address Line 1",
+                        type: 'text',
+                        maxlength: 50,
+                        content: null
+                    },
+                    "address_line_2":{
+                        name: "Address Line 2",
+                        type: 'text',
+                        maxlength: 50,
+                        content: null
+                    },
+                    "landmark":{
+                        name: "Landmark",
+                        type: 'text',
+                        maxlength: 50,
+                        content: null
+                    },
+                    "city":{
+                        name: "City",
+                        type: 'text',
+                        maxlength: 50,
+                        content: null
+                    },
+                    "state":{
+                        name: "State",
+                        type: 'text',
+                        maxlength: 50,
+                        content: null
+                    },
+                    "country":{
+                        name: "Country",
+                        type: 'text',
+                        maxlength: 20,
+                        content: null
+                    },
+                    "zip_code": {
+                        name: "Zip Code",
+                        type: 'text',
+                        maxlength: 20,
+                        content: null
+                    }
+
+                };
+            }else{
+                this.list = newVal;
+            }
+
+        },
     },
-    "city":{
-        name: "City",
-        type: 'text',
-        maxlength: 50,
-        content: null
-    },
-    "state":{
-        name: "State",
-        type: 'text',
-        maxlength: 50,
-        content: null
-    },
-    "country":{
-        name: "Country",
-        type: 'text',
-        maxlength: 20,
-        content: null
-    },
-    "zip_code": {
-        name: "Zip Code",
-        type: 'text',
-        maxlength: 20,
-        content: null
-    }
-};
-const demo = () => {
-    data.value = {
-        "address_line_1": {
-            name: "Address Line 1",
-            type: 'text',
-            maxlength: 50,
-            content: null
-        },
-        "address_line_2":{
-            name: "Address Line 2",
-            type: 'text',
-            maxlength: 50,
-            content: null
-        },
-        "landmark":{
-            name: "Landmark",
-            type: 'text',
-            maxlength: 50,
-            content: null
-        },
-        "city":{
-            name: "City",
-            type: 'text',
-            maxlength: 50,
-            content: null
-        },
-        "state":{
-            name: "State",
-            type: 'text',
-            maxlength: 50,
-            content: null
-        },
-        "country":{
-            name: "Country",
-            type: 'text',
-            maxlength: 20,
-            content: null
-        },
-        "zip_code": {
-            name: "Zip Code",
-            type: 'text',
-            maxlength: 20,
-            content: null
+    mounted() {
+        //----------------------------------------------------
+        if(this.content)
+        {
+            this.list = this.content;
         }
-
-    }
+        //----------------------------------------------------
+    },
+    methods: {
+        //----------------------------------------------------
+        emitOnInput: function () {
+            this.$emit('input', this.list);
+        },
+        //----------------------------------------------------
+    },
 }
-
-onMounted(() => {
-
-    // if(this.content)
-    // {
-    //     this.list = this.content;
-    // }
-});
-// function emitOnInput () {
-//     this.$emit('input', this.list);
-// }
 </script>
-<template>
-    {{ data }}
-    <h5 class="title is-5">Address</h5>
-    <div class="p-inputgroup mb-1" v-for="(item, index) in list">
-            <InputText
-                     v-model="list[index].content"
-                     :class="custom_class"
-                     :placeholder="list[index].name"
-                     @input="emitOnInput"/>
-    </div>
-
-</template>
 
