@@ -197,7 +197,7 @@ export const useContentStore = defineStore({
                 }
                 // this.active_theme = this.assets.default_theme;
 
-                // this.getUser();
+                this.getUser();
             }
         },
         //---------------------------------------------------------------------
@@ -886,7 +886,7 @@ export const useContentStore = defineStore({
         async getUser(){
             console.log(this.base_url);
             await vaah().ajax(
-                this.base_url+'/json/users/',
+                this.ajax_url+'/users/',
                 this.afterGetUser,
             );
         },
@@ -916,6 +916,7 @@ export const useContentStore = defineStore({
         },
         //---------------------------------------------------------------------
         setActiveTheme () {
+            console.log(this.item.vh_theme_id);
             let theme = vaah().findInArrayByKey(this.assets.themes,
                 'id', this.item.vh_theme_id);
             this.active_theme = theme;

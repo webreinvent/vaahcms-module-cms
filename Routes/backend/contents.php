@@ -25,6 +25,9 @@ Route::group(
         Route::get('/assets', 'ContentsController@getAssets')
             ->name('backend.cms.contents.assets');
         //---------------------------------------------------------
+        Route::get('/users', 'ContentsController@getUsers')
+            ->name('backend.cms.contents.usres');
+        //---------------------------------------------------------
         Route::post('/create', 'ContentsController@postCreate')
             ->name('backend.cms.contents.create');
         //---------------------------------------------------------
