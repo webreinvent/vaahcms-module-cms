@@ -175,7 +175,7 @@ const onSelectType = (field,data,group_index,field_index) => {
                                                                     || (store && store.assets && store.assets.non_repeatable_fields && store.assets.non_repeatable_fields.includes(element.type.slug))
                                                                     || element.is_repeatable"
                                                         >
-                                                            <td v-if="meta_index && meta_index !== 'filter_id'
+                                                            <td v-if="meta_index !== 'filter_id'
                                                                 && meta_index !== 'display_column'
                                                                 && meta_index !== 'options'"
                                                             >
