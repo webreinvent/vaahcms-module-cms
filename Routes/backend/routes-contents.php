@@ -2,10 +2,10 @@
 
 Route::group(
     [
-        'prefix' => 'backend/cms/contents',
-        
+        'prefix' => 'backend/cms/contents/{content_type_slug}',
+
         'middleware' => ['web', 'has.backend.access'],
-        
+
         'namespace' => 'Backend',
 ],
 function () {
