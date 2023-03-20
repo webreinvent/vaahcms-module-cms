@@ -5,8 +5,9 @@ use Illuminate\Routing\Controller;
 use VaahCms\Modules\Cms\Models\Content;
 use VaahCms\Modules\Cms\Models\ContentTypeBase;
 use WebReinvent\VaahCms\Entities\Taxonomy;
+
+use WebReinvent\VaahCms\Entities\User;
 use WebReinvent\VaahCms\Models\Theme;
-use WebReinvent\VaahCms\Models\User;
 
 class ContentsController extends Controller
 {
