@@ -8,6 +8,7 @@ import { useContentTypeStore } from '../../stores/store-contenttypes'
 import VhViewRow from '../../vaahvue/vue-three/primeflex/VhViewRow.vue';
 const store = useContentTypeStore();
 const route = useRoute();
+const useVaah = vaah();
 
 onMounted(async () => {
 
@@ -171,14 +172,14 @@ const onSelectType = (field,data,group_index,field_index) => {
                                                         <tr v-for="(meta_item, meta_index) in element.meta"
                                                             v-if="(meta_index !== 'container_opening_tag'
                                                                     && meta_index !== 'container_closing_tag')
-                                                                    || store.assets.non_repeatable_fields.includes(element.type.slug)
-                                                                    || field.is_repeatable"
+                                                                    || (store && store.assets && store.assets.non_repeatable_fields && store.assets.non_repeatable_fields.includes(element.type.slug))
+                                                                    || element.is_repeatable"
                                                         >
-                                                            <td v-if="meta_index !== 'filter_id'
+                                                            <td v-if="meta_index && meta_index !== 'filter_id'
                                                                 && meta_index !== 'display_column'
                                                                 && meta_index !== 'options'"
                                                             >
-                                                                <span v-html="vaah().toLabel(meta_index)"></span>
+                                                                <span v-html="useVaah.toLabel(meta_index)"> </span>
                                                             </td>
 
                                                             <td v-if="meta_index !== 'filter_id'
@@ -202,12 +203,13 @@ const onSelectType = (field,data,group_index,field_index) => {
                                                                     />
                                                                 </template>
 
-                                                                <template v-else-if="meta_index === 'type'">
-                                                                    <Dropdown v-model="selectedCity"
-                                                                              :options="cities"
+                                                                <template v-else-if="meta_index === 'type' && store && store.assets && store.assets.content_relations">
+                                                                    <Dropdown v-model="element.meta[meta_index]"
+                                                                              :options="store.assets.content_relations"
                                                                               optionLabel="name"
-                                                                              placeholder="Select a City"
-                                                                              class="w-full md:w-14rem" />
+                                                                              placeholder="Select"
+                                                                              class="w-full md:w-14rem"
+                                                                    />
                                                                 </template>
 
                                                                 <template v-else>
