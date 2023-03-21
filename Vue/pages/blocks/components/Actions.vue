@@ -90,6 +90,7 @@ const toggleBulkMenuState = (event) => {
                                     icon="pi pi-search"/>
                             <Button
                                 type="button"
+                                v-if="store.isViewLarge()"
                                 class="p-button-sm"
                                 data-testid="blocks-actions-show-filters"
                                 @click="store.show_filters = true">
@@ -99,6 +100,7 @@ const toggleBulkMenuState = (event) => {
 
                             <Button
                                 type="button"
+                                v-if="store.isViewLarge()"
                                 icon="pi pi-filter-slash"
                                 data-testid="blocks-actions-reset-filters"
                                 class="p-button-sm"

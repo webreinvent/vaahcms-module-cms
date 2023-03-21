@@ -8,6 +8,8 @@
     "dependencies": {
         "axios": "^0.27.2",
         "jodit": "^3.24.5",
+        "jodit-vue": "^3.0.0",
+        "jodit-vue3": "^1.0.5",
         "moment-timezone": "^0.5.34",
         "pinia": "^2.0.23",
         "primevue": "^3.18.0",
