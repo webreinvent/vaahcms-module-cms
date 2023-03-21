@@ -451,39 +451,39 @@
 </template>
 
 <script>
-import VvAutoCompleteUsers from "./VvAutoCompleteUsers";
-import VvAddress from "./VvAddress";
-import VvBoolean from "./VvBoolean";
-import VvCurrencyCode from "./VvCurrencyCode";
-import VvDate from "./VvDate";
-import VvDateTime from "./VvDateTime";
-import VvEditor from "./VvEditor";
-import VvJoditEditor from "./VvJoditEditor";
-import VvEmail from "./VvEmail";
-import VvFacebookCard from "./VvFacebookCard";
-import VvImage from './VvImage';
-import VvImageGroup from "./VvImageGroup";
-import VvJson from "./VvJson";
-import VvList from "./VvList";
-import VvMarkdown from "./VvMarkdown";
-import VvMedia from "./VvMedia";
-import VvNumber from "./VvNumber";
-import VvPassword from "./VvPassword";
-import VvPhoneNumber from "./VvPhoneNumber";
-import VvRelation from "./VvRelation";
-import VvSeoMetaTags from "./VvSeoMetaTags";
-import VvSlug from "./VvSlug";
-import VvTags from "./VvTags";
-import VvText from "./VvText";
-import VvSelect from "./VvSelect";
-import VvTreeSelect from "./VvTreeSelect";
-import VvTextarea from "./VvTextarea";
-import VvTime from "./VvTime";
-import VvTitle from "./VvTitle";
-import VvTwitterCard from "./VvTwitterCard";
-import VvUuid from "./VvUuid";
-import VvVisualEditor from "./VvVisualEditor";
-import VvCodeMirror from "./VvCodeMirror";
+// import VvAutoCompleteUsers from "./VvAutoCompleteUsers";
+// import VvAddress from "./VvAddress";
+// import VvBoolean from "./VvBoolean";
+// import VvCurrencyCode from "./VvCurrencyCode";
+// import VvDate from "./VvDate";
+// import VvDateTime from "./VvDateTime";
+// import VvEditor from "./VvEditor";
+// import VvJoditEditor from "./VvJoditEditor";
+// import VvEmail from "./VvEmail";
+// import VvFacebookCard from "./VvFacebookCard";
+// import VvImage from './VvImage';
+// import VvImageGroup from "./VvImageGroup";
+// import VvJson from "./VvJson";
+// import VvList from "./VvList";
+// import VvMarkdown from "./VvMarkdown";
+// import VvMedia from "./VvMedia";
+// import VvNumber from "./VvNumber";
+// import VvPassword from "./VvPassword";
+// import VvPhoneNumber from "./VvPhoneNumber";
+// import VvRelation from "./VvRelation";
+// import VvSeoMetaTags from "./VvSeoMetaTags";
+// import VvSlug from "./VvSlug";
+// import VvTags from "./VvTags";
+import VvText from "./VvText.vue";
+// import VvSelect from "./VvSelect";
+// import VvTreeSelect from "./VvTreeSelect";
+// import VvTextarea from "./VvTextarea";
+// import VvTime from "./VvTime";
+// import VvTitle from "./VvTitle";
+// import VvTwitterCard from "./VvTwitterCard";
+// import VvUuid from "./VvUuid";
+// import VvVisualEditor from "./VvVisualEditor";
+// import VvCodeMirror from "./VvCodeMirror";
 
 
 
@@ -562,14 +562,7 @@ export default {
         }
 
     },
-    components:{
-        VvAddress, VvBoolean, VvCurrencyCode, VvDate, VvDateTime,
-        VvEditor, VvJoditEditor, VvEmail, VvFacebookCard, VvImage, VvImageGroup,
-        VvJson, VvList, VvMarkdown, VvMedia, VvNumber, VvPassword, VvPhoneNumber,
-        VvRelation, VvSeoMetaTags,
-        VvSlug, VvTags, VvText, VvSelect, VvTreeSelect, VvTextarea, VvTime, VvTitle, VvTwitterCard, VvUuid,
-        VvVisualEditor,VvAutoCompleteUsers,VvCodeMirror
-    },
+
     data()
     {
         let obj = {
