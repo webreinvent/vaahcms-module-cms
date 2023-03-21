@@ -1,28 +1,10 @@
-<template>
-
-    <b-field :label="label"
-             :labelPosition="labelPosition">
-        <InputText
-                 :value="content"
-                 :size="size"
-                 :class="custom_class"
-                 :placeholder="placeholder"
-                 @input="emitOnInput"
-        />
-    </b-field>
-
-
-</template>
-
 <script>
-
+import VhField from './../../primeflex/VhField.vue'
 export default {
     props:{
         content: {
             type: String|Number,
-            default: function () {
-                return null
-            }
+            default: null
         },
         type: {
             type: String,
@@ -76,4 +58,16 @@ export default {
     },
 }
 </script>
+<template>
+
+    <VhField :label="props.label">
+        <InputText
+                 v-model="props.content"
+                 :class="props.custom_class"
+                 :placeholder="props.placeholder"
+        />
+    </VhField>
+
+
+</template>
 
