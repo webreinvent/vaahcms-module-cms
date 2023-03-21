@@ -102,7 +102,7 @@ const onSelectType = (field,data,group_index,field_index) => {
                             item-key="id">
                             <template #item="{element,index}">
                                 <div>
-                                    <div class="p-inputgroup mb-3">
+                                    <div class="p-inputgroup my-3">
                                         <InputText class="w-2" :model-value="element.type.name" disabled/>
                                         <InputText class="w-6"
                                                    v-model="element.name"
@@ -126,7 +126,7 @@ const onSelectType = (field,data,group_index,field_index) => {
                                             p-datatable-striped p-datatable-sm"
                                              data-scrollselectors=".p-datatable-wrapper" pv_id_6="">
                                             <div class="p-datatable-wrapper">
-                                                <table role="table" class="p-datatable-table">
+                                                <table role="table" class="p-datatable-table p-component p-datatable-striped">
 
                                                     <tr v-if="!store.assets.non_repeatable_fields.includes(element.type.slug)">
                                                         <td>
@@ -152,6 +152,7 @@ const onSelectType = (field,data,group_index,field_index) => {
                                                                          v-bind:true-value="1"
                                                                          data-testid="contenttype-group_field_searchable"
                                                                          v-model="element.is_searchable"
+                                                                         class="mt-2"
                                                             />
                                                         </td>
                                                     </tr>
@@ -179,7 +180,7 @@ const onSelectType = (field,data,group_index,field_index) => {
                                                                 && meta_index !== 'display_column'
                                                                 && meta_index !== 'options'"
                                                             >
-                                                                <span v-html="useVaah.toLabel(meta_index)"> </span>
+                                                                <span class="mt-3" v-html="useVaah.toLabel(meta_index)"></span>
                                                             </td>
 
                                                             <td v-if="meta_index !== 'filter_id'
@@ -190,32 +191,38 @@ const onSelectType = (field,data,group_index,field_index) => {
                                                                     <Checkbox :id="meta_index"
                                                                               :data-testid="'contenttype-group_field_meta_' + meta_index"
                                                                               v-model="element.meta[meta_index]"
-                                                                              class="mt-2"
+                                                                              :inputId="meta_index"
+                                                                              class="mt-3"
+                                                                              :binary="true"
                                                                     />
 
-                                                                    <label :for="meta_index" class="ml-2"> {{ meta_index }} </label>
+                                                                    <label :for="meta_index" class="mt-4 ml-2">
+                                                                        {{ useVaah.toLabel(meta_index) }}
+                                                                    </label>
                                                                 </template>
 
                                                                 <template v-else-if="meta_index === 'option'">
                                                                     <Chips  v-model="element.meta[meta_index]"
                                                                             placeholder="Add a tag"
-                                                                            aria-close-label="Delete this tag"
+                                                                            aria-close-label="Delete this option"
+                                                                            class="w-full mt-3"
+                                                                            inputClass="p-inputtext-sm"
                                                                     />
                                                                 </template>
 
-                                                                <template v-else-if="meta_index === 'type' && store && store.assets && store.assets.content_relations">
+                                                                <template v-else-if="meta_index === 'type' && (store && store.assets && store.assets.content_relations)">
                                                                     <Dropdown v-model="element.meta[meta_index]"
                                                                               :options="store.assets.content_relations"
                                                                               optionLabel="name"
                                                                               placeholder="Select"
-                                                                              class="w-full md:w-14rem"
+                                                                              class="w-full md:w-14rem mt-3"
                                                                     />
                                                                 </template>
 
                                                                 <template v-else>
                                                                     <InputText v-model="element.meta[meta_index]"
                                                                                type="text"
-                                                                               class="mt-2 w-full"
+                                                                               class="mt-3 w-full p-inputtext-sm"
                                                                     />
                                                                 </template>
                                                             </td>
