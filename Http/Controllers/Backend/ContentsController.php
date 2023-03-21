@@ -44,7 +44,7 @@ class ContentsController extends Controller
         {
 
             $arr_group = [];
-
+//            var_dump($form_groups['data']->groups);die();
             foreach ($form_groups['data']->groups as $group){
                 $arr_group[] = [$group];
             }

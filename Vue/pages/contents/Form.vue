@@ -63,7 +63,7 @@ const toggleFormMenu = (event) => {
                                                   @complete="store.searchUser($event)"
                                                   optionLabel="name"
                                                   optionValue="email"
-                                                  placeholde="Search..."
+                                                  placeholder="Search..."
                                                   inputClass="p-inputtext-sm"/>
                                 </div>
                                 <Accordion :multiple="true" :activeIndex="store.active_index" id="accordionTabContainer">
