@@ -68,6 +68,21 @@ export const useContentStore = defineStore({
         user_list:null,
         active_theme:null,
         active_index:[],
+        field: {
+            type:{
+                name:'Text',
+                slug:'text',
+            },
+            name:'Abinash',
+            meta:{
+                closing_tag: "</p>",
+                container_closing_tag: "",
+                container_opening_tag: "",
+                is_hidden: false,
+                opening_ta: "<p class='text'>",
+            },
+            content:'ashjgdjhasa',
+        },
     }),
     getters: {
 
