@@ -53,7 +53,7 @@ const props = defineProps({
                                  :placeholder="store.field.name"
                                  :app_url="store.field.type.slug === 'relation'
                                            ? ajax_url+'/getRelationsInTree' : ''"
-                                 v-model="store.field.content"
+                                 :value="store.field.content"
                                  custom_class="w-full"
                                  @onInput=""
                                  @onChange=""
