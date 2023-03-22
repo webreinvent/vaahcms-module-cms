@@ -65,9 +65,6 @@
             </vv-boolean>
         </template>
 
-
-
-
         <template v-else-if="field_slug === 'editor'">
 
             <vv-jodit-editor :content="value"
@@ -85,7 +82,6 @@
             </vv-jodit-editor>
 
         </template>
-
 
         <template v-else-if="field_slug === 'code-mirror'">
 
@@ -122,9 +118,6 @@
 
         </template>
 
-
-
-
         <template v-else-if="field_slug === 'date'">
             <vv-date :content="value"
                      :size="size"
@@ -155,8 +148,6 @@
             </vv-time>
         </template>
 
-
-
         <template v-else-if="field_slug === 'date-time'">
             <vv-date-time :content="value"
                           :size="size"
@@ -171,7 +162,6 @@
                           @onFocus="emitOnFocus" >
             </vv-date-time>
         </template>
-
 
         <template v-else-if="field_slug === 'user'">
             <vv-auto-complete-users :content="value"
@@ -233,7 +223,6 @@
             </vv-uuid>
         </template>
 
-
         <template v-else-if="field_slug === 'currency-code'">
             <vv-currency-code :content="value"
                               :size="size"
@@ -249,8 +238,6 @@
                               @onFocus="emitOnFocus" >
             </vv-currency-code>
         </template>
-
-
 
         <template v-else-if="field_slug === 'list'">
             <vv-list :content="value"
@@ -344,7 +331,6 @@
                         @onFocus="emitOnFocus" >
             </vv-address>
         </template>
-
 
         <template v-else-if="field_slug === 'relation'">
             <vv-tree-select :content="value"
