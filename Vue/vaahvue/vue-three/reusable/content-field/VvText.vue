@@ -1,9 +1,9 @@
-<script>
+<script setup>
 import {reactive, ref, watch } from 'vue';
 import {vaah} from '../../../pinia/vaah'
 import VhField from './../../primeflex/VhField.vue'
-export default {
-    props:{
+
+const props = defineProps({
         content: {
             type: String|Number,
             default: null
@@ -32,33 +32,11 @@ export default {
             type: String,
             default: null,
         },
-    },
-    data()
-    {
-        let obj = {
+    });
 
-        };
-
-        return obj;
-    },
-
-    created() {
-
-    },
-    watch: {
-    },
-    mounted() {
-        //----------------------------------------------------
-        //----------------------------------------------------
-    },
-    methods: {
-        //----------------------------------------------------
-        emitOnInput: function (data) {
-            this.$emit('input', data);
-        },
-        //----------------------------------------------------
-    },
-}
+// function emitOnInput (data) {
+//     this.$emit('input', data);
+// }
 </script>
 <template>
 
