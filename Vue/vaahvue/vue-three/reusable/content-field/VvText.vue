@@ -5,7 +5,7 @@ import VhField from './../../primeflex/VhField.vue'
 
 const props = defineProps({
         content: {
-            type: String|Number,
+            type: String||Number,
             default: null
         },
         type: {
@@ -33,21 +33,17 @@ const props = defineProps({
             default: null,
         },
     });
-
-// function emitOnInput (data) {
-//     this.$emit('input', data);
-// }
+function emitOnInput (data) {
+    this.$emit('input', data);
+}
 </script>
 <template>
-
-    <VhField :label="label">
-        <InputText
-                 v-model="props.content"
-                 :class="custom_class"
-                 :placeholder="placeholder"
-        />
-    </VhField>
-
+    <div class="col-12">
+        <InputText v-model="props.content"
+                   :class="custom_class"
+                   :placeholder="placeholder"
+                   @input="emitOnInput"/>
+    </div>
 
 </template>
 
