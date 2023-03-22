@@ -281,7 +281,10 @@ class Content extends Model {
 
                             $relation =  vh_content_relations_by_name($field['meta']['type']);
 
-                            if($relation && isset($relation['namespace']) && $relation['namespace']){
+                            if($relation && isset($relation['namespace'])
+                                && $relation['namespace']
+                                && $field && isset($field['content'])
+                                && is_array($field['content'])){
                                 foreach ($field['content'] as $id){
                                     $data = [
                                         'relatable_id' => $id,
@@ -704,6 +707,8 @@ class Content extends Model {
 
                         $content_val = ContentFormField::getContentAsset($content_val, $field->type->slug);
 
+                        $arr_group[$i][$key]['fields'][$y]['content'] = $content_val;
+
                         if(is_string($content_val)){
                             $arr_group[$i][$key]['fields'][$y]['content'] = vh_translate_dynamic_strings(
                                 $content_val
@@ -870,7 +875,7 @@ class Content extends Model {
                         $relatable_ids = ContentFormRelation::where('vh_cms_content_form_field_id',$related_item->id)
                             ->pluck('relatable_id')->toArray();
 
-                        if(!$field['content']){
+                        if(!$field['content'] && !is_array($field['content'])){
                             $row_to_delete_ids = array_diff($relatable_ids, []);
                         }else{
                             $row_to_delete_ids = array_diff($relatable_ids, $field['content']);
