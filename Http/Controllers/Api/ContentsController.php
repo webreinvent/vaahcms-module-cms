@@ -182,7 +182,7 @@ class ContentsController extends Controller
             return $response;
         }
 
-        $content_data = Content::getItem($content->id);
+        $content_data = Content::getApiItem($content->id);
 
         if($content_data['status'] != 'success')
         {
