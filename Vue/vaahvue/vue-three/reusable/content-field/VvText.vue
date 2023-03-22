@@ -1,4 +1,6 @@
 <script>
+import {reactive, ref, watch } from 'vue';
+import {vaah} from '../../../pinia/vaah'
 import VhField from './../../primeflex/VhField.vue'
 export default {
     props:{
@@ -60,11 +62,11 @@ export default {
 </script>
 <template>
 
-    <VhField :label="props.label">
+    <VhField :label="label">
         <InputText
                  v-model="props.content"
-                 :class="props.custom_class"
-                 :placeholder="props.placeholder"
+                 :class="custom_class"
+                 :placeholder="placeholder"
         />
     </VhField>
 
