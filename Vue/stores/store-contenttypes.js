@@ -111,8 +111,8 @@ export const useContentTypeStore = defineStore({
                     this.list_view_width = 12;
                     break;
                 case 'contenttypes.contentstructure':
-                    this.view = 'large';
-                    this.list_view_width = 4;
+                    this.view = 'content structure';
+                    this.list_view_width = 3;
                     break;
                 default:
                     this.view = 'small';
@@ -197,6 +197,7 @@ export const useContentTypeStore = defineStore({
                     },{deep: true}
                 );
             }
+
         },
         //---------------------------------------------------------------------
         async getAssets() {
@@ -706,6 +707,11 @@ export const useContentTypeStore = defineStore({
             return this.view === 'large';
         },
         //---------------------------------------------------------------------
+        isContentStructure()
+        {
+            return this.view !== 'content structure';
+        },
+        //---------------------------------------------------------------------
         getIdWidth()
         {
             let width = 50;
@@ -979,8 +985,9 @@ export const useContentTypeStore = defineStore({
             }
         },
         //---------------------------------------------------------------------
-        toContentStructure(item) {
+        async toContentStructure(item) {
             this.item = vaah().clone(item);
+            await this.getContentStrucutre(this.item.id);
             this.$router.push({name: 'contenttypes.contentstructure', params: {id: item.id}});
 
         },
@@ -992,7 +999,8 @@ export const useContentTypeStore = defineStore({
         },
         //---------------------------------------------------------------------
         removeField(idx,i) {
-            this.item.groups[i].content_types.splice(idx, 1);
+            this.item.groups[i].fields.splice(idx, 1);
+            vaah().toastErrors(['Removed']);
         },
         //---------------------------------------------------------------------
         getCopy(value)
@@ -1039,6 +1047,11 @@ export const useContentTypeStore = defineStore({
 
 
             return item;
+        },
+        //---------------------------------------------------------------------
+        groupsFieldsSlug(item){
+            console.log(item.name);
+            item.slug = vaah().strToSlug(item.name);
         },
         //---------------------------------------------------------------------
     }

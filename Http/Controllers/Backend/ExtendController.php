@@ -4,7 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use VaahCms\Modules\Cms\Entities\ContentTypeBase;
-use WebReinvent\VaahCms\Entities\TaxonomyType;
+use WebReinvent\VaahCms\Models\TaxonomyType;
 
 class ExtendController extends Controller
 {
@@ -37,7 +37,7 @@ class ExtendController extends Controller
         $list = [
             [
                 "name" => "Taxonomy",
-                "namespace" => "WebReinvent\\VaahCms\\Entities\\Taxonomy",
+                "namespace" => "WebReinvent\\VaahCms\\Models\\Taxonomy",
                 "options" => TaxonomyType::getListInTreeFormat(),
                 "filter_by" => 'vh_taxonomy_type_id',
                 "add_url" => route('vh.backend')."#/vaah/manage/taxonomies/create",
