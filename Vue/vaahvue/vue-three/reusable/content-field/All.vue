@@ -49,12 +49,8 @@ const props = defineProps({
             null,
         },
         value: {
-            type: String | Number | Array | Object,
-        default:
-
-            function () {
-                return null
-            }
+            type: String || Number || Array || Object,
+            default:null
         },
         type: {
             type: String,
@@ -102,8 +98,8 @@ const props = defineProps({
             null
         },
         meta:{
-            type: Array | Object,
-        default:
+            type: Array || Object,
+            default:
             null
         },
         ajax_url:{
@@ -127,7 +123,6 @@ const props = defineProps({
             false,
         },
     });
-
 function emitOnInput (data) {
     this.$emit('input', data);
 };
@@ -153,7 +148,7 @@ function emitOnFocus (data) {
             <vv-text :content="value"
                      :type="type"
                      :size="size"
-                     :class="custom_class"
+                     :custom_class="custom_class"
                      :label="label"
                      :labelPosition="labelPosition"
                      :placeholder="placeholder"
