@@ -39,27 +39,30 @@ const props = defineProps({
                 <h2 class="font-semibold text-lg">Test</h2>
                 <div class="p-inputgroup w-max">
                     <Button
-                        @click="store.copyGroupCode()"
+                        @click="store.copyGroupCode(store.field.type)"
                         icon="pi pi-copy"
                         data-testid="content-copy_group_code"
                         class="p-button-sm "/>
                 </div>
             </div>
             <div class="flex justify-content-between align-items-center w-full">
-                <ContentFieldAll :field_type="store.field.type.name"
-                                 :field_slug="store.field.type.slug"
-                                 :label="store.field.name"
-                                 :meta="store.field.meta"
-                                 :placeholder="store.field.name"
-                                 :app_url="store.field.type.slug === 'relation'
-                                           ? ajax_url+'/getRelationsInTree' : ''"
-                                 :value="store.field.content"
-                                 custom_class="w-full"
-                                 @onInput=""
-                                 @onChange=""
-                                 @onBlur=""
-                                 @onFocus="">
-                </ContentFieldAll>
+                <div class="col-12">
+                    <ContentFieldAll :field_type="store.field.type.name"
+                                     :field_slug="store.field.type.slug"
+                                     :label="store.field.name"
+                                     :meta="store.field.meta"
+                                     :placeholder="store.field.name"
+                                     :app_url="store.field.type.slug === 'relation'
+                                               ? ajax_url+'/getRelationsInTree' : ''"
+                                     :value="store.field.content"
+                                     custom_class="w-full"
+                                     :is_simple="store.field.is_simple"
+                                     @onInput=""
+                                     @onChange=""
+                                     @onBlur=""
+                                     @onFocus="">
+                    </ContentFieldAll>
+                </div>
             </div>
         </div>
     </div>

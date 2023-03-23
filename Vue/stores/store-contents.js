@@ -69,9 +69,10 @@ export const useContentStore = defineStore({
         active_theme:null,
         active_index:[],
         field: {
+            is_simple:true,
             type:{
-                name:'Text',
-                slug:'text',
+                name:'address',
+                slug:'address',
             },
             name:'Abinash',
             meta:{

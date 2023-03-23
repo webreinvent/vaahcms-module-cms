@@ -2,39 +2,39 @@
 import {reactive, ref, watch } from 'vue';
 import {vaah} from '../../../pinia/vaah'
 import VhField from './../../primeflex/VhField.vue'
-// import VvAutoCompleteUsers from "./VvAutoCompleteUsers";
-// import VvAddress from "./VvAddress";
-// import VvBoolean from "./VvBoolean";
-// import VvCurrencyCode from "./VvCurrencyCode";
-// import VvDate from "./VvDate";
-// import VvDateTime from "./VvDateTime";
-// import VvEditor from "./VvEditor";
-// import VvJoditEditor from "./VvJoditEditor";
-// import VvEmail from "./VvEmail";
-// import VvFacebookCard from "./VvFacebookCard";
-// import VvImage from './VvImage';
-// import VvImageGroup from "./VvImageGroup";
-// import VvJson from "./VvJson";
-// import VvList from "./VvList";
-// import VvMarkdown from "./VvMarkdown";
-// import VvMedia from "./VvMedia";
-// import VvNumber from "./VvNumber";
-// import VvPassword from "./VvPassword";
-// import VvPhoneNumber from "./VvPhoneNumber";
-// import VvRelation from "./VvRelation";
-// import VvSeoMetaTags from "./VvSeoMetaTags";
-// import VvSlug from "./VvSlug";
-// import VvTags from "./VvTags";
+// import VvAutoCompleteUsers from "./VvAutoCompleteUsers.vue";
+import VvAddress from "./VvAddress.vue";
+// import VvBoolean from "./VvBoolean.vue";
+// import VvCurrencyCode from "./VvCurrencyCode.vue";
+// import VvDate from "./VvDate.vue";
+// import VvDateTime from "./VvDateTime.vue";
+// import VvEditor from "./VvEditor.vue";
+import VvJoditEditor from "./VvJoditEditor.vue";
+import VvEmail from "./VvEmail.vue";
+// import VvFacebookCard from "./VvFacebookCard.vue";
+// import VvImage from './VvImage.vue';
+// import VvImageGroup from "./VvImageGroup.vue";
+// import VvJson from "./VvJson.vue";
+// import VvList from "./VvList.vue";
+// import VvMarkdown from "./VvMarkdown.vue";
+// import VvMedia from "./VvMedia.vue";
+import VvNumber from "./VvNumber.vue";
+import VvPassword from "./VvPassword.vue";
+// import VvPhoneNumber from "./VvPhoneNumber.vue";
+// import VvRelation from "./VvRelation.vue";
+// import VvSeoMetaTags from "./VvSeoMetaTags.vue";
+// import VvSlug from "./VvSlug.vue";
+// import VvTags from "./VvTags.vue";
 import VvText from "./VvText.vue";
-// import VvSelect from "./VvSelect";
-// import VvTreeSelect from "./VvTreeSelect";
-// import VvTextarea from "./VvTextarea";
-// import VvTime from "./VvTime";
-// import VvTitle from "./VvTitle";
-// import VvTwitterCard from "./VvTwitterCard";
-// import VvUuid from "./VvUuid";
-// import VvVisualEditor from "./VvVisualEditor";
-// import VvCodeMirror from "./VvCodeMirror";
+// import VvSelect from "./VvSelect.vue";
+// import VvTreeSelect from "./VvTreeSelect.vue";
+import VvTextarea from "./VvTextarea.vue";
+// import VvTime from "./VvTime.vue";
+// import VvTitle from "./VvTitle.vue";
+// import VvTwitterCard from "./VvTwitterCard.vue";
+// import VvUuid from "./VvUuid.vue";
+// import VvVisualEditor from "./VvVisualEditor.vue";
+// import VvCodeMirror from "./VvCodeMirror.vue";
 
 
 const props = defineProps({
@@ -146,8 +146,6 @@ function emitOnFocus (data) {
         || field_slug === 'title'
         ">
             <vv-text :content="value"
-                     :type="type"
-                     :size="size"
                      :custom_class="custom_class"
                      :label="label"
                      :labelPosition="labelPosition"
@@ -160,35 +158,111 @@ function emitOnFocus (data) {
             </vv-text>
         </template>
 
-<!--        <template v-else-if="field_slug === 'textarea'">-->
-<!--            <vv-textarea :content="value"-->
-<!--                         :size="size"-->
-<!--                         :class="custom_class"-->
-<!--                         :label="label"-->
-<!--                         :labelPosition="labelPosition"-->
-<!--                         :placeholder="placeholder"-->
-<!--                         :ref="field_slug"-->
-<!--                         @input="emitOnInput"-->
-<!--                         @onChange="emitOnChange"-->
-<!--                         @onBlur="emitOnBlur"-->
-<!--                         @onFocus="emitOnFocus" >-->
-<!--            </vv-textarea>-->
-<!--        </template>-->
+        <template v-else-if="field_slug === 'textarea'">
+            <vv-textarea :content="value"
+                         :size="size"
+                         :class="custom_class"
+                         :label="label"
+                         :labelPosition="labelPosition"
+                         :placeholder="placeholder"
+                         :ref="field_slug"
+                         @input="emitOnInput"
+                         @onChange="emitOnChange"
+                         @onBlur="emitOnBlur"
+                         @onFocus="emitOnFocus" >
+            </vv-textarea>
+        </template>
 
-<!--        <template v-else-if="field_slug === 'number' || field_slug === 'phone-number'-->
-<!--         || field_slug === 'price'">-->
-<!--            <vv-number :content="value"-->
-<!--                       :size="size"-->
-<!--                       :class="custom_class"-->
-<!--                       :label="label"-->
-<!--                       :labelPosition="labelPosition"-->
-<!--                       :placeholder="placeholder"-->
-<!--                       :ref="field_slug"-->
-<!--                       @input="emitOnInput"-->
-<!--                       @onChange="emitOnChange"-->
-<!--                       @onBlur="emitOnBlur"-->
-<!--                       @onFocus="emitOnFocus" >-->
-<!--            </vv-number>-->
+        <template v-else-if="field_slug === 'number' || field_slug === 'phone-number'
+         || field_slug === 'price'">
+            <vv-number :content="value"
+                       :size="size"
+                       :class="custom_class"
+                       :label="label"
+                       :labelPosition="labelPosition"
+                       :placeholder="placeholder"
+                       :ref="field_slug"
+                       @input="emitOnInput"
+                       @onChange="emitOnChange"
+                       @onBlur="emitOnBlur"
+                       @onFocus="emitOnFocus" >
+            </vv-number>
+        </template>
+
+        <template v-else-if="field_slug === 'password'">
+            <vv-password :content="value"
+                         :size="size"
+                         :class="custom_class"
+                         :label="label"
+                         :labelPosition="labelPosition"
+                         :placeholder="placeholder"
+                         :ref="field_slug"
+                         @input="emitOnInput"
+                         @onChange="emitOnChange"
+                         @onBlur="emitOnBlur"
+                         @onFocus="emitOnFocus" >
+            </vv-password>
+        </template>
+
+        <template v-else-if="field_slug === 'editor'">
+            <vv-jodit-editor :content="value"
+                             :size="size"
+                             :class="custom_class"
+                             :label="label"
+                             :is_simple="is_simple"
+                             :labelPosition="labelPosition"
+                             :placeholder="placeholder"
+                             :ref="field_slug"
+                             @input="emitOnInput"
+                             @onChange="emitOnChange"
+                             @onBlur="emitOnBlur"
+                             @onFocus="emitOnFocus" >
+            </vv-jodit-editor>
+        </template>
+
+        <template v-else-if="field_slug === 'email'">
+            <vv-email :content="value"
+                      :size="size"
+                      :class="custom_class"
+                      :label="label"
+                      :labelPosition="labelPosition"
+                      :placeholder="placeholder"
+                      :ref="field_slug"
+                      @input="emitOnInput"
+                      @onChange="emitOnChange"
+                      @onBlur="emitOnBlur"
+                      @onFocus="emitOnFocus" >
+            </vv-email>
+        </template>
+
+        <template v-else-if="field_slug === 'address'">
+            <vv-address :content="value"
+                        :size="size"
+                        :class="custom_class"
+                        :label="label"
+                        :labelPosition="labelPosition"
+                        :placeholder="placeholder"
+                        :ref="field_slug"
+                        @input="emitOnInput"
+                        @onChange="emitOnChange"
+                        @onBlur="emitOnBlur"
+                        @onFocus="emitOnFocus" >
+            </vv-address>
+        </template>
+
+<!--        <template v-else-if="field_slug === 'uuid'">-->
+<!--            <vv-uuid :content="value"-->
+<!--                     :size="size"-->
+<!--                     :class="custom_class"-->
+<!--                     :label="label"-->
+<!--                     :labelPosition="labelPosition"-->
+<!--                     :placeholder="placeholder"-->
+<!--                     :ref="field_slug"-->
+<!--                     @input="emitOnInput"-->
+<!--                     @onChange="emitOnChange"-->
+<!--                     @onBlur="emitOnBlur"-->
+<!--                     @onFocus="emitOnFocus" >-->
+<!--            </vv-uuid>-->
 <!--        </template>-->
 
 <!--        <template v-else-if="field_slug === 'boolean'">-->
@@ -204,24 +278,6 @@ function emitOnFocus (data) {
 <!--                        @onBlur="emitOnBlur"-->
 <!--                        @onFocus="emitOnFocus" >-->
 <!--            </vv-boolean>-->
-<!--        </template>-->
-
-<!--        <template v-else-if="field_slug === 'editor'">-->
-
-<!--            <vv-jodit-editor :content="value"-->
-<!--                             :size="size"-->
-<!--                             :class="custom_class"-->
-<!--                             :label="label"-->
-<!--                             :is_simple="is_simple"-->
-<!--                             :labelPosition="labelPosition"-->
-<!--                             :placeholder="placeholder"-->
-<!--                             :ref="field_slug"-->
-<!--                             @input="emitOnInput"-->
-<!--                             @onChange="emitOnChange"-->
-<!--                             @onBlur="emitOnBlur"-->
-<!--                             @onFocus="emitOnFocus" >-->
-<!--            </vv-jodit-editor>-->
-
 <!--        </template>-->
 
 <!--        <template v-else-if="field_slug === 'code-mirror'">-->
@@ -319,51 +375,6 @@ function emitOnFocus (data) {
 <!--            </vv-auto-complete-users>-->
 <!--        </template>-->
 
-<!--        <template v-else-if="field_slug === 'email'">-->
-<!--            <vv-email :content="value"-->
-<!--                      :size="size"-->
-<!--                      :class="custom_class"-->
-<!--                      :label="label"-->
-<!--                      :labelPosition="labelPosition"-->
-<!--                      :placeholder="placeholder"-->
-<!--                      :ref="field_slug"-->
-<!--                      @input="emitOnInput"-->
-<!--                      @onChange="emitOnChange"-->
-<!--                      @onBlur="emitOnBlur"-->
-<!--                      @onFocus="emitOnFocus" >-->
-<!--            </vv-email>-->
-<!--        </template>-->
-
-<!--        <template v-else-if="field_slug === 'password'">-->
-<!--            <vv-password :content="value"-->
-<!--                         :size="size"-->
-<!--                         :class="custom_class"-->
-<!--                         :label="label"-->
-<!--                         :labelPosition="labelPosition"-->
-<!--                         :placeholder="placeholder"-->
-<!--                         :ref="field_slug"-->
-<!--                         @input="emitOnInput"-->
-<!--                         @onChange="emitOnChange"-->
-<!--                         @onBlur="emitOnBlur"-->
-<!--                         @onFocus="emitOnFocus" >-->
-<!--            </vv-password>-->
-<!--        </template>-->
-
-<!--        <template v-else-if="field_slug === 'uuid'">-->
-<!--            <vv-uuid :content="value"-->
-<!--                     :size="size"-->
-<!--                     :class="custom_class"-->
-<!--                     :label="label"-->
-<!--                     :labelPosition="labelPosition"-->
-<!--                     :placeholder="placeholder"-->
-<!--                     :ref="field_slug"-->
-<!--                     @input="emitOnInput"-->
-<!--                     @onChange="emitOnChange"-->
-<!--                     @onBlur="emitOnBlur"-->
-<!--                     @onFocus="emitOnFocus" >-->
-<!--            </vv-uuid>-->
-<!--        </template>-->
-
 <!--        <template v-else-if="field_slug === 'currency-code'">-->
 <!--            <vv-currency-code :content="value"-->
 <!--                              :size="size"-->
@@ -456,21 +467,6 @@ function emitOnFocus (data) {
 <!--                             @onBlur="emitOnBlur"-->
 <!--                             @onFocus="emitOnFocus" >-->
 <!--            </vv-phone-number>-->
-<!--        </template>-->
-
-<!--        <template v-else-if="field_slug === 'address'">-->
-<!--            <vv-address :content="value"-->
-<!--                        :size="size"-->
-<!--                        :class="custom_class"-->
-<!--                        :label="label"-->
-<!--                        :labelPosition="labelPosition"-->
-<!--                        :placeholder="placeholder"-->
-<!--                        :ref="field_slug"-->
-<!--                        @input="emitOnInput"-->
-<!--                        @onChange="emitOnChange"-->
-<!--                        @onBlur="emitOnBlur"-->
-<!--                        @onFocus="emitOnFocus" >-->
-<!--            </vv-address>-->
 <!--        </template>-->
 
 <!--        <template v-else-if="field_slug === 'relation'">-->

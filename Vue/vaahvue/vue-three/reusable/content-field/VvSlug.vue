@@ -1,23 +1,8 @@
-<template>
+<script setup>
+import {reactive, ref, watch } from 'vue';
+import {vaah} from '../../../pinia/vaah'
 
-    <VhField :label="label"
-             :labelPosition="labelPosition">
-        <InputText
-                 :value="content"
-                 :size="size"
-                 :class="custom_class"
-                 :placeholder="placeholder"
-                 @input="emitOnInput"
-        ></InputText>
-    </VhField>
-
-
-</template>
-
-<script>
-
-export default {
-    props:{
+const props = defineProps({
         content: {
             type: String,
             default: function () {
@@ -48,32 +33,17 @@ export default {
             type: String,
             default: null,
         },
-    },
-    data()
-    {
-        let obj = {
+    });
 
-        };
-
-        return obj;
-    },
-
-    created() {
-
-    },
-    watch: {
-    },
-    mounted() {
-        //----------------------------------------------------
-        //----------------------------------------------------
-    },
-    methods: {
-        //----------------------------------------------------
-        emitOnInput: function (data) {
-            this.$emit('input', data);
-        },
-        //----------------------------------------------------
-    },
+function emitOnInput (data) {
+    this.$emit('input', data);
 }
 </script>
+<template>
+    <InputText
+             v-model="props.content"
+             :class="custom_class"
+             :placeholder="placeholder"
+             @input="emitOnInput"/>
+</template>
 

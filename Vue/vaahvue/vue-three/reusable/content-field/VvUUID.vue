@@ -1,28 +1,9 @@
-<template>
-
-    <VhField :label="label">
-        <InputText
-                 :value="content_value"
-                 expanded
-                 :size="size"
-                 :class="custom_class"
-                 :placeholder="placeholder"
-                 @input="emitOnInput"
-        ></InputText>
-        <p class="control">
-            <Button icon="pi pi-sync"
-                    iconPos="left"
-                    @click="generateUuid()"/>
-        </p>
-    </VhField>
-
-
-</template>
-
-<script>
+<script setup>
+import {reactive, ref, watch } from 'vue';
+import {vaah} from '../../../pinia/vaah'
 import { v4 as uuidv4 } from 'uuid';
-export default {
-    props:{
+
+const props = defineProps({
         content: {
             type: String,
             default: function () {
@@ -53,45 +34,27 @@ export default {
             type: String,
             default: null,
         },
-    },
-    data()
-    {
-        let obj = {
+    });
 
-            content_value: null,
+function generateUuid (){
+    this.content = uuidv4();
+    this.emitOnInput(this.content);
+}
 
-        };
-
-        return obj;
-    },
-
-    created() {
-
-    },
-    watch: {
-        content: function (newVal, oldVal) {
-            this.content_value = newVal;
-        }
-    },
-    mounted() {
-        //----------------------------------------------------
-        this.content_value = this.content;
-        //----------------------------------------------------
-    },
-    methods: {
-        //----------------------------------------------------
-        generateUuid: function()
-        {
-            this.content_value = uuidv4();
-            this.emitOnInput(this.content_value);
-        },
-        //----------------------------------------------------
-        //----------------------------------------------------
-        emitOnInput: function (data) {
-            this.$emit('input', data);
-        },
-        //----------------------------------------------------
-    },
+function emitOnInput  (data) {
+    this.$emit('input', data);
 }
 </script>
+<template>
+        <InputText
+                 v-model="props.content"
+                 :class="custom_class"
+                 :placeholder="placeholder"
+                 @input="emitOnInput"/>
+        <p class="control">
+            <Button icon="pi pi-sync"
+                    iconPos="left"
+                    @click="this.generateUuid()"/>
+        </p>
+</template>
 
