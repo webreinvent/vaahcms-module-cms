@@ -4,8 +4,8 @@ import {useRoute} from 'vue-router';
 import {vaah} from '../../vaahvue/pinia/vaah'
 import draggable from 'vuedraggable'
 import { useContentTypeStore } from '../../stores/store-contenttypes'
-
 import VhViewRow from '../../vaahvue/vue-three/primeflex/VhViewRow.vue';
+
 const store = useContentTypeStore();
 const route = useRoute();
 const useVaah = vaah();
@@ -78,11 +78,12 @@ const onSelectType = (field,data,group_index,field_index) => {
                                 />
 
                                 <p class="ml-1 mr-3 text-xs font-semibold">Is Repeatable</p>
+
                                 <Button icon="pi pi-hashtag"
-                                        :label="item.id"
                                         @click="store.getCopy(item.slug)"
                                         data-testid="contetntypes-copy_slug"
                                         class="p-button-sm"
+                                        :label="useVaah.convertToStr(item.id)"
                                 />
 
                                 <Button icon="pi pi-trash"
@@ -110,7 +111,7 @@ const onSelectType = (field,data,group_index,field_index) => {
                                                    data-testid="contenttype-group_field_name"
                                                    placeholder="Field Name"/>
                                         <Button icon="pi pi-hashtag p-button-sm"
-                                                :label="element.id"
+                                                :label="useVaah.convertToStr(element.id)"
                                                 :disabled="!element.id"
                                                 @click="store.getCopy(element.slug)"
                                                 data-testid="contenttype-group_field_slug"/>
