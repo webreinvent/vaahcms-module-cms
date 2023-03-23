@@ -69,9 +69,10 @@ export const useContentStore = defineStore({
         active_theme:null,
         active_index:[],
         field: {
+            is_simple:true,
             type:{
-                name:'Text',
-                slug:'text',
+                name:'address',
+                slug:'address',
             },
             name:'Abinash',
             meta:{
@@ -935,6 +936,21 @@ export const useContentStore = defineStore({
             let theme = vaah().findInArrayByKey(this.assets.themes,
                 'id', this.item.vh_theme_id);
             this.active_theme = theme;
+        },
+        //---------------------------------------------------------------------
+        copyGroupCode (group,group_index = null)
+        {
+            console.log(group);
+            let code = "";
+
+            if(group_index == null){
+                code = "{!! get_group($data ,'"+group.slug+"' ) !!}";
+
+            }else{
+                code = "{!! get_group($data ,'"+group.slug+"' ,'content' ,"+group_index+" ) !!}";
+
+            }
+            vaah().copy(code);
         },
         //---------------------------------------------------------------------
     }

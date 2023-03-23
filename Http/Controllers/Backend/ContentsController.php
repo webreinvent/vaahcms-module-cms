@@ -4,7 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use VaahCms\Modules\Cms\Models\Content;
 use VaahCms\Modules\Cms\Models\ContentTypeBase;
-use WebReinvent\VaahCms\Entities\Taxonomy;
+use WebReinvent\VaahCms\Models\Taxonomy;
 use WebReinvent\VaahCms\Models\Theme;
 use WebReinvent\VaahCms\Models\User;
 
