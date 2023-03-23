@@ -488,7 +488,7 @@ class Content extends Model {
 
         $content_form_groups = Content::getFormGroupsTest($item, 'content',$group_fields);
 
-        $template_form_groups = Content::getFormGroupsTest($item, 'content',$group_fields);
+        $template_form_groups = Content::getFormGroupsTest($item, 'template',$group_fields);
 
 
         $response['status'] = 'success';
