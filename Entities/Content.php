@@ -913,7 +913,7 @@ class Content extends Model {
                         $relatable_ids = ContentFormRelation::where('vh_cms_content_form_field_id',$related_item->id)
                             ->pluck('relatable_id')->toArray();
 
-                        if(!$field['content'] && !is_array($field['content'])){
+                        if(!$field['content'] || !is_array($field['content'])){
                             $row_to_delete_ids = array_diff($relatable_ids, []);
                         }else{
                             $row_to_delete_ids = array_diff($relatable_ids, $field['content']);
