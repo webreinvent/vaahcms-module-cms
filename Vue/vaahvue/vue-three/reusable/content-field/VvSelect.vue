@@ -9,8 +9,7 @@
                   :multiple="is_multiple"
                    :options="options"
                    :optionLabel="optionLabel"
-                   :optionValue="optionValue"
-                  expanded/>
+                   :optionValue="optionValue"/>
     </VhField>
 
 

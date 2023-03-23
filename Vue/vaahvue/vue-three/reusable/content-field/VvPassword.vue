@@ -1,25 +1,7 @@
-<template>
-
-    <Vhfield :label="label"
-             :labelPosition="labelPosition">
-        <Password
-                 :value="content"
-                 :size="size"
-                 :class="custom_class"
-                 toggleMask
-                 :placeholder="placeholder"
-                 autocomplete="new-password"
-                 @input="emitOnInput"
-        />
-    </Vhfield>
-
-
-</template>
-
-<script>
-
-export default {
-    props:{
+<script setup>
+import {reactive, ref, watch } from 'vue';
+import {vaah} from '../../../pinia/vaah'
+const props = defineProps({
         content: {
             type: String,
             default: function () {
@@ -50,32 +32,18 @@ export default {
             type: String,
             default: null,
         },
-    },
-    data()
-    {
-        let obj = {
-
-        };
-
-        return obj;
-    },
-
-    created() {
-
-    },
-    watch: {
-    },
-    mounted() {
-        //----------------------------------------------------
-        //----------------------------------------------------
-    },
-    methods: {
-        //----------------------------------------------------
-        emitOnInput: function (data) {
-            this.$emit('input', data);
-        },
-        //----------------------------------------------------
-    },
+    });
+function emitOnInput (data) {
+    this.$emit('input', data);
 }
 </script>
+<template>
+    <Password
+        v-model="props.content"
+        :class="custom_class"
+        toggleMask
+        :placeholder="placeholder"
+        autocomplete="new-password"
+        @input="emitOnInput"/>
+</template>
 

@@ -1,7 +1,6 @@
 <script setup>
 import {reactive, ref, watch } from 'vue';
 import {vaah} from '../../../pinia/vaah'
-import VhField from './../../primeflex/VhField.vue'
 
 const props = defineProps({
         content: {
@@ -38,12 +37,9 @@ function emitOnInput (data) {
 }
 </script>
 <template>
-    <div class="col-12">
-        <InputText v-model="props.content"
-                   :class="custom_class"
-                   :placeholder="placeholder"
-                   @input="emitOnInput"/>
-    </div>
-
+    <InputText v-model="props.content"
+               :class="custom_class"
+               :placeholder="placeholder"
+               @input="emitOnInput"/>
 </template>
 
