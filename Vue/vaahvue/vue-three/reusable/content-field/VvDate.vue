@@ -1,18 +1,11 @@
 <template>
-
-    <VhField :label="label"
-             :labelPosition="labelPosition">
         <Calender
             v-model="content_value"
             :placeholder="placeholder"
             @input="emitOnInput"
             :dateFormat="dateFormat"
-            editable>
+            editable >
         </Calender>
-    </VhField>
-
-
-</template>
 
 <script>
 
