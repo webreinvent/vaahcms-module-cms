@@ -1,12 +1,13 @@
 <script setup>
 import {onMounted, ref, watch} from "vue";
 import {useRoute} from 'vue-router';
-
 import { useContentTypeStore } from '../../stores/store-contenttypes'
-
 import VhViewRow from '../../vaahvue/vue-three/primeflex/VhViewRow.vue';
+import { vaah } from "../../vaahvue/pinia/vaah";
+
 const store = useContentTypeStore();
 const route = useRoute();
+const useVaah = vaah();
 
 onMounted(async () => {
 
@@ -76,13 +77,21 @@ const toggleItemMenu = (event) => {
 
 
                 <div class="p-inputgroup">
+                    <Button :label=" '#' + store.item.id "
+                            class="p-button-sm"
+                            @click="useVaah.copy(store.item.id)"
+                            data-testid="contenttypes-item_id"
+                    />
+
                     <Button label="Edit"
+                            class="p-button-sm"
                             @click="store.toEdit(store.item)"
                             data-testid="contenttypes-item-to-edit"
-                            icon="pi pi-save"/>
+                            icon="pi pi-pencil"/>
 
                     <!--item_menu-->
                     <Button
+                        class="p-button-sm"
                         type="button"
                         @click="toggleItemMenu"
                         data-testid="contenttypes-item-menu"
@@ -94,7 +103,7 @@ const toggleItemMenu = (event) => {
                           :popup="true" />
                     <!--/item_menu-->
 
-                    <Button class="p-button-primary"
+                    <Button class="p-button-sm"
                             icon="pi pi-times"
                             data-testid="contenttypes-item-to-list"
                             @click="store.toList()"/>
