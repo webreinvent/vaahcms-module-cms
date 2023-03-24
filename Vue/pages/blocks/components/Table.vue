@@ -24,6 +24,7 @@ const useVaah = vaah();
             </Column>
 
             <Column field="id" header="ID"
+                    v-if="store.isViewLarge()"
                     :style="{width: store.getIdWidth()}"
                     :sortable="true">
             </Column>

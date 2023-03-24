@@ -660,13 +660,13 @@ export const useBlockStore = defineStore({
         {
             this.list_selected_menu = [
                 {
-                    label: 'Activate',
+                    label: 'Publish',
                     command: async () => {
                         await this.updateList('activate')
                     }
                 },
                 {
-                    label: 'Deactivate',
+                    label: 'Unpublish',
                     command: async () => {
                         await this.updateList('deactivate')
                     }
@@ -703,13 +703,13 @@ export const useBlockStore = defineStore({
         {
             this.list_bulk_menu = [
                 {
-                    label: 'Mark all as active',
+                    label: 'Mark all as published',
                     command: async () => {
                         await this.listAction('activate-all')
                     }
                 },
                 {
-                    label: 'Mark all as inactive',
+                    label: 'Mark all as unpublished',
                     command: async () => {
                         await this.listAction('deactivate-all')
                     }
