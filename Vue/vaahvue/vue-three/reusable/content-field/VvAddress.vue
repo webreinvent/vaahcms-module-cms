@@ -1,5 +1,5 @@
 <script setup>
-import {reactive, ref, watch } from 'vue';
+import {reactive, ref, watch, onMounted } from 'vue';
 import {vaah} from '../../../pinia/vaah'
 
 const props = defineProps({
@@ -86,70 +86,164 @@ const props = defineProps({
 //     }
 // }
 
-watch(content, (newVal, oldVal) => {
-    if(!newVal){
-        this.list = {
-            "address_line_1": {
-                name: "Address Line 1",
-                type: 'text',
-                maxlength: 50,
-                content: null
-            },
-            "address_line_2":{
-                name: "Address Line 2",
-                type: 'text',
-                maxlength: 50,
-                content: null
-            },
-            "landmark":{
-                name: "Landmark",
-                type: 'text',
-                maxlength: 50,
-                content: null
-            },
-            "city":{
-                name: "City",
-                type: 'text',
-                maxlength: 50,
-                content: null
-            },
-            "state":{
-                name: "State",
-                type: 'text',
-                maxlength: 50,
-                content: null
-            },
-            "country":{
-                name: "Country",
-                type: 'text',
-                maxlength: 20,
-                content: null
-            },
-            "zip_code": {
-                name: "Zip Code",
-                type: 'text',
-                maxlength: 20,
-                content: null
-            }
 
-        };
-    }else{
-        this.list = newVal;
+
+// watch(content, (newVal, oldVal) => {
+//     if(!newVal){
+//         this.list = {
+//             "address_line_1": {
+//                 name: "Address Line 1",
+//                 type: 'text',
+//                 maxlength: 50,
+//                 content: null
+//             },
+//             "address_line_2":{
+//                 name: "Address Line 2",
+//                 type: 'text',
+//                 maxlength: 50,
+//                 content: null
+//             },
+//             "landmark":{
+//                 name: "Landmark",
+//                 type: 'text',
+//                 maxlength: 50,
+//                 content: null
+//             },
+//             "city":{
+//                 name: "City",
+//                 type: 'text',
+//                 maxlength: 50,
+//                 content: null
+//             },
+//             "state":{
+//                 name: "State",
+//                 type: 'text',
+//                 maxlength: 50,
+//                 content: null
+//             },
+//             "country":{
+//                 name: "Country",
+//                 type: 'text',
+//                 maxlength: 20,
+//                 content: null
+//             },
+//             "zip_code": {
+//                 name: "Zip Code",
+//                 type: 'text',
+//                 maxlength: 20,
+//                 content: null
+//             }
+//
+//         };
+//     }else{
+//         this.list = newVal;
+//     }
+// });
+let data = {
+    "address_line_1": {
+        name: "Address Line 1",
+        type: 'text',
+        maxlength: 50,
+        content: null
+    },
+    "address_line_2":{
+        name: "Address Line 2",
+        type: 'text',
+        maxlength: 50,
+        content: null
+    },
+    "landmark":{
+        name: "Landmark",
+        type: 'text',
+        maxlength: 50,
+        content: null
+    },
+    "city":{
+        name: "City",
+        type: 'text',
+        maxlength: 50,
+        content: null
+    },
+    "state":{
+        name: "State",
+        type: 'text',
+        maxlength: 50,
+        content: null
+    },
+    "country":{
+        name: "Country",
+        type: 'text',
+        maxlength: 20,
+        content: null
+    },
+    "zip_code": {
+        name: "Zip Code",
+        type: 'text',
+        maxlength: 20,
+        content: null
     }
-});
+};
+const demo = () => {
+    data.value = {
+        "address_line_1": {
+            name: "Address Line 1",
+            type: 'text',
+            maxlength: 50,
+            content: null
+        },
+        "address_line_2":{
+            name: "Address Line 2",
+            type: 'text',
+            maxlength: 50,
+            content: null
+        },
+        "landmark":{
+            name: "Landmark",
+            type: 'text',
+            maxlength: 50,
+            content: null
+        },
+        "city":{
+            name: "City",
+            type: 'text',
+            maxlength: 50,
+            content: null
+        },
+        "state":{
+            name: "State",
+            type: 'text',
+            maxlength: 50,
+            content: null
+        },
+        "country":{
+            name: "Country",
+            type: 'text',
+            maxlength: 20,
+            content: null
+        },
+        "zip_code": {
+            name: "Zip Code",
+            type: 'text',
+            maxlength: 20,
+            content: null
+        }
 
+    }
+}
 
 onMounted(() => {
-    if(this.content)
-    {
-        this.list = this.content;
-    }
+
+    // if(this.content)
+    // {
+    //     this.list = this.content;
+    // }
 });
-function emitOnInput () {
-    this.$emit('input', this.list);
-}
+// function emitOnInput () {
+//     this.$emit('input', this.list);
+// }
 </script>
 <template>
+    {{ data }}
     <h5 class="title is-5">Address</h5>
     <div class="p-inputgroup mb-1" v-for="(item, index) in list">
             <InputText
