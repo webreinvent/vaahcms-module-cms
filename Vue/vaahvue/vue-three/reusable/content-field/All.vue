@@ -248,7 +248,7 @@ function emitOnFocus (data) {
                         @onBlur="emitOnBlur"
                         @onFocus="emitOnFocus" >
             </vv-address>
-        </template>
+        </template>n
 
 <!--        <template v-else-if="field_slug === 'uuid'">-->
 <!--            <vv-uuid :content="value"-->
