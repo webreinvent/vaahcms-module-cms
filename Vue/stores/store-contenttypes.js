@@ -896,66 +896,10 @@ export const useContentTypeStore = defineStore({
                             this.itemAction('save-and-close');
                         }
                     },
-                    {
-                        label: 'Save & Clone',
-                        icon: 'pi pi-copy',
-                        command: () => {
 
-                            this.itemAction('save-and-clone');
-
-                        }
-                    },
-                    {
-                        label: 'Trash',
-                        icon: 'pi pi-times',
-                        command: () => {
-                            this.itemAction('trash');
-                        }
-                    },
-                    {
-                        label: 'Delete',
-                        icon: 'pi pi-trash',
-                        command: () => {
-                            this.confirmDeleteItem('delete');
-                        }
-                    },
                 ];
 
-            } else{
-                form_menu = [
-                    {
-                        label: 'Create & Close',
-                        icon: 'pi pi-check',
-                        command: () => {
-                            this.itemAction('create-and-close');
-                        }
-                    },
-                    {
-                        label: 'Create & Clone',
-                        icon: 'pi pi-copy',
-                        command: () => {
-
-                            this.itemAction('create-and-clone');
-
-                        }
-                    },
-                    {
-                        label: 'Reset',
-                        icon: 'pi pi-refresh',
-                        command: () => {
-                            this.setActiveItemAsEmpty();
-                        }
-                    }
-                ];
             }
-
-            form_menu.push({
-                label: 'Fill',
-                icon: 'pi pi-pencil',
-                command: () => {
-                    this.getFaker();
-                }
-            },)
 
             this.form_menu_list = form_menu;
 

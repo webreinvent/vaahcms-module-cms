@@ -4,10 +4,12 @@ import { useContentTypeStore } from '../../stores/store-contenttypes'
 import draggable from 'vuedraggable'
 import VhField from './../../vaahvue/vue-three/primeflex/VhField.vue'
 import {useRoute} from 'vue-router';
+import { vaah } from "../../vaahvue/pinia/vaah";
 
 
 const store = useContentTypeStore();
 const route = useRoute();
+const useVaah = vaah();
 
 onMounted(async () => {
     if(route.params && route.params.id)
@@ -17,6 +19,8 @@ onMounted(async () => {
 
     await store.watchItem();
     store.getNewStatus();
+
+    await store.getFormMenu();
 });
 
 //--------form_menu
@@ -55,13 +59,22 @@ const toggleFormMenu = (event) => {
 
 
                 <div class="p-inputgroup">
+                    <Button :label=" '#' + store.item.id "
+                            class="p-button-sm"
+                            @click="useVaah.copy(store.item.id)"
+                            data-testid="contenttypes-item_id"
+                            v-if="store && store.item && store.item.id"
+                    />
+
                     <Button label="Save"
-                            v-if="store.item && store.item.id"
+                            class="p-button-sm"
+                            v-if="store && store.item && store.item.id"
                             data-testid="contenttypes-save"
                             @click="store.itemAction('save')"
                             icon="pi pi-save"/>
 
                     <Button label="Create & New"
+                            class="p-button-sm"
                             v-else
                             @click="store.itemAction('create-and-new')"
                             data-testid="contenttypes-create-and-new"
@@ -70,6 +83,8 @@ const toggleFormMenu = (event) => {
 
                     <!--form_menu-->
                     <Button
+                        v-if="store && store.item && store.item.id"
+                        class="p-button-sm"
                         type="button"
                         @click="toggleFormMenu"
                         data-testid="contenttypes-form-menu"
@@ -77,12 +92,13 @@ const toggleFormMenu = (event) => {
                         aria-haspopup="true"/>
 
                     <Menu ref="form_menu"
+                          v-if="store && store.item && store.item.id"
                           :model="store.form_menu_list"
                           :popup="true" />
                     <!--/form_menu-->
 
 
-                    <Button class="p-button-primary"
+                    <Button class="p-button-sm"
                             icon="pi pi-times"
                             data-testid="contenttypes-to-list"
                             @click="store.toList()">

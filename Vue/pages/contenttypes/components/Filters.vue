@@ -25,6 +25,7 @@ const store = useContentTypeStore();
                                  v-model="store.query.filter.sort" />
                     <label for="sort-none">None</label>
                 </div>
+
                 <div class="field-radiobutton">
                     <RadioButton name="sort-ascending"
                                  data-testid="contenttypes-filters-sort-ascending"
@@ -32,12 +33,61 @@ const store = useContentTypeStore();
                                  v-model="store.query.filter.sort" />
                     <label for="sort-ascending">Updated (Ascending)</label>
                 </div>
+
                 <div class="field-radiobutton">
                     <RadioButton name="sort-descending"
                                  data-testid="contenttypes-filters-sort-descending"
                                  value="updated_at:desc"
                                  v-model="store.query.filter.sort" />
                     <label for="sort-descending">Updated (Descending)</label>
+                </div>
+
+                <div class="field-radiobutton">
+                    <RadioButton name="sort-ascending"
+                                 data-testid="contenttypes-filters-sort-ascending"
+                                 value="name"
+                                 v-model="store.query.filter.sort" />
+                    <label for="sort-ascending">Name (Ascending)</label>
+                </div>
+
+                <div class="field-radiobutton">
+                    <RadioButton name="sort-descending"
+                                 data-testid="contenttypes-filters-sort-descending"
+                                 value="name:desc"
+                                 v-model="store.query.filter.sort" />
+                    <label for="sort-descending">Name (Descending)</label>
+                </div>
+
+                <div class="field-radiobutton">
+                    <RadioButton name="sort-ascending"
+                                 data-testid="contenttypes-filters-sort-ascending"
+                                 value="plural"
+                                 v-model="store.query.filter.sort" />
+                    <label for="sort-ascending">Plural Name (Ascending)</label>
+                </div>
+
+                <div class="field-radiobutton">
+                    <RadioButton name="sort-descending"
+                                 data-testid="contenttypes-filters-sort-descending"
+                                 value="plural:desc"
+                                 v-model="store.query.filter.sort" />
+                    <label for="sort-descending">Plural Name (Descending)</label>
+                </div>
+
+                <div class="field-radiobutton">
+                    <RadioButton name="sort-ascending"
+                                 data-testid="contenttypes-filters-sort-ascending"
+                                 value="singular"
+                                 v-model="store.query.filter.sort" />
+                    <label for="sort-ascending">Singular Name (Ascending)</label>
+                </div>
+
+                <div class="field-radiobutton">
+                    <RadioButton name="sort-descending"
+                                 data-testid="contenttypes-filters-sort-descending"
+                                 value="singular:desc"
+                                 v-model="store.query.filter.sort" />
+                    <label for="sort-descending">Singular Name (Descending)</label>
                 </div>
 
             </VhFieldVertical>

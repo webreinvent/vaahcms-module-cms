@@ -41,7 +41,9 @@ const toggleBulkMenuState = (event) => {
                     @click="toggleSelectedMenuState"
                     data-testid="contenttypes-actions-menu"
                     aria-haspopup="true"
-                    aria-controls="overlay_menu">
+                    aria-controls="overlay_menu"
+                    class="p-button-sm"
+                >
                     <i class="pi pi-angle-down"></i>
                     <Badge v-if="store.action.items.length > 0"
                            :value="store.action.items.length" />
@@ -58,7 +60,7 @@ const toggleBulkMenuState = (event) => {
                     data-testid="contenttypes-actions-bulk-menu"
                     aria-haspopup="true"
                     aria-controls="bulk_menu_state"
-                    class="ml-1">
+                    class="ml-1 p-button-sm">
                     <i class="pi pi-ellipsis-h"></i>
                 </Button>
                 <Menu ref="bulk_menu_state"
@@ -84,10 +86,15 @@ const toggleBulkMenuState = (event) => {
                                        @keyup.enter.native="store.delayedSearch()"
                                        @keyup.13="store.delayedSearch()"
                                        data-testid="contenttypes-actions-search"
-                                       placeholder="Search"/>
+                                       placeholder="Search"
+                                       class="p-inputtext-sm"
+                            />
+
                             <Button @click="store.delayedSearch()"
                                     data-testid="contenttypes-actions-search-button"
-                                    icon="pi pi-search"/>
+                                    icon="pi pi-search"
+                                    class="p-button-sm"
+                            />
                             <Button
                                 type="button"
                                 v-if="store.isContentStructure()"
