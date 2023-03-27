@@ -8,12 +8,12 @@ Route::group(
 
         'namespace' => 'Backend',
     ],
-    function () {
-        //---------------------------------------------------------
-        Route::post('/upload', 'MediaController@upload')
-            ->name('backend.cms.media.upload');
-        //---------------------------------------------------------
-    },
+//    function () {
+//        //---------------------------------------------------------
+//        Route::post('/upload', 'MediaController@upload')
+//            ->name('backend.cms.media.upload');
+//        //---------------------------------------------------------
+//    },
 function () {
     /**
      * Get Assets
