@@ -39,6 +39,8 @@ export const useBlockStore = defineStore({
         list: null,
         item: null,
         fillable:null,
+        watch_stopper: null,
+        route_prefix: 'blocks.',
         empty_query:empty_states.query,
         empty_action:empty_states.action,
         query: vaah().clone(empty_states.query),
@@ -122,11 +124,17 @@ export const useBlockStore = defineStore({
         //---------------------------------------------------------------------
         watchRoutes(route)
         {
-            //watch routes
-            watch(route, (newVal,oldVal) =>
+            this.watch_stopper = watch(route, (newVal,oldVal) =>
                 {
+
+                    if(this.watch_stopper && !newVal.name.includes(this.route_prefix)){
+                        this.watch_stopper();
+
+                        return false;
+                    }
+
                     this.route = newVal;
-                    if(newVal.params.id){
+                    if (newVal.params.id) {
                         this.getItem(newVal.params.id);
                     }
                     this.setViewAndWidth(newVal.name);
