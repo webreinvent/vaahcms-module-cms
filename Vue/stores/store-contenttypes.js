@@ -295,9 +295,8 @@ export const useContentTypeStore = defineStore({
         },
         //---------------------------------------------------------------------
         storeGroupsAfter(data, res) {
-            if(data){
-                this.getContentStrucutre();
-            }
+
+            this.getContentStrucutre(this.item.id);
 
         },
         //---------------------------------------------------------------------
@@ -991,11 +990,6 @@ export const useContentTypeStore = defineStore({
 
 
             return item;
-        },
-        //---------------------------------------------------------------------
-        groupsFieldsSlug(item){
-            console.log(item.name);
-            item.slug = vaah().strToSlug(item.name);
         },
         //---------------------------------------------------------------------
     }

@@ -107,11 +107,10 @@ const onSelectType = (field,data,group_index,field_index) => {
                                         <InputText class="w-2" :model-value="element.type.name" disabled/>
                                         <InputText class="w-6"
                                                    v-model="element.name"
-                                                   @input="store.groupsFieldsSlug(element)"
                                                    data-testid="contenttype-group_field_name"
                                                    placeholder="Field Name"/>
                                         <Button icon="pi pi-hashtag p-button-sm"
-                                                :label="useVaah.convertToStr(element.id)"
+                                                :label="element.id ? useVaah.convertToStr(element.id) : '&nbsp;&nbsp;'"
                                                 :disabled="!element.id"
                                                 @click="store.getCopy(element.slug)"
                                                 data-testid="contenttype-group_field_slug"/>
