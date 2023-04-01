@@ -84,6 +84,7 @@ class ContentsController extends Controller
         }
 
         $contents->orderBy($order_by,$order);
+        $contents->where('status',$input['status'] ?? 'published');
 
         if(isset($input['per_page'])
             && $input['per_page']
