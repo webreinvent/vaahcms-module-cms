@@ -1,15 +1,13 @@
-<?php namespace VaahCms\Modules\cms\Models;
+<?php namespace VaahCms\Modules\Cms\Models;
 
-use Carbon\Carbon;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
-use WebReinvent\VaahCms\Traits\CrudWithUuidObservantTrait;
 use WebReinvent\VaahCms\Models\User;
+use WebReinvent\VaahCms\Traits\CrudWithUuidObservantTrait;
 
-class ContentType extends ContentTypeBase
-{
+class ContentType extends Model {
 
     use SoftDeletes;
     use CrudWithUuidObservantTrait;
@@ -23,29 +21,121 @@ class ContentType extends ContentTypeBase
         'deleted_at'
     ];
     //-------------------------------------------------
+    protected $dateFormat = 'Y-m-d H:i:s';
+    //-------------------------------------------------
     protected $fillable = [
         'uuid',
         'name',
         'slug',
+        'plural',
+        'plural_slug',
+        'singular',
+        'singular_slug',
+        'excerpt',
         'is_published',
+        'is_commentable',
+        'content_statuses',
+        'total_records',
+        'published_records',
+        'total_comments',
+        'meta',
         'created_by',
         'updated_by',
-        'deleted_by',
+        'deleted_by'
     ];
 
     //-------------------------------------------------
-    protected $appends = [
+    protected $appends  = [
     ];
+
+    //-------------------------------------------------
+
+
 
     //-------------------------------------------------
     protected function serializeDate(DateTimeInterface $date)
     {
         $date_time_format = config('settings.global.datetime_format');
-        return $date->format($date_time_format);
-    }
 
+        return $date->format($date_time_format);
+
+    }
+    //-------------------------------------------------
+    public function setNameAttribute($value)
+    {
+        if($value)
+        {
+            $this->attributes['name'] = ucwords($value);
+        } else{
+            $this->attributes['name'] = null;
+        }
+
+    }
+    //-------------------------------------------------
+    public function getNameAttribute($value)
+    {
+        if($value)
+        {
+            return ucwords($value);
+        }
+        return null;
+    }
     //-------------------------------------------------
 
+    //-------------------------------------------------
+    public function setContentStatusesAttribute($value)
+    {
+        if($value)
+        {
+            $this->attributes['content_statuses'] = json_encode($value);
+        } else{
+            $this->attributes['content_statuses'] = null;
+        }
+    }
+    //-------------------------------------------------
+    public function getContentStatusesAttribute($value)
+    {
+        if($value)
+        {
+            return json_decode($value);
+        }
+        return null;
+    }
+    //-------------------------------------------------
+    public function setMetaAttribute($value)
+    {
+        if($value)
+        {
+            $this->attributes['meta'] = json_encode($value);
+        } else{
+            $this->attributes['meta'] = null;
+        }
+    }
+    //-------------------------------------------------
+    public function getMetaAttribute($value)
+    {
+        if($value)
+        {
+            return json_decode($value);
+        }
+        return null;
+    }
+    //-------------------------------------------------
+    public function getTableColumns() {
+        return $this->getConnection()->getSchemaBuilder()
+            ->getColumnListing($this->getTable());
+    }
+    //-------------------------------------------------
+    public function scopeExclude($query, $columns)
+    {
+        return $query->select( array_diff( $this->getTableColumns(),$columns) );
+    }
+    //-------------------------------------------------
+    public function scopeIsPublished($query)
+    {
+        return $query->where( 'is_published', 1 );
+    }
+    //-------------------------------------------------
     public function createdByUser()
     {
         return $this->belongsTo(User::class,
@@ -60,7 +150,6 @@ class ContentType extends ContentTypeBase
             'updated_by', 'id'
         )->select('id', 'uuid', 'first_name', 'last_name', 'email');
     }
-
     //-------------------------------------------------
     public function deletedByUser()
     {
@@ -68,357 +157,160 @@ class ContentType extends ContentTypeBase
             'deleted_by', 'id'
         )->select('id', 'uuid', 'first_name', 'last_name', 'email');
     }
-
     //-------------------------------------------------
-    public function getTableColumns()
+    public function contents()
     {
-        return $this->getConnection()->getSchemaBuilder()
-            ->getColumnListing($this->getTable());
+        return $this->hasMany(Content::class,
+            'vh_cms_content_type_id', 'id');
     }
-
     //-------------------------------------------------
-    public function scopeExclude($query, $columns)
+    public function groups()
     {
-        return $query->select(array_diff($this->getTableColumns(), $columns));
+        return $this->morphMany(FormGroup::class, 'groupable')
+            ->orderBy('sort', 'asc');
     }
-
     //-------------------------------------------------
-    public function scopeBetweenDates($query, $from, $to)
+    public static function postCreate($request)
     {
 
-        if ($from) {
-            $from = \Carbon::parse($from)
-                ->startOfDay()
-                ->toDateTimeString();
-        }
-
-        if ($to) {
-            $to = \Carbon::parse($to)
-                ->endOfDay()
-                ->toDateTimeString();
-        }
-
-        $query->whereBetween('updated_at', [$from, $to]);
-    }
-
-    //-------------------------------------------------
-    public static function createItem($request)
-    {
-
-        $inputs = $request->all();
-
-        $validation = self::validation($inputs);
-        if (!$validation['success']) {
+        $validation = static::validation($request);
+        if(isset($validation['success']) && !$validation['success'])
+        {
             return $validation;
         }
 
-
-        // check if name exist
-        $item = self::where('name', $inputs['name'])->withTrashed()->first();
-
-        if ($item) {
-            $response['success'] = false;
-            $response['messages'][] = "This name is already exist.";
-            return $response;
-        }
-
-        // check if slug exist
-        $item = self::where('slug', $inputs['slug'])->withTrashed()->first();
-
-        if ($item) {
-            $response['success'] = false;
-            $response['messages'][] = "This slug is already exist.";
-            return $response;
-        }
-        $item = new self();
-        $item->fill($inputs);
-        $item->slug = Str::slug($inputs['slug']);
-        $item->plural = Str::slug($inputs['plural']);
-        $item->plural_slug = Str::slug($inputs['plural_slug']);
-        $item->singular = Str::slug($inputs['singular']);
-        $item->singular_slug = Str::slug($inputs['singular_slug']);
-        $item->excerpt = Str::slug($inputs['excerpt']);
-        $item->content_statuses = $inputs['content_statuses'];
+        $item = new static();
+        $item->fill($request->all());
         $item->save();
 
-        $response = self::getItem($item->id);
-        $response['messages'][] = 'Saved successfully.';
+        $response['success'] = true;
+        $response['data']['item'] =$item;
+        $response['messages'][] = 'Saved';
+
         return $response;
-
-    }
-
-    //-------------------------------------------------
-    public function scopeGetSorted($query, $filter)
-    {
-
-        if(!isset($filter['sort']))
-        {
-            return $query->orderBy('id', 'desc');
-        }
-
-        $sort = $filter['sort'];
-
-
-        $direction = Str::contains($sort, ':');
-
-        if(!$direction)
-        {
-            return $query->orderBy($sort, 'asc');
-        }
-
-        $sort = explode(':', $sort);
-
-        return $query->orderBy($sort[0], $sort[1]);
-    }
-    //-------------------------------------------------
-    public function scopeIsActiveFilter($query, $filter)
-    {
-
-        if(!isset($filter['is_published'])
-            || is_null($filter['is_published'])
-            || $filter['is_published'] === 'null'
-        )
-        {
-            return $query;
-        }
-        $is_published = $filter['is_published'];
-
-        if($is_published === 'true' || $is_published === true)
-        {
-            return $query->whereNotNull('is_published');
-        } else{
-            return $query->whereNull('is_published');
-        }
-
-    }
-    //-------------------------------------------------
-    public function scopeTrashedFilter($query, $filter)
-    {
-
-        if(!isset($filter['trashed']))
-        {
-            return $query;
-        }
-        $trashed = $filter['trashed'];
-
-        if($trashed === 'include')
-        {
-            return $query->withTrashed();
-        } else if($trashed === 'only'){
-            return $query->onlyTrashed();
-        }
-
-    }
-    //-------------------------------------------------
-    public function scopeSearchFilter($query, $filter)
-    {
-
-        if(!isset($filter['q']))
-        {
-            return $query;
-        }
-        $search = $filter['q'];
-        $query->where(function ($q) use ($search) {
-            $q->where('name', 'LIKE', '%' . $search . '%')
-                ->orWhere('slug', 'LIKE', '%' . $search . '%');
-        });
 
     }
     //-------------------------------------------------
     public static function getList($request)
     {
-        $list = self::getSorted($request->filter);
-        $list->isActiveFilter($request->filter);
-        $list->trashedFilter($request->filter);
-        $list->searchFilter($request->filter);
-
-        $rows = config('vaahcms.per_page');
-
-        if($request->has('rows'))
+        if($request['sort_by'])
         {
-            $rows = $request->rows;
+            $list = static::orderBy($request['sort_by'], $request['sort_order']);
+        }else{
+            $list = static::orderBy('id', $request['sort_order']);
         }
 
-        $list = $list->paginate($rows);
+        if($request['trashed'] == 'true')
+        {
+
+            $list->withTrashed();
+        }
+
+        if(isset($request->from) && isset($request->to))
+        {
+            $list->whereBetween('updated_at',[$request->from." 00:00:00",$request->to." 23:59:59"]);
+        }
+
+        if($request['filter'] && $request['filter'] == '1')
+        {
+
+            $list->where('is_published',$request['filter']);
+        }elseif($request['filter'] == '10'){
+
+            $list->whereNull('is_published')->orWhere('is_published',0);
+        }
+
+        if(isset($request->q))
+        {
+            $search_array = explode(" ",$request->q);
+
+            foreach ($search_array as $item){
+                $list->where(function ($q) use ($item){
+                    $q->where('name', 'LIKE', '%'.$item.'%')
+                        ->orWhere('id', 'LIKE', $item.'%')
+                        ->orWhere('slug', 'LIKE', '%'.$item.'%');
+                });
+            }
+        }
+
+
+        $data['list'] = $list->paginate(config('vaahcms.per_page'));
+
+
 
         $response['success'] = true;
-        $response['data'] = $list;
+        $response['data'] = $data;
 
         return $response;
 
 
     }
-
     //-------------------------------------------------
-    public static function updateList($request)
+    public static function validation($request)
     {
-
-        $inputs = $request->all();
-
         $rules = array(
-            'type' => 'required',
+            'name' => 'required|unique:vh_cms_content_types|max:60',
+            'slug' => 'required|unique:vh_cms_content_types|max:60',
+            'plural' => 'required|max:60',
+            'plural_slug' => 'required|unique:vh_cms_content_types|max:60',
+            'singular' => 'required|max:60',
+            'singular_slug' => 'required|unique:vh_cms_content_types|max:60',
         );
 
-        $messages = array(
-            'type.required' => 'Action type is required',
-        );
+        $validator = \Validator::make( $request->all(), $rules);
+        if ( $validator->fails() ) {
 
-
-        $validator = \Validator::make($inputs, $rules, $messages);
-        if ($validator->fails()) {
-
-            $errors = errorsToArray($validator->errors());
+            $errors             = errorsToArray($validator->errors());
             $response['success'] = false;
             $response['errors'] = $errors;
             return $response;
         }
 
-        if(isset($inputs['items']))
-        {
-            $items_id = collect($inputs['items'])
-                ->pluck('id')
-                ->toArray();
-        }
-
-
-        $items = self::whereIn('id', $items_id)
-            ->withTrashed();
-
-        switch ($inputs['type']) {
-            case 'deactivate':
-                $items->update(['is_published' => null]);
-                break;
-            case 'activate':
-                $items->update(['is_published' => 1]);
-                break;
-            case 'trash':
-                self::whereIn('id', $items_id)->delete();
-                break;
-            case 'restore':
-                self::whereIn('id', $items_id)->restore();
-                break;
-        }
+        $data = [];
 
         $response['success'] = true;
-        $response['data'] = true;
-        $response['messages'][] = 'Action was successful.';
 
         return $response;
+
     }
-
     //-------------------------------------------------
-    public static function deleteList($request): array
+    public static function storeValidation($request)
     {
-        $inputs = $request->all();
-
         $rules = array(
-            'type' => 'required',
-            'items' => 'required',
+            'name' => 'required|max:60',
+            'slug' => 'required|max:60',
+            'plural' => 'required|max:60',
+            'plural_slug' => 'required|max:60',
+            'singular' => 'required|max:60',
+            'singular_slug' => 'required|max:60',
         );
 
-        $messages = array(
-            'type.required' => 'Action type is required',
-            'items.required' => 'Select items',
-        );
+        $validator = \Validator::make( $request->all(), $rules);
+        if ( $validator->fails() ) {
 
-        $validator = \Validator::make($inputs, $rules, $messages);
-        if ($validator->fails()) {
-
-            $errors = errorsToArray($validator->errors());
-            $response['failed'] = true;
-            $response['messages'] = $errors;
+            $errors             = errorsToArray($validator->errors());
+            $response['success'] = false;
+            $response['errors'] = $errors;
             return $response;
         }
 
-        $items_id = collect($inputs['items'])->pluck('id')->toArray();
-        self::whereIn('id', $items_id)->forceDelete();
+        $data = [];
 
         $response['success'] = true;
-        $response['data'] = true;
-        $response['messages'][] = 'Action was successful.';
 
         return $response;
+
     }
     //-------------------------------------------------
-    public static function listAction($request, $type): array
-    {
-        $inputs = $request->all();
 
-        if(isset($inputs['items']))
-        {
-            $items_id = collect($inputs['items'])
-                ->pluck('id')
-                ->toArray();
-
-            $items = self::whereIn('id', $items_id)
-                ->withTrashed();
-        }
-
-
-        switch ($type) {
-            case 'deactivate':
-                if($items->count() > 0) {
-                    $items->update(['is_published' => null]);
-                }
-                break;
-            case 'activate':
-                if($items->count() > 0) {
-                    $items->update(['is_published' => 1]);
-                }
-                break;
-            case 'trash':
-                if(isset($items_id) && count($items_id) > 0) {
-                    self::whereIn('id', $items_id)->delete();
-                }
-                break;
-            case 'restore':
-                if(isset($items_id) && count($items_id) > 0) {
-                    self::whereIn('id', $items_id)->restore();
-                }
-                break;
-            case 'delete':
-                if(isset($items_id) && count($items_id) > 0) {
-                    self::whereIn('id', $items_id)->forceDelete();
-                }
-                break;
-            case 'activate-all':
-                self::query()->update(['is_published' => 1]);
-                break;
-            case 'deactivate-all':
-                self::query()->update(['is_published' => null]);
-                break;
-            case 'trash-all':
-                self::query()->delete();
-                break;
-            case 'restore-all':
-                self::withTrashed()->restore();
-                break;
-            case 'delete-all':
-                self::withTrashed()->forceDelete();
-                break;
-        }
-
-        $response['success'] = true;
-        $response['data'] = true;
-        $response['messages'][] = 'Action was successful.';
-
-        return $response;
-    }
     //-------------------------------------------------
     public static function getItem($id)
     {
 
-        $item = self::where('id', $id)
-            ->with(['createdByUser', 'updatedByUser', 'deletedByUser'])
+        $item = static::where('id', $id)->with(['createdByUser', 'updatedByUser', 'deletedByUser'])
             ->withTrashed()
             ->first();
 
-        if(!$item)
-        {
-            $response['success'] = false;
-            $response['errors'][] = 'Record not found with ID: '.$id;
-            return $response;
-        }
         $response['success'] = true;
         $response['data'] = $item;
 
@@ -426,130 +318,303 @@ class ContentType extends ContentTypeBase
 
     }
     //-------------------------------------------------
-    public static function updateItem($request, $id)
+    public static function getItemWithRelations($id)
     {
-        $inputs = $request->all();
+        $item = static::where('id', $id)
+            ->with(['createdByUser', 'updatedByUser',
+                'deletedByUser',
+                'groups'=>function($g){
+                    $g->orderBy('sort', 'asc')->with(['fields' => function($f){
+                        $f->orderBy('sort', 'asc')->with(['type']);
+                    }]);
+                }])
+            ->withTrashed()
+            ->first();
+        $response['success'] = true;
+        $response['data'] = $item;
 
-        $validation = self::validation($inputs);
-        if (!$validation['success']) {
+        return $response;
+
+    }
+    //-------------------------------------------------
+    public static function syncWithFormGroups(ContentTypeBase $content_type, $groups_array)
+    {
+
+        $stored_groups = $content_type->groups()->get()->pluck('slug','id')->toArray();
+
+        $input_groups = collect($groups_array)->pluck('slug')->toArray();
+        $groups_to_delete = array_diff($stored_groups, $input_groups);
+
+        if(count($groups_to_delete) > 0)
+        {
+            $groups_to_delete = array_flip($groups_to_delete);
+
+            FormGroup::deleteItems($groups_to_delete);
+        }
+
+        foreach($groups_array as $g_index => $group)
+        {
+
+            $group['sort'] = $g_index;
+            $group['slug'] = Str::slug($group['name']);
+
+            $stored_group = $content_type->groups()->where('slug', $group['slug'])->first();
+
+            $group_fillable = $group;
+            unset($group_fillable['fields']);
+
+
+            if($stored_group)
+            {
+                $stored_group->fill($group_fillable);
+                $stored_group =$content_type->groups()->save($stored_group);
+            } else{
+                $stored_group = $content_type->groups()->create($group_fillable);
+            }
+
+            foreach ($group['fields'] as $key => $field){
+                if(!isset($field['slug']) || !$field['slug']){
+                    $group['fields'][$key]['slug'] = Str::slug($field['name']);
+                }
+            }
+
+            FormGroup::syncWithFormFields($stored_group, $group['fields']);
+
+        }
+
+
+    }
+    //-------------------------------------------------
+    public static function postStoreGroups($request,$id)
+    {
+
+        $rules = array(
+            '*.fields' => 'array',
+            '*.fields.*.name' => 'required|max:100',
+        );
+
+        $validator = \Validator::make( $request->all(), $rules);
+        if ( $validator->fails() ) {
+
+            $errors             = errorsToArray($validator->errors());
+            $response['success'] = false;
+            $response['errors'] = $errors;
+            return $response;
+        }
+
+
+        $content_type = static::find($id);
+
+        //find delete groups
+        static::syncWithFormGroups($content_type, $request->all());
+
+
+        $response = [];
+
+        $response['success'] = true;
+        $response['data'][] = '';
+        $response['messages'][] = 'Action was successful';
+        if(env('APP_DEBUG'))
+        {
+            $response['hint'][] = '';
+        }
+        return $response;
+
+
+    }
+    //-------------------------------------------------
+    public static function postStore($request,$id)
+    {
+
+        $validation = static::storeValidation($request);
+        if(isset($validation['success']) && !$validation['success'])
+        {
             return $validation;
         }
 
         // check if name exist
-        $item = self::where('id', '!=', $inputs['id'])
-            ->withTrashed()
-            ->where('name', $inputs['name'])->first();
+        $name_exist = static::where('id','!=',$request['id'])->where('name',$request['name'])->first();
 
-        if ($item) {
+        if($name_exist)
+        {
             $response['success'] = false;
-            $response['messages'][] = "This name is already exist.";
+            $response['errors'][] = "This name is already exist.";
             return $response;
         }
+
 
         // check if slug exist
-        $item = self::where('id', '!=', $inputs['id'])
-            ->withTrashed()
-            ->where('slug', $inputs['slug'])->first();
+        $slug_exist = static::where('id','!=',$request['id'])->where('slug',$request['slug'])->first();
 
-        if ($item) {
+        if($slug_exist)
+        {
             $response['success'] = false;
-            $response['messages'][] = "This slug is already exist.";
+            $response['errors'][] = "This slug is already exist.";
             return $response;
         }
-        $item = self::where('id', $id)->withTrashed()->first();
-        $item->fill($inputs);
-        $item->slug = Str::slug($inputs['slug']);
-        $item->plural = Str::slug($inputs['plural']);
-        $item->plural_slug = Str::slug($inputs['plural_slug']);
-        $item->singular = Str::slug($inputs['singular']);
-        $item->singular_slug = Str::slug($inputs['singular_slug']);
-        $item->excerpt = Str::slug($inputs['excerpt']);
-        $item->content_statuses = $inputs['content_statuses'];
-        $item->save();
 
-        $response = self::getItem($item->id);
-        $response['messages'][] = 'Saved successfully.';
-        return $response;
+        $update = static::where('id',$id)->withTrashed()->first();
 
-    }
-    //-------------------------------------------------
-    public static function deleteItem($request, $id): array
-    {
-        $item = self::where('id', $id)->withTrashed()->first();
-        if (!$item) {
-            $response['success'] = false;
-            $response['messages'][] = 'Record does not exist.';
-            return $response;
-        }
-        $item->forceDelete();
+        $update->fill($request->all());
+        $update->save();
+
 
         $response['success'] = true;
         $response['data'] = [];
-        $response['messages'][] = 'Record has been deleted';
+        $response['messages'][] = 'Data updated.';
 
         return $response;
+
     }
     //-------------------------------------------------
-    public static function itemAction($request, $id, $type): array
+    public static function bulkStatusChange($request)
     {
-        switch($type)
+        if(!$request->has('inputs'))
         {
-            case 'activate':
-                self::where('id', $id)
-                    ->withTrashed()
-                    ->update(['is_published' => 1]);
-                break;
-            case 'deactivate':
-                self::where('id', $id)
-                    ->withTrashed()
-                    ->update(['is_published' => null]);
-                break;
-            case 'trash':
-                self::find($id)->delete();
-                break;
-            case 'restore':
-                self::where('id', $id)
-                    ->withTrashed()
-                    ->restore();
-                break;
-        }
-
-        return self::getItem($id);
-    }
-    //-------------------------------------------------
-
-    public static function validation($inputs)
-    {
-
-        $rules = array(
-            'name' => 'required|max:150',
-            'slug' => 'required|max:150',
-        );
-
-        $validator = \Validator::make($inputs, $rules);
-        if ($validator->fails()) {
-            $messages = $validator->errors();
             $response['success'] = false;
-            $response['messages'] = $messages->all();
+            $response['errors'][] = 'Select IDs';
             return $response;
         }
 
+        if(!$request->has('data'))
+        {
+            $response['success'] = false;
+            $response['errors'][] = 'Select Status';
+            return $response;
+        }
+
+        foreach($request->inputs as $id)
+        {
+            $role = static::where('id',$id)->withTrashed()->first();
+
+            if($role->deleted_at){
+                continue ;
+            }
+
+            if($request['data']){
+                $role->is_published = $request['data']['status'];
+            }else{
+                if($role->is_published == 1){
+                    $role->is_published = 0;
+                }else{
+                    $role->is_published = 1;
+                }
+            }
+            $role->save();
+        }
+
         $response['success'] = true;
+        $response['data'] = [];
+        $response['messages'][] = 'Action was successful';
+
+        return $response;
+
+
+    }
+    //-------------------------------------------------
+    public static function bulkTrash($request)
+    {
+
+        if(!$request->has('inputs'))
+        {
+            $response['success'] = false;
+            $response['errors'][] = 'Select IDs';
+            return $response;
+        }
+
+
+        foreach($request->inputs as $id)
+        {
+            $item = static::withTrashed()->where('id', $id)->first();
+            if($item)
+            {
+                $item->is_published = 0;
+                $item->save();
+                $item->delete();
+            }
+        }
+
+        $response['success'] = true;
+        $response['data'] = [];
+        $response['messages'][] = 'Action was successful';
+
+        return $response;
+
+
+    }
+    //-------------------------------------------------
+    public static function bulkRestore($request)
+    {
+
+
+        if(!$request->has('inputs'))
+        {
+            $response['success'] = false;
+            $response['errors'][] = 'Select IDs';
+            return $response;
+        }
+
+        if(!$request->has('data'))
+        {
+            $response['success'] = false;
+            $response['errors'][] = 'Select Status';
+            return $response;
+        }
+
+        foreach($request->inputs as $id)
+        {
+            $item = static::withTrashed()->where('id', $id)->first();
+            if(isset($item) && isset($item->deleted_at))
+            {
+                $item->restore();
+            }
+        }
+
+        $response['success'] = true;
+        $response['data'] = [];
+        $response['messages'][] = 'Action was successful';
+
         return $response;
 
     }
-
     //-------------------------------------------------
-    public static function getActiveItems()
+    public static function bulkDelete($request)
     {
-        $item = self::where('is_published', 1)
-            ->first();
-        return $item;
+
+        if(!$request->has('inputs'))
+        {
+            $response['success'] = false;
+            $response['errors'][] = 'Select IDs';
+            return $response;
+        }
+
+
+        foreach($request->inputs as $id)
+        {
+            $item = static::where('id', $id)->withTrashed()->first();
+            if($item)
+            {
+
+                $item->contents()->forceDelete();
+
+                $item->forceDelete();
+
+            }
+        }
+
+        $response['success'] = true;
+        $response['data'] = [];
+        $response['messages'][] = 'Action was successful';
+
+        return $response;
     }
-
     //-------------------------------------------------
     //-------------------------------------------------
     //-------------------------------------------------
-
+    //-------------------------------------------------
+    //-------------------------------------------------
+    //-------------------------------------------------
+    //-------------------------------------------------
+    //-------------------------------------------------
 
 }

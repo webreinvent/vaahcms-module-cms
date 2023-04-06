@@ -24,7 +24,7 @@ class ExtendController extends Controller
 
         ];
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data'] = $links;
 
         return $response;
@@ -59,7 +59,7 @@ class ExtendController extends Controller
             ]
         ];
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data'] = $list;
 
         return $response;
@@ -71,7 +71,7 @@ class ExtendController extends Controller
     {
         $links = [];
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data'] = $links;
 
         return $response;
@@ -171,7 +171,7 @@ class ExtendController extends Controller
             ]
         ];
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data'] = $data;
 
         return $response;

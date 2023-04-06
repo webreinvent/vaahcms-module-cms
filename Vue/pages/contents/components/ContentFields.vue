@@ -2,7 +2,7 @@
 import {reactive, ref, watch } from 'vue';
 import {vaah} from '../../../vaahvue/pinia/vaah'
 import { useContentStore } from '../../../stores/store-contents'
-import ContentFieldAll from '../../../vaahvue/vue-three/reusable/content-field/All.vue'
+// import ContentFieldAll from '../../../vaahvue/vue-three/reusable/content-field/All.vue'
 
 
 const store = useContentStore();
@@ -47,7 +47,7 @@ const props = defineProps({
             </div>
             <div class="flex justify-content-between align-items-center w-full">
                 <div class="col-12">
-                    <ContentFieldAll :field_type="store.field.type.name"
+<!--                    <ContentFieldAll :field_type="store.field.type.name"
                                      :field_slug="store.field.type.slug"
                                      :label="store.field.name"
                                      :meta="store.field.meta"
@@ -61,7 +61,7 @@ const props = defineProps({
                                      @onChange=""
                                      @onBlur=""
                                      @onFocus="">
-                    </ContentFieldAll>
+                    </ContentFieldAll>-->
                 </div>
             </div>
         </div>

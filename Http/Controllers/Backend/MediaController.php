@@ -42,7 +42,7 @@ class MediaController extends Controller
         if ( $validator->fails() ) {
 
             $errors             = errorsToArray($validator->errors());
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['errors'] = $errors;
             return response()->json($response);
         }*/
@@ -136,12 +136,12 @@ class MediaController extends Controller
 
             $data['baseurl'] = asset('storage'.substr($request->folder_path, 6)).'/';
 
-            $response['status'] = 'success';
+            $response['success'] = true;
             $response['data'] = $data;
 
         }catch(\Exception $e)
         {
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['errors'][] = $e->getMessage();
         }
 

@@ -26,7 +26,7 @@ class CmsSeeder{
 
         if(!$theme)
         {
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['errors'][] = 'Theme does not exist';
             return $response;
         }

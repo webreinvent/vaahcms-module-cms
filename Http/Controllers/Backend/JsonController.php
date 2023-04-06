@@ -77,7 +77,7 @@ class JsonController extends Controller
 
 
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data'] = $data;
 
         return response()->json($response);

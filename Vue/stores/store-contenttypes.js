@@ -296,8 +296,9 @@ export const useContentTypeStore = defineStore({
         //---------------------------------------------------------------------
         storeGroupsAfter(data, res) {
 
-            this.getContentStrucutre(this.item.id);
-
+            if(data){
+                this.getContentStrucutre(this.item.id);
+            }
         },
         //---------------------------------------------------------------------
         async getItemAfter(data, res)

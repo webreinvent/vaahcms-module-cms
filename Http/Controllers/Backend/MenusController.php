@@ -55,7 +55,7 @@ class MenusController extends Controller
 
         } catch (\Exception $e) {
             $response = [];
-            $response['status'] = 'failed';
+            $response['success'] = false;
             if (env('APP_DEBUG')) {
                 $response['errors'][] = $e->getMessage();
                 $response['hint'] = $e->getTrace();
@@ -131,14 +131,14 @@ class MenusController extends Controller
         if ( $validator->fails() ) {
 
             $errors             = errorsToArray($validator->errors());
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['errors'] = $errors;
             return response()->json($response);
         }
 
         $response = [];
 
-        $response['status'] = 'success';
+        $response['success'] = true;
 
         $inputs = $request->all();
 

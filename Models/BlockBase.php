@@ -186,7 +186,7 @@ class BlockBase extends Model {
 
         if($sort_number_exist)
         {
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['errors'][] = "Select different sort number.";
             return $response;
         }
@@ -195,7 +195,7 @@ class BlockBase extends Model {
         $item->fill($request->all());
         $item->save();
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data']['item'] =$item;
         $response['messages'][] = 'Saved';
 
@@ -258,7 +258,7 @@ class BlockBase extends Model {
 
         $data['list'] = $list->paginate(config('vaahcms.per_page'));
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data'] = $data;
 
         return $response;
@@ -285,12 +285,12 @@ class BlockBase extends Model {
         if ( $validator->fails() ) {
 
             $errors             = errorsToArray($validator->errors());
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['errors'] = $errors;
             return $response;
         }
 
-        $response['status'] = 'success';
+        $response['success'] = true;
 
         return $response;
 
@@ -315,12 +315,12 @@ class BlockBase extends Model {
         if ( $validator->fails() ) {
 
             $errors             = errorsToArray($validator->errors());
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['errors'] = $errors;
             return $response;
         }
 
-        $response['status'] = 'success';
+        $response['success'] = true;
 
         return $response;
 
@@ -340,7 +340,7 @@ class BlockBase extends Model {
             ->withTrashed()
             ->first();
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data'] = $item;
 
         return $response;
@@ -364,7 +364,7 @@ class BlockBase extends Model {
 
         if($name_exist)
         {
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['errors'][] = "This name is already exist.";
             return $response;
         }
@@ -377,7 +377,7 @@ class BlockBase extends Model {
 
         if($slug_exist)
         {
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['errors'][] = "This slug is already exist.";
             return $response;
         }
@@ -392,7 +392,7 @@ class BlockBase extends Model {
 
         if($sort_number_exist)
         {
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['errors'][] = "Select different sort number.";
             return $response;
         }
@@ -403,7 +403,7 @@ class BlockBase extends Model {
         $update->save();
 
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data'] = [];
         $response['messages'][] = 'Data updated.';
 
@@ -415,14 +415,14 @@ class BlockBase extends Model {
     {
         if(!$request->has('inputs'))
         {
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['errors'][] = 'Select IDs';
             return $response;
         }
 
         if(!$request->has('data'))
         {
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['errors'][] = 'Select Status';
             return $response;
         }
@@ -447,7 +447,7 @@ class BlockBase extends Model {
             $role->save();
         }
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data'] = [];
         $response['messages'][] = 'Action was successful';
 
@@ -461,7 +461,7 @@ class BlockBase extends Model {
 
         if(!$request->has('inputs'))
         {
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['errors'][] = 'Select IDs';
             return $response;
         }
@@ -478,7 +478,7 @@ class BlockBase extends Model {
             }
         }
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data'] = [];
         $response['messages'][] = 'Action was successful';
 
@@ -493,14 +493,14 @@ class BlockBase extends Model {
 
         if(!$request->has('inputs'))
         {
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['errors'][] = 'Select IDs';
             return $response;
         }
 
         if(!$request->has('data'))
         {
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['errors'][] = 'Select Status';
             return $response;
         }
@@ -514,7 +514,7 @@ class BlockBase extends Model {
             }
         }
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data'] = [];
         $response['messages'][] = 'Action was successful';
 
@@ -527,7 +527,7 @@ class BlockBase extends Model {
 
         if(!$request->has('inputs'))
         {
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['errors'][] = 'Select IDs';
             return $response;
         }
@@ -542,7 +542,7 @@ class BlockBase extends Model {
             }
         }
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data'] = [];
         $response['messages'][] = 'Action was successful';
 
