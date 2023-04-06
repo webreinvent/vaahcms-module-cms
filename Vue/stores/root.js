@@ -3,7 +3,7 @@ import {vaah} from "../vaahvue/pinia/vaah";
 
 let base_url = document.getElementsByTagName('base')[0].getAttribute("href");
 let ajax_url = base_url;
-let json_url = ajax_url + "/backend/cms/json";
+let json_url = ajax_url + "/cms/json";
 
 export const useRootStore = defineStore({
     id: 'root',

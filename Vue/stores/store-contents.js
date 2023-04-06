@@ -6,7 +6,7 @@ import {vaah} from '../vaahvue/pinia/vaah'
 let model_namespace = 'VaahCms\Modules\Cms\\Models\\Content';
 
 let base_url = document.getElementsByTagName('base')[0].getAttribute("href");
-let ajax_url = base_url + "/backend/cms/contents";
+let ajax_url = base_url + "/cms/contents";
 
 let empty_states = {
     query: {

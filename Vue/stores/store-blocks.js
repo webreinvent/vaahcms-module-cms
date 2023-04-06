@@ -7,7 +7,7 @@ let model_namespace = 'VaahCms\Modules\Cms\\Models\\Block';
 
 
 let base_url = document.getElementsByTagName('base')[0].getAttribute("href");
-let ajax_url = base_url + "/backend/cms/blocks";
+let ajax_url = base_url + "/cms/blocks";
 
 let empty_states = {
     query: {

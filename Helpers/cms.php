@@ -352,7 +352,6 @@ function get_group_content_field(Content $content, $group_slug='default',
     $data = null;
 
     foreach ($content->content_form_groups as $arr_group){
-        $data = null;
         foreach ($arr_group as $key => $group){
             if($group['slug'] === $group_slug){
 
