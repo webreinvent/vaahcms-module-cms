@@ -213,7 +213,7 @@ export const useContentStore = defineStore({
                 }
                 // this.active_theme = this.assets.default_theme;
 
-                this.getUser();
+                // this.getUser();
             }
         },
         //---------------------------------------------------------------------
@@ -382,6 +382,9 @@ export const useContentStore = defineStore({
                 case 'create-and-new':
                 case 'create-and-close':
                 case 'create-and-clone':
+
+                    item.content_groups = this.assets.content_type.form_groups;
+
                     options.method = 'POST';
                     options.params = item;
                     break;

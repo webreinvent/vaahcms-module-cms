@@ -69,6 +69,9 @@ class ContentsController extends Controller
             $data['empty_item'][$column] = null;
         }
 
+        $data['empty_item']['content_groups'] = [];
+        $data['empty_item']['template_groups'] = [];
+
         $response['success'] = true;
         $response['data'] = $data;
 
@@ -165,8 +168,9 @@ class ContentsController extends Controller
     //----------------------------------------------------------
     public function createItem(Request $request,$content_slug)
     {
+
         try{
-            return Content::createItem($request);
+            return Content::postCreate($request);
         }catch (\Exception $e){
             $response = [];
             $response['success'] = false;

@@ -35,6 +35,7 @@ const props = defineProps({
                  v-for="(field, f_index) in group.fields"
                  class="flex justify-content-between align-items-center w-full">
                 <div class="col-12">
+                    {{ field.content }}
                     <ContentFieldAll :field_type="field.type"
                                      :field_slug="field.type.slug"
                                      :label="field.name"

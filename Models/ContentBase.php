@@ -153,6 +153,25 @@ class ContentBase extends Model {
     {
         return $query->where( 'is_published', 1 );
     }
+
+    //-------------------------------------------------
+    public function scopeBetweenDates($query, $from, $to)
+    {
+
+        if ($from) {
+            $from = \Carbon::parse($from)
+                ->startOfDay()
+                ->toDateTimeString();
+        }
+
+        if ($to) {
+            $to = \Carbon::parse($to)
+                ->endOfDay()
+                ->toDateTimeString();
+        }
+
+        $query->whereBetween('updated_at', [$from, $to]);
+    }
     //-------------------------------------------------
     public function createdByUser()
     {
@@ -218,7 +237,7 @@ class ContentBase extends Model {
     {
 
         $validation = static::validation($request);
-        if(isset($validation['status']) && $validation['status'] == 'failed')
+        if(isset($validation['success']) && !$validation['success'])
         {
             return $validation;
         }
@@ -418,7 +437,7 @@ class ContentBase extends Model {
 
             $errors             = errorsToArray($validator->errors());
             $response['success'] = false;
-            $response['messages'] = $errors;
+            $response['errors'] = $errors;
             return $response;
         }
 
