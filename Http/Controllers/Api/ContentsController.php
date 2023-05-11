@@ -84,6 +84,7 @@ class ContentsController extends Controller
         }
 
         $contents->orderBy($order_by,$order);
+        $contents->where('status',$input['status'] ?? 'published');
 
         if(isset($input['per_page'])
             && $input['per_page']
@@ -182,7 +183,7 @@ class ContentsController extends Controller
             return $response;
         }
 
-        $content_data = Content::getItem($content->id);
+        $content_data = Content::getApiItem($content->id);
 
         if($content_data['status'] != 'success')
         {
