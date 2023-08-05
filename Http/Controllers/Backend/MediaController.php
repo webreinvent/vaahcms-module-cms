@@ -5,8 +5,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use VaahCms\Modules\Cms\Models\BlockBase;
-use VaahCms\Modules\Cms\Entities\ContentTypeBase;
-use VaahCms\Modules\Cms\Entities\FieldType;
+use VaahCms\Modules\Cms\Models\ContentTypeBase;
+use VaahCms\Modules\Cms\Models\FieldType;
 use WebReinvent\VaahCms\Models\Theme;
 
 class MediaController extends Controller
