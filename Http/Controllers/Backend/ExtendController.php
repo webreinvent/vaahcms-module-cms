@@ -86,17 +86,17 @@ class ExtendController extends Controller
             'label'=> 'CMS',
             'items' => [
                 [
-                    'url' => self::$link."content-types/",
+                    'link' => self::$link."content-types/",
                     'icon' => 'pi pi-book ',
                     'label'=> 'Content Types'
                 ],
                 [
-                    'url' => self::$link."menus/",
+                    'link' => self::$link."menus/",
                     'icon' => 'pi pi-bars',
                     'label'=> 'Menus'
                 ],
                 [
-                    'url' => self::$link."blocks/",
+                    'link' => self::$link."blocks/",
                     'icon' => 'pi pi-th-large',
                     'label'=> 'Blocks'
                 ],
@@ -115,7 +115,7 @@ class ExtendController extends Controller
             foreach ($content_types as $content_type)
             {
                 $list[0]['items'][3]['items'][] =  [
-                    'url' => self::$link."contents/".$content_type->slug."/list",
+                    'link' => self::$link."contents/".$content_type->slug."/list",
                     'label'=> $content_type->name
                 ];
             }

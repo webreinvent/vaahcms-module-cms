@@ -13,7 +13,7 @@
 
 
     @if(env('MODULE_CMS_ENV') == 'develop')
-        <script type="module" src="http://localhost:8367/Vue/main.js"></script>
+        <script type="module" src="http://localhost:8367/main.js"></script>
     @else
         <script type="module" src="{{vh_module_assets_url("Cms", "build/main.js")}}"></script>
     @endif
