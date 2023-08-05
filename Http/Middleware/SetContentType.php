@@ -2,8 +2,8 @@
 
 use Closure;
 use Illuminate\Http\Request;
-use VaahCms\Modules\Cms\Entities\Content;
-use VaahCms\Modules\Cms\Entities\ContentTypeBase;
+use VaahCms\Modules\Cms\Models\Content;
+use VaahCms\Modules\Cms\Models\ContentTypeBase;
 
 class SetContentType
 {

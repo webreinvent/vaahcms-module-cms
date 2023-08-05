@@ -4,7 +4,6 @@ use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
-use VaahCms\Modules\Cms\Entities\ContentTypeBase;
 use WebReinvent\VaahCms\Models\Taxonomy;
 use WebReinvent\VaahCms\Models\Theme;
 use WebReinvent\VaahCms\Models\ThemeTemplate;

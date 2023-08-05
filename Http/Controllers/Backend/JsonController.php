@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use VaahCms\Modules\Cms\Entities\ContentTypeBase;
+use VaahCms\Modules\Cms\Models\ContentTypeBase;
 
 class JsonController extends Controller
 {
