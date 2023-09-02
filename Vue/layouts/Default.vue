@@ -16,7 +16,7 @@ onMounted(async () => {
 
 
 <template>
-    <div class="col-12"><navbar/></div>
+    <div class="pb-3 pt-2"><navbar/></div>
     <div class="grid">
         <div class="col"><RouterView /></div>
     </div>
