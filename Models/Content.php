@@ -296,7 +296,7 @@ class Content extends ContentBase
     {
         $inputs = $request->all();
 
-        $validation = self::validation($inputs);
+        $validation = self::validation($request);
         if (!$validation['success']) {
             return $validation;
         }
@@ -327,6 +327,11 @@ class Content extends ContentBase
         $item->fill($inputs);
         $item->slug = Str::slug($inputs['slug']);
         $item->save();
+
+
+        static::storeFormGroups($item, $inputs['content_form_groups']);
+
+        static::storeFormGroups($item, $inputs['template_form_groups']);
 
         $response = self::getItem($item->id);
         $response['messages'][] = 'Saved successfully.';

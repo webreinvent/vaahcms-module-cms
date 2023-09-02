@@ -101,6 +101,8 @@ export const useContentStore = defineStore({
              */
             this.setViewAndWidth(route.name);
 
+            this.ajax_url = this.base_url+'/cms/contents/'+this.route.params.slug
+
             /**
              * Update query state with the query parameters of url
              */
@@ -151,8 +153,10 @@ export const useContentStore = defineStore({
 
                     this.route = newVal;
 
+                    this.ajax_url = this.base_url+'/cms/contents/'+this.route.params.slug
+
                     if(newVal.params.slug){
-                        this.getList(newVal.params.slug);
+                        this.getList();
                     }
 
                     this.setViewAndWidth(newVal.name);
@@ -191,7 +195,7 @@ export const useContentStore = defineStore({
                 this.assets_is_fetching = false;
 
                 await vaah().ajax(
-                    this.ajax_url+'/'+this.route.params.slug+'/assets',
+                    this.ajax_url+'/assets',
                     this.afterGetAssets,
                 );
             }
@@ -216,13 +220,13 @@ export const useContentStore = defineStore({
             }
         },
         //---------------------------------------------------------------------
-        async getList(slug = this.route.params.slug) {
+        async getList() {
             document.title = this.toLabel(this.route.params.slug)+' | Contents - CMS';
             let options = {
                 query: vaah().clone(this.query)
             };
             await vaah().ajax(
-                this.ajax_url+'/'+slug,
+                this.ajax_url,
                 this.afterGetList,
                 options
             );
@@ -240,7 +244,7 @@ export const useContentStore = defineStore({
         async getItem(id) {
             if(id){
                 await vaah().ajax(
-                    ajax_url+'/'+id,
+                    this.ajax_url+'/'+id,
                     this.getItemAfter
                 );
             }
@@ -386,7 +390,10 @@ export const useContentStore = defineStore({
                     item.content_groups = this.assets.content_type.form_groups;
 
                     options.method = 'POST';
-                    options.params = item;
+                    options.params = {
+                        'content_form_groups': this.assets.content_type.form_groups,
+                        'template_form_groups': []
+                    };
                     break;
 
                 /**
@@ -398,6 +405,9 @@ export const useContentStore = defineStore({
                 case 'save-and-clone':
                     options.method = 'PUT';
                     options.params = item;
+
+                    options.params.content_form_groups = this.assets.content_type.form_groups;
+                    options.params.template_form_groups = [];
                     ajax_url += '/'+item.id
                     break;
                 /**
