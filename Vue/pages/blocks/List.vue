@@ -15,6 +15,8 @@ const confirm = useConfirm();
 
 
 onMounted(async () => {
+
+    document.title = 'Blocks - CMS';
     /**
      * call onLoad action when List view loads
      */

@@ -96,7 +96,6 @@ export const useContentStore = defineStore({
              * Set initial routes
              */
             this.route = route;
-            this.ajax_url = this.ajax_url+'/'+this.route.params.slug
             /**
              * Update with view and list css column number
              */
@@ -152,8 +151,8 @@ export const useContentStore = defineStore({
 
                     this.route = newVal;
 
-                    if(newVal.params.id){
-                        this.getItem(newVal.params.id);
+                    if(newVal.params.slug){
+                        this.getList(newVal.params.slug);
                     }
 
                     this.setViewAndWidth(newVal.name);
@@ -192,7 +191,7 @@ export const useContentStore = defineStore({
                 this.assets_is_fetching = false;
 
                 await vaah().ajax(
-                    this.ajax_url+'/assets',
+                    this.ajax_url+'/'+this.route.params.slug+'/assets',
                     this.afterGetAssets,
                 );
             }
@@ -217,12 +216,13 @@ export const useContentStore = defineStore({
             }
         },
         //---------------------------------------------------------------------
-        async getList() {
+        async getList(slug = this.route.params.slug) {
+            document.title = this.toLabel(this.route.params.slug)+' | Contents - CMS';
             let options = {
                 query: vaah().clone(this.query)
             };
             await vaah().ajax(
-                this.ajax_url,
+                this.ajax_url+'/'+slug,
                 this.afterGetList,
                 options
             );
@@ -954,6 +954,11 @@ export const useContentStore = defineStore({
 
             }
             vaah().copy(code);
+        },
+        //---------------------------------------------------------------------
+        toLabel (text)
+        {
+            return vaah().toLabel(text)
         },
         //---------------------------------------------------------------------
     }

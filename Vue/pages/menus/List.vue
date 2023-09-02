@@ -13,6 +13,8 @@ const confirm = useConfirm();
 
 
 onMounted(async () => {
+
+    document.title = 'Menus - CMS';
     /**
      * call onLoad action when List view loads
      */
