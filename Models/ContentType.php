@@ -1,4 +1,4 @@
-<?php namespace VaahCms\Modules\cms\Models;
+<?php namespace VaahCms\Modules\Cms\Models;
 
 use Carbon\Carbon;
 use DateTimeInterface;

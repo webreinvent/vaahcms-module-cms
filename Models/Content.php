@@ -11,6 +11,8 @@ use WebReinvent\VaahCms\Models\User;
 class Content extends ContentBase
 {
 
+
+
     //-------------------------------------------------
     //-------------------------------------------------
     public function scopeGetSorted($query, $filter)
@@ -274,18 +276,28 @@ class Content extends ContentBase
     public static function getItem($id)
     {
 
-        $item = self::where('id', $id)
-            ->with(['createdByUser', 'updatedByUser', 'deletedByUser'])
+        $item = Content::where('id', $id)
+            ->with([
+                'contentType', 'theme', 'template',
+                'authorUser', 'createdByUser', 'updatedByUser',
+                'deletedByUser',
+                'fields' => function($f){
+                    $f->with(['group', 'field']);
+                }
+            ])
             ->withTrashed()
             ->first();
 
-        if(!$item)
-        {
-            $response['success'] = false;
-            $response['errors'][] = 'Record not found with ID: '.$id;
-            return $response;
-        }
+
+        $content_form_groups = static::getFormGroups($item, 'content');
+
+        $template_form_groups = static::getFormGroups($item, 'template');
+
         $response['success'] = true;
+
+        $item->content_form_groups = $content_form_groups;
+        $item->template_form_groups = $template_form_groups;
+
         $response['data'] = $item;
 
         return $response;

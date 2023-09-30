@@ -207,7 +207,7 @@ class ContentBase extends Model {
     //-------------------------------------------------
     public function contentType()
     {
-        return $this->belongsTo(ContentTypeBase::class,
+        return $this->belongsTo(ContentType::class,
             'vh_cms_content_type_id', 'id'
         );
     }
@@ -490,9 +490,7 @@ class ContentBase extends Model {
         }
 
         $arr_group = [];
-
-
-
+        
         $i = 0;
 
         foreach ($groups as $group)
