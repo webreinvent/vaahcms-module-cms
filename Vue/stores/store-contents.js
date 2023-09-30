@@ -406,8 +406,8 @@ export const useContentStore = defineStore({
                     options.method = 'PUT';
                     options.params = item;
 
-                    options.params.content_form_groups = this.assets.content_type.form_groups;
-                    options.params.template_form_groups = [];
+                    /*options.params.content_form_groups = this.assets.content_type.form_groups;
+                    options.params.template_form_groups = [];*/
                     ajax_url += '/'+item.id
                     break;
                 /**
@@ -441,7 +441,6 @@ export const useContentStore = defineStore({
         {
             if(data)
             {
-                this.item = data;
                 await this.getList();
                 await this.formActionAfter();
                 this.getItemMenu();

@@ -79,7 +79,7 @@ const toggleFormMenu = (event) => {
                                         <Message severity="info">
                                             These fields can be managed from "Content Types" sections.
                                         </Message>
-                                        <ContentFields :groups="store.assets.content_type.form_groups"/>
+                                        <ContentFields :groups="store.item.content_form_groups"/>
 
                                     </AccordionTab>
                                     <AccordionTab >
