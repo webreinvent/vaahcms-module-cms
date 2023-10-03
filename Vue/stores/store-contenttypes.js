@@ -7,7 +7,7 @@ let model_namespace = 'VaahCms\Modules\cms\\Models\\ContentTypeBase';
 
 
 let base_url = document.getElementsByTagName('base')[0].getAttribute("href");
-let ajax_url = base_url + "/backend/cms/contenttypes";
+let ajax_url = base_url + "/cms/contenttypes";
 
 let empty_states = {
     query: {
@@ -295,10 +295,10 @@ export const useContentTypeStore = defineStore({
         },
         //---------------------------------------------------------------------
         storeGroupsAfter(data, res) {
-            if(data){
-                this.getContentStrucutre();
-            }
 
+            if(data){
+                this.getContentStrucutre(this.item.id);
+            }
         },
         //---------------------------------------------------------------------
         async getItemAfter(data, res)
@@ -991,11 +991,6 @@ export const useContentTypeStore = defineStore({
 
 
             return item;
-        },
-        //---------------------------------------------------------------------
-        groupsFieldsSlug(item){
-            console.log(item.name);
-            item.slug = vaah().strToSlug(item.name);
         },
         //---------------------------------------------------------------------
     }

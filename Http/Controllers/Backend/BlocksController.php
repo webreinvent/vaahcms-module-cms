@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use VaahCms\Modules\Cms\Entities\FieldType;
+use VaahCms\Modules\Cms\Models\FieldType;
 use VaahCms\Modules\Cms\Models\Block;
 use WebReinvent\VaahCms\Models\Theme;
 

@@ -107,11 +107,10 @@ const onSelectType = (field,data,group_index,field_index) => {
                                         <InputText class="w-2" :model-value="element.type.name" disabled/>
                                         <InputText class="w-6"
                                                    v-model="element.name"
-                                                   @input="store.groupsFieldsSlug(element)"
                                                    data-testid="contenttype-group_field_name"
                                                    placeholder="Field Name"/>
                                         <Button icon="pi pi-hashtag p-button-sm"
-                                                :label="useVaah.convertToStr(element.id)"
+                                                :label="element.id ? useVaah.convertToStr(element.id) : '&nbsp;&nbsp;'"
                                                 :disabled="!element.id"
                                                 @click="store.getCopy(element.slug)"
                                                 data-testid="contenttype-group_field_slug"/>
@@ -174,7 +173,8 @@ const onSelectType = (field,data,group_index,field_index) => {
                                                         <tr v-for="(meta_item, meta_index) in element.meta"
                                                             v-if="(meta_index !== 'container_opening_tag'
                                                                     && meta_index !== 'container_closing_tag')
-                                                                    || (store && store.assets && store.assets.non_repeatable_fields && store.assets.non_repeatable_fields.includes(element.type.slug))
+                                                                    || (store && store.assets && store.assets.non_repeatable_fields
+                                                                     && store.assets.non_repeatable_fields.includes(element.type.slug))
                                                                     || element.is_repeatable"
                                                         >
                                                             <td v-if="meta_index !== 'filter_id'
@@ -211,7 +211,8 @@ const onSelectType = (field,data,group_index,field_index) => {
                                                                     />
                                                                 </template>
 
-                                                                <template v-else-if="meta_index === 'type' && (store && store.assets && store.assets.content_relations)">
+                                                                <template v-else-if="meta_index === 'type'
+                                                                && (store && store.assets && store.assets.content_relations)">
                                                                     <Dropdown v-model="element.meta[meta_index]"
                                                                               :options="store.assets.content_relations"
                                                                               optionLabel="name"

@@ -183,7 +183,7 @@ class ContentTypeBase extends Model {
         $item->fill($request->all());
         $item->save();
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data']['item'] =$item;
         $response['messages'][] = 'Saved';
 
@@ -238,7 +238,7 @@ class ContentTypeBase extends Model {
 
 
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data'] = $data;
 
         return $response;
@@ -261,14 +261,14 @@ class ContentTypeBase extends Model {
         if ( $validator->fails() ) {
 
             $errors             = errorsToArray($validator->errors());
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['errors'] = $errors;
             return $response;
         }
 
         $data = [];
 
-        $response['status'] = 'success';
+        $response['success'] = true;
 
         return $response;
 
@@ -289,14 +289,14 @@ class ContentTypeBase extends Model {
         if ( $validator->fails() ) {
 
             $errors             = errorsToArray($validator->errors());
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['errors'] = $errors;
             return $response;
         }
 
         $data = [];
 
-        $response['status'] = 'success';
+        $response['success'] = true;
 
         return $response;
 
@@ -311,7 +311,7 @@ class ContentTypeBase extends Model {
             ->withTrashed()
             ->first();
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data'] = $item;
 
         return $response;
@@ -325,13 +325,14 @@ class ContentTypeBase extends Model {
             ->with(['createdByUser', 'updatedByUser',
                 'deletedByUser',
                 'groups'=>function($g){
-                $g->orderBy('sort', 'asc')->with(['fields' => function($f){
-                    $f->orderBy('sort', 'asc')->with(['type']);
-                }]);
+                    $g->orderBy('sort', 'asc')->with(['fields' => function($f){
+                        $f->orderBy('sort', 'asc')->with(['type']);
+                    }]);
                 }])
             ->withTrashed()
             ->first();
-        $response['status'] = 'success';
+
+        $response['success'] = true;
         $response['data'] = $item;
 
         return $response;
@@ -398,7 +399,7 @@ class ContentTypeBase extends Model {
         if ( $validator->fails() ) {
 
             $errors             = errorsToArray($validator->errors());
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['errors'] = $errors;
             return $response;
         }
@@ -412,7 +413,7 @@ class ContentTypeBase extends Model {
 
         $response = [];
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data'][] = '';
         $response['messages'][] = 'Action was successful';
         if(env('APP_DEBUG'))
@@ -438,7 +439,7 @@ class ContentTypeBase extends Model {
 
         if($name_exist)
         {
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['errors'][] = "This name is already exist.";
             return $response;
         }
@@ -449,7 +450,7 @@ class ContentTypeBase extends Model {
 
         if($slug_exist)
         {
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['errors'][] = "This slug is already exist.";
             return $response;
         }
@@ -460,7 +461,7 @@ class ContentTypeBase extends Model {
         $update->save();
 
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data'] = [];
         $response['messages'][] = 'Data updated.';
 
@@ -472,14 +473,14 @@ class ContentTypeBase extends Model {
     {
         if(!$request->has('inputs'))
         {
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['errors'][] = 'Select IDs';
             return $response;
         }
 
         if(!$request->has('data'))
         {
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['errors'][] = 'Select Status';
             return $response;
         }
@@ -504,7 +505,7 @@ class ContentTypeBase extends Model {
             $role->save();
         }
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data'] = [];
         $response['messages'][] = 'Action was successful';
 
@@ -518,7 +519,7 @@ class ContentTypeBase extends Model {
 
         if(!$request->has('inputs'))
         {
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['errors'][] = 'Select IDs';
             return $response;
         }
@@ -535,7 +536,7 @@ class ContentTypeBase extends Model {
             }
         }
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data'] = [];
         $response['messages'][] = 'Action was successful';
 
@@ -550,14 +551,14 @@ class ContentTypeBase extends Model {
 
         if(!$request->has('inputs'))
         {
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['errors'][] = 'Select IDs';
             return $response;
         }
 
         if(!$request->has('data'))
         {
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['errors'][] = 'Select Status';
             return $response;
         }
@@ -571,7 +572,7 @@ class ContentTypeBase extends Model {
             }
         }
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data'] = [];
         $response['messages'][] = 'Action was successful';
 
@@ -584,7 +585,7 @@ class ContentTypeBase extends Model {
 
         if(!$request->has('inputs'))
         {
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['errors'][] = 'Select IDs';
             return $response;
         }
@@ -603,7 +604,7 @@ class ContentTypeBase extends Model {
             }
         }
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data'] = [];
         $response['messages'][] = 'Action was successful';
 

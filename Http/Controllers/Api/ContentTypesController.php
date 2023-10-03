@@ -4,9 +4,9 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use VaahCms\Modules\Cms\Entities\Content;
-use VaahCms\Modules\Cms\Entities\ContentTypeBase;
-use VaahCms\Modules\Cms\Entities\FieldType;
+use VaahCms\Modules\Cms\Models\Content;
+use VaahCms\Modules\Cms\Models\ContentTypeBase;
+use VaahCms\Modules\Cms\Models\FieldType;
 
 class ContentTypesController extends Controller
 {

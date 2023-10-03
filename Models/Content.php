@@ -11,137 +11,9 @@ use WebReinvent\VaahCms\Models\User;
 class Content extends ContentBase
 {
 
-    use SoftDeletes;
-    use CrudWithUuidObservantTrait;
+
 
     //-------------------------------------------------
-    protected $table = 'vh_cms_contents';
-    //-------------------------------------------------
-    protected $dates = [
-        'created_at',
-        'updated_at',
-        'deleted_at'
-    ];
-    //-------------------------------------------------
-    protected $fillable = [
-        'uuid',
-        'name',
-        'slug',
-        'status',
-        'created_by',
-        'updated_by',
-        'deleted_by',
-    ];
-
-    //-------------------------------------------------
-    protected $appends = [
-    ];
-
-    //-------------------------------------------------
-    protected function serializeDate(DateTimeInterface $date)
-    {
-        $date_time_format = config('settings.global.datetime_format');
-        return $date->format($date_time_format);
-    }
-
-    //-------------------------------------------------
-
-    public function createdByUser()
-    {
-        return $this->belongsTo(User::class,
-            'created_by', 'id'
-        )->select('id', 'uuid', 'first_name', 'last_name', 'email');
-    }
-
-    //-------------------------------------------------
-    public function updatedByUser()
-    {
-        return $this->belongsTo(User::class,
-            'updated_by', 'id'
-        )->select('id', 'uuid', 'first_name', 'last_name', 'email');
-    }
-
-    //-------------------------------------------------
-    public function deletedByUser()
-    {
-        return $this->belongsTo(User::class,
-            'deleted_by', 'id'
-        )->select('id', 'uuid', 'first_name', 'last_name', 'email');
-    }
-
-    //-------------------------------------------------
-    public function getTableColumns()
-    {
-        return $this->getConnection()->getSchemaBuilder()
-            ->getColumnListing($this->getTable());
-    }
-
-    //-------------------------------------------------
-    public function scopeExclude($query, $columns)
-    {
-        return $query->select(array_diff($this->getTableColumns(), $columns));
-    }
-
-    //-------------------------------------------------
-    public function scopeBetweenDates($query, $from, $to)
-    {
-
-        if ($from) {
-            $from = \Carbon::parse($from)
-                ->startOfDay()
-                ->toDateTimeString();
-        }
-
-        if ($to) {
-            $to = \Carbon::parse($to)
-                ->endOfDay()
-                ->toDateTimeString();
-        }
-
-        $query->whereBetween('updated_at', [$from, $to]);
-    }
-
-    //-------------------------------------------------
-    public static function createItem($request)
-    {
-
-        $inputs = $request->all();
-
-        $validation = self::validation($inputs);
-        if (!$validation['success']) {
-            return $validation;
-        }
-
-
-        // check if name exist
-        $item = self::where('name', $inputs['name'])->withTrashed()->first();
-
-        if ($item) {
-            $response['success'] = false;
-            $response['messages'][] = "This name is already exist.";
-            return $response;
-        }
-
-        // check if slug exist
-        $item = self::where('slug', $inputs['slug'])->withTrashed()->first();
-
-        if ($item) {
-            $response['success'] = false;
-            $response['messages'][] = "This slug is already exist.";
-            return $response;
-        }
-
-        $item = new self();
-        $item->fill($inputs);
-        $item->slug = Str::slug($inputs['slug']);
-        $item->save();
-
-        $response = self::getItem($item->id);
-        $response['messages'][] = 'Saved successfully.';
-        return $response;
-
-    }
-
     //-------------------------------------------------
     public function scopeGetSorted($query, $filter)
     {
@@ -404,18 +276,28 @@ class Content extends ContentBase
     public static function getItem($id)
     {
 
-        $item = self::where('id', $id)
-            ->with(['createdByUser', 'updatedByUser', 'deletedByUser'])
+        $item = Content::where('id', $id)
+            ->with([
+                'contentType', 'theme', 'template',
+                'authorUser', 'createdByUser', 'updatedByUser',
+                'deletedByUser',
+                'fields' => function($f){
+                    $f->with(['group', 'field']);
+                }
+            ])
             ->withTrashed()
             ->first();
 
-        if(!$item)
-        {
-            $response['success'] = false;
-            $response['errors'][] = 'Record not found with ID: '.$id;
-            return $response;
-        }
+
+        $content_form_groups = static::getFormGroups($item, 'content');
+
+        $template_form_groups = static::getFormGroups($item, 'template');
+
         $response['success'] = true;
+
+        $item->content_form_groups = $content_form_groups;
+        $item->template_form_groups = $template_form_groups;
+
         $response['data'] = $item;
 
         return $response;
@@ -426,7 +308,7 @@ class Content extends ContentBase
     {
         $inputs = $request->all();
 
-        $validation = self::validation($inputs);
+        $validation = self::validation($request);
         if (!$validation['success']) {
             return $validation;
         }
@@ -457,6 +339,11 @@ class Content extends ContentBase
         $item->fill($inputs);
         $item->slug = Str::slug($inputs['slug']);
         $item->save();
+
+
+        static::storeFormGroups($item, $inputs['content_form_groups']);
+
+        static::storeFormGroups($item, $inputs['template_form_groups']);
 
         $response = self::getItem($item->id);
         $response['messages'][] = 'Saved successfully.';
@@ -508,27 +395,6 @@ class Content extends ContentBase
         return self::getItem($id);
     }
     //-------------------------------------------------
-
-    public static function validation($inputs)
-    {
-
-        $rules = array(
-            'name' => 'required|max:150',
-            'slug' => 'required|max:150',
-        );
-
-        $validator = \Validator::make($inputs, $rules);
-        if ($validator->fails()) {
-            $messages = $validator->errors();
-            $response['success'] = false;
-            $response['messages'] = $messages->all();
-            return $response;
-        }
-
-        $response['success'] = true;
-        return $response;
-
-    }
 
     //-------------------------------------------------
     public static function getActiveItems()

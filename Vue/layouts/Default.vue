@@ -1,7 +1,7 @@
 <script setup>
 import {onMounted, reactive} from "vue";
 
-import Aside from '../components/Aside.vue';
+import navbar from '../components/topnav.vue';
 
 import { useRootStore } from '../stores/root'
 const rootStore = useRootStore();
@@ -16,9 +16,8 @@ onMounted(async () => {
 
 
 <template>
-
+    <div class="pb-3 pt-2"><navbar/></div>
     <div class="grid">
-<!--        <div class="col-2"><Aside/></div>-->
         <div class="col"><RouterView /></div>
     </div>
 

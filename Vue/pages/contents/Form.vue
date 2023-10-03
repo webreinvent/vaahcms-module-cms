@@ -63,7 +63,7 @@ const toggleFormMenu = (event) => {
                                                   @complete="store.searchUser($event)"
                                                   optionLabel="name"
                                                   optionValue="email"
-                                                  placeholde="Search..."
+                                                  placeholder="Search..."
                                                   inputClass="p-inputtext-sm"/>
                                 </div>
                                 <Accordion :multiple="true" :activeIndex="store.active_index" id="accordionTabContainer">
@@ -79,11 +79,8 @@ const toggleFormMenu = (event) => {
                                         <Message severity="info">
                                             These fields can be managed from "Content Types" sections.
                                         </Message>
-                                        <ContentFields :groups="store.assets.content_type.form_groups"/>
+                                        <ContentFields :groups="store.item.content_form_groups"/>
 
-<!--                                        <div class="col-12 m-2">-->
-<!--                            -->
-<!--                                        </div>-->
                                     </AccordionTab>
                                     <AccordionTab >
                                         <template #header>
@@ -180,7 +177,7 @@ const toggleFormMenu = (event) => {
                               optionValue="id"
                               placeholder="Select Theme"
                               data-testid="contents-theme"
-                              @select="store.setActiveTheme"
+                              @change="store.setActiveTheme"
                               class="w-full md:w-14rem" />
                 </VhField>
                 <VhField label="Template" v-if="store.active_theme">

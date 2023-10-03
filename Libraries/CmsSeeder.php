@@ -2,8 +2,8 @@
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use VaahCms\Modules\Cms\Entities\Content;
-use VaahCms\Modules\Cms\Entities\ContentTypeBase;
+use VaahCms\Modules\Cms\Models\ContentTypeBase;
+use VaahCms\Modules\Cms\Models\Content;
 use WebReinvent\VaahCms\Models\ThemeTemplate;
 use WebReinvent\VaahCms\Entities\User;
 
@@ -26,7 +26,7 @@ class CmsSeeder{
 
         if(!$theme)
         {
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['errors'][] = 'Theme does not exist';
             return $response;
         }

@@ -7,7 +7,7 @@ let model_namespace = 'VaahCms\Modules\Cms\\Models\\Block';
 
 
 let base_url = document.getElementsByTagName('base')[0].getAttribute("href");
-let ajax_url = base_url + "/backend/cms/blocks";
+let ajax_url = base_url + "/cms/blocks";
 
 let empty_states = {
     query: {
@@ -39,6 +39,8 @@ export const useBlockStore = defineStore({
         list: null,
         item: null,
         fillable:null,
+        watch_stopper: null,
+        route_prefix: 'blocks.',
         empty_query:empty_states.query,
         empty_action:empty_states.action,
         query: vaah().clone(empty_states.query),
@@ -122,11 +124,17 @@ export const useBlockStore = defineStore({
         //---------------------------------------------------------------------
         watchRoutes(route)
         {
-            //watch routes
-            watch(route, (newVal,oldVal) =>
+            this.watch_stopper = watch(route, (newVal,oldVal) =>
                 {
+
+                    if(this.watch_stopper && !newVal.name.includes(this.route_prefix)){
+                        this.watch_stopper();
+
+                        return false;
+                    }
+
                     this.route = newVal;
-                    if(newVal.params.id){
+                    if (newVal.params.id) {
                         this.getItem(newVal.params.id);
                     }
                     this.setViewAndWidth(newVal.name);
@@ -660,13 +668,13 @@ export const useBlockStore = defineStore({
         {
             this.list_selected_menu = [
                 {
-                    label: 'Activate',
+                    label: 'Publish',
                     command: async () => {
                         await this.updateList('activate')
                     }
                 },
                 {
-                    label: 'Deactivate',
+                    label: 'Unpublish',
                     command: async () => {
                         await this.updateList('deactivate')
                     }
@@ -703,13 +711,13 @@ export const useBlockStore = defineStore({
         {
             this.list_bulk_menu = [
                 {
-                    label: 'Mark all as active',
+                    label: 'Mark all as published',
                     command: async () => {
                         await this.listAction('activate-all')
                     }
                 },
                 {
-                    label: 'Mark all as inactive',
+                    label: 'Mark all as unpublished',
                     command: async () => {
                         await this.listAction('deactivate-all')
                     }

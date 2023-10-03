@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use VaahCms\Modules\Cms\Entities\ContentTypeBase;
+use VaahCms\Modules\Cms\Models\ContentTypeBase;
 
 class JsonController extends Controller
 {
@@ -37,26 +37,20 @@ class JsonController extends Controller
 
         $data['aside_menu'][0] = [
             "label" => "Manage",
-            "child" => [
+            "items" => [
                 [
                     "label"=>'Content Types',
-                    "icon"=>'cog',
-                    "link"=> self::$link."content-types",
-                    'path' => "/content-types",
+                    "url"=> self::$link."content-types",
                 ],
 
                 [
                     "label"=>'Menus',
-                    "icon"=>'link',
-                    "link"=> self::$link."menus",
-                    'path' => "/menus",
+                    "url"=> self::$link."menus",
                 ],
 
                 [
                     "label"=>'Blocks',
-                    "icon"=>'cubes',
-                    "link"=> self::$link."blocks",
-                    'path' => "/blocks",
+                    "url"=> self::$link."blocks",
                 ],
 
             ],
@@ -73,11 +67,9 @@ class JsonController extends Controller
 
             foreach ($contents as $content)
             {
-                $data['aside_menu'][1]['child'][] = [
+                $data['aside_menu'][1]['items'][] = [
                     'label' => $content->name,
-                    'icon' => 'list',
-                    'link' => self::$link."contents/".$content->slug."/list",
-                    'path' => "/contents/".$content->slug."/list",
+                    'url' => self::$link."contents/".$content->slug."/list",
                 ];
             }
         }
@@ -85,7 +77,7 @@ class JsonController extends Controller
 
 
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data'] = $data;
 
         return response()->json($response);

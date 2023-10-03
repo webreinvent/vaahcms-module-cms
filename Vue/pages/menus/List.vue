@@ -13,6 +13,8 @@ const confirm = useConfirm();
 
 
 onMounted(async () => {
+
+    document.title = 'Menus - CMS';
     /**
      * call onLoad action when List view loads
      */
@@ -49,7 +51,7 @@ onMounted(async () => {
     <div class="grid" v-if="store.assets">
 
         <div class="col-3">
-            <Panel>
+            <Panel class="is-small">
 
                 <template class="p-1" #header>
 

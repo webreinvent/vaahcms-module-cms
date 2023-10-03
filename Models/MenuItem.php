@@ -1,6 +1,6 @@
 <?php
 
-namespace VaahCms\Modules\Cms\Entities;
+namespace VaahCms\Modules\Cms\Models;
 
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;

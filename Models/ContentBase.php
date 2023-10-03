@@ -153,6 +153,25 @@ class ContentBase extends Model {
     {
         return $query->where( 'is_published', 1 );
     }
+
+    //-------------------------------------------------
+    public function scopeBetweenDates($query, $from, $to)
+    {
+
+        if ($from) {
+            $from = \Carbon::parse($from)
+                ->startOfDay()
+                ->toDateTimeString();
+        }
+
+        if ($to) {
+            $to = \Carbon::parse($to)
+                ->endOfDay()
+                ->toDateTimeString();
+        }
+
+        $query->whereBetween('updated_at', [$from, $to]);
+    }
     //-------------------------------------------------
     public function createdByUser()
     {
@@ -188,7 +207,7 @@ class ContentBase extends Model {
     //-------------------------------------------------
     public function contentType()
     {
-        return $this->belongsTo(ContentTypeBase::class,
+        return $this->belongsTo(ContentType::class,
             'vh_cms_content_type_id', 'id'
         );
     }
@@ -218,7 +237,7 @@ class ContentBase extends Model {
     {
 
         $validation = static::validation($request);
-        if(isset($validation['status']) && $validation['status'] == 'failed')
+        if(isset($validation['success']) && !$validation['success'])
         {
             return $validation;
         }
@@ -228,7 +247,7 @@ class ContentBase extends Model {
 
         if($name_exist)
         {
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['messages'][] = "This name is already exist.";
             return $response;
         }
@@ -328,7 +347,7 @@ class ContentBase extends Model {
 
         }
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data']['item'] =$item;
         $response['messages'][] = 'Saved';
 
@@ -388,7 +407,7 @@ class ContentBase extends Model {
 
 
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data'] = $data;
         $response['status'] = $status_list;
 
@@ -417,14 +436,14 @@ class ContentBase extends Model {
         if ( $validator->fails() ) {
 
             $errors             = errorsToArray($validator->errors());
-            $response['status'] = 'failed';
-            $response['messages'] = $errors;
+            $response['success'] = false;
+            $response['errors'] = $errors;
             return $response;
         }
 
         $data = [];
 
-        $response['status'] = 'success';
+        $response['success'] = true;
 
         return $response;
 
@@ -450,7 +469,7 @@ class ContentBase extends Model {
 
         $template_form_groups = static::getFormGroups($item, 'template');
 
-        $response['status'] = 'success';
+        $response['success'] = true;
 
         $item->content_form_groups = $content_form_groups;
         $item->template_form_groups = $template_form_groups;
@@ -471,9 +490,7 @@ class ContentBase extends Model {
         }
 
         $arr_group = [];
-
-
-
+        
         $i = 0;
 
         foreach ($groups as $group)
@@ -742,7 +759,7 @@ class ContentBase extends Model {
 
         if($name_exist)
         {
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['messages'][] = "This name is already exist.";
             return $response;
         }
@@ -760,7 +777,7 @@ class ContentBase extends Model {
         static::storeFormGroups($item, $inputs['template_form_groups']);
 
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data'] = [];
         $response['messages'][] = 'Data updated.';
 
@@ -896,7 +913,7 @@ class ContentBase extends Model {
 
                     }catch(\Exception $e)
                     {
-                        $response['status'] = 'failed';
+                        $response['success'] = false;
                         $response['inputs'] = $field;
                         $response['messages'][] = $e->getMessage();
                         return $response;
@@ -918,14 +935,14 @@ class ContentBase extends Model {
     {
         if(!$request->has('inputs'))
         {
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['messages'][] = 'Select IDs';
             return $response;
         }
 
         if(!$request->has('data'))
         {
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['messages'][] = 'Select Status';
             return $response;
         }
@@ -950,7 +967,7 @@ class ContentBase extends Model {
             $role->save();
         }
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data'] = [];
         $response['messages'][] = 'Action was successful';
 
@@ -964,7 +981,7 @@ class ContentBase extends Model {
 
         if(!$request->has('inputs'))
         {
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['messages'][] = 'Select IDs';
             return $response;
         }
@@ -979,7 +996,7 @@ class ContentBase extends Model {
             }
         }
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data'] = [];
         $response['messages'][] = 'Action was successful';
 
@@ -994,7 +1011,7 @@ class ContentBase extends Model {
 
         if(!$request->has('inputs'))
         {
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['messages'][] = 'Select IDs';
             return $response;
         }
@@ -1008,7 +1025,7 @@ class ContentBase extends Model {
             }
         }
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data'] = [];
         $response['messages'][] = 'Action was successful';
 
@@ -1021,14 +1038,14 @@ class ContentBase extends Model {
 
         if(!$request->has('inputs'))
         {
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['messages'][] = 'Select IDs';
             return $response;
         }
 
         if(!$request->has('data'))
         {
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['messages'][] = 'Select Status';
             return $response;
         }
@@ -1044,7 +1061,7 @@ class ContentBase extends Model {
             }
         }
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data'] = [];
         $response['messages'][] = 'Action was successful';
 
@@ -1062,7 +1079,7 @@ class ContentBase extends Model {
             'vh_cms_form_group_index' => $inputs['index']])->forceDelete();
 
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data'] = [];
 
         return $response;

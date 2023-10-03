@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use VaahCms\Modules\Cms\Models\Content;
-use VaahCms\Modules\Cms\Entities\FieldType;
+use VaahCms\Modules\Cms\Models\FieldType;
 use VaahCms\Modules\cms\Models\ContentType;
 
 
@@ -59,7 +59,7 @@ class ContentTypesController extends Controller
 
         }catch (\Exception $e){
             $response = [];
-            $response['status'] = 'failed';
+            $response['success'] = false;
             if(env('APP_DEBUG')){
                 $response['errors'][] = $e->getMessage();
                 $response['hint'] = $e->getTrace();
@@ -78,7 +78,7 @@ class ContentTypesController extends Controller
             return ContentType::getList($request);
         }catch (\Exception $e){
             $response = [];
-            $response['status'] = 'failed';
+            $response['success'] = false;
             if(env('APP_DEBUG')){
                 $response['errors'][] = $e->getMessage();
                 $response['hint'] = $e->getTrace();
@@ -95,7 +95,7 @@ class ContentTypesController extends Controller
             return ContentType::updateList($request);
         }catch (\Exception $e){
             $response = [];
-            $response['status'] = 'failed';
+            $response['success'] = false;
             if(env('APP_DEBUG')){
                 $response['errors'][] = $e->getMessage();
                 $response['hint'] = $e->getTrace();
@@ -114,7 +114,7 @@ class ContentTypesController extends Controller
             return ContentType::listAction($request, $type);
         }catch (\Exception $e){
             $response = [];
-            $response['status'] = 'failed';
+            $response['success'] = false;
             if(env('APP_DEBUG')){
                 $response['errors'][] = $e->getMessage();
                 $response['hint'] = $e->getTrace();
@@ -131,7 +131,7 @@ class ContentTypesController extends Controller
             return ContentType::deleteList($request);
         }catch (\Exception $e){
             $response = [];
-            $response['status'] = 'failed';
+            $response['success'] = false;
             if(env('APP_DEBUG')){
                 $response['errors'][] = $e->getMessage();
                 $response['hint'] = $e->getTrace();
@@ -148,7 +148,7 @@ class ContentTypesController extends Controller
             return ContentType::createItem($request);
         }catch (\Exception $e){
             $response = [];
-            $response['status'] = 'failed';
+            $response['success'] = false;
             if(env('APP_DEBUG')){
                 $response['errors'][] = $e->getMessage();
                 $response['hint'] = $e->getTrace();
@@ -171,7 +171,7 @@ class ContentTypesController extends Controller
             return ContentType::getItem($id);
         }catch (\Exception $e){
             $response = [];
-            $response['status'] = 'failed';
+            $response['success'] = false;
             if(env('APP_DEBUG')){
                 $response['errors'][] = $e->getMessage();
                 $response['hint'] = $e->getTrace();
@@ -188,7 +188,7 @@ class ContentTypesController extends Controller
             return ContentType::updateItem($request,$id);
         }catch (\Exception $e){
             $response = [];
-            $response['status'] = 'failed';
+            $response['success'] = false;
             if(env('APP_DEBUG')){
                 $response['errors'][] = $e->getMessage();
                 $response['hint'] = $e->getTrace();
@@ -205,7 +205,7 @@ class ContentTypesController extends Controller
             return ContentType::deleteItem($request,$id);
         }catch (\Exception $e){
             $response = [];
-            $response['status'] = 'failed';
+            $response['success'] = false;
             if(env('APP_DEBUG')){
                 $response['errors'][] = $e->getMessage();
                 $response['hint'] = $e->getTrace();
@@ -222,7 +222,7 @@ class ContentTypesController extends Controller
             return ContentType::itemAction($request,$id,$action);
         }catch (\Exception $e){
             $response = [];
-            $response['status'] = 'failed';
+            $response['success'] = false;
             if(env('APP_DEBUG')){
                 $response['errors'][] = $e->getMessage();
                 $response['hint'] = $e->getTrace();
@@ -239,7 +239,7 @@ class ContentTypesController extends Controller
             return ContentType::getItemWithRelations($id);
         }catch (\Exception $e){
             $response = [];
-            $response['status'] = 'failed';
+            $response['success'] = false;
             if(env('APP_DEBUG')){
                 $response['errors'][] = $e->getMessage();
                 $response['hint'] = $e->getTrace();

@@ -1,9 +1,9 @@
 {
     "name": "cms",
     "scripts": {
-        "dev": "vite --host",
-        "build": "vite build",
-        "preview": "vite preview --port 8367"
+        "dev-cms": "vite --host",
+        "build-cms": "vite build",
+        "preview-cms": "vite preview --port 8367"
     },
     "dependencies": {
         "axios": "^0.27.2",

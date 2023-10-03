@@ -62,7 +62,7 @@ class MenuBase extends Model
         if ( $validator->fails() ) {
 
             $errors             = errorsToArray($validator->errors());
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['errors'] = $errors;
             return $response;
         }
@@ -72,7 +72,7 @@ class MenuBase extends Model
 
         if($user)
         {
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['errors'][] = "This name is already exist.";
             return $response;
         }
@@ -83,7 +83,7 @@ class MenuBase extends Model
 
         if($user)
         {
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['errors'][] = "This slug is already exist.";
             return $response;
         }
@@ -100,7 +100,7 @@ class MenuBase extends Model
 
         $menu = new MenusController();
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data']['item'] =$item['data'];
         $response['data']['assets'] = $menu->getAssets($request);
         $response['messages'][] = 'Saved';
@@ -116,7 +116,7 @@ class MenuBase extends Model
 
         $data['list'] = $list->get();
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data'] = $data;
 
         return $response;
@@ -209,14 +209,14 @@ class MenuBase extends Model
     {
         if(!$request->has('inputs'))
         {
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['errors'][] = 'Select IDs';
             return $response;
         }
 
         if(!$request->has('data'))
         {
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['errors'][] = 'Select Status';
             return $response;
         }
@@ -241,7 +241,7 @@ class MenuBase extends Model
             $role->save();
         }
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data'] = [];
         $response['messages'][] = 'Action was successful';
 
@@ -255,7 +255,7 @@ class MenuBase extends Model
 
         if(!$request->has('inputs'))
         {
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['errors'][] = 'Select IDs';
             return $response;
         }
@@ -272,7 +272,7 @@ class MenuBase extends Model
             }
         }
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data'] = [];
         $response['messages'][] = 'Action was successful';
 
@@ -287,14 +287,14 @@ class MenuBase extends Model
 
         if(!$request->has('inputs'))
         {
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['errors'][] = 'Select IDs';
             return $response;
         }
 
         if(!$request->has('data'))
         {
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['errors'][] = 'Select Status';
             return $response;
         }
@@ -308,7 +308,7 @@ class MenuBase extends Model
             }
         }
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data'] = [];
         $response['messages'][] = 'Action was successful';
 
@@ -323,7 +323,7 @@ class MenuBase extends Model
 
         if(!$request->has('inputs'))
         {
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['errors'][] = 'Select IDs';
             return $response;
         }
@@ -347,7 +347,7 @@ class MenuBase extends Model
 
 
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data']['assets'] = $menu->getAssets($request);
         $response['messages'][] = 'Action was successful';
 
@@ -391,7 +391,7 @@ class MenuBase extends Model
         $menu_item->is_home = 1;
         $menu_item->save();
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data'] = [];
 
         return $response;

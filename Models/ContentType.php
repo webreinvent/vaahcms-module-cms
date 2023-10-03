@@ -1,4 +1,4 @@
-<?php namespace VaahCms\Modules\cms\Models;
+<?php namespace VaahCms\Modules\Cms\Models;
 
 use Carbon\Carbon;
 use DateTimeInterface;
@@ -8,9 +8,8 @@ use Illuminate\Support\Str;
 use WebReinvent\VaahCms\Traits\CrudWithUuidObservantTrait;
 use WebReinvent\VaahCms\Models\User;
 
-class ContentType extends ContentTypeBase
+class ContentType extends Model
 {
-
     use SoftDeletes;
     use CrudWithUuidObservantTrait;
 
@@ -23,29 +22,121 @@ class ContentType extends ContentTypeBase
         'deleted_at'
     ];
     //-------------------------------------------------
+    protected $dateFormat = 'Y-m-d H:i:s';
+    //-------------------------------------------------
     protected $fillable = [
         'uuid',
         'name',
         'slug',
+        'plural',
+        'plural_slug',
+        'singular',
+        'singular_slug',
+        'excerpt',
         'is_published',
+        'is_commentable',
+        'content_statuses',
+        'total_records',
+        'published_records',
+        'total_comments',
+        'meta',
         'created_by',
         'updated_by',
-        'deleted_by',
+        'deleted_by'
     ];
 
     //-------------------------------------------------
-    protected $appends = [
+    protected $appends  = [
     ];
+
+    //-------------------------------------------------
+
+
 
     //-------------------------------------------------
     protected function serializeDate(DateTimeInterface $date)
     {
         $date_time_format = config('settings.global.datetime_format');
-        return $date->format($date_time_format);
-    }
 
+        return $date->format($date_time_format);
+
+    }
+    //-------------------------------------------------
+    public function setNameAttribute($value)
+    {
+        if($value)
+        {
+            $this->attributes['name'] = ucwords($value);
+        } else{
+            $this->attributes['name'] = null;
+        }
+
+    }
+    //-------------------------------------------------
+    public function getNameAttribute($value)
+    {
+        if($value)
+        {
+            return ucwords($value);
+        }
+        return null;
+    }
     //-------------------------------------------------
 
+    //-------------------------------------------------
+    public function setContentStatusesAttribute($value)
+    {
+        if($value)
+        {
+            $this->attributes['content_statuses'] = json_encode($value);
+        } else{
+            $this->attributes['content_statuses'] = null;
+        }
+    }
+    //-------------------------------------------------
+    public function getContentStatusesAttribute($value)
+    {
+        if($value)
+        {
+            return json_decode($value);
+        }
+        return null;
+    }
+    //-------------------------------------------------
+    public function setMetaAttribute($value)
+    {
+        if($value)
+        {
+            $this->attributes['meta'] = json_encode($value);
+        } else{
+            $this->attributes['meta'] = null;
+        }
+    }
+    //-------------------------------------------------
+    public function getMetaAttribute($value)
+    {
+        if($value)
+        {
+            return json_decode($value);
+        }
+        return null;
+    }
+    //-------------------------------------------------
+    public function getTableColumns() {
+        return $this->getConnection()->getSchemaBuilder()
+            ->getColumnListing($this->getTable());
+    }
+    //-------------------------------------------------
+    public function scopeExclude($query, $columns)
+    {
+        return $query->select( array_diff( $this->getTableColumns(),$columns) );
+    }
+    //-------------------------------------------------
+    public function scopeIsPublished($query)
+    {
+        return $query->where( 'is_published', 1 );
+    }
+    //-------------------------------------------------
     public function createdByUser()
     {
         return $this->belongsTo(User::class,
@@ -60,7 +151,6 @@ class ContentType extends ContentTypeBase
             'updated_by', 'id'
         )->select('id', 'uuid', 'first_name', 'last_name', 'email');
     }
-
     //-------------------------------------------------
     public function deletedByUser()
     {
@@ -68,37 +158,17 @@ class ContentType extends ContentTypeBase
             'deleted_by', 'id'
         )->select('id', 'uuid', 'first_name', 'last_name', 'email');
     }
-
     //-------------------------------------------------
-    public function getTableColumns()
+    public function contents()
     {
-        return $this->getConnection()->getSchemaBuilder()
-            ->getColumnListing($this->getTable());
+        return $this->hasMany(Content::class,
+            'vh_cms_content_type_id', 'id');
     }
-
     //-------------------------------------------------
-    public function scopeExclude($query, $columns)
+    public function groups()
     {
-        return $query->select(array_diff($this->getTableColumns(), $columns));
-    }
-
-    //-------------------------------------------------
-    public function scopeBetweenDates($query, $from, $to)
-    {
-
-        if ($from) {
-            $from = \Carbon::parse($from)
-                ->startOfDay()
-                ->toDateTimeString();
-        }
-
-        if ($to) {
-            $to = \Carbon::parse($to)
-                ->endOfDay()
-                ->toDateTimeString();
-        }
-
-        $query->whereBetween('updated_at', [$from, $to]);
+        return $this->morphMany(FormGroup::class, 'groupable')
+            ->orderBy('sort', 'asc');
     }
 
     //-------------------------------------------------
@@ -118,7 +188,7 @@ class ContentType extends ContentTypeBase
 
         if ($item) {
             $response['success'] = false;
-            $response['messages'][] = "This name is already exist.";
+            $response['errors'][] = "This name is already exist.";
             return $response;
         }
 
@@ -127,7 +197,7 @@ class ContentType extends ContentTypeBase
 
         if ($item) {
             $response['success'] = false;
-            $response['messages'][] = "This slug is already exist.";
+            $response['errors'][] = "This slug is already exist.";
             return $response;
         }
         $item = new self();
@@ -326,7 +396,7 @@ class ContentType extends ContentTypeBase
 
             $errors = errorsToArray($validator->errors());
             $response['failed'] = true;
-            $response['messages'] = $errors;
+            $response['errors'] = $errors;
             return $response;
         }
 
@@ -442,7 +512,7 @@ class ContentType extends ContentTypeBase
 
         if ($item) {
             $response['success'] = false;
-            $response['messages'][] = "This name is already exist.";
+            $response['errors'][] = "This name is already exist.";
             return $response;
         }
 
@@ -453,7 +523,7 @@ class ContentType extends ContentTypeBase
 
         if ($item) {
             $response['success'] = false;
-            $response['messages'][] = "This slug is already exist.";
+            $response['errors'][] = "This slug is already exist.";
             return $response;
         }
         $item = self::where('id', $id)->withTrashed()->first();
@@ -478,7 +548,7 @@ class ContentType extends ContentTypeBase
         $item = self::where('id', $id)->withTrashed()->first();
         if (!$item) {
             $response['success'] = false;
-            $response['messages'][] = 'Record does not exist.';
+            $response['errors'][] = 'Record does not exist.';
             return $response;
         }
         $item->forceDelete();
@@ -530,7 +600,7 @@ class ContentType extends ContentTypeBase
         if ($validator->fails()) {
             $messages = $validator->errors();
             $response['success'] = false;
-            $response['messages'] = $messages->all();
+            $response['errors'] = $messages->all();
             return $response;
         }
 
@@ -546,7 +616,117 @@ class ContentType extends ContentTypeBase
             ->first();
         return $item;
     }
+    //-------------------------------------------------
+    //-------------------------------------------------
+    //-------------------------------------------------
+    //-------------------------------------------------
 
+    //-------------------------------------------------
+    //-------------------------------------------------
+    public static function getItemWithRelations($id)
+    {
+        $item = static::where('id', $id)
+            ->with(['createdByUser', 'updatedByUser',
+                'deletedByUser',
+                'groups'=>function($g){
+                    $g->orderBy('sort', 'asc')->with(['fields' => function($f){
+                        $f->orderBy('sort', 'asc')->with(['type']);
+                    }]);
+                }])
+            ->withTrashed()
+            ->first();
+        $response['success'] = true;
+        $response['data'] = $item;
+
+        return $response;
+
+    }
+    //-------------------------------------------------
+    public static function syncWithFormGroups(self $content_type, $groups_array)
+    {
+
+        $stored_groups = $content_type->groups()->get()->pluck('slug','id')->toArray();
+
+        $input_groups = collect($groups_array)->pluck('slug')->toArray();
+        $groups_to_delete = array_diff($stored_groups, $input_groups);
+
+        if(count($groups_to_delete) > 0)
+        {
+            $groups_to_delete = array_flip($groups_to_delete);
+
+            FormGroup::deleteItems($groups_to_delete);
+        }
+
+        foreach($groups_array as $g_index => $group)
+        {
+
+            $group['sort'] = $g_index;
+            $group['slug'] = Str::slug($group['name']);
+
+            $stored_group = $content_type->groups()->where('slug', $group['slug'])->first();
+
+            $group_fillable = $group;
+            unset($group_fillable['fields']);
+
+
+            if($stored_group)
+            {
+                $stored_group->fill($group_fillable);
+                $stored_group =$content_type->groups()->save($stored_group);
+            } else{
+                $stored_group = $content_type->groups()->create($group_fillable);
+            }
+
+            foreach ($group['fields'] as $key => $field){
+                if(!isset($field['slug']) || !$field['slug']){
+                    $group['fields'][$key]['slug'] = Str::slug($field['name']);
+                }
+            }
+
+            FormGroup::syncWithFormFields($stored_group, $group['fields']);
+
+        }
+
+
+    }
+    //-------------------------------------------------
+    public static function postStoreGroups($request,$id)
+    {
+
+        $rules = array(
+            '*.fields' => 'array',
+            '*.fields.*.name' => 'required|max:100',
+        );
+
+        $validator = \Validator::make( $request->all(), $rules);
+        if ( $validator->fails() ) {
+
+            $errors             = errorsToArray($validator->errors());
+            $response['success'] = false;
+            $response['errors'] = $errors;
+            return $response;
+        }
+
+
+        $content_type = static::find($id);
+
+        //find delete groups
+        static::syncWithFormGroups($content_type, $request->all());
+
+
+        $response = [];
+
+        $response['success'] = true;
+        $response['data'][] = '';
+        $response['messages'][] = 'Action was successful';
+        if(env('APP_DEBUG'))
+        {
+            $response['hint'][] = '';
+        }
+        return $response;
+
+
+    }
     //-------------------------------------------------
     //-------------------------------------------------
     //-------------------------------------------------

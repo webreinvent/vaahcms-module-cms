@@ -42,7 +42,7 @@ onMounted(async () => {
     /**
      * fetch list of records
      */
-    await store.getList();
+    await store.getList(route.params.slug);
 });
 
 </script>
@@ -51,13 +51,13 @@ onMounted(async () => {
     <div class="grid" v-if="store.assets">
 
         <div :class="'col-'+store.list_view_width">
-            <Panel>
+            <Panel class="is-small">
 
                 <template class="p-1" #header>
 
                     <div class="flex flex-row">
                         <div >
-                            <b class="mr-1">Contents</b>
+                            <b class="mr-1">{{ store.toLabel(route.params.slug) }}</b>
                             <Badge v-if="store.list && store.list.total > 0"
                                    :value="store.list.total">
                             </Badge>

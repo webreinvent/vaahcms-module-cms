@@ -6,7 +6,7 @@ import {vaah} from '../vaahvue/pinia/vaah'
 let model_namespace = 'VaahCms\Modules\Cms\\Models\\Content';
 
 let base_url = document.getElementsByTagName('base')[0].getAttribute("href");
-let ajax_url = base_url + "/backend/cms/contents";
+let ajax_url = base_url + "/cms/contents";
 
 let empty_states = {
     query: {
@@ -68,6 +68,22 @@ export const useContentStore = defineStore({
         user_list:null,
         active_theme:null,
         active_index:[],
+        field: {
+            is_simple:true,
+            type:{
+                name:'address',
+                slug:'address',
+            },
+            name:'Abinash',
+            meta:{
+                closing_tag: "</p>",
+                container_closing_tag: "",
+                container_opening_tag: "",
+                is_hidden: false,
+                opening_ta: "<p class='text'>",
+            },
+            content:'ashjgdjhasa',
+        },
     }),
     getters: {
 
@@ -80,11 +96,12 @@ export const useContentStore = defineStore({
              * Set initial routes
              */
             this.route = route;
-            this.ajax_url = this.ajax_url+'/'+this.route.params.slug
             /**
              * Update with view and list css column number
              */
             this.setViewAndWidth(route.name);
+
+            this.ajax_url = this.base_url+'/cms/contents/'+this.route.params.slug
 
             /**
              * Update query state with the query parameters of url
@@ -136,8 +153,10 @@ export const useContentStore = defineStore({
 
                     this.route = newVal;
 
-                    if(newVal.params.id){
-                        this.getItem(newVal.params.id);
+                    this.ajax_url = this.base_url+'/cms/contents/'+this.route.params.slug
+
+                    if(newVal.params.slug){
+                        this.getList();
                     }
 
                     this.setViewAndWidth(newVal.name);
@@ -202,6 +221,7 @@ export const useContentStore = defineStore({
         },
         //---------------------------------------------------------------------
         async getList() {
+            document.title = this.toLabel(this.route.params.slug)+' | Contents - CMS';
             let options = {
                 query: vaah().clone(this.query)
             };
@@ -224,7 +244,7 @@ export const useContentStore = defineStore({
         async getItem(id) {
             if(id){
                 await vaah().ajax(
-                    ajax_url+'/'+id,
+                    this.ajax_url+'/'+id,
                     this.getItemAfter
                 );
             }
@@ -366,8 +386,14 @@ export const useContentStore = defineStore({
                 case 'create-and-new':
                 case 'create-and-close':
                 case 'create-and-clone':
+
+                    item.content_groups = this.assets.content_type.form_groups;
+
                     options.method = 'POST';
-                    options.params = item;
+                    options.params = {
+                        'content_form_groups': this.assets.content_type.form_groups,
+                        'template_form_groups': []
+                    };
                     break;
 
                 /**
@@ -379,6 +405,9 @@ export const useContentStore = defineStore({
                 case 'save-and-clone':
                     options.method = 'PUT';
                     options.params = item;
+
+                    /*options.params.content_form_groups = this.assets.content_type.form_groups;
+                    options.params.template_form_groups = [];*/
                     ajax_url += '/'+item.id
                     break;
                 /**
@@ -412,7 +441,6 @@ export const useContentStore = defineStore({
         {
             if(data)
             {
-                this.item = data;
                 await this.getList();
                 await this.formActionAfter();
                 this.getItemMenu();
@@ -886,7 +914,7 @@ export const useContentStore = defineStore({
         async getUser(){
             console.log(this.base_url);
             await vaah().ajax(
-                this.base_url+'/json/users/',
+                this.ajax_url+'/users/',
                 this.afterGetUser,
             );
         },
@@ -916,9 +944,30 @@ export const useContentStore = defineStore({
         },
         //---------------------------------------------------------------------
         setActiveTheme () {
+            console.log(this.item.vh_theme_id);
             let theme = vaah().findInArrayByKey(this.assets.themes,
                 'id', this.item.vh_theme_id);
             this.active_theme = theme;
+        },
+        //---------------------------------------------------------------------
+        copyGroupCode (group,group_index = null)
+        {
+            console.log(group);
+            let code = "";
+
+            if(group_index == null){
+                code = "{!! get_group($data ,'"+group.slug+"' ) !!}";
+
+            }else{
+                code = "{!! get_group($data ,'"+group.slug+"' ,'content' ,"+group_index+" ) !!}";
+
+            }
+            vaah().copy(code);
+        },
+        //---------------------------------------------------------------------
+        toLabel (text)
+        {
+            return vaah().toLabel(text)
         },
         //---------------------------------------------------------------------
     }

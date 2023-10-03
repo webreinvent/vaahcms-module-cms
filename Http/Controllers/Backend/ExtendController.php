@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use VaahCms\Modules\Cms\Entities\ContentTypeBase;
+use VaahCms\Modules\Cms\Models\ContentTypeBase;
 use WebReinvent\VaahCms\Models\TaxonomyType;
 
 class ExtendController extends Controller
@@ -24,7 +24,7 @@ class ExtendController extends Controller
 
         ];
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data'] = $links;
 
         return $response;
@@ -59,7 +59,7 @@ class ExtendController extends Controller
             ]
         ];
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data'] = $list;
 
         return $response;
@@ -71,7 +71,7 @@ class ExtendController extends Controller
     {
         $links = [];
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data'] = $links;
 
         return $response;
@@ -86,17 +86,17 @@ class ExtendController extends Controller
             'label'=> 'CMS',
             'items' => [
                 [
-                    'url' => self::$link."content-types/",
+                    'link' => self::$link."content-types/",
                     'icon' => 'pi pi-book ',
                     'label'=> 'Content Types'
                 ],
                 [
-                    'url' => self::$link."menus/",
+                    'link' => self::$link."menus/",
                     'icon' => 'pi pi-bars',
                     'label'=> 'Menus'
                 ],
                 [
-                    'url' => self::$link."blocks/",
+                    'link' => self::$link."blocks/",
                     'icon' => 'pi pi-th-large',
                     'label'=> 'Blocks'
                 ],
@@ -115,7 +115,7 @@ class ExtendController extends Controller
             foreach ($content_types as $content_type)
             {
                 $list[0]['items'][3]['items'][] =  [
-                    'url' => self::$link."contents/".$content_type->slug."/list",
+                    'link' => self::$link."contents/".$content_type->slug."/list",
                     'label'=> $content_type->name
                 ];
             }
@@ -171,7 +171,7 @@ class ExtendController extends Controller
             ]
         ];
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data'] = $data;
 
         return $response;

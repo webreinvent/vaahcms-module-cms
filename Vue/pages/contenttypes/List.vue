@@ -15,6 +15,8 @@ const confirm = useConfirm();
 
 
 onMounted(async () => {
+
+    document.title = 'Content Types - CMS';
     /**
      * call onLoad action when List view loads
      */
@@ -51,13 +53,13 @@ onMounted(async () => {
     <div class="grid" v-if="store.assets">
 
         <div :class="'col-'+store.list_view_width">
-            <Panel>
+            <Panel class="is-small">
 
                 <template class="p-1" #header>
 
                     <div class="flex flex-row">
                         <div >
-                            <b class="mr-1">ContentTypes</b>
+                            <b class="mr-1">Content Types</b>
                             <Badge v-if="store.list && store.list.total > 0"
                                    :value="store.list.total">
                             </Badge>

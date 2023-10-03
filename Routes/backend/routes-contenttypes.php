@@ -7,7 +7,13 @@ Route::group(
         'middleware' => ['web', 'has.backend.access'],
 
         'namespace' => 'Backend',
-],
+    ],
+//    function () {
+//        //---------------------------------------------------------
+//        Route::post('/upload', 'MediaController@upload')
+//            ->name('backend.cms.media.upload');
+//        //---------------------------------------------------------
+//    },
 function () {
     /**
      * Get Assets
