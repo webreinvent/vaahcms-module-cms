@@ -162,10 +162,10 @@ const toggleFormMenu = (event) => {
                                data-testid="contents-name"
                                v-model="store.item.name"/>
                 </VhField>
-{{store.item.status}}
+                
                 <VhField label="Status">
                     <Dropdown v-model="store.item.status"
-                              :options="[{name:'Publish',value:1},{name:'Draft',value:0}]"
+                              :options="store.assets.status"
                               optionLabel="name"
                               optionValue="value"
                               placeholder="Select status"
