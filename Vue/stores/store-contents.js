@@ -360,6 +360,7 @@ export const useContentStore = defineStore({
         },
         //---------------------------------------------------------------------
         async itemAction(type, item=null){
+            console.log('type',type);
             if(!item)
             {
                 item = this.item;
@@ -394,6 +395,7 @@ export const useContentStore = defineStore({
                         'content_form_groups': this.assets.content_type.form_groups,
                         'template_form_groups': []
                     };
+                    options.params = item;
                     break;
 
                 /**
@@ -429,7 +431,7 @@ export const useContentStore = defineStore({
                     ajax_url += '/'+item.id+'/action/'+type;
                     break;
             }
-
+            console.log( type)
             await vaah().ajax(
                 ajax_url,
                 this.itemActionAfter,
@@ -640,7 +642,10 @@ export const useContentStore = defineStore({
         //---------------------------------------------------------------------
         toForm()
         {
-            this.item = vaah().clone(this.assets.empty_item);
+            if(this.assets.content_type &&this.assets.content_type.form_groups){
+                this.item.content_form_groups=this.assets.content_type.form_groups;
+            }
+            // this.item = vaah().clone(this.assets.empty_item);
             this.getFormMenu();
             this.$router.push({name: 'contents.form'})
         },
@@ -944,7 +949,6 @@ export const useContentStore = defineStore({
         },
         //---------------------------------------------------------------------
         setActiveTheme () {
-            console.log(this.item.vh_theme_id);
             let theme = vaah().findInArrayByKey(this.assets.themes,
                 'id', this.item.vh_theme_id);
             this.active_theme = theme;

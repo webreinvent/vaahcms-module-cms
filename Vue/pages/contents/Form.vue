@@ -79,7 +79,10 @@ const toggleFormMenu = (event) => {
                                         <Message severity="info">
                                             These fields can be managed from "Content Types" sections.
                                         </Message>
-                                        <ContentFields :groups="store.item.content_form_groups"/>
+                                        <div v-if="store.item.content_form_groups">
+                                            <ContentFields :groups="store.item.content_form_groups"/>
+                                        </div>
+
 
                                     </AccordionTab>
                                     <AccordionTab >
@@ -159,7 +162,7 @@ const toggleFormMenu = (event) => {
                                data-testid="contents-name"
                                v-model="store.item.name"/>
                 </VhField>
-
+{{store.item.status}}
                 <VhField label="Status">
                     <Dropdown v-model="store.item.status"
                               :options="[{name:'Publish',value:1},{name:'Draft',value:0}]"
