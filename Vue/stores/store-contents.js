@@ -203,6 +203,7 @@ export const useContentStore = defineStore({
         //---------------------------------------------------------------------
         afterGetAssets(data, res)
         {
+
             if(data)
             {
                 this.assets = data;
@@ -214,9 +215,12 @@ export const useContentStore = defineStore({
                 if(this.route.params && !this.route.params.id){
                     this.item = vaah().clone(data.empty_item);
                 }
+
+                this.contentsStatusOptions();
                 // this.active_theme = this.assets.default_theme;
 
                 // this.getUser();
+
             }
         },
         //---------------------------------------------------------------------
@@ -951,6 +955,7 @@ export const useContentStore = defineStore({
         setActiveTheme () {
             let theme = vaah().findInArrayByKey(this.assets.themes,
                 'id', this.item.vh_theme_id);
+            console.log('setActiveTheme', theme);
             this.active_theme = theme;
         },
         //---------------------------------------------------------------------
@@ -974,6 +979,18 @@ export const useContentStore = defineStore({
             return vaah().toLabel(text)
         },
         //---------------------------------------------------------------------
+        contentsStatusOptions() {
+            const result = [];
+            if(this.assets && this.assets.content_type && this.assets.content_type.content_statuses){
+                const content_statuses = this.assets.content_type.content_statuses;
+                for (let i = 0; i < content_statuses.length; i++) {
+                    const name = content_statuses[i];
+                    const slug = name.toLowerCase().replace(/ /g, '-');
+                    result.push({ name, slug });
+                }
+            }
+            this.assets.content_type.content_statuses = result;
+        }
     }
 });
 

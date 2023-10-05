@@ -27,7 +27,6 @@ class ContentsController extends Controller
 
         $data['currency_codes'] = vh_get_currency_list();
         $data['themes'] = Theme::getActiveThemes();
-        $data['status']= self::getStatus();
 
         $default_theme_template = Theme::getDefaultThemesAndTemplateWithRelations($content_slug);
 
@@ -80,20 +79,6 @@ class ContentsController extends Controller
         return response()->json($response);
     }
 
-    //----------------------------------------------------------
-    public static function getStatus(){
-        return [
-            [
-                'name' => 'Normal',
-                'value' => '0'
-            ],
-            [
-                'name' => 'Low',
-                'value' => '1'
-            ]
-
-              ];
-    }
     //----------------------------------------------------------
     public function getUsers(Request $request,$content_slug)
     {

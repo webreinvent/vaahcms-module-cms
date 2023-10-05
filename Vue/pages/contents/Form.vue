@@ -162,17 +162,14 @@ const toggleFormMenu = (event) => {
                                data-testid="contents-name"
                                v-model="store.item.name"/>
                 </VhField>
-                
                 <VhField label="Status">
                     <Dropdown v-model="store.item.status"
-                              :options="store.assets.status"
+                              :options="store.assets.content_type.content_statuses"
                               optionLabel="name"
-                              optionValue="value"
                               placeholder="Select status"
                               data-testid="contents-status"
                               class="w-full md:w-14rem" />
                 </VhField>
-
                 <VhField label="Theme">
                     <Dropdown v-model="store.item.vh_theme_id"
                               :options="store.assets.themes"
