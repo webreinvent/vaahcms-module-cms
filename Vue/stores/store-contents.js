@@ -942,34 +942,20 @@ export const useContentStore = defineStore({
         },
         //---------------------------------------------------------------------
         async searchUser(event){
-            // if (!event.query.trim().length) {
-            //     this.user_list = this.users;
-            // }
-            // else {
-            //     this.user_list = this.users.filter((user) => {
-            //         return user.name.toLowerCase().startsWith(event.query.toLowerCase());
-            //     });
-            // }
-
+            const self = this;
             clearTimeout(this.search.delay_timer);
             this.search.delay_timer = setTimeout(async function() {
-                let options = {
-                    query: {
-                        q : event.query,
-                    },
-                };
-
                 await vaah().ajax(
-                    self.base_url + '/backend/json/users/',
+                    self.base_url+'/json/users/'+event.query,
                     self.afterSearchUser,
-                    options
                 );
             }, this.search.delay_time);
         },
-
-
+        //---------------------------------------------------------------------
         async afterSearchUser(data, res){
-            console.log('>>>>>>',data);
+            if(res.data){
+                this.user_list = res.data;
+            }
         },
         //---------------------------------------------------------------------
         expandAll() {
