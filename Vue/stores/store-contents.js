@@ -242,6 +242,7 @@ export const useContentStore = defineStore({
             {
                 this.list = data;
             }
+
         },
         //---------------------------------------------------------------------
 
@@ -259,6 +260,7 @@ export const useContentStore = defineStore({
             if(data)
             {
                 this.item = data;
+               this.setActiveTheme();
             }else{
                 this.$router.push({name: 'contents.index'});
             }
@@ -541,6 +543,10 @@ export const useContentStore = defineStore({
         setActiveItemAsEmpty()
         {
             this.item = vaah().clone(this.assets.empty_item);
+            if(this.assets.content_type &&this.assets.content_type.form_groups){
+                this.item.content_form_groups=this.assets.content_type.form_groups;
+            }
+
         },
         //---------------------------------------------------------------------
         confirmDelete()
@@ -664,6 +670,7 @@ export const useContentStore = defineStore({
         {
             this.item = item;
             this.$router.push({name: 'contents.form', params:{id:item.id}})
+            this.setActiveTheme();
         },
         //---------------------------------------------------------------------
         isViewLarge()
@@ -934,15 +941,35 @@ export const useContentStore = defineStore({
             }
         },
         //---------------------------------------------------------------------
-        searchUser(event){
-            if (!event.query.trim().length) {
-                this.user_list = this.users;
-            }
-            else {
-                this.user_list = this.users.filter((user) => {
-                    return user.name.toLowerCase().startsWith(event.query.toLowerCase());
-                });
-            }
+        async searchUser(event){
+            // if (!event.query.trim().length) {
+            //     this.user_list = this.users;
+            // }
+            // else {
+            //     this.user_list = this.users.filter((user) => {
+            //         return user.name.toLowerCase().startsWith(event.query.toLowerCase());
+            //     });
+            // }
+
+            clearTimeout(this.search.delay_timer);
+            this.search.delay_timer = setTimeout(async function() {
+                let options = {
+                    query: {
+                        q : event.query,
+                    },
+                };
+
+                await vaah().ajax(
+                    self.base_url + '/backend/json/users/',
+                    self.afterSearchUser,
+                    options
+                );
+            }, this.search.delay_time);
+        },
+
+
+        async afterSearchUser(data, res){
+            console.log('>>>>>>',data);
         },
         //---------------------------------------------------------------------
         expandAll() {
