@@ -42,10 +42,7 @@ Route::group(
 Route::get( '/backend/json/getUserById/{id}', 'Backend\ContentsController@getUserById' )
     ->name( 'vh.backend.cms.getUserById' );
 
-//include('backend/content-types.php');
-include('backend/blocks.php');
 include('backend/routes-blocks.php');
 include('backend/routes-contents.php');
-include('backend/menus.php');
 include('backend/routes-menus.php');
 include('backend/routes-contenttypes.php');

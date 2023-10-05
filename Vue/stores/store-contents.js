@@ -955,7 +955,6 @@ export const useContentStore = defineStore({
         setActiveTheme () {
             let theme = vaah().findInArrayByKey(this.assets.themes,
                 'id', this.item.vh_theme_id);
-            console.log('setActiveTheme', theme);
             this.active_theme = theme;
         },
         //---------------------------------------------------------------------
@@ -982,7 +981,11 @@ export const useContentStore = defineStore({
         contentsStatusOptions() {
             const result = [];
             if(this.assets && this.assets.content_type && this.assets.content_type.content_statuses){
-                const content_statuses = this.assets.content_type.content_statuses;
+                let content_statuses = this.assets.content_type.content_statuses;
+
+                if(!Array.isArray(content_statuses)){
+                     content_statuses = JSON.parse(content_statuses);
+                }
                 for (let i = 0; i < content_statuses.length; i++) {
                     const name = content_statuses[i];
                     const slug = name.toLowerCase().replace(/ /g, '-');
@@ -990,7 +993,10 @@ export const useContentStore = defineStore({
                 }
             }
             this.assets.content_type.content_statuses = result;
-        }
+        },
+        //---------------------------------------------------------------------
+        //---------------------------------------------------------------------
+        //---------------------------------------------------------------------
     }
 });
 
