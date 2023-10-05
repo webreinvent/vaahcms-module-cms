@@ -57,9 +57,10 @@ const toggleFormMenu = (event) => {
                                                v-model="store.item.permalink"/>
                                 </div>
                                 <div class="p-inputgroup mb-2">
-                                    <AutoComplete v-model="store.item.author"
+                                    <AutoComplete v-model="store.selected_user_id"
                                                   class="w-full"
                                                   :suggestions="store.user_list"
+                                                  @change="store.setUserId()"
                                                   @complete="store.searchUser($event)"
                                                   optionLabel="name"
                                                   optionValue="email"
@@ -75,10 +76,10 @@ const toggleFormMenu = (event) => {
                                                 </div>
                                             </div>
                                         </template>
-
                                         <Message severity="info">
                                             These fields can be managed from "Content Types" sections.
                                         </Message>
+
                                         <div v-if="store.item.content_form_groups">
                                             <ContentFields :groups="store.item.content_form_groups"/>
                                         </div>
@@ -153,7 +154,6 @@ const toggleFormMenu = (event) => {
                     </Button>
                 </div>
             </template>
-
             <div v-if="store.item">
 
                 <VhField label="Name">

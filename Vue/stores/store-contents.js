@@ -84,6 +84,7 @@ export const useContentStore = defineStore({
             },
             content:'ashjgdjhasa',
         },
+        selected_user_id:null,
     }),
     getters: {
 
@@ -261,6 +262,7 @@ export const useContentStore = defineStore({
             {
                 this.item = data;
                this.setActiveTheme();
+               this.selected_user_id=data.author_user;
             }else{
                 this.$router.push({name: 'contents.index'});
             }
@@ -546,6 +548,8 @@ export const useContentStore = defineStore({
             if(this.assets.content_type &&this.assets.content_type.form_groups){
                 this.item.content_form_groups=this.assets.content_type.form_groups;
             }
+            this.selected_user_id= null;
+
 
         },
         //---------------------------------------------------------------------
@@ -1008,6 +1012,14 @@ export const useContentStore = defineStore({
             this.assets.content_type.content_statuses = result;
         },
         //---------------------------------------------------------------------
+        setUserId(){
+            if (this.selected_user_id && this.selected_user_id.id) {
+                const user_id = this.selected_user_id.id;
+                this.item.author = user_id;
+            }else{
+                this.item.author= null;
+            }
+        },
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
     }
