@@ -136,17 +136,17 @@ class ExtendController extends Controller
         $data['next_steps'] = [
             [
                 'name' => 'View Pages',
-                'icon' => 'eye',
+                'icon' => 'pi-eye',
                 'link' => self::$link."contents/pages/list"
             ],
             [
                 'name' => 'Add Pages',
-                'icon' => 'plus',
+                'icon' => 'pi-plus',
                 'link' => self::$link."contents/pages/list/create"
             ],
             [
                 'name' => 'Add a Content Type',
-                'icon' => 'edit',
+                'icon' => 'pi-pencil',
                 'link' => self::$link."content-types/create"
             ]
         ];
@@ -155,17 +155,17 @@ class ExtendController extends Controller
         $data['actions'] = [
             [
                 'name' => 'Manage Menus',
-                'icon' => 'bars',
+                'icon' => 'pi-bars',
                 'link' => self::$link."menus/"
             ],
             [
                 'name' => 'Manage Blocks',
-                'icon' => 'th-large',
+                'icon' => 'pi-th-large',
                 'link' => self::$link."blocks/"
             ],
             [
                 'name' => 'Learn more about CMS',
-                'icon' => 'graduation-cap',
+                'icon' => 'pi-file',
                 'open_in_new_tab' => true,
                 'link' => "https://docs.vaah.dev/vaahcms/cms/introduction.html"
             ]
