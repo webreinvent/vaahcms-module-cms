@@ -19,19 +19,25 @@ const props = defineProps({
 
 <template>
     <div v-if="groups.length > 0"
-         v-for="(arr_groups,g_index) in groups">
+         v-for="(arr_groups,g_index) in groups"
+         :key="'content-fields-group-'+g_index"
+         :aria-id="'content-fields-group-'+g_index">
         <div  v-for="(group,index) in arr_groups">
             <div class="flex justify-content-between align-items-center w-full">
                 <h2 class="font-semibold text-lg">{{group.name}}</h2>
-                <div class="p-inputgroup w-max">
-                    <Button
+                <div v-if="index === 0" class="p-inputgroup w-max">
+                    <Button v-if="arr_groups.length > 1"
                             @click="store.copyGroupCode(group,index)"
+                            icon="pi pi-file"
+                            data-testid="content-copy_group_code"
+                            class="p-button-sm "/>
+                    <Button @click="store.copyGroupCode(group)"
                             icon="pi pi-copy"
                             data-testid="content-copy_group_code"
                             class="p-button-sm "/>
                 </div>
             </div>
-            <div v-if="group.fields.length>0"
+            <div v-if="group.fields.length > 0"
                  v-for="(field, f_index) in group.fields"
                  class="flex justify-content-between align-items-center w-full">
                 <div class="col-12">
@@ -50,39 +56,12 @@ const props = defineProps({
                     </ContentFieldAll>
                 </div>
             </div>
-        </div>
-    </div>
-    <div v-else >
-        <div>
-            <div class="flex justify-content-between align-items-center w-full">
-                <h2 class="font-semibold text-lg">Test</h2>
-                <div class="p-inputgroup w-max">
-                    <Button
-                        @click="store.copyGroupCode(store.field.type)"
-                        icon="pi pi-copy"
-                        data-testid="content-copy_group_code"
-                        class="p-button-sm "/>
-                </div>
-            </div>
-            <div class="flex justify-content-between align-items-center w-full">
-                <div class="col-12">
-<!--                    <ContentFieldAll :field_type="store.field.type.name"
-                                     :field_slug="store.field.type.slug"
-                                     :label="store.field.name"
-                                     :meta="store.field.meta"
-                                     :placeholder="store.field.name"
-                                     :app_url="store.field.type.slug === 'relation'
-                                               ? ajax_url+'/getRelationsInTree' : ''"
-                                     :value="store.field.content"
-                                     custom_class="w-full"
-                                     :is_simple="store.field.is_simple"
-                                     @onInput=""
-                                     @onChange=""
-                                     @onBlur=""
-                                     @onFocus="">
-                    </ContentFieldAll>-->
-                </div>
-            </div>
+
+            <Button v-if="group.is_repeatable
+                    && arr_groups.length - 1 === index"
+                    @click="store.addGroup(arr_groups,group)">
+                Add Group
+            </Button>
         </div>
     </div>
 </template>

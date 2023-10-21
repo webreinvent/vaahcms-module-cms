@@ -980,7 +980,6 @@ export const useContentStore = defineStore({
         //---------------------------------------------------------------------
         copyGroupCode (group,group_index = null)
         {
-            console.log(group);
             let code = "";
 
             if(group_index == null){
@@ -1022,6 +1021,27 @@ export const useContentStore = defineStore({
             }else{
                 this.item.author= null;
             }
+        },
+        //---------------------------------------------------------------------
+        addGroup: function (arr_groups,group)
+        {
+
+            let temp_group = JSON.parse(JSON.stringify(group));
+
+
+            temp_group.fields.forEach( function(  field) {
+
+                if(field.type.slug !== "seo-meta-tags"){
+                    field.content = null;
+                    if(field.is_repeatable) field.content = [''];
+                    field.vh_cms_form_group_index = arr_groups.length;
+                    field.vh_cms_form_field_id  = null;
+                }
+            });
+
+            arr_groups.push(temp_group);
+
+
         },
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
