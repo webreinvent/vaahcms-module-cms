@@ -27,11 +27,11 @@ const props = defineProps({
                 <h2 v-if="index === 0" class="font-semibold text-lg">{{group.name}}</h2>
                 <div v-if="index === 0" class="p-inputgroup w-max">
                     <Button v-if="arr_groups.length > 1"
-                            @click="store.copyGroupCode(group,index)"
+                            @click="store.copyGroupCode(group,index,'template')"
                             icon="pi pi-file"
                             data-testid="content-copy_group_code"
                             class="p-button-sm "/>
-                    <Button @click="store.copyGroupCode(group)"
+                    <Button @click="store.copyGroupCode(group,null,'template')"
                             icon="pi pi-copy"
                             data-testid="content-copy_group_code"
                             class="p-button-sm "/>
@@ -44,7 +44,7 @@ const props = defineProps({
                     <h2 class="font-semibold text-lg">{{group.name}}</h2>
                     <div class="p-inputgroup w-max">
                         <Button
-                                @click="store.copyGroupCode(group,index)"
+                                @click="store.copyGroupCode(group,index,'template')"
                                 icon="pi pi-file"
                                 data-testid="content-copy_group_code"
                                 class="p-button-sm "/>
@@ -79,7 +79,7 @@ const props = defineProps({
                                 </ContentFieldAll>
                             </div>
                             <div class="col-1">
-                                <Button @click="store.copyCode(group, field,index)"
+                                <Button @click="store.copyCode(group, field,index,null,'template')"
                                         icon="pi pi-copy"
                                         data-testid="content-copy_code"
                                         class="p-button-sm "/>
@@ -109,11 +109,11 @@ const props = defineProps({
                             <div v-if="key === 0" class="col-1">
                                 <div class="p-inputgroup w-max">
                                     <Button
-                                        @click="store.copyCode(group, field,index,key)"
+                                        @click="store.copyCode(group, field,index,key,'template')"
                                         icon="pi pi-file"
                                         data-testid="content-copy_group_code"
                                         class="p-button-sm "/>
-                                    <Button @click="store.copyCode(group, field,index)"
+                                    <Button @click="store.copyCode(group, field,index,null,'template')"
                                             icon="pi pi-copy"
                                             data-testid="content-copy_group_code"
                                             class="p-button-sm "/>
@@ -122,7 +122,7 @@ const props = defineProps({
                             <div v-else class="col-1">
                                 <div class="p-inputgroup w-max">
                                     <Button
-                                        @click="store.copyCode(group, field,index,key)"
+                                        @click="store.copyCode(group, field,index,key,'template')"
                                         icon="pi pi-file"
                                         data-testid="content-copy_group_code"
                                         class="p-button-sm "/>

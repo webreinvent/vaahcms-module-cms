@@ -2,6 +2,7 @@
 import {onMounted, ref, watch} from "vue";
 import { useContentStore } from '../../stores/store-contents'
 import ContentFields from "./components/ContentFields.vue";
+import TemplateFields from "./components/TemplateFields.vue";
 import VhField from './../../vaahvue/vue-three/primeflex/VhField.vue'
 import {useRoute} from 'vue-router';
 
@@ -57,9 +58,10 @@ const toggleFormMenu = (event) => {
                                                v-model="store.item.permalink"/>
                                 </div>
                                 <div class="p-inputgroup mb-2">
-                                    <AutoComplete v-model="store.item.author"
+                                    <AutoComplete v-model="store.selected_user_id"
                                                   class="w-full"
                                                   :suggestions="store.user_list"
+                                                  @change="store.setUserId()"
                                                   @complete="store.searchUser($event)"
                                                   optionLabel="name"
                                                   optionValue="email"
@@ -75,11 +77,14 @@ const toggleFormMenu = (event) => {
                                                 </div>
                                             </div>
                                         </template>
-
                                         <Message severity="info">
                                             These fields can be managed from "Content Types" sections.
                                         </Message>
-                                        <ContentFields :groups="store.item.content_form_groups"/>
+
+                                        <div v-if="store.item.content_form_groups">
+                                            <ContentFields :groups="store.item.content_form_groups"/>
+                                        </div>
+
 
                                     </AccordionTab>
                                     <AccordionTab >
@@ -90,6 +95,13 @@ const toggleFormMenu = (event) => {
                                                 </div>
                                             </div>
                                         </template>
+                                        <Message severity="info">
+                                            These fields required for the theme page template.
+                                        </Message>
+
+                                        <div v-if="store.item.template_form_groups">
+                                            <TemplateFields :groups="store.item.template_form_groups"/>
+                                        </div>
                                     </AccordionTab>
                                 </Accordion>
                             </div>
@@ -150,27 +162,27 @@ const toggleFormMenu = (event) => {
                     </Button>
                 </div>
             </template>
-
             <div v-if="store.item">
 
-                <VhField label="Name">
+                <VhField label="Name" labelClass="col-12 mb-2 md:col-3 md:mb-0"
+                         valueClass="col-12 md:col-9">
                     <InputText class="w-full"
                                name="contents-name"
                                data-testid="contents-name"
                                v-model="store.item.name"/>
                 </VhField>
-
-                <VhField label="Status">
+                <VhField label="Status" labelClass="col-12 mb-2 md:col-3 md:mb-0"
+                         valueClass="col-12 md:col-9">
                     <Dropdown v-model="store.item.status"
-                              :options="[{name:'Publish',value:1},{name:'Draft',value:0}]"
+                              :options="store.assets.content_type.content_statuses"
                               optionLabel="name"
-                              optionValue="value"
+                              optionValue="name"
                               placeholder="Select status"
                               data-testid="contents-status"
-                              class="w-full md:w-14rem" />
+                              class="w-full" />
                 </VhField>
-
-                <VhField label="Theme">
+                <VhField label="Theme" labelClass="col-12 mb-2 md:col-3 md:mb-0"
+                         valueClass="col-12 md:col-9">
                     <Dropdown v-model="store.item.vh_theme_id"
                               :options="store.assets.themes"
                               optionLabel="name"
@@ -178,16 +190,20 @@ const toggleFormMenu = (event) => {
                               placeholder="Select Theme"
                               data-testid="contents-theme"
                               @change="store.setActiveTheme"
-                              class="w-full md:w-14rem" />
+                              class="w-full" />
                 </VhField>
-                <VhField label="Template" v-if="store.active_theme">
+                <VhField label="Template"
+                         v-if="store.active_theme && store.item.vh_theme_id"
+                         labelClass="col-12 mb-2 md:col-3 md:mb-0"
+                         valueClass="col-12 md:col-9">
                     <Dropdown v-model="store.item.vh_theme_template_id"
                               :options="store.active_theme.templates"
                               optionLabel="name"
-                              optionValue="value"
+                              optionValue="id"
+                              @change="store.setActiveTemplate"
                               placeholder="Select Template"
                               data-testid="contents-template"
-                              class="w-full md:w-14rem" />
+                              class="w-full" />
                 </VhField>
 
             </div>

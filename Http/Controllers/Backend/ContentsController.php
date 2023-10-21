@@ -26,7 +26,7 @@ class ContentsController extends Controller
         //$data['fields'] = FieldType::select('id', 'name', 'slug')->get();
 
         $data['currency_codes'] = vh_get_currency_list();
-        $data['themes'] = Theme::getActiveThemes();
+        $data['themes'] = Theme::getActiveThemesWithTemplates();
 
         $default_theme_template = Theme::getDefaultThemesAndTemplateWithRelations($content_slug);
 
@@ -38,6 +38,7 @@ class ContentsController extends Controller
         $data['non_repeatable_fields'] = Content::getNonRepeatableFields();
 
         $data['content_type'] = $request->content_type;
+
         $form_groups = ContentType::getItemWithRelations($request->content_type->id);
 
         if(isset($form_groups['success']) && $form_groups['success'])

@@ -34,7 +34,14 @@ const useVaah = vaah();
                     <Badge v-if="prop.data.deleted_at"
                            value="Trashed"
                            severity="danger"></Badge>
+                    <a v-if="prop.data.id != store.route.params.id"
+                       href="javascript:void(0)"   @click="store.toEdit(prop.data)">
                     {{prop.data.name}}
+                    </a>
+                    <span v-else>
+                        {{prop.data.name}}
+                    </span>
+
                 </template>
 
             </Column>

@@ -259,6 +259,7 @@ class ContentBase extends Model {
         $fillable['name'] = $inputs['name'];
         $fillable['slug'] = $inputs['name'];
         $fillable['permalink'] = $inputs['permalink'];
+        $fillable['author'] = $inputs['author'];
         $fillable['vh_cms_content_type_id'] = $request->content_type->id;
         $fillable['vh_theme_id'] = $request->vh_theme_id;
         $fillable['vh_theme_template_id'] = $request->vh_theme_template_id;
@@ -490,7 +491,7 @@ class ContentBase extends Model {
         }
 
         $arr_group = [];
-        
+
         $i = 0;
 
         foreach ($groups as $group)

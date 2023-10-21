@@ -33,6 +33,8 @@ export const useContentStore = defineStore({
         model: model_namespace,
         assets_is_fetching: true,
         app: null,
+        active_template_groups: null,
+        active_template: null,
         assets: null,
         rows_per_page: [10,20,30,50,100,500],
         list: null,
@@ -84,6 +86,7 @@ export const useContentStore = defineStore({
             },
             content:'ashjgdjhasa',
         },
+        selected_user_id:null,
     }),
     getters: {
 
@@ -158,6 +161,9 @@ export const useContentStore = defineStore({
                     if(newVal.params.slug){
                         this.getList();
                     }
+                    if(newVal.params.id){
+                        this.getItem(newVal.params.id);
+                    }
 
                     this.setViewAndWidth(newVal.name);
 
@@ -203,6 +209,7 @@ export const useContentStore = defineStore({
         //---------------------------------------------------------------------
         afterGetAssets(data, res)
         {
+
             if(data)
             {
                 this.assets = data;
@@ -214,9 +221,12 @@ export const useContentStore = defineStore({
                 if(this.route.params && !this.route.params.id){
                     this.item = vaah().clone(data.empty_item);
                 }
+
+                this.contentsStatusOptions();
                 // this.active_theme = this.assets.default_theme;
 
                 // this.getUser();
+
             }
         },
         //---------------------------------------------------------------------
@@ -238,6 +248,7 @@ export const useContentStore = defineStore({
             {
                 this.list = data;
             }
+
         },
         //---------------------------------------------------------------------
 
@@ -255,6 +266,8 @@ export const useContentStore = defineStore({
             if(data)
             {
                 this.item = data;
+               this.setActiveTheme();
+               this.selected_user_id=data.author_user;
             }else{
                 this.$router.push({name: 'contents.index'});
             }
@@ -388,12 +401,14 @@ export const useContentStore = defineStore({
                 case 'create-and-clone':
 
                     item.content_groups = this.assets.content_type.form_groups;
+                    item.template_groups = this.active_template_groups;
 
                     options.method = 'POST';
                     options.params = {
                         'content_form_groups': this.assets.content_type.form_groups,
-                        'template_form_groups': []
+                        'template_form_groups': this.active_template_groups
                     };
+                    options.params = item;
                     break;
 
                 /**
@@ -429,7 +444,7 @@ export const useContentStore = defineStore({
                     ajax_url += '/'+item.id+'/action/'+type;
                     break;
             }
-
+            console.log( type)
             await vaah().ajax(
                 ajax_url,
                 this.itemActionAfter,
@@ -535,6 +550,12 @@ export const useContentStore = defineStore({
         setActiveItemAsEmpty()
         {
             this.item = vaah().clone(this.assets.empty_item);
+            if(this.assets.content_type &&this.assets.content_type.form_groups){
+                this.item.content_form_groups=this.assets.content_type.form_groups;
+            }
+            this.selected_user_id= null;
+
+
         },
         //---------------------------------------------------------------------
         confirmDelete()
@@ -640,7 +661,14 @@ export const useContentStore = defineStore({
         //---------------------------------------------------------------------
         toForm()
         {
+
             this.item = vaah().clone(this.assets.empty_item);
+            if(this.assets.content_type &&this.assets.content_type.form_groups){
+                this.item.content_form_groups=this.assets.content_type.form_groups;
+            }
+
+            this.item.template_form_groups=[];
+
             this.getFormMenu();
             this.$router.push({name: 'contents.form'})
         },
@@ -655,6 +683,7 @@ export const useContentStore = defineStore({
         {
             this.item = item;
             this.$router.push({name: 'contents.form', params:{id:item.id}})
+            this.setActiveTheme();
         },
         //---------------------------------------------------------------------
         isViewLarge()
@@ -925,14 +954,20 @@ export const useContentStore = defineStore({
             }
         },
         //---------------------------------------------------------------------
-        searchUser(event){
-            if (!event.query.trim().length) {
-                this.user_list = this.users;
-            }
-            else {
-                this.user_list = this.users.filter((user) => {
-                    return user.name.toLowerCase().startsWith(event.query.toLowerCase());
-                });
+        async searchUser(event){
+            const self = this;
+            clearTimeout(this.search.delay_timer);
+            this.search.delay_timer = setTimeout(async function() {
+                await vaah().ajax(
+                    self.base_url+'/json/users/'+event.query,
+                    self.afterSearchUser,
+                );
+            }, this.search.delay_time);
+        },
+        //---------------------------------------------------------------------
+        async afterSearchUser(data, res){
+            if(res.data){
+                this.user_list = res.data;
             }
         },
         //---------------------------------------------------------------------
@@ -944,22 +979,39 @@ export const useContentStore = defineStore({
         },
         //---------------------------------------------------------------------
         setActiveTheme () {
-            console.log(this.item.vh_theme_id);
             let theme = vaah().findInArrayByKey(this.assets.themes,
                 'id', this.item.vh_theme_id);
             this.active_theme = theme;
         },
         //---------------------------------------------------------------------
-        copyGroupCode (group,group_index = null)
+        copyCode: function (group, field,group_index = 0,field_index = null,type = 'content')
         {
-            console.log(group);
+
+            let code = "";
+
+            if(field_index == null){
+                if(group_index === 0){
+                    code = "{!! get_field($data, '"+field.slug+"', '"+group.slug+"','"+type+"') !!}";
+                }else{
+                    code = "{!! get_field($data, '"+field.slug+"', '"+group.slug+"','"+type+"' , "+group_index+") !!}";
+                }
+
+            }else{
+                code = "{!! get_field($data, '"+field.slug+"', '"+group.slug+"','"+type+"' , "+group_index+", "+field_index+") !!}";
+            }
+
+            vaah().copy(code);
+        },
+        //---------------------------------------------------------------------
+        copyGroupCode (group,group_index = null,type = 'content')
+        {
             let code = "";
 
             if(group_index == null){
-                code = "{!! get_group($data ,'"+group.slug+"' ) !!}";
+                code = "{!! get_group($data ,'"+group.slug+"','"+type+"' ) !!}";
 
             }else{
-                code = "{!! get_group($data ,'"+group.slug+"' ,'content' ,"+group_index+" ) !!}";
+                code = "{!! get_group($data ,'"+group.slug+"' ,'"+type+"' ,"+group_index+" ) !!}";
 
             }
             vaah().copy(code);
@@ -969,6 +1021,123 @@ export const useContentStore = defineStore({
         {
             return vaah().toLabel(text)
         },
+        //---------------------------------------------------------------------
+        contentsStatusOptions() {
+            const result = [];
+            if(this.assets && this.assets.content_type && this.assets.content_type.content_statuses){
+                let content_statuses = this.assets.content_type.content_statuses;
+
+                if(!Array.isArray(content_statuses)){
+                     content_statuses = JSON.parse(content_statuses);
+                }
+                for (let i = 0; i < content_statuses.length; i++) {
+                    const name = content_statuses[i];
+                    const slug = name.toLowerCase().replace(/ /g, '-');
+                    result.push({ name, slug });
+                }
+            }
+            this.assets.content_type.content_statuses = result;
+        },
+        //---------------------------------------------------------------------
+        setUserId(){
+            if (this.selected_user_id && this.selected_user_id.id) {
+                const user_id = this.selected_user_id.id;
+                this.item.author = user_id;
+            }else{
+                this.item.author= null;
+            }
+        },
+        //---------------------------------------------------------------------
+        addField: function (field)
+        {
+            if(!field.content || typeof field.content === 'string'){
+                let content = field.content;
+
+                field.content = [
+                    content,
+                    null
+                ]
+            }else{
+                field.content.push(null);
+            }
+
+        },
+        //---------------------------------------------------------------------
+        addGroup: function (arr_groups,group)
+        {
+
+            let temp_group = JSON.parse(JSON.stringify(group));
+
+
+            temp_group.fields.forEach( function(  field) {
+
+                if(field.type.slug !== "seo-meta-tags"){
+                    field.content = null;
+                    if(field.is_repeatable) field.content = [''];
+                    field.vh_cms_form_group_index = arr_groups.length;
+                    field.vh_cms_form_field_id  = null;
+                }
+            });
+
+            arr_groups.push(temp_group);
+
+
+        },
+        //---------------------------------------------------------------------
+        removeField: function (field,index)
+        {
+            if(field.content !== 'string'){
+
+                if(field.content.length === 2 && field.is_repeatable != 1){
+                    let val = field.content[0];
+                    field.content = null;
+                    field.content = val;
+                }else{
+                    field.content.splice(index, 1);
+                }
+
+            }
+
+        },
+        //---------------------------------------------------------------------
+        removeGroup: function (arr_groups,group,index)
+        {
+
+            arr_groups.splice(index, 1);
+
+            if(group.fields[0].vh_cms_form_field_id){
+                this.$Progress.start();
+                let url = this.ajax_url+'/actions/remove-group';
+                let params = {
+                    inputs: {
+                        index: index,
+                        group_id: group.fields[0].vh_cms_form_group_id,
+                        content_id: this.$route.params.id
+                    },
+                };
+                this.$vaah.ajax(url, params, this.removeGroupAfter);
+            }
+
+        },
+
+        //---------------------------------------------------------------------
+        setActiveTemplate: function () {
+            this.active_template = vaah().findInArrayByKey(this.active_theme.templates,
+                'id', this.item.vh_theme_template_id);
+
+            let groups = [];
+
+            this.active_template.groups.forEach(function ( item,index) {
+
+                groups[index] = [item];
+            });
+
+            this.active_template_groups = groups;
+
+            this.item.template_form_groups=this.active_template_groups;
+
+        }
+        //---------------------------------------------------------------------
         //---------------------------------------------------------------------
     }
 });
