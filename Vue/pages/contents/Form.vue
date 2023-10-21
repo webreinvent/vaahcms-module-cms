@@ -184,7 +184,8 @@ const toggleFormMenu = (event) => {
                               @change="store.setActiveTheme"
                               class="w-full" />
                 </VhField>
-                <VhField label="Template" v-if="store.active_theme"
+                <VhField label="Template"
+                         v-if="store.active_theme && store.item.vh_theme_id"
                          labelClass="col-12 mb-2 md:col-3 md:mb-0"
                          valueClass="col-12 md:col-9">
                     <Dropdown v-model="store.item.vh_theme_template_id"

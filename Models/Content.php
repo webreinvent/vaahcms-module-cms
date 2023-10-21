@@ -315,23 +315,13 @@ class Content extends ContentBase
 
         // check if name exist
         $item = self::where('id', '!=', $inputs['id'])
+            ->where('vh_cms_content_type_id',$inputs['content_type']['id'])
             ->withTrashed()
             ->where('name', $inputs['name'])->first();
 
-        if ($item) {
+        if($item){
             $response['success'] = false;
             $response['messages'][] = "This name is already exist.";
-            return $response;
-        }
-
-        // check if slug exist
-        $item = self::where('id', '!=', $inputs['id'])
-            ->withTrashed()
-            ->where('slug', $inputs['slug'])->first();
-
-        if ($item) {
-            $response['success'] = false;
-            $response['messages'][] = "This slug is already exist.";
             return $response;
         }
 
@@ -339,6 +329,8 @@ class Content extends ContentBase
         $item->fill($inputs);
         $item->slug = Str::slug($inputs['slug']);
         $item->save();
+
+
 
 
         static::storeFormGroups($item, $inputs['content_form_groups']);

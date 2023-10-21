@@ -159,6 +159,9 @@ export const useContentStore = defineStore({
                     if(newVal.params.slug){
                         this.getList();
                     }
+                    if(newVal.params.id){
+                        this.getItem(newVal.params.id);
+                    }
 
                     this.setViewAndWidth(newVal.name);
 
@@ -368,7 +371,6 @@ export const useContentStore = defineStore({
         },
         //---------------------------------------------------------------------
         async itemAction(type, item=null){
-            console.log('type',type);
             if(!item)
             {
                 item = this.item;
@@ -656,10 +658,11 @@ export const useContentStore = defineStore({
         //---------------------------------------------------------------------
         toForm()
         {
+
+            this.item = vaah().clone(this.assets.empty_item);
             if(this.assets.content_type &&this.assets.content_type.form_groups){
                 this.item.content_form_groups=this.assets.content_type.form_groups;
             }
-            // this.item = vaah().clone(this.assets.empty_item);
             this.getFormMenu();
             this.$router.push({name: 'contents.form'})
         },
