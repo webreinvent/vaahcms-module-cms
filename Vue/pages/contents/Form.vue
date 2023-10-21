@@ -156,22 +156,25 @@ const toggleFormMenu = (event) => {
             </template>
             <div v-if="store.item">
 
-                <VhField label="Name">
+                <VhField label="Name" labelClass="col-12 mb-2 md:col-3 md:mb-0"
+                         valueClass="col-12 md:col-9">
                     <InputText class="w-full"
                                name="contents-name"
                                data-testid="contents-name"
                                v-model="store.item.name"/>
                 </VhField>
-                <VhField label="Status">
+                <VhField label="Status" labelClass="col-12 mb-2 md:col-3 md:mb-0"
+                         valueClass="col-12 md:col-9">
                     <Dropdown v-model="store.item.status"
                               :options="store.assets.content_type.content_statuses"
                               optionLabel="name"
                               optionValue="name"
                               placeholder="Select status"
                               data-testid="contents-status"
-                              class="w-full md:w-14rem" />
+                              class="w-full" />
                 </VhField>
-                <VhField label="Theme">
+                <VhField label="Theme" labelClass="col-12 mb-2 md:col-3 md:mb-0"
+                         valueClass="col-12 md:col-9">
                     <Dropdown v-model="store.item.vh_theme_id"
                               :options="store.assets.themes"
                               optionLabel="name"
@@ -179,16 +182,18 @@ const toggleFormMenu = (event) => {
                               placeholder="Select Theme"
                               data-testid="contents-theme"
                               @change="store.setActiveTheme"
-                              class="w-full md:w-14rem" />
+                              class="w-full" />
                 </VhField>
-                <VhField label="Template" v-if="store.active_theme">
+                <VhField label="Template" v-if="store.active_theme"
+                         labelClass="col-12 mb-2 md:col-3 md:mb-0"
+                         valueClass="col-12 md:col-9">
                     <Dropdown v-model="store.item.vh_theme_template_id"
                               :options="store.active_theme.templates"
                               optionLabel="name"
                               optionValue="id"
                               placeholder="Select Template"
                               data-testid="contents-template"
-                              class="w-full md:w-14rem" />
+                              class="w-full" />
                 </VhField>
 
             </div>

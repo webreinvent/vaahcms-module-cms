@@ -150,7 +150,7 @@ export const useContentTypeStore = defineStore({
 
                     this.route = newVal;
 
-                    if(newVal.params.id){
+                    if(newVal.name !== 'contenttypes.contentstructure' && newVal.params.id){
                         this.getItem(newVal.params.id);
                     }
 
@@ -258,16 +258,16 @@ export const useContentTypeStore = defineStore({
             }
         },
         //---------------------------------------------------------------------
-        async getContentStrucutre(id){
+        async getContentStructure(id){
             if(id){
                 await vaah().ajax(
                     ajax_url+'/relations/'+id,
-                    this.getContentStrucutreAfter
+                    this.getContentStructureAfter
                 );
             }
         },
         //---------------------------------------------------------------------
-        getContentStrucutreAfter(data, res) {
+        getContentStructureAfter(data, res) {
             if(data){
                 if(data.groups.length == 0){
                     data.groups[0] = {
@@ -297,7 +297,7 @@ export const useContentTypeStore = defineStore({
         storeGroupsAfter(data, res) {
 
             if(data){
-                this.getContentStrucutre(this.item.id);
+                this.getContentStructure(this.item.id);
             }
         },
         //---------------------------------------------------------------------
@@ -931,7 +931,7 @@ export const useContentTypeStore = defineStore({
         //---------------------------------------------------------------------
         async toContentStructure(item) {
             this.item = vaah().clone(item);
-            await this.getContentStrucutre(this.item.id);
+            await this.getContentStructure(this.item.id);
             this.$router.push({name: 'contenttypes.contentstructure', params: {id: item.id}});
 
         },
