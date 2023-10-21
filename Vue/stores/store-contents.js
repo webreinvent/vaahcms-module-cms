@@ -978,6 +978,25 @@ export const useContentStore = defineStore({
             this.active_theme = theme;
         },
         //---------------------------------------------------------------------
+        copyCode: function (group, field,group_index = 0,field_index = null)
+        {
+
+            let code = "";
+
+            if(field_index == null){
+                if(group_index === 0){
+                    code = "{!! get_field($data, '"+field.slug+"', '"+group.slug+"') !!}";
+                }else{
+                    code = "{!! get_field($data, '"+field.slug+"', '"+group.slug+"','content' , "+group_index+") !!}";
+                }
+
+            }else{
+                code = "{!! get_field($data, '"+field.slug+"', '"+group.slug+"','content' , "+group_index+", "+field_index+") !!}";
+            }
+
+            vaah().copy(code);
+        },
+        //---------------------------------------------------------------------
         copyGroupCode (group,group_index = null)
         {
             let code = "";
@@ -1023,6 +1042,21 @@ export const useContentStore = defineStore({
             }
         },
         //---------------------------------------------------------------------
+        addField: function (field)
+        {
+            if(!field.content || typeof field.content === 'string'){
+                let content = field.content;
+
+                field.content = [
+                    content,
+                    null
+                ]
+            }else{
+                field.content.push(null);
+            }
+
+        },
+        //---------------------------------------------------------------------
         addGroup: function (arr_groups,group)
         {
 
@@ -1041,6 +1075,42 @@ export const useContentStore = defineStore({
 
             arr_groups.push(temp_group);
 
+
+        },
+        //---------------------------------------------------------------------
+        removeField: function (field,index)
+        {
+            if(field.content !== 'string'){
+
+                if(field.content.length === 2 && field.is_repeatable != 1){
+                    let val = field.content[0];
+                    field.content = null;
+                    field.content = val;
+                }else{
+                    field.content.splice(index, 1);
+                }
+
+            }
+
+        },
+        //---------------------------------------------------------------------
+        removeGroup: function (arr_groups,group,index)
+        {
+
+            arr_groups.splice(index, 1);
+
+            if(group.fields[0].vh_cms_form_field_id){
+                this.$Progress.start();
+                let url = this.ajax_url+'/actions/remove-group';
+                let params = {
+                    inputs: {
+                        index: index,
+                        group_id: group.fields[0].vh_cms_form_group_id,
+                        content_id: this.$route.params.id
+                    },
+                };
+                this.$vaah.ajax(url, params, this.removeGroupAfter);
+            }
 
         },
         //---------------------------------------------------------------------
