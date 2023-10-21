@@ -2,6 +2,7 @@
 import {onMounted, ref, watch} from "vue";
 import { useContentStore } from '../../stores/store-contents'
 import ContentFields from "./components/ContentFields.vue";
+import TemplateFields from "./components/TemplateFields.vue";
 import VhField from './../../vaahvue/vue-three/primeflex/VhField.vue'
 import {useRoute} from 'vue-router';
 
@@ -94,6 +95,13 @@ const toggleFormMenu = (event) => {
                                                 </div>
                                             </div>
                                         </template>
+                                        <Message severity="info">
+                                            These fields required for the theme page template.
+                                        </Message>
+
+                                        <div v-if="store.item.template_form_groups">
+                                            <TemplateFields :groups="store.item.template_form_groups"/>
+                                        </div>
                                     </AccordionTab>
                                 </Accordion>
                             </div>
@@ -192,6 +200,7 @@ const toggleFormMenu = (event) => {
                               :options="store.active_theme.templates"
                               optionLabel="name"
                               optionValue="id"
+                              @change="store.setActiveTemplate"
                               placeholder="Select Template"
                               data-testid="contents-template"
                               class="w-full" />

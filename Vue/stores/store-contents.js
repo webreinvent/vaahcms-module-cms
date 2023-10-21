@@ -33,6 +33,8 @@ export const useContentStore = defineStore({
         model: model_namespace,
         assets_is_fetching: true,
         app: null,
+        active_template_groups: null,
+        active_template: null,
         assets: null,
         rows_per_page: [10,20,30,50,100,500],
         list: null,
@@ -399,11 +401,12 @@ export const useContentStore = defineStore({
                 case 'create-and-clone':
 
                     item.content_groups = this.assets.content_type.form_groups;
+                    item.template_groups = this.active_template_groups;
 
                     options.method = 'POST';
                     options.params = {
                         'content_form_groups': this.assets.content_type.form_groups,
-                        'template_form_groups': []
+                        'template_form_groups': this.active_template_groups
                     };
                     options.params = item;
                     break;
@@ -662,6 +665,9 @@ export const useContentStore = defineStore({
             this.item = vaah().clone(this.assets.empty_item);
             if(this.assets.content_type &&this.assets.content_type.form_groups){
                 this.item.content_form_groups=this.assets.content_type.form_groups;
+            }
+            if(this.active_template_groups){
+                this.item.template_form_groups=this.active_template_groups;
             }
             this.getFormMenu();
             this.$router.push({name: 'contents.form'})
@@ -978,34 +984,34 @@ export const useContentStore = defineStore({
             this.active_theme = theme;
         },
         //---------------------------------------------------------------------
-        copyCode: function (group, field,group_index = 0,field_index = null)
+        copyCode: function (group, field,group_index = 0,field_index = null,type = 'content')
         {
 
             let code = "";
 
             if(field_index == null){
                 if(group_index === 0){
-                    code = "{!! get_field($data, '"+field.slug+"', '"+group.slug+"') !!}";
+                    code = "{!! get_field($data, '"+field.slug+"', '"+group.slug+"','"+type+"') !!}";
                 }else{
-                    code = "{!! get_field($data, '"+field.slug+"', '"+group.slug+"','content' , "+group_index+") !!}";
+                    code = "{!! get_field($data, '"+field.slug+"', '"+group.slug+"','"+type+"' , "+group_index+") !!}";
                 }
 
             }else{
-                code = "{!! get_field($data, '"+field.slug+"', '"+group.slug+"','content' , "+group_index+", "+field_index+") !!}";
+                code = "{!! get_field($data, '"+field.slug+"', '"+group.slug+"','"+type+"' , "+group_index+", "+field_index+") !!}";
             }
 
             vaah().copy(code);
         },
         //---------------------------------------------------------------------
-        copyGroupCode (group,group_index = null)
+        copyGroupCode (group,group_index = null,type = 'content')
         {
             let code = "";
 
             if(group_index == null){
-                code = "{!! get_group($data ,'"+group.slug+"' ) !!}";
+                code = "{!! get_group($data ,'"+group.slug+"','"+type+"' ) !!}";
 
             }else{
-                code = "{!! get_group($data ,'"+group.slug+"' ,'content' ,"+group_index+" ) !!}";
+                code = "{!! get_group($data ,'"+group.slug+"' ,'"+type+"' ,"+group_index+" ) !!}";
 
             }
             vaah().copy(code);
@@ -1113,6 +1119,24 @@ export const useContentStore = defineStore({
             }
 
         },
+
+        //---------------------------------------------------------------------
+        setActiveTemplate: function () {
+            this.active_template = vaah().findInArrayByKey(this.active_theme.templates,
+                'id', this.item.vh_theme_template_id);
+
+            let groups = [];
+
+            this.active_template.groups.forEach(function ( item,index) {
+
+                groups[index] = [item];
+            });
+
+            this.active_template_groups = groups;
+
+            this.item.template_form_groups=this.active_template_groups;
+
+        }
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
     }
