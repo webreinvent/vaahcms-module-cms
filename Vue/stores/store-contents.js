@@ -666,9 +666,9 @@ export const useContentStore = defineStore({
             if(this.assets.content_type &&this.assets.content_type.form_groups){
                 this.item.content_form_groups=this.assets.content_type.form_groups;
             }
-            if(this.active_template_groups){
-                this.item.template_form_groups=this.active_template_groups;
-            }
+
+            this.item.template_form_groups=[];
+
             this.getFormMenu();
             this.$router.push({name: 'contents.form'})
         },
