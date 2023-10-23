@@ -77,7 +77,16 @@ const toggleFormMenu = (event) => {
                                                 </div>
                                             </div>
                                         </template>
-                                        <Message severity="info">
+                                        <Message severity="info"
+                                                 :pt="{
+                                                    wrapper: {
+                                                        class: 'justify-content-between'
+                                                    },
+                                                    text: {
+                                                        class: 'flex-grow-1'
+                                                    }
+                                                 }"
+                                        >
                                             These fields can be managed from "Content Types" sections.
                                         </Message>
 
@@ -95,7 +104,16 @@ const toggleFormMenu = (event) => {
                                                 </div>
                                             </div>
                                         </template>
-                                        <Message severity="info">
+                                        <Message severity="info"
+                                                 :pt="{
+                                                    wrapper: {
+                                                        class: 'justify-content-between'
+                                                    },
+                                                    text: {
+                                                        class: 'flex-grow-1'
+                                                    }
+                                                 }"
+                                        >
                                             These fields required for the theme page template.
                                         </Message>
 
