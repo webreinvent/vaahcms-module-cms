@@ -83,8 +83,6 @@ onMounted(async () => {
 
                 <Actions/>
 
-                <br/>
-
                 <Table/>
 
             </Panel>
