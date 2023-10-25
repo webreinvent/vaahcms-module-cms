@@ -77,7 +77,7 @@ const toggleBulkMenuState = (event) => {
 
 
                     <div class="col-12">
-                        <div class="p-inputgroup ">
+                        <div class="p-inputgroup">
 
                             <InputText v-model="store.query.filter.q"
                                        class="p-inputtext-sm"
