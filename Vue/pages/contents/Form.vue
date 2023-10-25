@@ -29,7 +29,13 @@ const toggleFormMenu = (event) => {
 </script>
 <template>
     <div class="col-6">
-        <Card>
+        <Card
+            :pt="{
+                content: {
+                    class: 'p-0'
+                }
+            }"
+        >
             <template #header>
                 <div class="flex justify-content-between align-items-center w-full">
                     <h2 class="font-semibold text-lg">Content Structure</h2>
@@ -47,17 +53,17 @@ const toggleFormMenu = (event) => {
                     </div>
                 </div>
             </template>
-            <template #content>
-                <div class="col-12">
+            <template class="is-small" #content>
+                <div class="col-12 p-0">
                             <div v-if="store.item">
-                                <div class="p-inputgroup">
+                                <div>
                                     <InputText class="w-full mb-2"
                                                name="contents-name"
                                                data-testid="contents-name"
                                                placeholder="Perma link"
                                                v-model="store.item.permalink"/>
                                 </div>
-                                <div class="p-inputgroup mb-2">
+                                <div class="mb-2">
                                     <AutoComplete v-model="store.selected_user_id"
                                                   class="w-full"
                                                   :suggestions="store.user_list"
@@ -128,7 +134,7 @@ const toggleFormMenu = (event) => {
         </Card>
     </div>
     <div class="col-3" >
-        <Panel >
+        <Panel class="is-small">
             <template class="p-1" #header>
                 <div class="flex flex-row">
                     <div class="p-panel-title">
@@ -162,6 +168,7 @@ const toggleFormMenu = (event) => {
                     <!--form_menu-->
                     <Button
                         type="button"
+                        class="p-button-sm"
                         @click="toggleFormMenu"
                         data-testid="contents-form-menu"
                         icon="pi pi-angle-down"
@@ -173,14 +180,14 @@ const toggleFormMenu = (event) => {
                     <!--/form_menu-->
 
 
-                    <Button class="p-button-primary"
+                    <Button class="p-button-primary p-button-sm"
                             icon="pi pi-times"
                             data-testid="contents-to-list"
                             @click="store.toList()">
                     </Button>
                 </div>
             </template>
-            <div v-if="store.item">
+            <div v-if="store.item" class="py-2">
 
                 <VhField label="Name" labelClass="col-12 mb-2 md:col-3 md:mb-0"
                          valueClass="col-12 md:col-9">
@@ -211,6 +218,7 @@ const toggleFormMenu = (event) => {
                               class="w-full" />
                 </VhField>
                 <VhField label="Template"
+                         class="mb-0"
                          v-if="store.active_theme && store.item.vh_theme_id"
                          labelClass="col-12 mb-2 md:col-3 md:mb-0"
                          valueClass="col-12 md:col-9">

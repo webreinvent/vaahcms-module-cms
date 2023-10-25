@@ -73,8 +73,6 @@ const toggleItemMenu = (event) => {
             </template>
 
             <template #icons>
-
-
                 <div class="p-inputgroup">
                     <Button label="Edit"
                             @click="store.toEdit(store.item)"

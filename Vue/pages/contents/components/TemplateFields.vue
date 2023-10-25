@@ -21,13 +21,18 @@ const props = defineProps({
     <div v-if="groups.length > 0"
          v-for="(arr_groups,g_index) in groups"
          :key="'content-fields-group-'+g_index"
-         :aria-id="'content-fields-group-'+g_index">
-        <Divider v-if="g_index > 0 && g_index < groups.length" class="p-0 border-bottom-1 border-gray-200" />
-        <div  v-for="(group,index) in arr_groups">
-            <Divider v-if="arr_groups.length && index > 0 && index < arr_groups.length" class="p-0 border-bottom-1 border-gray-200" />
-            <div class="flex justify-content-between align-items-center w-full mb-2">
-                <h2 v-if="index === 0" class="font-semibold text-lg">{{group.name}}</h2>
-                <div v-if="index === 0" class="p-inputgroup w-max">
+         :aria-id="'content-fields-group-'+g_index"
+         :class="g_index !== groups.length - 1 ? 'py-3' : 'pt-3'"
+    >
+        <div  v-for="(group,index) in arr_groups"
+              class="border-1 border-gray-200 border-round-md p-3 relative"
+              :class="index === 0 && arr_groups.length > 1 ? 'mb-5' : index !== arr_groups.length - 1 ? 'my-5' : ''"
+        >
+            <div class="absolute left-0 top-0 p-2 flex justify-content-between align-items-center w-full mb-2"
+                 style="transform: translateY(-50%)"
+            >
+                <h2 class="font-semibold text-lg bg-white px-2">{{group.name}}</h2>
+                <div v-if="index === 0" class="p-inputgroup w-max bg-white px-2">
                     <Button v-if="arr_groups.length > 1"
                             @click="store.copyGroupCode(group,index,'template')"
                             icon="pi pi-file"
@@ -38,25 +43,20 @@ const props = defineProps({
                             data-testid="content-copy_group_code"
                             class="p-button-sm "/>
                 </div>
+                <div v-else class="p-inputgroup w-max">
+                    <Button
+                        @click="store.copyGroupCode(group,index,'template')"
+                        icon="pi pi-file"
+                        data-testid="content-copy_group_code"
+                        class="p-button-sm "/>
+                    <Button @click="store.removeGroup(arr_groups,group,index)"
+                            icon="pi pi-times"
+                            data-testid="content-copy_group_code"
+                            class="p-button-sm "/>
+                </div>
             </div>
 
             <div class="card flex flex-column gap-2">
-                <div v-if="index > 0"
-                     class="flex justify-content-between align-items-center w-full mb-2">
-                    <h2 class="font-semibold text-lg">{{group.name}}</h2>
-                    <div class="p-inputgroup w-max">
-                        <Button
-                                @click="store.copyGroupCode(group,index,'template')"
-                                icon="pi pi-file"
-                                data-testid="content-copy_group_code"
-                                class="p-button-sm "/>
-                        <Button @click="store.removeGroup(arr_groups,group,index)"
-                                icon="pi pi-times"
-                                data-testid="content-copy_group_code"
-                                class="p-button-sm "/>
-                    </div>
-                </div>
-
                 <div v-if="group.fields.length > 0"
                      v-for="(field, f_index) in group.fields"
                      :key="f_index">
@@ -110,6 +110,7 @@ const props = defineProps({
                             <div v-if="key === 0">
                                 <div class="p-inputgroup w-max">
                                     <Button
+                                        v-if="field.content.length > 1"
                                         @click="store.copyCode(group, field,index,key,'template')"
                                         icon="pi pi-file"
                                         data-testid="content-copy_group_code"
