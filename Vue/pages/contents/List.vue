@@ -62,14 +62,14 @@ onMounted(async () => {
                                    :value="store.list.total">
                             </Badge>
                         </div>
-
                     </div>
 
                 </template>
 
                 <template #icons>
 
-                    <Button data-testid="contents-list-create"
+                    <Button class="p-button-sm"
+                            data-testid="contents-list-create"
                             @click="store.toForm()">
                         <i class="pi pi-plus mr-1"></i>
                         Create
