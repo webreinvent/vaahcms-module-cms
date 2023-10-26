@@ -14,6 +14,8 @@ onMounted(async () => {
     if(route.params && route.params.id)
     {
         await store.getItem(route.params.id);
+    } else {
+        store.toForm();
     }
 
     await store.watchItem();
