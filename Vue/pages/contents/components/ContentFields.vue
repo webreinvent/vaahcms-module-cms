@@ -142,7 +142,7 @@ const props = defineProps({
 
                     <div class="w-full flex justify-content-center mt-2">
                         <Button v-if="field.is_repeatable && !store.assets.non_repeatable_fields.includes(field.type.slug)"
-                                @click="store.addField(field)">
+                                @click="store.addField(field)" class="p-button-sm">
                             Add Field
                         </Button>
                     </div>
@@ -152,7 +152,7 @@ const props = defineProps({
             <div class="flex justify-content-center">
                 <Button v-if="group.is_repeatable
                     && arr_groups.length - 1 === index"
-                        @click="store.addGroup(arr_groups,group)">
+                        @click="store.addGroup(arr_groups,group)" class="p-button-sm">
                     Add Group
                 </Button>
             </div>

@@ -57,7 +57,7 @@ const toggleFormMenu = (event) => {
                 <div class="col-12 p-0">
                             <div v-if="store.item">
                                 <div>
-                                    <InputText class="w-full mb-2"
+                                    <InputText class="w-full p-inputtext-sm mb-2"
                                                name="contents-name"
                                                data-testid="contents-name"
                                                placeholder="Perma link"
@@ -76,7 +76,7 @@ const toggleFormMenu = (event) => {
                                 </div>
                                 <Accordion :multiple="true" :activeIndex="store.active_index" id="accordionTabContainer">
                                     <AccordionTab>
-                                        <template #header>
+                                        <template class="p-3" #header>
                                             <div class="w-full">
                                                 <div>
                                                     <h5 class="font-semibold text-sm">Content Fields</h5>
@@ -189,14 +189,14 @@ const toggleFormMenu = (event) => {
             </template>
             <div v-if="store.item" class="py-2">
 
-                <VhField label="Name" labelClass="col-12 mb-2 md:col-3 md:mb-0"
+                <VhField label="Name" labelClass="text-xs col-12 mb-2 md:col-3 md:mb-0"
                          valueClass="col-12 md:col-9">
-                    <InputText class="w-full"
+                    <InputText class="w-full p-inputtext-sm"
                                name="contents-name"
                                data-testid="contents-name"
                                v-model="store.item.name"/>
                 </VhField>
-                <VhField label="Status" labelClass="col-12 mb-2 md:col-3 md:mb-0"
+                <VhField label="Status" labelClass="text-xs col-12 mb-2 md:col-3 md:mb-0"
                          valueClass="col-12 md:col-9">
                     <Dropdown v-model="store.item.status"
                               :options="store.assets.content_type.content_statuses"
@@ -204,9 +204,9 @@ const toggleFormMenu = (event) => {
                               optionValue="name"
                               placeholder="Select status"
                               data-testid="contents-status"
-                              class="w-full" />
+                              class="w-full is-small" />
                 </VhField>
-                <VhField label="Theme" labelClass="col-12 mb-2 md:col-3 md:mb-0"
+                <VhField label="Theme" labelClass="text-xs col-12 mb-2 md:col-3 md:mb-0"
                          valueClass="col-12 md:col-9">
                     <Dropdown v-model="store.item.vh_theme_id"
                               :options="store.assets.themes"
@@ -215,12 +215,12 @@ const toggleFormMenu = (event) => {
                               placeholder="Select Theme"
                               data-testid="contents-theme"
                               @change="store.setActiveTheme"
-                              class="w-full" />
+                              class="w-full is-small" />
                 </VhField>
                 <VhField label="Template"
                          class="mb-0"
                          v-if="store.active_theme && store.item.vh_theme_id"
-                         labelClass="col-12 mb-2 md:col-3 md:mb-0"
+                         labelClass="text-xs col-12 mb-2 md:col-3 md:mb-0"
                          valueClass="col-12 md:col-9">
                     <Dropdown v-model="store.item.vh_theme_template_id"
                               :options="store.active_theme.templates"
@@ -229,7 +229,7 @@ const toggleFormMenu = (event) => {
                               @change="store.setActiveTemplate"
                               placeholder="Select Template"
                               data-testid="contents-template"
-                              class="w-full" />
+                              class="w-full is-small" />
                 </VhField>
 
             </div>
