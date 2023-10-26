@@ -280,7 +280,8 @@ const onSelectType = (field,data,group_index,field_index) => {
                         :clone="store.cloneField"
                         item-key="id">
                         <template #item="{element,index}">
-                            <div class="p-inputgroup mb-3">
+                            <div class="p-inputgroup"
+                                 :class="index < store.assets.field_types.length - 1 ? 'mb-2' : ''">
                                 <Button icon="pi pi-bars" class="p-button-sm p-button-secondary"/>
 
                                 <Button :label="element.name"
