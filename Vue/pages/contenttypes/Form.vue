@@ -112,55 +112,55 @@ const toggleFormMenu = (event) => {
 
             <div v-if="store.item" >
 
-                <VhField label="Name" labelClass="col-12 mb-2 md:col-3 md:mb-0"
+                <VhField label="Name" labelClass="text-xs col-12 mb-2 md:col-3 md:mb-0"
                          valueClass="col-12 md:col-9">
-                    <InputText class="w-full"
+                    <InputText class="w-full p-inputtext-sm"
                                name="contenttypes-name"
                                data-testid="contenttypes-name"
                                v-model="store.item.name"/>
                 </VhField>
 
-                <VhField label="Slug" labelClass="col-12 mb-2 md:col-3 md:mb-0"
+                <VhField label="Slug" labelClass="text-xs col-12 mb-2 md:col-3 md:mb-0"
                          valueClass="col-12 md:col-9">
-                    <InputText class="w-full"
+                    <InputText class="w-full p-inputtext-sm"
                                name="contenttypes-slug"
                                data-testid="contenttypes-slug"
                                v-model="store.item.slug"/>
                 </VhField>
 
-                <VhField label="Content Plural Name" labelClass="col-12 mb-2 md:col-3 md:mb-0"
+                <VhField label="Content Plural Name" labelClass="text-xs col-12 mb-2 md:col-3 md:mb-0"
                          valueClass="col-12 md:col-9">
-                    <InputText class="w-full"
+                    <InputText class="w-full p-inputtext-sm"
                                name="contenttypes-plural_name"
                                data-testid="contenttypes-plural_name"
                                v-model="store.item.plural"/>
                 </VhField>
 
-                <VhField label="Content Plural Slug" labelClass="col-12 mb-2 md:col-3 md:mb-0"
+                <VhField label="Content Plural Slug" labelClass="text-xs col-12 mb-2 md:col-3 md:mb-0"
                          valueClass="col-12 md:col-9">
-                    <InputText class="w-full"
+                    <InputText class="w-full p-inputtext-sm"
                                name="contenttypes-plural_slug"
                                data-testid="contenttypes-plural_slug"
                                v-model="store.item.plural_slug"/>
                 </VhField>
 
-                <VhField label="Content Singular Name" labelClass="col-12 mb-2 md:col-3 md:mb-0"
+                <VhField label="Content Singular Name" labelClass="text-xs col-12 mb-2 md:col-3 md:mb-0"
                          valueClass="col-12 md:col-9">
-                    <InputText class="w-full"
+                    <InputText class="w-full p-inputtext-sm"
                                name="contenttypes-singular"
                                data-testid="contenttypes-singular_name"
                                v-model="store.item.singular"/>
                 </VhField>
 
-                <VhField label="Content Singular Slug" labelClass="col-12 mb-2 md:col-3 md:mb-0"
+                <VhField label="Content Singular Slug" labelClass="text-xs col-12 mb-2 md:col-3 md:mb-0"
                          valueClass="col-12 md:col-9">
-                    <InputText class="w-full"
+                    <InputText class="w-full p-inputtext-sm"
                                name="contenttypes-singular_slug"
                                data-testid="contenttypes-singular_slug"
                                v-model="store.item.singular_slug"/>
                 </VhField>
 
-                <VhField label="Excerpt" labelClass="col-12 mb-2 md:col-3 md:mb-0"
+                <VhField label="Excerpt" labelClass="text-xs col-12 mb-2 md:col-3 md:mb-0"
                          valueClass="col-12 md:col-9">
                     <Textarea  class="w-full"
                                rows="5" cols="30"
@@ -169,7 +169,7 @@ const toggleFormMenu = (event) => {
                                v-model="store.item.excerpt"/>
                 </VhField>
 
-                <VhField label="Is Published" labelClass="col-12 mb-2 md:col-3 md:mb-0"
+                <VhField label="Is Published" labelClass="text-xs col-12 mb-2 md:col-3 md:mb-0"
                          valueClass="col-12 md:col-9">
                     <InputSwitch v-bind:false-value="0"
                                  v-bind:true-value="1"
@@ -178,7 +178,7 @@ const toggleFormMenu = (event) => {
                                  data-testid="contenttypes-is_published"
                                  v-model="store.item.is_published"/>
                 </VhField>
-                <VhField label="Is Comments Allowed" labelClass="col-12 mb-2 md:col-3 md:mb-0"
+                <VhField label="Is Comments Allowed" labelClass="text-xs col-12 mb-2 md:col-3 md:mb-0"
                          valueClass="col-12 md:col-9">
                     <InputSwitch v-bind:false-value="0"
                                  v-bind:true-value="1"
@@ -197,12 +197,12 @@ const toggleFormMenu = (event) => {
                     <template #item="{element,index}">
                         <div class="p-inputgroup mb-3">
                             <Button icon="pi pi-bars" class="p-button-sm p-button-secondary"/>
-                            <InputText class="w-full"
+                            <InputText class="w-full p-inputtext-sm"
                                        v-if="index == store.edit_status_index && !store.disable_status_editing"
                                        name="contenttypes-statuses_name"
                                        data-testid="contenttypes-statuses_name"
                                        v-model="store.new_status[index]"/>
-                            <InputText class="w-full"
+                            <InputText class="w-full p-inputtext-sm"
                                        v-else
                                        name="contenttypes-statuses_name"
                                        data-testid="contenttypes-statuses_name"
@@ -215,9 +215,9 @@ const toggleFormMenu = (event) => {
                         </div>
                     </template>
                 </draggable>
-                <VhField label="New Status" labelClass="col-12 mb-2 md:col-3 md:mb-0"
+                <VhField label="New Status" labelClass="text-xs col-12 mb-2 md:col-3 md:mb-0"
                          valueClass="col-12 md:col-9">
-                    <InputText class="w-full"
+                    <InputText class="w-full p-inputtext-sm"
                                name="contenttypes-new_status"
                                data-testid="contenttypes-new_status"
                                v-model="store.new_status_item"

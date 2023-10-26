@@ -10,22 +10,25 @@
             <li >
                 <div class="p-inputgroup mb-3">
                     <InputText v-if="element.content"
-                               class="w-2" :model-value="element.content.name" disabled/>
-                    <InputText class="w-6"
+                               class="w-2 p-inputtext-sm" :model-value="element.content.name" disabled/>
+                    <InputText class="w-6 p-inputtext-sm"
                                v-model="element.name"
                                data-testid="menus-item_field_name"
                                placeholder="Field Name"/>
-                    <Button icon="pi pi-home p-button-sm"
+                    <Button icon="pi pi-home"
+                            class="p-button-sm"
                             :severity="element.is_home ?'success':''"
                             :disabled="!element.id"
                             @click="store.setAsHomePage(element.id)"
                             v-tooltip.top="'Set as Home Page'"
                             data-testid="menus-item_field_name"/>
-                    <Button icon="pi pi-cog p-button-sm"
+                    <Button icon="pi pi-cog"
+                            class="p-button-sm"
                             v-tooltip.top="'Settings'"
                             data-testid="menus-item_field_settings"
                             @click="element.menu_options = !element.menu_options"/>
-                    <Button icon="pi pi-trash p-button-sm"
+                    <Button icon="pi pi-trash"
+                            class="p-button-sm"
                             v-tooltip.top="'Delete'"
                             data-testid="menus-item_field_remove"
                             @click="store.removeAt(this.tasks,index)"/>

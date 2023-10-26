@@ -71,7 +71,7 @@ onMounted(async () => {
                               :options="store.assets.themes"
                               optionLabel="name" optionValue="id"
                               data-testid="menus-theme"
-                              class="w-full"
+                              class="w-full is-small"
                               @change="store.setActiveTheme"
                               placeholder="Select a Theme" >
                     </Dropdown>
@@ -87,14 +87,16 @@ onMounted(async () => {
                                   optionLabel="name" optionValue="id"
                                   @change="store.setActiveLocation"
                                   data-testid="menus-item_location"
-                                  placeholder="Select a Location" >
+                                  placeholder="Select a Location"
+                                  class="is-small">
                         </Dropdown>
                         <Button :disabled="!store.query.vh_theme_location_id
                                 || !store.active_theme.locations"
                                 @click="store.copyLocationCode"
                                 v-tooltip.top="'Copy Code'"
                                 data-testid="menus-item_location_copy"
-                                icon="pi pi-copy">
+                                icon="pi pi-copy"
+                                class="p-button-sm">
                         </Button>
                     </div>
 
@@ -108,7 +110,7 @@ onMounted(async () => {
                     <Dropdown v-model="store.query.vh_menu_id"
                               :options="store.active_location.menus"
                               optionLabel="name" optionValue="id"
-                              class="w-full"
+                              class="w-full is-small"
                               data-testid="menus-menu_item"
                               @change="store.setActiveMenu"
                               placeholder="Select a Theme" >
@@ -122,10 +124,12 @@ onMounted(async () => {
 
                     <div class="p-inputgroup">
                         <InputText type="text"
+                                   class="p-inputtext-sm"
                                    data-testid="menus-create_menu_item"
                                    v-model="store.new_item.name" >
                         </InputText>
                         <Button @click="store.createItem"
+                                class="p-button-sm"
                                 data-testid="menus-save_menu_item"
                                 label="Create">
                         </Button>
