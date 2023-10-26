@@ -159,13 +159,7 @@ const useVaah = vaah();
                    :totalRecords="store.list.total"
                    @page="store.paginate($event)"
                    :rowsPerPageOptions="store.rows_per_page"
-                   :pt="{
-                       rowperpagedropdown: {
-                           root: {
-                               class: 'mt-2 md:mt-0'
-                           }
-                       }
-                   }">
+                   class="bg-white-alpha-0 pt-2">
         </Paginator>
         <!--/paginator-->
 
