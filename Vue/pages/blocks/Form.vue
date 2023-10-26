@@ -133,7 +133,7 @@ const toggleFormMenu = (event) => {
 
                 <VhField label="Name" labelClass="col-12 mb-2 md:col-3 md:mb-0"
                          valueClass="col-12 md:col-9">
-                    <InputText class="w-full"
+                    <InputText class="w-full p-inputtext-sm"
                                name="blocks-name"
                                data-testid="blocks-name"
                                v-model="store.item.name"/>
@@ -141,7 +141,7 @@ const toggleFormMenu = (event) => {
 
                 <VhField label="Slug" labelClass="col-12 mb-2 md:col-3 md:mb-0"
                          valueClass="col-12 md:col-9">
-                    <InputText class="w-full"
+                    <InputText class="w-full p-inputtext-sm"
                                name="blocks-slug"
                                data-testid="blocks-slug"
                                v-model="store.item.slug"/>
@@ -157,7 +157,7 @@ const toggleFormMenu = (event) => {
                               optionLabel="name"
                               optionValue="id"
                               placeholder="Select a Theme"
-                              class="w-full"  />
+                              class="w-full is-small"  />
 
                 </VhField>
 
@@ -168,11 +168,14 @@ const toggleFormMenu = (event) => {
                               name="blocks-select_location"
                               data-testid="blocks-select_location"
                               :options="store.active_theme.locations" optionLabel="name"
-                              optionValue="id" placeholder="Select a Location" />
+                              optionValue="id" placeholder="Select a Location"
+                                  class="is-small"
+                        />
                         <Button :disabled="!store.item.vh_theme_location_id
                                 || !store.active_theme.locations"
                                 @click="store.copyLocationCode"
-                                icon="pi pi-copy"/>
+                                icon="pi pi-copy"
+                                class="p-button-sm"/>
                     </div>
 
                 </VhField>
@@ -184,7 +187,7 @@ const toggleFormMenu = (event) => {
                     <InputNumber name="blocks-sort"
                                  data-testid="blocks-sort"
                                  v-model="store.item.sort"
-                                 class="w-full" />
+                                 class="w-full p-inputtext-sm" />
                 </VhField>
 
                 <VhField label="Is Published" labelClass="col-12 mb-2 md:col-3 md:mb-0"
