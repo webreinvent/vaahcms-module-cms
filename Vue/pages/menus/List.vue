@@ -64,7 +64,7 @@ onMounted(async () => {
 
                 </template>
 
-                <div>
+                <div class="mb-2">
 
                     <h5>Theme</h5>
                     <Dropdown v-model="store.query.vh_theme_id"
@@ -77,9 +77,7 @@ onMounted(async () => {
                     </Dropdown>
                 </div>
 
-                <div v-if="store.active_theme">
-
-                    <br/>
+                <div class="mb-2" v-if="store.active_theme">
 
                     <h5>Location</h5>
 
@@ -103,10 +101,8 @@ onMounted(async () => {
 
                 </div>
 
-                <div v-if="store.query.vh_theme_id && store.active_location
+                <div class="mb-2" v-if="store.query.vh_theme_id && store.active_location
                 && store.active_location.menus.length > 0">
-
-                    <br/>
 
                     <h5>Menu</h5>
                     <Dropdown v-model="store.query.vh_menu_id"
@@ -120,8 +116,8 @@ onMounted(async () => {
                 </div>
 
 
-                <div v-if="store.active_theme && store.active_location">
-                    <br/>
+                <div class="mb-2" v-if="store.active_theme && store.active_location">
+
                     <h5>Create New Menu</h5>
 
                     <div class="p-inputgroup">

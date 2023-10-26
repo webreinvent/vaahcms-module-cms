@@ -31,7 +31,7 @@
                             @click="store.removeAt(this.tasks,index)"/>
                 </div>
                 <div class="menu-options m-3" v-if="element.menu_options">
-                    <div class="mb-5">
+                    <div class="mb-5 flex align-items-center">
                         <Checkbox v-model="element.attr_target_blank"
                                   data-testid="menus-item_as_target_blank"
                                   :binary="true"
