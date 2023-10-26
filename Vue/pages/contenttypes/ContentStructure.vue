@@ -113,8 +113,8 @@ const onSelectType = (field,data,group_index,field_index) => {
                             <template #item="{element,index}">
                                 <div>
                                     <div class="p-inputgroup" :class="index < item.fields.length - 1 ? 'mb-3' : ''">
-                                        <InputText class="w-2" :model-value="element.type.name" disabled/>
-                                        <InputText class="w-6"
+                                        <InputText class="w-2 p-inputtext-sm" :model-value="element.type.name" disabled/>
+                                        <InputText class="w-6 p-inputtext-sm"
                                                    v-model="element.name"
                                                    data-testid="contenttype-group_field_name"
                                                    placeholder="Field Name"/>
@@ -122,11 +122,15 @@ const onSelectType = (field,data,group_index,field_index) => {
                                                 :label="element.id ? useVaah.convertToStr(element.id) : '&nbsp;&nbsp;'"
                                                 :disabled="!element.id"
                                                 @click="store.getCopy(element.slug)"
-                                                data-testid="contenttype-group_field_slug"/>
+                                                data-testid="contenttype-group_field_slug"
+                                                class="p-button-sm"/>
                                         <Button icon="pi pi-cog p-button-sm"
                                                 data-testid="contenttype-group_field_cog"
-                                                @click="element.content_settings_status = !element.content_settings_status"></Button>
-                                        <Button icon="pi pi-trash p-button-sm"
+                                                @click="element.content_settings_status = !element.content_settings_status"
+                                                class="p-button-sm">
+                                        </Button>
+                                        <Button icon="pi pi-trash"
+                                                class="p-button-sm"
                                                 data-testid="contenttype-group_field_remove"
                                                 @click="store.removeField(index,idx)"/>
                                     </div>
@@ -250,7 +254,9 @@ const onSelectType = (field,data,group_index,field_index) => {
             </template>
             <template #footer>
                 <div class="p-inputgroup w-6 m-auto">
-                    <InputText v-model="store.new_group.name"></InputText>
+                    <InputText v-model="store.new_group.name"
+                               class="p-inputtext-sm">
+                    </InputText>
                     <Button label="Add Group"
                             class="p-button-sm"
                             data-testid="contetntypes-add_to_group"
