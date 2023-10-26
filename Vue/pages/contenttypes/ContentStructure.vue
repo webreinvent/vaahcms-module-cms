@@ -47,7 +47,11 @@ const onSelectType = (field,data,group_index,field_index) => {
 
 <template>
     <div class="col-6" >
-        <Card>
+        <Card
+            :pt="{
+                content: 'p-0',
+                footer: 'pt-2'
+            }">
             <template #header>
                 <div class="flex justify-content-between align-items-center w-full">
                     <h2 class="font-semibold text-lg">Content Structure</h2>
@@ -66,12 +70,17 @@ const onSelectType = (field,data,group_index,field_index) => {
             </template>
             <template #content>
                 <Card v-if="store.item && store.item.groups && store.item.groups.length > 0"
-                      v-for="(item,idx) in store.item.groups" class="mb-3">
+                      v-for="(item,idx) in store.item.groups" class="mb-3"
+                      :pt="{
+                            content: 'p-0'
+                      }"
+                >
                     <template #content>
                         <div class="w-full flex justify-content-between align-items-center mb-4">
                             <h4 class="font-semibold">{{item.name}}</h4>
                             <div class="w-max p-inputgroup align-items-center">
                                 <InputSwitch v-model="item.is_repeatable"
+                                             class="is-small"
                                              v-bind:false-value="0"
                                              v-bind:true-value="1"
                                              data-testid="contetntypes-is_repeatable"
@@ -252,7 +261,11 @@ const onSelectType = (field,data,group_index,field_index) => {
         </Card>
     </div>
     <div class="col-3" >
-        <Card style="height:570px; overflow-y: auto">
+        <Card style="height:570px; overflow-y: auto"
+              :pt="{
+                content: 'p-0'
+              }"
+        >
             <template #header>
                 <h2 class="font-semibold text-lg">Content Fields</h2>
             </template>

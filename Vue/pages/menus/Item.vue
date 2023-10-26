@@ -62,7 +62,7 @@ const toggleItemMenu = (event) => {
 
     <div class="col-6 " >
 
-        <Panel class="draggable-menu">
+        <Panel class="draggable-menu is-small">
 
             <template class="p-1" #header>
 
@@ -84,18 +84,19 @@ const toggleItemMenu = (event) => {
 
                 <div class="p-inputgroup">
                     <Button label="Save"
+                            class="p-button-sm"
                             v-if="store.item && store.item.id"
                             data-testid="menus-save"
                             @click="store.storeItem"
                             icon="pi pi-save"/>
                     <!--/form_menu-->
-                    <Button class="p-button-primary"
+                    <Button class="p-button-primary p-button-sm"
                             icon="pi pi-cog"
                             v-tooltip.top="'Settings'"
                             data-testid="menus-item_delete"
                             @click="store.menu_settings = !store.menu_settings"/>
 
-                    <Button class="p-button-primary"
+                    <Button class="p-button-primary p-button-sm"
                             icon="pi pi-trash"
                             v-tooltip.top="'Delete'"
                             data-testid="menus-item_delete"
@@ -103,7 +104,7 @@ const toggleItemMenu = (event) => {
                 </div>
             </template>
             <div v-if="store.menu_settings">
-                <div class="col-12 mb-2" v-if="store.item && store.item.id">
+                <div class="col-12 mb-2 px-0" v-if="store.item && store.item.id">
                     <InputText class="w-full mb-1"
                                v-model="store.item.name"
                                Placeholder="Name"
@@ -127,14 +128,16 @@ const toggleItemMenu = (event) => {
     </div>
 
     <div class="col-3">
-        <Card>
+        <Card :pt="{
+            content: 'p-0'
+        }">
             <template #header>
                 <h2 class="font-semibold text-lg">Content</h2>
             </template>
             <template #content>
-                <Panel header="Contents" :toggleable="true" class="mb-4">
+                <Panel header="Contents" :toggleable="true" class="mb-3 is-small">
 
-                    <InputText class="w-full mb-3"
+                    <InputText class="w-full my-2"
                                v-model="store.content_search"
                                data-testid="menus-content_search"
                                @input="store.searchContent()"
@@ -146,7 +149,7 @@ const toggleItemMenu = (event) => {
                                item-key="name"
                                :group="{ name: 'menu_items', pull: 'clone', put: false }"  >
                     <template #item="{element}">
-                            <div class="p-inputgroup mb-3">
+                            <div class="p-inputgroup my-2">
                                 <Button icon="pi pi-bars"
                                         class="p-button-secondary p-button-sm"/>
                                 <Button :label="element.name"
@@ -155,7 +158,7 @@ const toggleItemMenu = (event) => {
                         </template>
                     </draggable>
                 </Panel>
-                <Panel v-if="store.menu_types" header="Custom" :toggleable="true">
+                <Panel v-if="store.menu_types" header="Custom" :toggleable="true" class="is-small">
 
                     <draggable :list="store.menu_types"
                                class="dragArea"
@@ -163,7 +166,7 @@ const toggleItemMenu = (event) => {
                                item-key="name"
                                :group="{ name: 'menu_items', pull: 'clone', put: false }"  >
                         <template #item="{element}">
-                            <div class="p-inputgroup mb-3">
+                            <div class="p-inputgroup my-2">
                                 <Button icon="pi pi-bars"
                                         class="p-button-secondary p-button-sm"/>
                                 <Button :label="element.name"

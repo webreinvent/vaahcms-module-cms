@@ -6,7 +6,7 @@ use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
-use VaahCms\Modules\Cms\Entities\MenuItem;
+use VaahCms\Modules\Cms\Models\MenuItem;
 use VaahCms\Modules\Cms\Http\Controllers\Backend\MenusController;
 
 

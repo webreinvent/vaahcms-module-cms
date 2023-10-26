@@ -30,7 +30,7 @@ const toggleBulkMenuState = (event) => {
     <div>
 
         <!--actions-->
-        <div :class="{'flex justify-content-between': store.isViewLarge()}">
+        <div :class="{'flex justify-content-between': store.isViewLarge()}" class="mt-2 mb-2">
 
             <!--left-->
             <div v-if="store.view === 'large'">
@@ -77,17 +77,21 @@ const toggleBulkMenuState = (event) => {
 
 
                     <div class="col-12">
-                        <div class="p-inputgroup ">
+                        <div class="p-inputgroup">
 
                             <InputText v-model="store.query.filter.q"
+                                       class="p-inputtext-sm"
                                        @keyup.enter="store.delayedSearch()"
                                        @keyup.enter.native="store.delayedSearch()"
                                        @keyup.13="store.delayedSearch()"
                                        data-testid="contents-actions-search"
-                                       placeholder="Search"/>
+                                       placeholder="Search"
+                            />
                             <Button @click="store.delayedSearch()"
                                     data-testid="contents-actions-search-button"
-                                    icon="pi pi-search"/>
+                                    icon="pi pi-search"
+                                    class="p-button-sm"
+                            />
                             <Button
                                 type="button"
                                 v-if="store.isViewLarge()"

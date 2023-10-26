@@ -34,7 +34,7 @@ const toggleFormMenu = (event) => {
 
     <div class="col-6" >
 
-        <Panel >
+        <Panel class="is-small">
 
             <template class="p-1" #header>
 
@@ -63,7 +63,7 @@ const toggleFormMenu = (event) => {
 
     <div class="col-3" >
 
-        <Panel >
+        <Panel class="is-small">
 
             <template class="p-1" #header>
 
@@ -88,12 +88,14 @@ const toggleFormMenu = (event) => {
 
                 <div class="p-inputgroup">
                     <Button label="Save"
+                            class="p-button-sm"
                             v-if="store.item && store.item.id"
                             data-testid="blocks-save"
                             @click="store.itemAction('save')"
                             icon="pi pi-save"/>
 
                     <Button label="Create & New"
+                            class="p-button-sm"
                             v-else
                             @click="store.itemAction('create-and-new')"
                             data-testid="blocks-create-and-new"
@@ -103,6 +105,7 @@ const toggleFormMenu = (event) => {
                     <!--form_menu-->
                     <Button
                         type="button"
+                        class="p-button-sm"
                         @click="toggleFormMenu"
                         data-testid="blocks-form-menu"
                         icon="pi pi-angle-down"
@@ -114,7 +117,7 @@ const toggleFormMenu = (event) => {
                     <!--/form_menu-->
 
 
-                    <Button class="p-button-primary"
+                    <Button class="p-button-primary p-button-sm"
                             icon="pi pi-times"
                             data-testid="blocks-to-list"
                             @click="store.toList()">
@@ -126,33 +129,40 @@ const toggleFormMenu = (event) => {
             </template>
 
 
-            <div v-if="store.item">
+            <div v-if="store.item" class="py-2">
 
-                <VhField label="Name">
+                <VhField label="Name" labelClass="col-12 mb-2 md:col-3 md:mb-0"
+                         valueClass="col-12 md:col-9">
                     <InputText class="w-full"
                                name="blocks-name"
                                data-testid="blocks-name"
                                v-model="store.item.name"/>
                 </VhField>
 
-                <VhField label="Slug">
+                <VhField label="Slug" labelClass="col-12 mb-2 md:col-3 md:mb-0"
+                         valueClass="col-12 md:col-9">
                     <InputText class="w-full"
                                name="blocks-slug"
                                data-testid="blocks-slug"
                                v-model="store.item.slug"/>
                 </VhField>
 
-                <VhField label="Themes">
+                <VhField label="Theme" labelClass="col-12 mb-2 md:col-3 md:mb-0"
+                         valueClass="col-12 md:col-9">
                     <Dropdown v-model="store.item.vh_theme_id"
                               name="blocks-select_theme"
                               @change="store.setActiveTheme"
                               data-testid="blocks-select_theme"
-                              :options="store.assets.themes" optionLabel="name"
-                              optionValue="id" placeholder="Select a Theme" />
+                              :options="store.assets.themes"
+                              optionLabel="name"
+                              optionValue="id"
+                              placeholder="Select a Theme"
+                              class="w-full"  />
 
                 </VhField>
 
-                <VhField label="Locations">
+                <VhField label="Location" labelClass="col-12 mb-2 md:col-3 md:mb-0"
+                         valueClass="col-12 md:col-9">
                     <div class="p-inputgroup">
                         <Dropdown v-model="store.item.vh_theme_location_id"
                               name="blocks-select_location"
@@ -169,15 +179,19 @@ const toggleFormMenu = (event) => {
 
 
 
-                <VhField label="Sort">
+                <VhField label="Sort" labelClass="col-12 mb-2 md:col-3 md:mb-0"
+                         valueClass="col-12 md:col-9">
                     <InputNumber name="blocks-sort"
                                  data-testid="blocks-sort"
-                                 v-model="store.item.sort" />
+                                 v-model="store.item.sort"
+                                 class="w-full" />
                 </VhField>
 
-                <VhField label="Is Published">
+                <VhField label="Is Published" labelClass="col-12 mb-2 md:col-3 md:mb-0"
+                         valueClass="col-12 md:col-9">
                     <InputSwitch v-bind:false-value="0"
                                  v-bind:true-value="1"
+                                 class="is-small"
                                  name="blocks-publish"
                                  data-testid="blocks-publish"
                                  v-model="store.item.is_published"/>

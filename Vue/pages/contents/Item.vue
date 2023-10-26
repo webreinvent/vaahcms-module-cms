@@ -58,7 +58,7 @@ const toggleItemMenu = (event) => {
 
     <div class="col-6" >
 
-        <Panel v-if="store && store.item">
+        <Panel v-if="store && store.item" class="is-small">
 
             <template class="p-1" #header>
 
@@ -73,13 +73,13 @@ const toggleItemMenu = (event) => {
             </template>
 
             <template #icons>
-
-
                 <div class="p-inputgroup">
                     <Button label="Edit"
                             @click="store.toEdit(store.item)"
                             data-testid="contents-item-to-edit"
-                            icon="pi pi-save"/>
+                            icon="pi pi-save"
+                            class="p-button-sm"
+                    />
 
                     <!--item_menu-->
                     <Button
@@ -87,14 +87,16 @@ const toggleItemMenu = (event) => {
                         @click="toggleItemMenu"
                         data-testid="contents-item-menu"
                         icon="pi pi-angle-down"
-                        aria-haspopup="true"/>
+                        aria-haspopup="true"
+                        class="p-button-sm"
+                    />
 
                     <Menu ref="item_menu_state"
                           :model="store.item_menu_list"
                           :popup="true" />
                     <!--/item_menu-->
 
-                    <Button class="p-button-primary"
+                    <Button class="p-button-primary p-button-sm"
                             icon="pi pi-times"
                             data-testid="contents-item-to-list"
                             @click="store.toList()"/>
