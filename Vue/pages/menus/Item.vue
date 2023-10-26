@@ -105,15 +105,15 @@ const toggleItemMenu = (event) => {
             </template>
             <div v-if="store.menu_settings">
                 <div class="col-12 mb-2 px-0" v-if="store.item && store.item.id">
-                    <InputText class="w-full mb-1"
+                    <InputText class="w-full mb-2 p-inputtext-sm"
                                v-model="store.item.name"
                                Placeholder="Name"
                                data-testid="menus-item_name"/>
-                    <InputText class="w-full mb-1"
+                    <InputText class="w-full mb-2 p-inputtext-sm"
                                v-model="store.item.attr_id"
                                Placeholder="Menu Id"
                                data-testid="menus-item_id"/>
-                    <InputText class="w-full mb-1"
+                    <InputText class="w-full p-inputtext-sm"
                                v-model="store.item.attr_class"
                                Placeholder="Menu Class"
                                data-testid="menus-item_class"/>
@@ -137,7 +137,7 @@ const toggleItemMenu = (event) => {
             <template #content>
                 <Panel header="Contents" :toggleable="true" class="mb-3 is-small">
 
-                    <InputText class="w-full my-2"
+                    <InputText class="w-full my-2 p-inputtext-sm"
                                v-model="store.content_search"
                                data-testid="menus-content_search"
                                @input="store.searchContent()"
