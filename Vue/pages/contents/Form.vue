@@ -29,7 +29,7 @@ const toggleFormMenu = (event) => {
 </script>
 <template>
     <div class="col-6">
-        <Card class="is-small py-2">
+        <Card class="is-small py-1">
             <template #header>
                 <div class="flex justify-content-between align-items-center w-full">
                     <b>Content Structure</b>
