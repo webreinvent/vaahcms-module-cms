@@ -29,16 +29,10 @@ const toggleFormMenu = (event) => {
 </script>
 <template>
     <div class="col-6">
-        <Card
-            :pt="{
-                content: {
-                    class: 'p-0'
-                }
-            }"
-        >
+        <Card class="is-small py-2">
             <template #header>
                 <div class="flex justify-content-between align-items-center w-full">
-                    <h2 class="font-semibold text-lg">Content Structure</h2>
+                    <b>Content Structure</b>
                     <div class="p-inputgroup w-max">
                         <Button label="Expand All"
                                 @click="store.expandAll"
@@ -53,7 +47,7 @@ const toggleFormMenu = (event) => {
                     </div>
                 </div>
             </template>
-            <template class="is-small" #content>
+            <template #content>
                 <div class="col-12 p-0">
                             <div v-if="store.item">
                                 <div>
@@ -74,16 +68,20 @@ const toggleFormMenu = (event) => {
                                                   placeholder="Search..."
                                                   inputClass="p-inputtext-sm"/>
                                 </div>
-                                <Accordion :multiple="true" :activeIndex="store.active_index" id="accordionTabContainer">
+                                <Accordion :multiple="true"
+                                           :activeIndex="store.active_index" id="accordionTabContainer"
+                                           class="is-small"
+                                >
                                     <AccordionTab>
                                         <template class="p-3" #header>
                                             <div class="w-full">
                                                 <div>
-                                                    <h5 class="font-semibold text-sm">Content Fields</h5>
+                                                    <h5 class="font-semibold text-xs">Content Fields</h5>
                                                 </div>
                                             </div>
                                         </template>
                                         <Message severity="info"
+                                                 :class="store.item.content_form_groups.length ? 'mt-0' : 'my-0'"
                                                  :pt="{
                                                     wrapper: {
                                                         class: 'justify-content-between'
@@ -106,11 +104,12 @@ const toggleFormMenu = (event) => {
                                         <template #header>
                                             <div class="w-full">
                                                 <div>
-                                                    <h5 class="font-semibold text-sm">Template Fields</h5>
+                                                    <h5 class="font-semibold text-xs">Template Fields</h5>
                                                 </div>
                                             </div>
                                         </template>
-                                        <Message severity="info"
+                                        <Message severity="info" class="mt-0"
+                                                 :class="store.item.template_form_groups.length ? 'mt-0' : 'my-0'"
                                                  :pt="{
                                                     wrapper: {
                                                         class: 'justify-content-between'
