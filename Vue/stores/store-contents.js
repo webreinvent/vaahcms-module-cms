@@ -220,9 +220,11 @@ export const useContentStore = defineStore({
 
                 if(this.route.params && !this.route.params.id){
                     this.item = vaah().clone(data.empty_item);
+                    this.item.content_form_groups=this.assets.content_type.form_groups;
                 }
 
                 this.contentsStatusOptions();
+
                 // this.active_theme = this.assets.default_theme;
 
                 // this.getUser();

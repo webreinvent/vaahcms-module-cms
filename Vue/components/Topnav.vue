@@ -17,7 +17,11 @@ const menu = ref();
 <template>
 
     <div v-if="height && root.assets">
-        <Menubar :model="root.assets.aside_menu" />
+        <Menubar :model="root.assets.aside_menu"
+                 class="p-2"
+                 :pt="{
+                    action: 'p-2'
+                 }"/>
     </div>
 
 </template>

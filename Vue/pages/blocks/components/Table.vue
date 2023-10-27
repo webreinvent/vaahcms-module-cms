@@ -68,16 +68,6 @@ const useVaah = vaah();
                          </Button>
                      </div>
 
-                     <!--<span v-if="prop.data.theme">{{ prop.data.theme.name }}</span>
-                     <span v-if="prop.data.theme_location">{{ prop.data.theme_location.name }}</span>
-
-                     <Button class="p-button-tiny p-button-text"
-                             :data-testid="'block-copy_block_'+prop.data.id"
-                             v-tooltip.top="'Copy Block'"
-                             @click="useVaah.copy(prop.data.slug)"
-                             icon="pi pi-copy">
-                     </Button>-->
-
                  </template>
              </Column>
 
