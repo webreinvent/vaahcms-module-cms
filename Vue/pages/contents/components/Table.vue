@@ -18,16 +18,16 @@ const useVaah = vaah();
                    stripedRows
                    responsiveLayout="scroll">
 
-            <Column selectionMode="multiple"
+             <Column selectionMode="multiple"
                     v-if="store.isViewLarge()"
                     headerStyle="width: 3em">
             </Column>
 
-            <Column field="id" header="ID" v-if="store.isViewLarge()"
+             <Column field="id" header="ID" v-if="store.isViewLarge()"
                     :style="{width: store.getIdWidth()}" :sortable="true">
             </Column>
 
-            <Column field="name" header="Name"
+             <Column field="name" header="Name"
                     :sortable="true">
 
                 <template #body="prop">
@@ -60,7 +60,7 @@ const useVaah = vaah();
              </Column>
 
 
-                <Column field="updated_at" header="Updated"
+             <Column field="updated_at" header="Updated"
                         v-if="store.isViewLarge()"
                         style="width:150px;"
                         :sortable="true">
@@ -71,7 +71,7 @@ const useVaah = vaah();
 
                 </Column>
 
-            <Column field="status" v-if="store.isViewLarge()"
+             <Column field="status" v-if="store.isViewLarge()"
                     :sortable="true"
                     style="width:100px;"
                     header="Status">
@@ -87,7 +87,7 @@ const useVaah = vaah();
 
             </Column>
 
-            <Column field="actions" style="width:150px;"
+             <Column field="actions" style="width:150px;"
                     v-if="store.isViewLarge()"
                     :style="{width: store.getActionWidth() }"
                     :header="store.getActionLabel()">

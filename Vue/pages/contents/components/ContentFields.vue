@@ -22,7 +22,7 @@ const props = defineProps({
          v-for="(arr_groups,g_index) in groups"
          :key="'content-fields-group-'+g_index"
          :aria-id="'content-fields-group-'+g_index"
-         :class="g_index !== groups.length - 1 ? 'py-3' : 'pt-3'"
+         :class="g_index === 0 ? 'pt-4 pb-3' : g_index !== groups.length - 1 ? 'py-3' : 'pt-3'"
     >
         <div  v-for="(group,index) in arr_groups"
               class="border-1 border-gray-200 border-round-md p-3 relative"

@@ -120,6 +120,10 @@ export const useContentStore = defineStore({
                     this.view = 'large';
                     this.list_view_width = 12;
                     break;
+                case 'contents.view':
+                    this.view = 'medium';
+                    this.list_view_width = 6;
+                    break;
                 default:
                     this.view = 'small';
                     this.list_view_width = 3;

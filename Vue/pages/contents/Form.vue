@@ -72,7 +72,7 @@ const toggleFormMenu = (event) => {
                                            :activeIndex="store.active_index" id="accordionTabContainer"
                                            class="is-small"
                                 >
-                                    <AccordionTab>
+                                    <AccordionTab :pt="{ root: 'mb-2' }">
                                         <template class="p-3" #header>
                                             <div class="w-full">
                                                 <div>
@@ -81,17 +81,17 @@ const toggleFormMenu = (event) => {
                                             </div>
                                         </template>
                                         <Message severity="info"
-                                                 :class="store.item.content_form_groups.length ? 'mt-0' : 'my-0'"
+                                                 class="my-0"
                                                  :pt="{
                                                     wrapper: {
-                                                        class: 'justify-content-between'
+                                                        class: 'justify-content-between py-1'
                                                     },
                                                     text: {
                                                         class: 'flex-grow-1'
                                                     }
                                                  }"
                                         >
-                                            These fields can be managed from "Content Types" sections.
+                                            <span class="font-normal">These fields can be managed from "Content Types" sections.</span>
                                         </Message>
 
                                         <div v-if="store.item.content_form_groups">
@@ -108,18 +108,18 @@ const toggleFormMenu = (event) => {
                                                 </div>
                                             </div>
                                         </template>
-                                        <Message severity="info" class="mt-0"
-                                                 :class="store.item.template_form_groups.length ? 'mt-0' : 'my-0'"
+                                        <Message severity="info"
+                                                 class="my-0"
                                                  :pt="{
                                                     wrapper: {
-                                                        class: 'justify-content-between'
+                                                        class: 'justify-content-between py-1'
                                                     },
                                                     text: {
                                                         class: 'flex-grow-1'
                                                     }
                                                  }"
                                         >
-                                            These fields required for the theme page template.
+                                            <span class="font-normal">These fields required for the theme page template.</span>
                                         </Message>
 
                                         <div v-if="store.item.template_form_groups">
