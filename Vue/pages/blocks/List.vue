@@ -72,11 +72,11 @@ onMounted(async () => {
                 <template #icons>
 
                     <Button class="p-button-sm"
+                            icon="pi pi-plus mr-1"
+                            label="Create"
                             data-testid="blocks-list-create"
                             @click="store.toForm()"
                     >
-                        <i class="pi pi-plus mr-1"></i>
-                        Create
                     </Button>
 
                 </template>

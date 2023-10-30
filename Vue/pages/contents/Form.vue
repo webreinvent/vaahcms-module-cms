@@ -29,7 +29,7 @@ const toggleFormMenu = (event) => {
 </script>
 <template>
     <div class="col-6">
-        <Card class="is-small py-2">
+        <Card class="is-small py-1">
             <template #header>
                 <div class="flex justify-content-between align-items-center w-full">
                     <b>Content Structure</b>
@@ -188,14 +188,14 @@ const toggleFormMenu = (event) => {
             </template>
             <div v-if="store.item" class="py-2">
 
-                <VhField label="Name" labelClass="text-xs col-12 mb-2 md:col-3 md:mb-0"
+                <VhField label="Name" class="mb-2" labelClass="text-xs col-12 mb-2 md:col-3 md:mb-0"
                          valueClass="col-12 md:col-9">
                     <InputText class="w-full p-inputtext-sm"
                                name="contents-name"
                                data-testid="contents-name"
                                v-model="store.item.name"/>
                 </VhField>
-                <VhField label="Status" labelClass="text-xs col-12 mb-2 md:col-3 md:mb-0"
+                <VhField label="Status" class="mb-2" labelClass="text-xs col-12 mb-2 md:col-3 md:mb-0"
                          valueClass="col-12 md:col-9">
                     <Dropdown v-model="store.item.status"
                               :options="store.assets.content_type.content_statuses"
@@ -205,7 +205,7 @@ const toggleFormMenu = (event) => {
                               data-testid="contents-status"
                               class="w-full is-small" />
                 </VhField>
-                <VhField label="Theme" labelClass="text-xs col-12 mb-2 md:col-3 md:mb-0"
+                <VhField label="Theme" class="mb-2" labelClass="text-xs col-12 mb-2 md:col-3 md:mb-0"
                          valueClass="col-12 md:col-9">
                     <Dropdown v-model="store.item.vh_theme_id"
                               :options="store.assets.themes"

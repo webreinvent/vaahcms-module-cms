@@ -53,13 +53,17 @@ const useVaah = vaah();
                  <template #body="prop">
 
                      <div class="p-inputgroup">
-                         <Tag v-if="prop.data.theme" class="mr-0"
-                              severity="warning"
+                         <Tag v-if="prop.data.theme"
+                              class="mr-0 font-normal border-round-left-sm"
                               :value="prop.data.theme.name"
-                              aria-label="Table Primary Tag" tabindex="0"></Tag>
-                         <Tag v-if="prop.data.theme_location" class="mr-0"
+                              severity="info"
+                              aria-label="Table Primary Tag"
+                              tabindex="0"></Tag>
+                         <Tag v-if="prop.data.theme_location"
+                              class="mr-0 font-normal border-round-right-sm"
                               :value="prop.data.theme_location.name"
-                              aria-label="Table Primary Tag" tabindex="0"></Tag>
+                              aria-label="Table Primary Tag"
+                              tabindex="0"></Tag>
                          <Button class="p-button-tiny p-button-text"
                                  :data-testid="'block-copy_block_'+prop.data.id"
                                  v-tooltip.top="'Copy Location Blocks'"

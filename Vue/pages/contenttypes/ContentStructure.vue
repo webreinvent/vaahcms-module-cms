@@ -47,14 +47,13 @@ const onSelectType = (field,data,group_index,field_index) => {
 
 <template>
     <div class="col-6" >
-        <Card
+        <Card class="is-small py-1"
             :pt="{
-                content: 'p-0',
-                footer: 'pt-2'
+                footer: 'pt-0'
             }">
             <template #header>
                 <div class="flex justify-content-between align-items-center w-full">
-                    <h2 class="font-semibold text-lg">Content Structure</h2>
+                    <b>Content Structure</b>
                     <div class="p-inputgroup w-max">
                         <Button label="Save"
                                 icon="pi pi-save"
@@ -70,15 +69,13 @@ const onSelectType = (field,data,group_index,field_index) => {
             </template>
             <template #content>
                 <Card v-if="store.item && store.item.groups && store.item.groups.length > 0"
-                      v-for="(item,idx) in store.item.groups" class="mb-3"
-                      :pt="{
-                            content: 'p-0'
-                      }"
+                      v-for="(item,idx) in store.item.groups"
+                      class="mb-3 is-small py-2"
                 >
                     <template #content>
-                        <div class="w-full flex justify-content-between align-items-center mb-4">
+                        <div class="w-full flex justify-content-between align-items-center mb-2">
                             <h4 class="font-semibold">{{item.name}}</h4>
-                            <div class="w-max p-inputgroup align-items-center">
+                            <div class="flex align-items-center">
                                 <InputSwitch v-model="item.is_repeatable"
                                              class="is-small"
                                              v-bind:false-value="0"
@@ -86,20 +83,21 @@ const onSelectType = (field,data,group_index,field_index) => {
                                              data-testid="contetntypes-is_repeatable"
                                 />
 
-                                <p class="ml-1 mr-3 text-xs font-semibold">Is Repeatable</p>
+                                <p class="ml-1 mr-2 text-xs font-semibold">Is Repeatable</p>
+                                <div class="w-max p-inputgroup align-items-center">
 
-                                <Button icon="pi pi-hashtag"
-                                        @click="store.getCopy(item.slug)"
-                                        data-testid="contetntypes-copy_slug"
-                                        class="p-button-sm"
-                                        :label="useVaah.convertToStr(item.id)"
-                                />
+                                    <Button @click="store.getCopy(item.slug)"
+                                            data-testid="contetntypes-copy_slug"
+                                            class="p-button-sm"
+                                            :label="'#' + useVaah.convertToStr(item.id)"
+                                    />
 
-                                <Button icon="pi pi-trash"
-                                        class="p-button-sm"
-                                        data-testid="contetntypes-remove_group"
-                                        @click="store.removeGroup(item,idx)"
-                                />
+                                    <Button icon="pi pi-trash"
+                                            class="p-button-sm"
+                                            data-testid="contetntypes-remove_group"
+                                            @click="store.removeGroup(item,idx)"
+                                    />
+                                </div>
                             </div>
                         </div>
 
@@ -112,19 +110,18 @@ const onSelectType = (field,data,group_index,field_index) => {
                             item-key="id">
                             <template #item="{element,index}">
                                 <div>
-                                    <div class="p-inputgroup" :class="index < item.fields.length - 1 ? 'mb-3' : ''">
+                                    <div class="p-inputgroup" :class="index < item.fields.length - 1 ? 'mb-2' : ''">
                                         <InputText class="w-2 p-inputtext-sm" :model-value="element.type.name" disabled/>
                                         <InputText class="w-6 p-inputtext-sm"
                                                    v-model="element.name"
                                                    data-testid="contenttype-group_field_name"
                                                    placeholder="Field Name"/>
-                                        <Button icon="pi pi-hashtag p-button-sm"
-                                                :label="element.id ? useVaah.convertToStr(element.id) : '&nbsp;&nbsp;'"
+                                        <Button :label="element.id ? '#' + useVaah.convertToStr(element.id) : '&nbsp;&nbsp;'"
                                                 :disabled="!element.id"
                                                 @click="store.getCopy(element.slug)"
                                                 data-testid="contenttype-group_field_slug"
                                                 class="p-button-sm"/>
-                                        <Button icon="pi pi-cog p-button-sm"
+                                        <Button icon="pi pi-cog"
                                                 data-testid="contenttype-group_field_cog"
                                                 @click="element.content_settings_status = !element.content_settings_status"
                                                 class="p-button-sm">
@@ -134,7 +131,8 @@ const onSelectType = (field,data,group_index,field_index) => {
                                                 data-testid="contenttype-group_field_remove"
                                                 @click="store.removeField(index,idx)"/>
                                     </div>
-                                    <div v-if="element.content_settings_status" :class="index < item.fields.length - 1 ? 'my-3' : 'mt-3'">
+                                    <div v-if="element.content_settings_status"
+                                         class="my-2">
                                         <div class="p-datatable p-component p-datatable-responsive-stack
                                             p-datatable-striped p-datatable-sm"
                                              data-scrollselectors=".p-datatable-wrapper" pv_id_6="">
@@ -156,11 +154,11 @@ const onSelectType = (field,data,group_index,field_index) => {
                                                     </tr>
 
                                                     <tr>
-                                                        <td class="py-2">
+                                                        <td class="py-1">
                                                             Is searchable
                                                         </td>
 
-                                                        <td class="py-2">
+                                                        <td class="py-1">
                                                             <InputSwitch  v-bind:false-value="0"
                                                                          v-bind:true-value="1"
                                                                          data-testid="contenttype-group_field_searchable"
@@ -170,11 +168,11 @@ const onSelectType = (field,data,group_index,field_index) => {
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td>
+                                                        <td class="py-1">
                                                             Excerpt
                                                         </td>
 
-                                                        <td>
+                                                        <td class="py-1">
                                                             <Textarea data-testid="contenttype-group_field_excerpt"
                                                                       v-model="element.excerpt"
                                                                       class="w-full"
@@ -193,13 +191,15 @@ const onSelectType = (field,data,group_index,field_index) => {
                                                             <td v-if="meta_index !== 'filter_id'
                                                                 && meta_index !== 'display_column'
                                                                 && meta_index !== 'options'"
+                                                                class="py-1"
                                                             >
-                                                                <span class="mt-3" v-html="useVaah.toLabel(meta_index)"></span>
+                                                                <span v-html="useVaah.toLabel(meta_index)"></span>
                                                             </td>
 
                                                             <td v-if="meta_index !== 'filter_id'
                                                                     && meta_index !== 'display_column'
                                                                     && meta_index !== 'options'"
+                                                                class="py-1"
                                                             >
                                                                 <template v-if="meta_index.includes('is_')">
                                                                     <Checkbox :id="meta_index"
@@ -209,7 +209,7 @@ const onSelectType = (field,data,group_index,field_index) => {
                                                                               :binary="true"
                                                                     />
 
-                                                                    <label :for="meta_index" class="mt-4 ml-2">
+                                                                    <label :for="meta_index" class="ml-2">
                                                                         {{ useVaah.toLabel(meta_index) }}
                                                                     </label>
                                                                 </template>
@@ -218,7 +218,7 @@ const onSelectType = (field,data,group_index,field_index) => {
                                                                     <Chips  v-model="element.meta[meta_index]"
                                                                             placeholder="Add a tag"
                                                                             aria-close-label="Delete this option"
-                                                                            class="w-full mt-3"
+                                                                            class="w-full"
                                                                             inputClass="p-inputtext-sm"
                                                                     />
                                                                 </template>
@@ -236,7 +236,7 @@ const onSelectType = (field,data,group_index,field_index) => {
                                                                 <template v-else>
                                                                     <InputText v-model="element.meta[meta_index]"
                                                                                type="text"
-                                                                               class="mt-3 w-full p-inputtext-sm"
+                                                                               class="w-full p-inputtext-sm"
                                                                     />
                                                                 </template>
                                                             </td>
@@ -267,12 +267,10 @@ const onSelectType = (field,data,group_index,field_index) => {
     </div>
     <div class="col-3" >
         <Card style="height:570px; overflow-y: auto"
-              :pt="{
-                content: 'p-0'
-              }"
+              class="is-small py-1"
         >
             <template #header>
-                <h2 class="font-semibold text-lg">Content Fields</h2>
+                <b>Content Fields</b>
             </template>
 
             <template #content>
@@ -288,11 +286,13 @@ const onSelectType = (field,data,group_index,field_index) => {
                         <template #item="{element,index}">
                             <div class="p-inputgroup"
                                  :class="index < store.assets.field_types.length - 1 ? 'mb-2' : ''">
-                                <Button icon="pi pi-bars" class="p-button-sm p-button-secondary"/>
-
                                 <Button :label="element.name"
-                                        data-testid="contenttypes-statuses_name_edit"
-                                        class="p-button-sm p-button-secondary"/>
+                                        icon="pi pi-bars mr-2"
+                                        class="p-button-secondary p-button-sm"
+                                        :pt="{
+                                            label: 'font-normal'
+                                        }"
+                                />
                             </div>
                         </template>
                     </draggable>

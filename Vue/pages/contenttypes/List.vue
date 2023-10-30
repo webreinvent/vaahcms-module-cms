@@ -74,9 +74,9 @@ onMounted(async () => {
                     <Button data-testid="contenttypes-list-create"
                             @click="store.toForm()"
                             class="p-button-sm"
+                            icon="pi pi-plus mr-1"
+                            label="Create"
                     >
-                        <i class="pi pi-plus mr-1"></i>
-                        Create
                     </Button>
 
                 </template>
