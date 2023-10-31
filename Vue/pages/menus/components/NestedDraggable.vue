@@ -1,14 +1,14 @@
 <template>
     <draggable
-        class="dragArea drag-list"
+        class="dragArea drag-list list-none"
         tag="ul"
         :list="tasks"
         :group="{ name: 'menu_items' }"
         item-key="name"
     >
         <template #item="{ element,index }">
-            <li >
-                <div class="p-inputgroup" :class="index < tasks.length - 1 ? 'mb-2' : ''">
+            <li class="relative list-item-marker">
+                <div class="p-inputgroup mb-2">
                     <InputText v-if="element.content"
                                class="w-2 p-inputtext-sm" :model-value="element.content.name" disabled/>
                     <InputText class="w-6 p-inputtext-sm"
@@ -67,16 +67,16 @@
                                    class="w-full p-inputtext-sm" id="item-class"/>
                     </div>
                 </div>
-                <NestedDraggable v-if="element.child" :tasks="element.child" />
+                <NestedDraggable v-if="element.child" :tasks="element.child"/>
             </li>
         </template>
     </draggable>
 </template>
 
 <script setup>
-import {reactive, ref, watch } from 'vue';
+import {reactive, ref, watch} from 'vue';
 import {vaah} from '../../../vaahvue/pinia/vaah'
-import { useMenuStore} from '../../../stores/store-menus'
+import {useMenuStore} from '../../../stores/store-menus'
 
 import draggable from 'vuedraggable'
 
@@ -92,5 +92,19 @@ const props = defineProps({
 
 <style scoped>
 .dragArea {
+}
+
+.drag-list:before {
+    border-left: 1px dashed rgba(0, 0, 0, 0.3);
+}
+
+.list-item-marker::before {
+    content: '';
+    display: block;
+    width: 10px;
+    border-bottom: 1px dashed rgba(0, 0, 0, 0.3);
+    position: absolute;
+    top: 14px;
+    left: -14px;
 }
 </style>

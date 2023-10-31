@@ -153,7 +153,10 @@ const useVaah = vaah();
                    :totalRecords="store.list.total"
                    @page="store.paginate($event)"
                    :rowsPerPageOptions="store.rows_per_page"
-                   class="bg-white-alpha-0 pt-2">
+                   class="bg-white-alpha-0 py-2"
+                   template="PrevPageLink PageLinks NextPageLink RowsPerPageDropdown"
+                   :pt="{ root: 'p-0 pt-1'}"
+        >
         </Paginator>
         <!--/paginator-->
 
