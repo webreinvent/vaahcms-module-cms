@@ -29,16 +29,10 @@ const toggleFormMenu = (event) => {
 </script>
 <template>
     <div class="col-6">
-        <Card
-            :pt="{
-                content: {
-                    class: 'p-0'
-                }
-            }"
-        >
+        <Card class="is-small py-1">
             <template #header>
                 <div class="flex justify-content-between align-items-center w-full">
-                    <h2 class="font-semibold text-lg">Content Structure</h2>
+                    <b>Content Structure</b>
                     <div class="p-inputgroup w-max">
                         <Button label="Expand All"
                                 @click="store.expandAll"
@@ -53,7 +47,7 @@ const toggleFormMenu = (event) => {
                     </div>
                 </div>
             </template>
-            <template class="is-small" #content>
+            <template #content>
                 <div class="col-12 p-0">
                             <div v-if="store.item">
                                 <div>
@@ -74,26 +68,30 @@ const toggleFormMenu = (event) => {
                                                   placeholder="Search..."
                                                   inputClass="p-inputtext-sm"/>
                                 </div>
-                                <Accordion :multiple="true" :activeIndex="store.active_index" id="accordionTabContainer">
-                                    <AccordionTab>
+                                <Accordion :multiple="true"
+                                           :activeIndex="store.active_index" id="accordionTabContainer"
+                                           class="is-small"
+                                >
+                                    <AccordionTab :pt="{ root: 'mb-2' }">
                                         <template class="p-3" #header>
                                             <div class="w-full">
                                                 <div>
-                                                    <h5 class="font-semibold text-sm">Content Fields</h5>
+                                                    <h5 class="font-semibold text-xs">Content Fields</h5>
                                                 </div>
                                             </div>
                                         </template>
                                         <Message severity="info"
+                                                 class="my-0"
                                                  :pt="{
                                                     wrapper: {
-                                                        class: 'justify-content-between'
+                                                        class: 'justify-content-between py-1'
                                                     },
                                                     text: {
                                                         class: 'flex-grow-1'
                                                     }
                                                  }"
                                         >
-                                            These fields can be managed from "Content Types" sections.
+                                            <span class="font-normal">These fields can be managed from "Content Types" sections.</span>
                                         </Message>
 
                                         <div v-if="store.item.content_form_groups">
@@ -106,21 +104,22 @@ const toggleFormMenu = (event) => {
                                         <template #header>
                                             <div class="w-full">
                                                 <div>
-                                                    <h5 class="font-semibold text-sm">Template Fields</h5>
+                                                    <h5 class="font-semibold text-xs">Template Fields</h5>
                                                 </div>
                                             </div>
                                         </template>
                                         <Message severity="info"
+                                                 class="my-0"
                                                  :pt="{
                                                     wrapper: {
-                                                        class: 'justify-content-between'
+                                                        class: 'justify-content-between py-1'
                                                     },
                                                     text: {
                                                         class: 'flex-grow-1'
                                                     }
                                                  }"
                                         >
-                                            These fields required for the theme page template.
+                                            <span class="font-normal">These fields required for the theme page template.</span>
                                         </Message>
 
                                         <div v-if="store.item.template_form_groups">
@@ -189,14 +188,14 @@ const toggleFormMenu = (event) => {
             </template>
             <div v-if="store.item" class="py-2">
 
-                <VhField label="Name" labelClass="text-xs col-12 mb-2 md:col-3 md:mb-0"
+                <VhField label="Name" class="mb-2" labelClass="text-xs col-12 mb-2 md:col-3 md:mb-0"
                          valueClass="col-12 md:col-9">
                     <InputText class="w-full p-inputtext-sm"
                                name="contents-name"
                                data-testid="contents-name"
                                v-model="store.item.name"/>
                 </VhField>
-                <VhField label="Status" labelClass="text-xs col-12 mb-2 md:col-3 md:mb-0"
+                <VhField label="Status" class="mb-2" labelClass="text-xs col-12 mb-2 md:col-3 md:mb-0"
                          valueClass="col-12 md:col-9">
                     <Dropdown v-model="store.item.status"
                               :options="store.assets.content_type.content_statuses"
@@ -206,7 +205,7 @@ const toggleFormMenu = (event) => {
                               data-testid="contents-status"
                               class="w-full is-small" />
                 </VhField>
-                <VhField label="Theme" labelClass="text-xs col-12 mb-2 md:col-3 md:mb-0"
+                <VhField label="Theme" class="mb-2" labelClass="text-xs col-12 mb-2 md:col-3 md:mb-0"
                          valueClass="col-12 md:col-9">
                     <Dropdown v-model="store.item.vh_theme_id"
                               :options="store.assets.themes"

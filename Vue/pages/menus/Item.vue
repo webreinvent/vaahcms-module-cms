@@ -128,53 +128,99 @@ const toggleItemMenu = (event) => {
     </div>
 
     <div class="col-3">
-        <Card :pt="{
-            content: 'p-0'
-        }">
+        <Card class="is-small">
             <template #header>
-                <h2 class="font-semibold text-lg">Content</h2>
+                <b class="py-1">Content</b>
             </template>
             <template #content>
-                <Panel header="Contents" :toggleable="true" class="mb-3 is-small">
+                <div class="py-1">
+                    <Panel
+                        header="Contents"
+                        :toggleable="true"
+                        class="mb-2 is-small"
+                        :pt="{
+                            title: {
+                                class: 'font-semibold text-xs'
+                            },
+                            header: {
+                                class: 'py-1'
+                            },
+                            toggler: {
+                                style: 'height: 1.5rem; width: 1.5rem'
+                            },
+                            togglerIcon: {
+                                style: 'height: 0.7rem; width: 0.7rem'
+                            }
+                        }"
+                    >
 
-                    <InputText class="w-full my-2 p-inputtext-sm"
-                               v-model="store.content_search"
-                               data-testid="menus-content_search"
-                               @input="store.searchContent()"
-                               placeholder="Search content"/>
+                        <InputText class="w-full my-2 p-inputtext-sm"
+                                   v-model="store.content_search"
+                                   data-testid="menus-content_search"
+                                   @input="store.searchContent()"
+                                   placeholder="Search content"/>
 
-                    <draggable :list="store.filtered_content_list"
-                               class="dragArea"
-                               :clone="store.cloneField"
-                               item-key="name"
-                               :group="{ name: 'menu_items', pull: 'clone', put: false }"  >
-                    <template #item="{element}">
-                            <div class="p-inputgroup my-2">
-                                <Button icon="pi pi-bars"
-                                        class="p-button-secondary p-button-sm"/>
-                                <Button :label="element.name"
-                                        class="p-button-secondary p-button-sm"/>
-                            </div>
-                        </template>
-                    </draggable>
-                </Panel>
-                <Panel v-if="store.menu_types" header="Custom" :toggleable="true" class="is-small">
+                        <draggable :list="store.filtered_content_list"
+                                   class="dragArea"
+                                   :clone="store.cloneField"
+                                   item-key="name"
+                                   :group="{ name: 'menu_items', pull: 'clone', put: false }"  >
+                            <template #item="{element, index}">
+                                <div class="p-inputgroup"
+                                     :class="index < store.filtered_content_list.length - 1 ? 'mb-2' : ''"
+                                >
+                                    <Button :label="element.name"
+                                            icon="pi pi-bars mr-2"
+                                            class="p-button-secondary p-button-sm"
+                                            :pt="{
+                                            label: 'font-normal'
+                                        }"
+                                    />
+                                </div>
+                            </template>
+                        </draggable>
+                    </Panel>
+                    <Panel v-if="store.menu_types"
+                           header="Custom"
+                           :toggleable="true"
+                           class="is-small"
+                           :pt="{
+                               title: {
+                                   class: 'font-semibold text-xs'
+                               },
+                                header: {
+                                    class: 'py-1'
+                                },
+                                toggler: {
+                                    style: 'height: 1.5rem; width: 1.5rem'
+                                },
+                                togglerIcon: {
+                                    style: 'height: 0.7rem; width: 0.7rem'
+                                }
+                           }"
+                    >
 
-                    <draggable :list="store.menu_types"
-                               class="dragArea"
-                               :clone="store.customCloneField"
-                               item-key="name"
-                               :group="{ name: 'menu_items', pull: 'clone', put: false }"  >
-                        <template #item="{element}">
-                            <div class="p-inputgroup my-2">
-                                <Button icon="pi pi-bars"
-                                        class="p-button-secondary p-button-sm"/>
-                                <Button :label="element.name"
-                                        class="p-button-secondary p-button-sm"/>
-                            </div>
-                        </template>
-                    </draggable>
-                </Panel>
+                        <draggable :list="store.menu_types"
+                                   class="dragArea"
+                                   :clone="store.customCloneField"
+                                   item-key="name"
+                                   :group="{ name: 'menu_items', pull: 'clone', put: false }"  >
+                            <template #item="{element, index}">
+                                <div class="p-inputgroup"
+                                     :class="index < store.menu_types.length - 1 ? 'mb-2' : ''"
+                                >
+                                    <Button :label="element.name"
+                                            icon="pi pi-bars mr-2"
+                                            class="p-button-secondary p-button-sm"
+                                            :pt="{
+                                            label: 'font-normal'
+                                        }"
+                                    />
+                                </div>
+                            </template>
+                        </draggable>
+                    </Panel>
+                </div>
             </template>
         </Card>
     </div>

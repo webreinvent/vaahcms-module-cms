@@ -120,6 +120,10 @@ export const useContentStore = defineStore({
                     this.view = 'large';
                     this.list_view_width = 12;
                     break;
+                case 'contents.view':
+                    this.view = 'medium';
+                    this.list_view_width = 6;
+                    break;
                 default:
                     this.view = 'small';
                     this.list_view_width = 3;
@@ -220,9 +224,11 @@ export const useContentStore = defineStore({
 
                 if(this.route.params && !this.route.params.id){
                     this.item = vaah().clone(data.empty_item);
+                    this.item.content_form_groups=this.assets.content_type.form_groups;
                 }
 
                 this.contentsStatusOptions();
+
                 // this.active_theme = this.assets.default_theme;
 
                 // this.getUser();

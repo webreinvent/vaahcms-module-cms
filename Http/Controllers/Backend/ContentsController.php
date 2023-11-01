@@ -27,6 +27,7 @@ class ContentsController extends Controller
 
         $data['currency_codes'] = vh_get_currency_list();
         $data['themes'] = Theme::getActiveThemesWithTemplates();
+        $data['rows'] = config('vaahcms.per_page');
 
         $default_theme_template = Theme::getDefaultThemesAndTemplateWithRelations($content_slug);
 

@@ -2,9 +2,10 @@
 import {onMounted, ref, watch} from "vue";
 import {useRoute} from 'vue-router';
 
-import { useBlockStore } from '../../stores/store-blocks'
+import {useBlockStore} from '../../stores/store-blocks'
 
 import VhViewRow from '../../vaahvue/vue-three/primeflex/VhViewRow.vue';
+
 const store = useBlockStore();
 const route = useRoute();
 
@@ -14,8 +15,7 @@ onMounted(async () => {
      * If record id is not set in url then
      * redirect user to list view
      */
-    if(route.params && !route.params.id)
-    {
+    if (route.params && !route.params.id) {
         store.toList();
         return false;
     }
@@ -23,8 +23,7 @@ onMounted(async () => {
     /**
      * Fetch the record from the database
      */
-    if(!store.item || Object.keys(store.item).length < 1)
-    {
+    if (!store.item || Object.keys(store.item).length < 1) {
         await store.getItem(route.params.id);
     }
 
@@ -56,14 +55,14 @@ const toggleItemMenu = (event) => {
 </script>
 <template>
 
-    <div class="col-6" >
+    <div class="col-6">
 
         <Panel v-if="store && store.item" class="is-small">
 
             <template class="p-1" #header>
 
 
-                <div class="flex flex-row">
+                <div class="flex flex-row py-1">
                     <div class="p-panel-title">
                         <span>
                             Content
@@ -75,12 +74,11 @@ const toggleItemMenu = (event) => {
 
             </template>
 
-            <div  class="content min-h-150" v-html="store.item.content"></div>
+            <div class="content" style="min-height: 150px" v-html="store.item.content"></div>
         </Panel>
-
     </div>
 
-    <div class="col-3" >
+    <div class="col-3">
 
         <Panel v-if="store && store.item" class="is-small">
 
@@ -117,7 +115,7 @@ const toggleItemMenu = (event) => {
 
                     <Menu ref="item_menu_state"
                           :model="store.item_menu_list"
-                          :popup="true" />
+                          :popup="true"/>
                     <!--/item_menu-->
 
                     <Button class="p-button-primary p-button-sm"
@@ -126,7 +124,6 @@ const toggleItemMenu = (event) => {
                             @click="store.toList()"/>
 
                 </div>
-
 
 
             </template>
@@ -158,66 +155,75 @@ const toggleItemMenu = (event) => {
 
                 </Message>
 
-                <div class="p-datatable p-component p-datatable-responsive-scroll p-datatable-striped p-datatable-sm">
-                <table class="p-datatable-table">
-                    <tbody class="p-datatable-tbody">
-                    <template v-for="(value, column) in store.item ">
+                <div class="p-datatable p-component p-datatable-responsive-scroll p-datatable-striped p-datatable-sm overflow-auto">
+                    <table class="p-datatable-table">
+                        <tbody class="p-datatable-tbody">
+                        <template v-for="(value, column) in store.item ">
 
-                        <template v-if="column === 'created_by'
+                            <template v-if="column === 'created_by'
                         || column === 'updated_by' || column === 'theme'
                         || column === 'theme_location'">
+                            </template>
+
+                            <template v-else-if="column === 'id' || column === 'uuid'">
+                                <VhViewRow :label="column"
+                                           label_class="line-height-2"
+                                           :value="value"
+                                           :can_copy="true"
+                                />
+                            </template>
+
+                            <template
+                                v-else-if="(column === 'created_by_user' || column === 'updated_by_user'  || column === 'deleted_by_user') && (typeof value === 'object' && value !== null)">
+                                <VhViewRow :label="column"
+                                           label_class="line-height-2"
+                                           :value="value"
+                                           type="user"
+                                />
+                            </template>
+
+                            <template v-else-if="column === 'is_active'">
+                                <VhViewRow :label="column"
+                                           label_class="line-height-2"
+                                           :value="value"
+                                           type="yes-no"
+                                />
+                            </template>
+
+                            <template v-else-if="column === 'vh_theme_id'">
+                                <tr>
+                                    <td class="line-height-2"><b>Theme</b></td>
+                                    <td v-if="store.item.theme" colspan="2">
+                                        <Tag class="font-normal"
+                                             :value="store.item.theme.title"
+                                             severity="primary"></Tag>
+                                    </td>
+                                </tr>
+                            </template>
+
+                            <template v-else-if="column === 'vh_theme_location_id'">
+                                <tr>
+                                    <td class="line-height-2"><b>Theme Location</b></td>
+                                    <td v-if="store.item.theme_location" colspan="2">
+                                        <Tag class="font-normal"
+                                             :value="store.item.theme_location.name"
+                                             severity="primary"></Tag>
+                                    </td>
+                                </tr>
+                            </template>
+
+                            <template v-else>
+                                <VhViewRow :label="column"
+                                           label_class="line-height-2"
+                                           :value="value"
+                                />
+                            </template>
+
+
                         </template>
+                        </tbody>
 
-                        <template v-else-if="column === 'id' || column === 'uuid'">
-                            <VhViewRow :label="column"
-                                       :value="value"
-                                       :can_copy="true"
-                            />
-                        </template>
-
-                        <template v-else-if="(column === 'created_by_user' || column === 'updated_by_user'  || column === 'deleted_by_user') && (typeof value === 'object' && value !== null)">
-                            <VhViewRow :label="column"
-                                       :value="value"
-                                       type="user"
-                            />
-                        </template>
-
-                        <template v-else-if="column === 'is_active'">
-                            <VhViewRow :label="column"
-                                       :value="value"
-                                       type="yes-no"
-                            />
-                        </template>
-
-                        <template v-else-if="column === 'vh_theme_id'">
-                            <tr>
-                                <td :style="{width: '150px'}"><b>Theme</b></td>
-                                <td v-if="store.item.theme" colspan="2">
-                                    <Tag :value="store.item.theme.title" severity="primary"></Tag>
-                                </td>
-                            </tr>
-                        </template>
-
-                        <template v-else-if="column === 'vh_theme_location_id'">
-                            <tr>
-                                <td :style="{width: '150px'}"><b>Theme Location</b></td>
-                                <td v-if="store.item.theme_location" colspan="2">
-                                    <Tag :value="store.item.theme_location.name" severity="primary"></Tag>
-                                </td>
-                            </tr>
-                        </template>
-
-                        <template v-else>
-                            <VhViewRow :label="column"
-                                       :value="value"
-                                       />
-                        </template>
-
-
-                    </template>
-                    </tbody>
-
-                </table>
+                    </table>
 
                 </div>
             </div>

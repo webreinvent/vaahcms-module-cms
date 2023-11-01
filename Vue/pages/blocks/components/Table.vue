@@ -53,13 +53,17 @@ const useVaah = vaah();
                  <template #body="prop">
 
                      <div class="p-inputgroup">
-                         <Tag v-if="prop.data.theme" class="mr-0"
-                              severity="warning"
+                         <Tag v-if="prop.data.theme"
+                              class="mr-0 font-normal border-round-left-sm"
                               :value="prop.data.theme.name"
-                              aria-label="Table Primary Tag" tabindex="0"></Tag>
-                         <Tag v-if="prop.data.theme_location" class="mr-0"
+                              severity="info"
+                              aria-label="Table Primary Tag"
+                              tabindex="0"></Tag>
+                         <Tag v-if="prop.data.theme_location"
+                              class="mr-0 font-normal border-round-right-sm"
                               :value="prop.data.theme_location.name"
-                              aria-label="Table Primary Tag" tabindex="0"></Tag>
+                              aria-label="Table Primary Tag"
+                              tabindex="0"></Tag>
                          <Button class="p-button-tiny p-button-text"
                                  :data-testid="'block-copy_block_'+prop.data.id"
                                  v-tooltip.top="'Copy Location Blocks'"
@@ -67,16 +71,6 @@ const useVaah = vaah();
                                  icon="pi pi-copy">
                          </Button>
                      </div>
-
-                     <!--<span v-if="prop.data.theme">{{ prop.data.theme.name }}</span>
-                     <span v-if="prop.data.theme_location">{{ prop.data.theme_location.name }}</span>
-
-                     <Button class="p-button-tiny p-button-text"
-                             :data-testid="'block-copy_block_'+prop.data.id"
-                             v-tooltip.top="'Copy Block'"
-                             @click="useVaah.copy(prop.data.slug)"
-                             icon="pi pi-copy">
-                     </Button>-->
 
                  </template>
              </Column>
@@ -159,7 +153,10 @@ const useVaah = vaah();
                    :totalRecords="store.list.total"
                    @page="store.paginate($event)"
                    :rowsPerPageOptions="store.rows_per_page"
-                   class="bg-white-alpha-0 pt-2">
+                   class="bg-white-alpha-0 py-2"
+                   template="PrevPageLink PageLinks NextPageLink RowsPerPageDropdown"
+                   :pt="{ root: 'p-0 pt-1'}"
+        >
         </Paginator>
         <!--/paginator-->
 
