@@ -50,12 +50,16 @@ const toggleFormMenu = (event) => {
             <template #content>
                 <div class="col-12 p-0">
                             <div v-if="store.item">
-                                <div>
+                                <div class="p-inputgroup">
                                     <InputText class="w-full p-inputtext-sm mb-2"
                                                name="contents-name"
                                                data-testid="contents-name"
                                                placeholder="Perma link"
                                                v-model="store.item.permalink"/>
+                                    <Button v-if="store.item.id"
+                                            data-testid="contents-to_external_link"
+                                            @click="store.toExternalLink(store.item)"
+                                            class="p-button-sm mb-2" icon="pi pi-external-link"/>
                                 </div>
                                 <div class="mb-2">
                                     <AutoComplete v-model="store.selected_user_id"

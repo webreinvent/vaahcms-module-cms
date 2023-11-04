@@ -265,7 +265,7 @@ class CmsSeeder{
             return false;
         }
 
-        $content_type = ContentTypeBase::where('slug', $content_type_slug)
+        $content_type = ContentType::where('slug', $content_type_slug)
             ->with(['groups.fields.type'])
             ->first()->toArray();
 

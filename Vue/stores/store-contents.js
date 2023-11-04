@@ -679,6 +679,12 @@ export const useContentStore = defineStore({
             this.$router.push({name: 'contents.form'})
         },
         //---------------------------------------------------------------------
+        toExternalLink(item)
+        {
+            window.open(item.link_prefix+item.permalink,
+                '_blank');
+        },
+        //---------------------------------------------------------------------
         toView(item)
         {
             this.item = vaah().clone(item);
