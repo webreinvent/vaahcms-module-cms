@@ -339,8 +339,9 @@ class ContentTypeBase extends Model {
 
     }
     //-------------------------------------------------
-    public static function syncWithFormGroups(ContentTypeBase $content_type, $groups_array)
+    public static function syncWithFormGroups(ContentType $content_type, $groups_array)
     {
+
 
         $stored_groups = $content_type->groups()->get()->pluck('slug','id')->toArray();
 
