@@ -7,7 +7,7 @@ Cms Module for VaahCMS
 
 #### For Hot Reload add following:
 ```dotenv
-APP_MODULE_CMS_ENV=develop
+MODULE_CMS_ENV=develop
 ```
 
 #### Frontend Routes
