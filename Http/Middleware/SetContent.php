@@ -2,8 +2,8 @@
 
 use Closure;
 use Illuminate\Http\Request;
-use VaahCms\Modules\Cms\Entities\Content;
-use VaahCms\Modules\Cms\Entities\ContentTypeBase;
+use VaahCms\Modules\Cms\Models\Content;
+use VaahCms\Modules\Cms\Models\ContentTypeBase;
 
 class SetContent
 {
@@ -51,7 +51,7 @@ class SetContent
 
         $content = Content::getItem($content->id);
 
-        if($content['status'] != 'success')
+        if(!$content || !isset($content['success']) || !$content['success'])
         {
             abort(404);
         }
