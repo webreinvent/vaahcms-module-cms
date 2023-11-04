@@ -1,328 +1,96 @@
-<script src="./ListJs.js"></script>
+<script setup>
+import {onMounted, reactive, ref} from "vue";
+import {useRoute} from 'vue-router';
+
+import {useBlockStore} from '../../stores/store-blocks'
+
+import Actions from "./components/Actions.vue";
+import Table from "./components/Table.vue";
+
+const store = useBlockStore();
+const route = useRoute();
+
+import { useConfirm } from "primevue/useconfirm";
+const confirm = useConfirm();
+
+
+onMounted(async () => {
+
+    document.title = 'Blocks - CMS';
+    /**
+     * call onLoad action when List view loads
+     */
+    await store.onLoad(route);
+
+    /**
+     * watch routes to update view, column width
+     * and get new item when routes get changed
+     */
+    await store.watchRoutes(route);
+
+    /**
+     * watch states like `query.filter` to
+     * call specific actions if a state gets
+     * changed
+     */
+    await store.watchStates();
+
+    /**
+     * fetch assets required for the crud
+     * operation
+     */
+    await store.getAssets();
+
+    /**
+     * fetch list of records
+     */
+    await store.getList();
+});
+
+</script>
 <template>
-    <div class="columns">
 
-        <!--left-->
-        <div class="column"
-             :class="{'is-12': page.list_view == 'large',
-                     'is-3': page.list_view == 'small',
-                     }">
+    <div class="grid" v-if="store.assets">
 
-            <!--card-->
-            <div class="card" v-if="page.assets && page.list">
+        <div :class="'col-'+store.list_view_width">
+            <Panel class="is-small">
 
-                <!--header-->
-                <div class="card-header">
+                <template class="p-1" #header>
 
-                    <div class="card-header-title">
-                        Blocks
-                        <span v-if="page.list">
-                                 &nbsp; ({{page.list.total}})
-                        </span>
-                    </div>
-
-                    <div class="card-header-buttons">
-                        <div class="field has-addons is-pulled-right">
-
-                            <p class="control">
-                                <b-button type="is-light"
-                                          @click="toCreate()"
-                                          icon-left="plus">
-                                    Create
-                                </b-button>
-                            </p>
-                            <div class="control">
-                                <b-button type="is-light"
-                                          @click="sync()"
-                                          :loading="is_btn_loading"
-                                          icon-left="redo-alt">
-                                </b-button>
-                            </div>
+                    <div class="flex flex-row">
+                        <div >
+                            <b class="mr-1">Blocks</b>
+                            <Badge v-if="store.list && store.list.total > 0"
+                                   :value="store.list.total">
+                            </Badge>
                         </div>
-                    </div>
-
-                </div>
-                <!--/header-->
-
-                <!--content-->
-                <div class="card-content">
-
-
-                    <div class="block" >
-
-
-
-                        <!--actions-->
-                        <div class="level" v-if="page.list_view !='small'">
-
-                            <!--left-->
-                            <div class="level-left" >
-                                <div  class="level-item" >
-                                    <b-field >
-
-                                        <b-select placeholder="- Bulk Actions -"
-                                                  v-model="page.bulk_action.action">
-                                            <option value="">
-                                                - Bulk Actions -
-                                            </option>
-                                            <option
-                                                v-for="option in page.assets.bulk_actions"
-                                                :value="option.slug"
-                                                :key="option.slug">
-                                                {{ option.name }}
-                                            </option>
-                                        </b-select>
-
-                                        <b-select placeholder="- Select Status -"
-                                                  v-if="page.bulk_action.action == 'bulk-change-status'"
-                                                  v-model="page.bulk_action.data.status">
-                                            <option value="">
-                                                - Select Status -
-                                            </option>
-                                            <option value=1>
-                                                Published
-                                            </option>
-                                            <option value=0>
-                                                Unpublished
-                                            </option>
-                                        </b-select>
-
-                                        <p class="control">
-                                            <button class="button is-primary"
-                                                    @click="actions">
-                                                Apply
-                                            </button>
-                                        </p>
-
-                                    </b-field>
-                                </div>
-                            </div>
-                            <!--/left-->
-
-
-                            <!--right-->
-                            <div class="level-right" >
-
-                                <div class="level-item">
-
-                                    <b-field>
-
-                                        <b-input placeholder="Search"
-                                                 type="text"
-                                                 icon="search"
-                                                 @input="delayedSearch"
-                                                 @keyup.enter.prevent="delayedSearch"
-                                                 v-model="query_string.q">
-                                        </b-input>
-
-                                        <p class="control">
-                                            <button class="button is-primary"
-                                                    @click="getList">
-                                                Filter
-                                            </button>
-                                        </p>
-                                        <p class="control">
-                                            <button class="button is-primary"
-                                                    @click="resetPage">
-                                                Reset
-                                            </button>
-                                        </p>
-                                        <p class="control">
-                                            <button class="button is-primary"
-                                                    @click="toggleFilters()"
-                                                    slot="trigger">
-                                                <b-icon icon="ellipsis-v"></b-icon>
-                                            </button>
-                                        </p>
-                                    </b-field>
-
-                                </div>
-
-                            </div>
-                            <!--/right-->
-
-                        </div >
-                        <!--/actions-->
-
-                        <b-field v-else>
-                            <b-input placeholder="Search"
-                                     expanded
-                                     type="text"
-                                     icon="search"
-                                     @input="delayedSearch"
-                                     @keyup.enter.prevent="delayedSearch"
-                                     v-model="query_string.q">
-                            </b-input>
-                        </b-field>
-
-
-                        <!--filters-->
-                        <div class="level" v-if="page.show_filters && page.list_view !='small'">
-
-                            <div class="level-left">
-
-                                <div class="level-item">
-
-                                    <b-field label="">
-                                        <b-select placeholder="- Select a filter -"
-                                                  v-model="query_string.filter"
-                                                  @input="setFilter()">
-
-                                            <option value="">Select a filter</option>
-
-                                            <optgroup label="Status">
-                                                <option value=01>
-                                                    Published
-                                                </option>
-                                                <option value=10>
-                                                    Unpublished
-                                                </option>
-                                            </optgroup>
-
-                                            <optgroup v-for="(theme, index) in page.assets.themes" :label="theme.name">
-                                                <option v-for="(location, index) in theme.locations"
-                                                        :value="location.slug"
-                                                >{{location.name}}
-                                                </option>
-                                            </optgroup>
-
-                                        </b-select>
-                                    </b-field>
-
-
-                                </div>
-
-                                <div class="level-item">
-
-                                    <b-field label="">
-                                        <b-select placeholder="- Sort by -"
-                                                  v-model="query_string.sort_by"
-                                                  @input="setFilter()">
-                                            <option value="">
-                                                -  Sort by -
-                                            </option>
-                                            <option value=id>
-                                                Id
-                                            </option>
-                                            <option value=name>
-                                                Name
-                                            </option>
-                                            <option value=is_published>
-                                                Is Published
-                                            </option>
-                                            <option value=updated_at>
-                                                Updated At
-                                            </option>
-
-                                        </b-select>
-                                    </b-field>
-
-
-                                </div>
-                                <div class="level-item">
-
-                                    <b-field label="">
-                                        <b-dropdown aria-role="list" @input="setFilter()" v-model="query_string.sort_order">
-                                            <button class="button is-primary" type="button" slot="trigger">
-                                                <span v-if="query_string.sort_order === 'desc'">Descending</span>
-                                                <span v-else>Ascending</span>
-                                            </button>
-
-                                            <b-dropdown-item  value="desc">
-                                                <span>Descending</span>
-                                            </b-dropdown-item>
-                                            <b-dropdown-item  value="asc">
-                                                <span>Ascending</span>
-                                            </b-dropdown-item>
-                                        </b-dropdown>
-                                    </b-field>
-
-
-                                </div>
-
-                                <div class="level-item">
-                                    <div class="field">
-                                        <b-checkbox v-model="query_string.trashed"
-                                                    @input="getList"
-                                        >
-                                            Include Trashed
-                                        </b-checkbox>
-                                    </div>
-                                </div>
-
-                            </div>
-                            <div class="level-right">
-
-                                <div class="level-item">
-
-                                    <b-field>
-                                        <b-datepicker
-                                            position="is-bottom-left"
-                                            placeholder="- Select a dates -"
-                                            v-model="selected_date"
-                                            @input="setDateRange"
-                                            range>
-                                        </b-datepicker>
-                                    </b-field>
-
-
-                                </div>
-
-                            </div>
-
-
-                        </div>
-                        <!--/filters-->
-
-
-                        <!--list-->
-                        <div class="block ">
-
-                            <div class="block" style="margin-bottom: 0px;" >
-
-                                <div v-if="page.list_view == 'small'">
-                                    <ListSmallView @eReloadList="getList"/>
-                                </div>
-
-                                <div v-else>
-                                    <ListLargeView @eReloadList="getList"/>
-                                </div>
-
-                            </div>
-
-                            <hr style="margin-top: 0;"/>
-
-                            <div class="block" v-if="page.list">
-                                <b-pagination  :total="page.list.total"
-                                               :current.sync="page.list.current_page"
-                                               :per-page="page.list.per_page"
-                                               range-before=3
-                                               range-after=3
-                                               @change="paginate">
-                                </b-pagination>
-                            </div>
-
-                        </div>
-                        <!--/list-->
-
-
 
                     </div>
 
+                </template>
 
-                </div>
-                <!--/content-->
+                <template #icons>
 
-            </div>
-            <!--/card-->
+                    <Button class="p-button-sm"
+                            icon="pi pi-plus mr-1"
+                            label="Create"
+                            data-testid="blocks-list-create"
+                            @click="store.toForm()"
+                    >
+                    </Button>
 
+                </template>
 
+                <Actions/>
+
+                <Table/>
+
+            </Panel>
         </div>
-        <!--/left-->
 
-        <router-view @eReloadList="getList"></router-view>
+        <RouterView/>
 
     </div>
+
+
 </template>
-
-

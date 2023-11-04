@@ -4,10 +4,10 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use VaahCms\Modules\Cms\Entities\Block;
-use VaahCms\Modules\Cms\Entities\ContentType;
-use VaahCms\Modules\Cms\Entities\FieldType;
-use WebReinvent\VaahCms\Entities\Theme;
+use VaahCms\Modules\Cms\Models\BlockBase;
+use VaahCms\Modules\Cms\Models\ContentTypeBase;
+use VaahCms\Modules\Cms\Models\FieldType;
+use WebReinvent\VaahCms\Models\Theme;
 
 class MediaController extends Controller
 {
@@ -42,7 +42,7 @@ class MediaController extends Controller
         if ( $validator->fails() ) {
 
             $errors             = errorsToArray($validator->errors());
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['errors'] = $errors;
             return response()->json($response);
         }*/
@@ -136,12 +136,12 @@ class MediaController extends Controller
 
             $data['baseurl'] = asset('storage'.substr($request->folder_path, 6)).'/';
 
-            $response['status'] = 'success';
+            $response['success'] = true;
             $response['data'] = $data;
 
         }catch(\Exception $e)
         {
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['errors'][] = $e->getMessage();
         }
 

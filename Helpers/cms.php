@@ -16,7 +16,7 @@
 
 
 //-----------------------------------------------------------------------------------
-use VaahCms\Modules\Cms\Entities\Content;
+use VaahCms\Modules\Cms\Models\Content;
 
 
 //-----------------------------------------------------------------------------------
@@ -130,18 +130,18 @@ function get_bulma_pagination($contents)
     $value = '<nav class="pagination" role="navigation" aria-label="pagination">';
 
     if($contents->previousPageUrl()){
-        $value .= '<a class="pagination-previous" 
+        $value .= '<a class="pagination-previous"
         href="'.$contents->previousPageUrl().'" >Previous</a>';
     }else{
-        $value .= '<a class="pagination-previous" 
+        $value .= '<a class="pagination-previous"
         title="This is the first page" disabled>Previous</a>';
     }
 
     if($contents->nextPageUrl()){
-        $value .= '<a class="pagination-next" href="'.$contents->nextPageUrl().'" 
+        $value .= '<a class="pagination-next" href="'.$contents->nextPageUrl().'"
                     >Next page</a>';
     }else{
-        $value .= '<a class="pagination-next" 
+        $value .= '<a class="pagination-next"
         title="This is the last page" disabled>Next page</a>';
     }
 
@@ -179,7 +179,7 @@ function get_bulma_pagination($contents)
         }
     }else{
         $value .= '<li>
-                  <a class="pagination-link is-current" 
+                  <a class="pagination-link is-current"
                   aria-label="Page 1" aria-current="page">1</a>
                 </li>';
     }
@@ -352,7 +352,6 @@ function get_group_content_field(Content $content, $group_slug='default',
     $data = null;
 
     foreach ($content->content_form_groups as $arr_group){
-        $data = null;
         foreach ($arr_group as $key => $group){
             if($group['slug'] === $group_slug){
 

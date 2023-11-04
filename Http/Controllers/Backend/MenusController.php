@@ -1,13 +1,10 @@
 <?php namespace VaahCms\Modules\Cms\Http\Controllers\Backend;
 
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use VaahCms\Modules\Cms\Entities\Content;
-use VaahCms\Modules\Cms\Entities\ContentType;
-use VaahCms\Modules\Cms\Entities\Menu;
-use WebReinvent\VaahCms\Entities\Theme;
+use VaahCms\Modules\Cms\Models\Content;
+use VaahCms\Modules\Cms\Models\Menu;
+use WebReinvent\VaahCms\Models\Theme;
 
 
 class MenusController extends Controller
@@ -26,37 +23,48 @@ class MenusController extends Controller
     public function getAssets(Request $request)
     {
 
-        $data['themes'] = Theme::getActiveThemesWithMenuLocations();
+        try {
+            $data = [];
 
-        $response['status'] = 'success';
-        $response['data'] = $data;
+            $data['themes'] = Theme::getActiveThemesWithMenuLocations();
 
-        return response()->json($response);
-    }
-    //----------------------------------------------------------
-    public function postCreate(Request $request)
-    {
-        $response = Menu::postCreate($request);
-        return response()->json($response);
-    }
-    //----------------------------------------------------------
-    public function getList(Request $request)
-    {
-        $response = Menu::getList($request);
-        return response()->json($response);
-    }
-    //----------------------------------------------------------
-    public function getItem(Request $request, $id)
-    {
-        $response = Menu::getItem($id);
-        return response()->json($response);
-    }
+            $data['permission'] = [];
+            $data['rows'] = config('vaahcms.per_page');
 
-    //----------------------------------------------------------
-    public function getMenuItems(Request $request, $id)
-    {
-        $response = Menu::getMenuItems($id);
-        return response()->json($response);
+            $data['fillable']['except'] = [
+                'uuid',
+                'created_by',
+                'updated_by',
+                'deleted_by',
+            ];
+
+            $model = new Menu();
+            $fillable = $model->getFillable();
+            $data['fillable']['columns'] = array_diff(
+                $fillable, $data['fillable']['except']
+            );
+
+            foreach ($fillable as $column) {
+                $data['empty_item'][$column] = null;
+            }
+
+            $data['actions'] = [];
+
+            $response['success'] = true;
+            $response['data'] = $data;
+
+        } catch (\Exception $e) {
+            $response = [];
+            $response['success'] = false;
+            if (env('APP_DEBUG')) {
+                $response['errors'][] = $e->getMessage();
+                $response['hint'] = $e->getTrace();
+            } else {
+                $response['errors'][] = 'Something went wrong.';
+            }
+        }
+
+        return $response;
     }
     //----------------------------------------------------------
     public function postStore(Request $request, $id)
@@ -65,6 +73,51 @@ class MenusController extends Controller
         return response()->json($response);
     }
 
+    //----------------------------------------------------------
+    public function getList(Request $request)
+    {
+        return Menu::getList($request);
+    }
+    //----------------------------------------------------------
+    public function updateList(Request $request)
+    {
+        return Menu::updateList($request);
+    }
+    //----------------------------------------------------------
+    public function listAction(Request $request, $type)
+    {
+        return Menu::listAction($request, $type);
+    }
+    //----------------------------------------------------------
+    public function deleteList(Request $request)
+    {
+        return Menu::deleteList($request);
+    }
+    //----------------------------------------------------------
+    public function createItem(Request $request)
+    {
+        return Menu::createItem($request);
+    }
+    //----------------------------------------------------------
+    public function getItem(Request $request, $id)
+    {
+        return Menu::getItem($id);
+    }
+    //----------------------------------------------------------
+    public function updateItem(Request $request,$id)
+    {
+        return Menu::updateItem($request,$id);
+    }
+    //----------------------------------------------------------
+    public function deleteItem(Request $request,$id)
+    {
+        return Menu::deleteItem($request,$id);
+    }
+    //----------------------------------------------------------
+    public function itemAction(Request $request,$id,$action)
+    {
+        return Menu::itemAction($request,$id,$action);
+    }
     //----------------------------------------------------------
 
     //----------------------------------------------------------
@@ -78,14 +131,14 @@ class MenusController extends Controller
         if ( $validator->fails() ) {
 
             $errors             = errorsToArray($validator->errors());
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['errors'] = $errors;
             return response()->json($response);
         }
 
         $response = [];
 
-        $response['status'] = 'success';
+        $response['success'] = true;
 
         $inputs = $request->all();
 
@@ -128,7 +181,6 @@ class MenusController extends Controller
         return response()->json($response);
 
     }
-
     //----------------------------------------------------------
     public function getContentList(Request $request)
     {
@@ -145,17 +197,21 @@ class MenusController extends Controller
 
         $list = $list->take(10)->get();
 
-        $data = [];
 
-        $data['list'] = $list;
-
-        $response['status'] = 'success';
-        $response['data'] = $data;
+        $response['success'] = true;
+        $response['data'] = $list;
 
         return response()->json($response);
 
     }
-    //----------------------------------------------------------
 
+
+
+    //----------------------------------------------------------
+    public function getMenuItems(Request $request, $id)
+    {
+        $response = Menu::getMenuItems($id);
+        return response()->json($response);
+    }
 
 }

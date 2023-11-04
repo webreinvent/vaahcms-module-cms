@@ -29,3 +29,5 @@ Route::group(
         Route::any( '/contents/{singular_slug}/{content_slug}', 'ContentsController@getContentItem' );
         //------------------------------------------------
     });
+
+include('api/api-routes-menus.php');

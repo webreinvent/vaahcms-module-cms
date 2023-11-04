@@ -5,7 +5,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use VaahCms\Modules\Cms\Entities\Content;
 use VaahCms\Modules\Cms\Entities\ContentFormField;
-use VaahCms\Modules\Cms\Entities\ContentType;
+use VaahCms\Modules\Cms\Entities\ContentTypeBase;
 
 class ContentsController extends Controller
 {
@@ -20,7 +20,7 @@ class ContentsController extends Controller
     public static function getContentList(Request $request, $plural_slug)
     {
 
-        $content_type = ContentType::where('plural_slug', $plural_slug)->first();
+        $content_type = ContentTypeBase::where('plural_slug', $plural_slug)->first();
 
         if(!$content_type)
         {
@@ -162,7 +162,7 @@ class ContentsController extends Controller
     public static function getContentItem(Request $request, $singular_slug, $content_slug)
     {
 
-        $content_type = ContentType::where('singular_slug', $singular_slug)->first();
+        $content_type = ContentTypeBase::where('singular_slug', $singular_slug)->first();
 
         if(!$content_type)
         {

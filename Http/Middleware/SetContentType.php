@@ -2,8 +2,8 @@
 
 use Closure;
 use Illuminate\Http\Request;
-use VaahCms\Modules\Cms\Entities\Content;
-use VaahCms\Modules\Cms\Entities\ContentType;
+use VaahCms\Modules\Cms\Models\Content;
+use VaahCms\Modules\Cms\Models\ContentTypeBase;
 
 class SetContentType
 {
@@ -16,7 +16,7 @@ class SetContentType
      */
     public function handle(Request $request, Closure $next)
     {
-        $content = ContentType::where('slug', $request->content_type_slug)->first();
+        $content = ContentTypeBase::where('slug', $request->content_type_slug)->first();
 
         //for controller
         $request->content_type = $content;

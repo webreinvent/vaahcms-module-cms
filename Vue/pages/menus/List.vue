@@ -1,99 +1,150 @@
-<script src="./ListJs.js"></script>
+<script setup>
+import {onMounted, reactive, ref} from "vue";
+import {useRoute} from 'vue-router';
+
+import {useMenuStore} from '../../stores/store-menus'
+import VhField from './../../vaahvue/vue-three/primeflex/VhField.vue'
+
+const store = useMenuStore();
+const route = useRoute();
+
+import { useConfirm } from "primevue/useconfirm";
+const confirm = useConfirm();
+
+
+onMounted(async () => {
+
+    document.title = 'Menus - CMS';
+    /**
+     * call onLoad action when List view loads
+     */
+    await store.onLoad(route);
+
+    /**
+     * watch routes to update view, column width
+     * and get new item when routes get changed
+     */
+    await store.watchRoutes(route);
+
+    /**
+     * watch states like `query.filter` to
+     * call specific actions if a state gets
+     * changed
+     */
+    await store.watchStates();
+
+    /**
+     * fetch assets required for the crud
+     * operation
+     */
+    await store.getAssets();
+
+    /**
+     * fetch list of records
+     */
+    await store.getList();
+});
+
+</script>
 <template>
-    <div v-if="assets" class="columns">
 
-        <div class="column is-3">
-            <div class="card">
+    <div class="grid" v-if="store.assets">
 
+        <div class="col-3">
+            <Panel class="is-small">
 
-                <!--header-->
-                <header class="card-header">
+                <template class="p-1" #header>
 
-                    <div class="card-header-title">
-                        <span>Choose Menu</span>
+                    <div class="flex flex-row">
+                        <div >
+                            <b class="mr-1">Choose Menu</b>
+                        </div>
+
+                    </div>
+
+                </template>
+
+                <div class="mb-2">
+
+                    <h5>Theme</h5>
+                    <Dropdown v-model="store.query.vh_theme_id"
+                              :options="store.assets.themes"
+                              optionLabel="name" optionValue="id"
+                              data-testid="menus-theme"
+                              class="w-full is-small"
+                              @change="store.setActiveTheme"
+                              placeholder="Select a Theme" >
+                    </Dropdown>
+                </div>
+
+                <div class="mb-2" v-if="store.active_theme">
+
+                    <h5>Location</h5>
+
+                    <div class="p-inputgroup">
+                        <Dropdown v-model="store.query.vh_theme_location_id"
+                                  :options="store.active_theme.locations"
+                                  optionLabel="name" optionValue="id"
+                                  @change="store.setActiveLocation"
+                                  data-testid="menus-item_location"
+                                  placeholder="Select a Location"
+                                  class="is-small">
+                        </Dropdown>
+                        <Button :disabled="!store.query.vh_theme_location_id
+                                || !store.active_theme.locations"
+                                @click="store.copyLocationCode"
+                                v-tooltip.top="'Copy Code'"
+                                data-testid="menus-item_location_copy"
+                                icon="pi pi-copy"
+                                class="p-button-sm">
+                        </Button>
                     </div>
 
 
-                </header>
-                <!--/header-->
+                </div>
 
-                <!--content-->
-                <div class="card-content" >
+                <div class="mb-2" v-if="store.query.vh_theme_id && store.active_location
+                && store.active_location.menus.length > 0">
 
-                    <b-field label="Themes"
-                             :label-position="labelPosition">
-                        <b-select v-model="page.query_string.vh_theme_id"
-                                  expanded
-                                  @input="setActiveTheme">
-                            <option value="">Select a Theme</option>
-                            <option v-if="assets.themes"
-                                    v-for="(theme, index) in assets.themes"
-                                    :value="theme.id"
-                            >{{theme.name}}</option>
-                        </b-select>
-                    </b-field>
+                    <h5>Menu</h5>
+                    <Dropdown v-model="store.query.vh_menu_id"
+                              :options="store.active_location.menus"
+                              optionLabel="name" optionValue="id"
+                              class="w-full is-small"
+                              data-testid="menus-menu_item"
+                              @change="store.setActiveMenu"
+                              placeholder="Select a Theme" >
+                    </Dropdown>
+                </div>
 
-                    <b-field label="Locations"
-                             v-if="page.active_theme"
-                             :label-position="labelPosition">
-                        <b-select v-model="page.query_string.vh_theme_location_id"
-                                  expanded
-                                  @input="setActiveLocation">
-                            <option value="">Select a Location</option>
-                            <option v-for="(location, index) in page.active_theme.locations"
-                                    :value="location.id"
-                            >{{location.name}}</option>
-                        </b-select>
-                        <b-tooltip :active="!!page.query_string.vh_theme_location_id"
-                                   label="Copy Code" type="is-dark">
-                            <p class="control">
-                                <b-button icon-left="copy"
-                                          :disabled="!page.query_string.vh_theme_location_id"
-                                          class="button"
-                                          @click="copyCode(
-                                          page.active_theme.locations,
-                                          page.query_string.vh_theme_location_id
-                                          )">
-                                </b-button>
-                            </p>
-                        </b-tooltip>
-                    </b-field>
 
-                    <b-field label="Menus"
-                             v-if="page.query_string.vh_theme_id && page.active_location && page.active_location.menus.length > 0"
-                             :label-position="labelPosition">
-                        <b-select v-model="page.query_string.vh_menu_id"
-                                  expanded
-                                  @input="setActiveMenu">
-                            <option value="">Select a Menu</option>
-                            <option v-for="(menu, index) in page.active_location.menus"
-                                    :value="menu.id"
-                            >{{menu.name}}</option>
-                        </b-select>
-                    </b-field>
+                <div class="mb-2" v-if="store.active_theme && store.active_location">
 
-                    <b-field label="Create New Menu"
-                             v-if="page.active_theme && page.active_location"
-                             :label-position="labelPosition">
-                        <b-input v-model="page.new_item.name"
-                                 expanded>
-                        </b-input>
-                        <p class="control">
-                            <b-button @click="create">Create</b-button>
-                        </p>
-                    </b-field>
+                    <h5>Create New Menu</h5>
+
+                    <div class="p-inputgroup">
+                        <InputText type="text"
+                                   class="p-inputtext-sm"
+                                   data-testid="menus-create_menu_item"
+                                   v-model="store.new_item.name" >
+                        </InputText>
+                        <Button @click="store.createItem"
+                                class="p-button-sm"
+                                data-testid="menus-save_menu_item"
+                                label="Create">
+                        </Button>
+                    </div>
+
 
                 </div>
-                <!--/content-->
-            </div>
-        </div>
-        <div class="column ">
 
-            <router-view></router-view>
 
+            </Panel>
         </div>
+
+        <RouterView/>
 
     </div>
+
+
 </template>
-
-

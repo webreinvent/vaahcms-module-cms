@@ -3,8 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use VaahCms\Modules\Cms\Entities\ContentType;
-use WebReinvent\VaahCms\Entities\TaxonomyType;
+use VaahCms\Modules\Cms\Models\ContentTypeBase;
+use WebReinvent\VaahCms\Models\TaxonomyType;
 
 class ExtendController extends Controller
 {
@@ -24,7 +24,7 @@ class ExtendController extends Controller
 
         ];
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data'] = $links;
 
         return $response;
@@ -37,7 +37,7 @@ class ExtendController extends Controller
         $list = [
             [
                 "name" => "Taxonomy",
-                "namespace" => "WebReinvent\\VaahCms\\Entities\\Taxonomy",
+                "namespace" => "WebReinvent\\VaahCms\\Models\\Taxonomy",
                 "options" => TaxonomyType::getListInTreeFormat(),
                 "filter_by" => 'vh_taxonomy_type_id',
                 "add_url" => route('vh.backend')."#/vaah/manage/taxonomies/create",
@@ -59,7 +59,7 @@ class ExtendController extends Controller
             ]
         ];
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data'] = $list;
 
         return $response;
@@ -71,7 +71,7 @@ class ExtendController extends Controller
     {
         $links = [];
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data'] = $links;
 
         return $response;
@@ -82,41 +82,39 @@ class ExtendController extends Controller
     {
 
         $list[0] = [
-            'link' => '#',
-            'icon'=> 'file-alt',
+            'icon'=> 'pi pi-copy',
             'label'=> 'CMS',
-            'child' => [
+            'items' => [
                 [
                     'link' => self::$link."content-types/",
-                    'icon' => 'paste',
+                    'icon' => 'pi pi-book ',
                     'label'=> 'Content Types'
                 ],
                 [
                     'link' => self::$link."menus/",
-                    'icon' => 'bars',
+                    'icon' => 'pi pi-bars',
                     'label'=> 'Menus'
                 ],
                 [
                     'link' => self::$link."blocks/",
-                    'icon' => 'th-large',
+                    'icon' => 'pi pi-th-large',
                     'label'=> 'Blocks'
                 ],
                 [
-                    'link' => '#',
-                    'icon'=> 'file',
+                    'icon'=> 'pi pi-file',
                     'label'=> 'Content',
-                    'child' => []
-                ]
+                    'items' => []
+                ],
             ]
         ];
 
-        $content_types = ContentType::isPublished()->get();
+        $content_types = ContentTypeBase::isPublished()->get();
 
         if($content_types->count() > 0)
         {
             foreach ($content_types as $content_type)
             {
-                $list[0]['child'][3]['child'][] =  [
+                $list[0]['items'][3]['items'][] =  [
                     'link' => self::$link."contents/".$content_type->slug."/list",
                     'label'=> $content_type->name
                 ];
@@ -124,7 +122,7 @@ class ExtendController extends Controller
         }
 
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data'] = $list;
 
         return $response;
@@ -138,17 +136,17 @@ class ExtendController extends Controller
         $data['next_steps'] = [
             [
                 'name' => 'View Pages',
-                'icon' => 'eye',
+                'icon' => 'pi-eye',
                 'link' => self::$link."contents/pages/list"
             ],
             [
                 'name' => 'Add Pages',
-                'icon' => 'plus',
+                'icon' => 'pi-plus',
                 'link' => self::$link."contents/pages/list/create"
             ],
             [
                 'name' => 'Add a Content Type',
-                'icon' => 'edit',
+                'icon' => 'pi-pencil',
                 'link' => self::$link."content-types/create"
             ]
         ];
@@ -157,23 +155,23 @@ class ExtendController extends Controller
         $data['actions'] = [
             [
                 'name' => 'Manage Menus',
-                'icon' => 'bars',
+                'icon' => 'pi-bars',
                 'link' => self::$link."menus/"
             ],
             [
                 'name' => 'Manage Blocks',
-                'icon' => 'th-large',
+                'icon' => 'pi-th-large',
                 'link' => self::$link."blocks/"
             ],
             [
                 'name' => 'Learn more about CMS',
-                'icon' => 'graduation-cap',
+                'icon' => 'pi-file',
                 'open_in_new_tab' => true,
                 'link' => "https://docs.vaah.dev/vaahcms/cms/introduction.html"
             ]
         ];
 
-        $response['status'] = 'success';
+        $response['success'] = true;
         $response['data'] = $data;
 
         return $response;

@@ -2,9 +2,10 @@
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use VaahCms\Modules\Cms\Entities\Content;
-use VaahCms\Modules\Cms\Entities\ContentType;
-use WebReinvent\VaahCms\Entities\ThemeTemplate;
+use VaahCms\Modules\Cms\Models\ContentType;
+use VaahCms\Modules\Cms\Models\ContentTypeBase;
+use VaahCms\Modules\Cms\Models\Content;
+use WebReinvent\VaahCms\Models\ThemeTemplate;
 use WebReinvent\VaahCms\Entities\User;
 
 class CmsSeeder{
@@ -26,7 +27,7 @@ class CmsSeeder{
 
         if(!$theme)
         {
-            $response['status'] = 'failed';
+            $response['success'] = false;
             $response['errors'][] = 'Theme does not exist';
             return $response;
         }
@@ -237,9 +238,8 @@ class CmsSeeder{
 
             $stored = ContentType::find($stored->id);
 
-
             //template groups
-            ContentType::syncWithFormGroups($stored, $content_type['groups']);
+            ContentTypeBase::syncWithFormGroups($stored, $content_type['groups']);
 
 
         }
@@ -265,7 +265,7 @@ class CmsSeeder{
             return false;
         }
 
-        $content_type = ContentType::where('slug', $content_type_slug)
+        $content_type = ContentTypeBase::where('slug', $content_type_slug)
             ->with(['groups.fields.type'])
             ->first()->toArray();
 
@@ -280,12 +280,14 @@ class CmsSeeder{
             $template = ThemeTemplate::where('vh_theme_id', $theme->id)
                 ->where('slug', $item['template_slug'])
                 ->with(['groups.fields.type'])
-                ->first()->toArray();
+                ->first();
 
             if(!$template)
             {
                 continue;
             }
+
+            $template = $template->toArray();
 
             if(!isset($item['slug']) || !$item['slug']){
                 $item['slug'] = Str::slug($item['name']);
@@ -599,8 +601,8 @@ class CmsSeeder{
         $data['twitter_image'] = self::fillFieldContent(
             'https://via.placeholder.com/150',200,
             'twitter:image','text',
-            'URL of image to use in the card. 
-                                Images must be less than 5MB in size. 
+            'URL of image to use in the card.
+                                Images must be less than 5MB in size.
                                 JPG, PNG, WEBP and GIF formats are supported.');
 
         $data['twitter_site'] = self::fillFieldContent(
@@ -630,8 +632,8 @@ class CmsSeeder{
         $data['og_image'] = self::fillFieldContent(
             'https://via.placeholder.com/150',200,
             'og:image','text',
-            'URL of image to use in the card. 
-                                Images must be less than 5MB in size. 
+            'URL of image to use in the card.
+                                Images must be less than 5MB in size.
                                 JPG, PNG, WEBP and GIF formats are supported.');
 
         $data['og_title'] = self::fillFieldContent(
