@@ -6,7 +6,6 @@ $settings = [
     "name"=> 'Cms',
     "slug"=> "cms",
     "title"=> "Cms",
-    "version"=> "2.0.0",
     "thumbnail"=> "https://placehold.jp/300x160.png",
     "excerpt"=> "Cms",
     "description"=> "Cms",

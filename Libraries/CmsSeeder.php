@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use VaahCms\Modules\Cms\Models\ContentType;
 use VaahCms\Modules\Cms\Models\ContentTypeBase;
 use VaahCms\Modules\Cms\Models\Content;
 use WebReinvent\VaahCms\Models\ThemeTemplate;
@@ -235,8 +236,7 @@ class CmsSeeder{
                 ->where('slug', $content_type['content']['slug'])
                 ->first();
 
-            $stored = ContentTypeBase::find($stored->id);
-
+            $stored = ContentType::find($stored->id);
 
             //template groups
             ContentTypeBase::syncWithFormGroups($stored, $content_type['groups']);
@@ -265,7 +265,7 @@ class CmsSeeder{
             return false;
         }
 
-        $content_type = ContentTypeBase::where('slug', $content_type_slug)
+        $content_type = ContentType::where('slug', $content_type_slug)
             ->with(['groups.fields.type'])
             ->first()->toArray();
 

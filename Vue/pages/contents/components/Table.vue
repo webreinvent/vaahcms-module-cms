@@ -96,6 +96,12 @@ const useVaah = vaah();
                     <div class="p-inputgroup ">
 
                         <Button class="p-button-tiny p-button-text"
+                                data-testid="contents-table-to-external-ink"
+                                v-tooltip.top="'View Content'"
+                                @click="store.toExternalLink(prop.data)"
+                                icon="pi pi-external-link" />
+
+                        <Button class="p-button-tiny p-button-text"
                                 data-testid="contents-table-to-view"
                                 v-tooltip.top="'View'"
                                 @click="store.toView(prop.data)"
