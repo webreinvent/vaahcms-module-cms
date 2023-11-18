@@ -47,6 +47,12 @@ class ContentTypesController extends Controller
                 $data['empty_item'][$column] = null;
             }
 
+            $data['empty_item']['content_statuses'] = [
+                'draft',
+                'published',
+                'protected',
+            ];
+
             $data['field_types'] = FieldType::select('id', 'name', 'slug', 'meta')
                 ->get();
 

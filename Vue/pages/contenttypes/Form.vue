@@ -12,13 +12,13 @@ const route = useRoute();
 const useVaah = vaah();
 
 onMounted(async () => {
+    store.enable_status_editing_indexes = [];
     if(route.params && route.params.id)
     {
         await store.getItem(route.params.id);
     }
 
     await store.watchItem();
-    store.getNewStatus();
 
     await store.getFormMenu();
 });
@@ -188,7 +188,7 @@ const toggleFormMenu = (event) => {
                                  v-model="store.item.is_commentable"/>
                 </VhField>
                 <draggable
-                    v-model="store.new_status"
+                    v-model="store.item.content_statuses"
                     class="dragArea list-group"
                     :group="{ name: 'content-types', pull: 'clone', put: false }"
                     @start="drag=true"
@@ -198,19 +198,17 @@ const toggleFormMenu = (event) => {
                         <div class="p-inputgroup mb-2">
                             <Button icon="pi pi-bars" class="p-button-sm p-button-secondary"/>
                             <InputText class="w-full p-inputtext-sm"
-                                       v-if="index == store.edit_status_index && !store.disable_status_editing"
                                        name="contenttypes-statuses_name"
                                        data-testid="contenttypes-statuses_name"
-                                       v-model="store.new_status[index]"/>
-                            <InputText class="w-full p-inputtext-sm"
-                                       v-else
-                                       name="contenttypes-statuses_name"
-                                       data-testid="contenttypes-statuses_name"
-                                       :disabled="true"
-                                       v-model="store.new_status[index]"/>
+                                       :disabled="!store.enable_status_editing_indexes.includes(index)"
+                                       v-model="store.item.content_statuses[index]"/>
                             <Button icon="pi pi-pencil"
                                     data-testid="contenttypes-statuses_name_edit"
                                     @click="store.toggleEditStatus(index)"
+                                    class="p-button-sm p-button-secondary"/>
+                            <Button icon="pi pi-times"
+                                    data-testid="contenttypes-statuses_name_edit"
+                                    @click="store.removeStatus(index)"
                                     class="p-button-sm p-button-secondary"/>
                         </div>
                     </template>
@@ -222,7 +220,7 @@ const toggleFormMenu = (event) => {
                                name="contenttypes-new_status"
                                data-testid="contenttypes-new_status"
                                v-model="store.new_status_item"
-                               @blur="store.addStatus"/>
+                               v-on:keyup.enter="store.addStatus"/>
                 </VhField>
 
             </div>
