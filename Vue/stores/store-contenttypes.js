@@ -39,6 +39,7 @@ export const useContentTypeStore = defineStore({
         list: null,
         item: null,
         fillable:null,
+        enable_status_editing_indexes:[],
         empty_query:empty_states.query,
         empty_action:empty_states.action,
         query: vaah().clone(empty_states.query),
@@ -64,11 +65,6 @@ export const useContentTypeStore = defineStore({
         list_bulk_menu: [],
         item_menu_list: [],
         item_menu_state: null,
-        new_status: [
-            'draft',
-            'published',
-            'protected',
-        ],
         new_status_item: null,
         edit_status_index: null,
         disable_status_editing: true,
@@ -437,7 +433,6 @@ export const useContentTypeStore = defineStore({
                 case 'create-and-new':
                 case 'create-and-close':
                 case 'create-and-clone':
-                    this.item.content_statuses = JSON.stringify(this.new_status);
                     options.method = 'POST';
                     options.params = item;
                     break;
@@ -449,7 +444,6 @@ export const useContentTypeStore = defineStore({
                 case 'save':
                 case 'save-and-close':
                 case 'save-and-clone':
-                    this.item.content_statuses = JSON.stringify(this.new_status);
                     options.method = 'PUT';
                     options.params = item;
                     ajax_url += '/'+item.id
@@ -905,28 +899,24 @@ export const useContentTypeStore = defineStore({
 
         },
         //---------------------------------------------------------------------
-        getNewStatus(){
-            if(this.item.id){
-                this.new_status = JSON.parse(this.item.content_statuses);
-            }
+        addStatus(){
+            this.item.content_statuses.push(this.new_status_item);
+            this.new_status_item = null;
         },
         //---------------------------------------------------------------------
-        addStatus(){
-            this.item.content_statuses = null;
-            this.new_status.push(this.new_status_item);
-            this.new_status_item = null;
+        removeStatus(index){
+            this.item.content_statuses.splice(index, 1);
         },
         //---------------------------------------------------------------------
         toggleEditStatus(status_index)
         {
-            this.edit_status_index = status_index;
-            if(this.disable_status_editing)
-            {
-                this.disable_status_editing = false;
-            } else
-            {
-                this.disable_status_editing = true;
+            if(this.enable_status_editing_indexes.includes(status_index)){
+                const index = this.enable_status_editing_indexes.indexOf(status_index);
+                this.enable_status_editing_indexes.splice(index, 1);
+            }else{
+                this.enable_status_editing_indexes.push(status_index);
             }
+
         },
         //---------------------------------------------------------------------
         async toContentStructure(item) {
