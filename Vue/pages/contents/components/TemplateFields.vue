@@ -56,11 +56,12 @@ const props = defineProps({
                 </div>
             </div>
 
-            <div class="card flex flex-column gap-2">
+            <div class="card">
                 <div v-if="group.fields.length > 0"
                      v-for="(field, f_index) in group.fields"
                      :key="f_index">
-                    <div >
+                    <div class="flex flex-column gap-1">
+                        <label class="font-medium line-height-1 text-xs">{{ field.name }}</label>
                         <div v-if="!field.content || typeof field.content === 'string'
                         || typeof field.content === 'number'
                         || store.assets.non_repeatable_fields.includes(field.type.slug)"

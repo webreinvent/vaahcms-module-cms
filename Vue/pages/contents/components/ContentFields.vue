@@ -62,8 +62,8 @@ const props = defineProps({
                      class="w-full"
                      v-for="(field, f_index) in group.fields"
                      :key="f_index">
-                    <div class="w-full flex flex-column gap-2">
-                        <label>{{ field.name }}</label>
+                    <div class="w-full flex flex-column gap-1">
+                        <label class="font-medium line-height-1 text-xs">{{ field.name }}</label>
                         <div v-if="!field.content || typeof field.content === 'string'
                         || typeof field.content === 'number'
                         || store.assets.non_repeatable_fields.includes(field.type.slug)"
