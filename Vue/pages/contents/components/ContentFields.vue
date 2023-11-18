@@ -65,7 +65,7 @@ const props = defineProps({
                     <div class="w-full flex flex-column gap-1">
                         <label class="font-medium line-height-1 text-xs">{{ field.name }}</label>
                         <div v-if="!field.content || typeof field.content === 'string'
-                        || typeof field.content === 'number'
+                        || typeof field.content === 'number' || typeof field.content === 'object'
                         || store.assets.non_repeatable_fields.includes(field.type.slug)"
                              class="flex justify-content-between align-items-start gap-3 w-full">
                             <div class="flex-grow-1">
