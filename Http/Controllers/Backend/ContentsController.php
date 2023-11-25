@@ -254,6 +254,40 @@ class ContentsController extends Controller
         }
     }
     //----------------------------------------------------------
+    public function getRelationsInTree(Request $request)
+    {
+        $input = $request->all();
+
+        $list = [];
+
+        $relation =  vh_content_relations_by_name($input['type']);
+
+        if(!isset($relation['display_column']) || !$relation['display_column']){
+            $relation['display_column'] = 'name';
+        }
+
+        $url = null;
+
+        if($relation && isset($relation['namespace'])){
+
+            $relation['filter_id'] = $input['filter_id'];
+
+            $list = Content::getListByVariables($relation);
+
+            if(isset($relation['add_url']) && $relation['add_url']){
+                $url = $relation['add_url'];
+            }
+        }
+
+
+        $response['success'] = true;
+        $response['data']['list'] = $list;
+        $response['data']['display_column'] = $relation['display_column'];
+        $response['data']['add_url'] = $url;
+
+        return $response;
+    }
+    //----------------------------------------------------------
 
 
 }

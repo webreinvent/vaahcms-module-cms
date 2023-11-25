@@ -891,7 +891,7 @@ class ContentBase extends Model {
                         if(!$field['content']){
                             $row_to_delete_ids = array_diff($relatable_ids, []);
                         }else{
-                            $row_to_delete_ids = array_diff($relatable_ids, $field['content']);
+                            $row_to_delete_ids = array_diff($relatable_ids, [$field['content']]);
                         }
 
                         if(count($row_to_delete_ids) > 0)
@@ -1330,7 +1330,7 @@ class ContentBase extends Model {
             $list->where($var['filter_by'],$var['filter_id']);
         }
 
-        $list = $list->get();
+        $list = $list->select('id','id as key', $var['display_column'].' as label')->get();
 
         return $list;
 

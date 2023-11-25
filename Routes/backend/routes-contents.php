@@ -36,6 +36,10 @@ function () {
     /**
      * Update List
      */
+
+    Route::post('/getRelationsInTree', 'ContentsController@getRelationsInTree')
+        ->name('backend.cms.contents.getRelationsInTree');
+    //---------------------------------------------------------
     Route::match(['put', 'patch'], '/', 'ContentsController@updateList')
         ->name('vh.backend.cms.contents.list.update');
     /**

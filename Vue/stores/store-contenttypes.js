@@ -993,6 +993,10 @@ export const useContentTypeStore = defineStore({
             return item;
         },
         //---------------------------------------------------------------------
+        async selectType(event,item) {
+            item.meta['filter_id'] = event.id;
+        },
+        //---------------------------------------------------------------------
     }
 });
 
