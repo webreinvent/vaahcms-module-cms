@@ -1,10 +1,10 @@
-<?php namespace VaahCms\Modules\cms\Http\Controllers\Backend;
+<?php namespace VaahCms\Modules\Cms\Http\Controllers\Backend;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use VaahCms\Modules\Cms\Models\Content;
 use VaahCms\Modules\Cms\Models\FieldType;
-use VaahCms\Modules\cms\Models\ContentType;
+use VaahCms\Modules\Cms\Models\ContentType;
 
 
 class ContentTypesController extends Controller
