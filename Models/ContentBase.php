@@ -891,7 +891,7 @@ class ContentBase extends Model {
                         if(!$field['content']){
                             $row_to_delete_ids = array_diff($relatable_ids, []);
                         }else{
-                            $row_to_delete_ids = array_diff($relatable_ids, [$field['content']]);
+                            $row_to_delete_ids = array_diff($relatable_ids, $field['content']);
                         }
 
                         if(count($row_to_delete_ids) > 0)
