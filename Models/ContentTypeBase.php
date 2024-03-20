@@ -99,7 +99,7 @@ class ContentTypeBase extends Model {
         {
             return json_decode($value);
         }
-        return null;
+        return [];
     }
     //-------------------------------------------------
     public function setMetaAttribute($value)

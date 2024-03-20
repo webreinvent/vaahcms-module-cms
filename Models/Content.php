@@ -364,15 +364,15 @@ class Content extends ContentBase
     {
         switch($type)
         {
-            case 'activate':
+            case 'published':
                 self::where('id', $id)
                     ->withTrashed()
-                    ->update(['status' => 1]);
+                    ->update(['status' => 'published']);
                 break;
-            case 'deactivate':
+            case 'draft':
                 self::where('id', $id)
                     ->withTrashed()
-                    ->update(['status' => null]);
+                    ->update(['status' => 'draft']);
                 break;
             case 'trash':
                 self::find($id)->delete();

@@ -237,7 +237,7 @@ class ContentsController extends Controller
         }
     }
     //----------------------------------------------------------
-    public function itemAction(Request $request,$id,$action)
+    public function itemAction(Request $request,$content_type_slug,$id,$action)
     {
         try{
             return Content::itemAction($request,$id,$action);
