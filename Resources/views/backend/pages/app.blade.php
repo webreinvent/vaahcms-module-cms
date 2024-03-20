@@ -6,6 +6,8 @@
     <!--CSS Support for PrimeVue-->
     <link href="{{vh_get_backend_assets_url()}}/build/vaahtwo.css" rel="stylesheet" media="screen">
 
+    <link href="{{vh_module_assets_url("Cms", "build/index.css")}}" rel="stylesheet" media="screen">
+
 @endsection
 
 

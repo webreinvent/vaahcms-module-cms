@@ -267,13 +267,14 @@ class CmsSeeder{
 
         $content_type = ContentType::where('slug', $content_type_slug)
             ->with(['groups.fields.type'])
-            ->first()->toArray();
+            ->first();
 
         if(!$content_type)
         {
             return false;
         }
 
+        $content_type = $content_type->toArray();
 
         foreach($list as $item)
         {

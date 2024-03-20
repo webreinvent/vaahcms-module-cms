@@ -1330,7 +1330,7 @@ class ContentBase extends Model {
             $list->where($var['filter_by'],$var['filter_id']);
         }
 
-        $list = $list->get();
+        $list = $list->select('id','id as key', $var['display_column'].' as label')->get();
 
         return $list;
 

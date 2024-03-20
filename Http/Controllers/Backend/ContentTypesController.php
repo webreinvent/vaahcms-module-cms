@@ -1,10 +1,11 @@
-<?php namespace VaahCms\Modules\cms\Http\Controllers\Backend;
+<?php namespace VaahCms\Modules\Cms\Http\Controllers\Backend;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use VaahCms\Modules\Cms\Models\Content;
 use VaahCms\Modules\Cms\Models\FieldType;
-use VaahCms\Modules\cms\Models\ContentType;
+use VaahCms\Modules\Cms\Models\ContentType;
+use WebReinvent\VaahCms\Models\TaxonomyType;
 
 
 class ContentTypesController extends Controller
@@ -47,8 +48,20 @@ class ContentTypesController extends Controller
                 $data['empty_item'][$column] = null;
             }
 
+            $data['empty_item']['content_statuses'] = [
+                'draft',
+                'published',
+                'protected',
+            ];
+
             $data['field_types'] = FieldType::select('id', 'name', 'slug', 'meta')
                 ->get();
+
+            $data['content_relations'] = vh_content_relations();
+
+            $data['taxonomy_types'] = TaxonomyType::whereNotNull('is_active')
+                ->whereNull('parent_id')->with(['children'])
+                ->select('id', 'name', 'slug')->get();
 
             $data['non_repeatable_fields'] = Content::getNonRepeatableFields();
 

@@ -77,12 +77,7 @@ const useVaah = vaah();
                     header="Status">
 
                 <template #body="prop">
-                    <InputSwitch v-model.bool="prop.data.status"
-                                 data-testid="contents-table-status"
-                                 v-bind:false-value="0"  v-bind:true-value="1"
-                                 class="p-inputswitch-sm"
-                                 @input="store.toggleIsActive(prop.data)">
-                    </InputSwitch>
+                    {{useVaah.toLabel(prop.data.status)}}
                 </template>
 
             </Column>

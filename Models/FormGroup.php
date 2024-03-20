@@ -224,7 +224,7 @@ class FormGroup extends Model {
 
                         if($stored_field){
 
-                            if($stored_field->meta && isset($stored_field->meta->type)
+                            if(isset($field['id']) && $stored_field->meta && isset($stored_field->meta->type)
                                 && $field['meta']['type'] != $stored_field->meta->type){
                                 $content_form_fields = ContentFormField::with(['contentFormRelations'])
                                     ->where('vh_cms_form_field_id', $field['id'])->get();

@@ -180,13 +180,13 @@ const onSelectType = (field,data,group_index,field_index) => {
                                                         </td>
                                                     </tr>
 
-                                                    <template v-if="element.meta">
-                                                        <tr v-for="(meta_item, meta_index) in element.meta"
-                                                            v-if="(meta_index !== 'container_opening_tag'
+                                                    <template v-if="element.meta" v-for="(meta_item, meta_index) in element.meta">
+                                                        <tr
+                                                            v-if="meta_index !== 'filter' && ((meta_index !== 'container_opening_tag'
                                                                     && meta_index !== 'container_closing_tag')
                                                                     || (store && store.assets && store.assets.non_repeatable_fields
                                                                      && store.assets.non_repeatable_fields.includes(element.type.slug))
-                                                                    || element.is_repeatable"
+                                                                    || element.is_repeatable)"
                                                         >
                                                             <td v-if="meta_index !== 'filter_id'
                                                                 && meta_index !== 'display_column'
@@ -228,8 +228,23 @@ const onSelectType = (field,data,group_index,field_index) => {
                                                                     <Dropdown v-model="element.meta[meta_index]"
                                                                               :options="store.assets.content_relations"
                                                                               optionLabel="name"
+                                                                              optionValue="name"
                                                                               placeholder="Select"
                                                                               class="w-full md:w-14rem mt-3"
+                                                                    />
+
+                                                                    <TreeSelect  v-if="element.meta[meta_index]
+                                                                        && useVaah.findInArrayByKey(
+                                                                        store.assets.content_relations,'name', element.meta[meta_index])
+                                                                        && useVaah.findInArrayByKey(
+                                                                        store.assets.content_relations,'name', element.meta[meta_index])['options']"
+                                                                                 class="w-full"
+                                                                                v-model="element.meta['filter']"
+                                                                                 :metaKeySelection="false"
+                                                                                 @node-select="store.selectType($event,element)"
+                                                                                :options="useVaah.findInArrayByKey(
+                                                                        store.assets.content_relations,'name', element.meta[meta_index])['options']"
+                                                                                placeholder="Select..."
                                                                     />
                                                                 </template>
 

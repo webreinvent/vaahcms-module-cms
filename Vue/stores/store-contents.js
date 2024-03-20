@@ -69,7 +69,7 @@ export const useContentStore = defineStore({
         users:null,
         user_list:null,
         active_theme:null,
-        active_index:[],
+        active_index:[0],
         field: {
             is_simple:true,
             type:{
