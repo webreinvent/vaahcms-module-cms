@@ -1081,10 +1081,13 @@ export const useMenuStore = defineStore({
             );
         },
         //---------------------------------------------------------------------
-        deleteItemAfter (data, res) {
+        async deleteItemAfter (data, res) {
             if(data){
                 this.query.vh_menu_id = null;
-                this.toList();
+                this.assets_is_fetching = true;
+                await this.toList();
+                await this.getAssets();
+
 
             }
 

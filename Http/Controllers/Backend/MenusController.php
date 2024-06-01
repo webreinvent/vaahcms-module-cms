@@ -121,66 +121,6 @@ class MenusController extends Controller
     //----------------------------------------------------------
 
     //----------------------------------------------------------
-    public function postActions(Request $request, $action)
-    {
-        $rules = array(
-            'inputs' => 'required',
-        );
-
-        $validator = \Validator::make( $request->all(), $rules);
-        if ( $validator->fails() ) {
-
-            $errors             = errorsToArray($validator->errors());
-            $response['success'] = false;
-            $response['errors'] = $errors;
-            return response()->json($response);
-        }
-
-        $response = [];
-
-        $response['success'] = true;
-
-        $inputs = $request->all();
-
-        switch ($action)
-        {
-
-            //------------------------------------
-            case 'bulk-change-status':
-                $response = Menu::bulkStatusChange($request);
-                break;
-            //------------------------------------
-            case 'bulk-trash':
-
-                $response = Menu::bulkTrash($request);
-
-                break;
-            //------------------------------------
-            case 'bulk-restore':
-
-                $response = Menu::bulkRestore($request);
-
-                break;
-
-            //------------------------------------
-            case 'bulk-delete':
-
-                $response = Menu::bulkDelete($request);
-
-                break;
-
-            //------------------------------------
-            case 'set-as-home-page':
-
-                $response = Menu::setAsHomePage($request);
-
-                break;
-            //------------------------------------
-        }
-
-        return response()->json($response);
-
-    }
     //----------------------------------------------------------
     public function getContentList(Request $request)
     {

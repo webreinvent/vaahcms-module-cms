@@ -116,7 +116,7 @@ class Menu extends MenuBase
 
 
         $item = static::getItem($item->id);
-        
+
         $response['success'] = true;
         $response['data']['item'] =$item['data'];
         $response['messages'][] = 'Saved successfully.';
@@ -326,7 +326,13 @@ class Menu extends MenuBase
         switch ($type) {
             case 'delete':
                 if(isset($inputs['inputs']) && count($inputs['inputs']) > 0) {
-                    self::whereIn('id', $inputs['inputs'])->forceDelete();
+
+                    foreach ($inputs['inputs'] as $id){
+                        MenuItem::where('vh_menu_id', $id)->withTrashed()->forceDelete();
+
+                        self::where('id',$id)->withTrashed()->forceDelete();
+                    }
+
                 }
                 break;
             case 'delete-all':
