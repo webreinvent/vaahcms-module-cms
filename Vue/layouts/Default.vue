@@ -16,7 +16,10 @@ onMounted(async () => {
 
 
 <template>
-    <div class="pb-3 pt-2"><Topnav/></div>
-    <RouterView />
+    <div>
+        <div class="pb-3 pt-2"><Topnav/></div>
+        <RouterView />
+
+    </div>
 
 </template>

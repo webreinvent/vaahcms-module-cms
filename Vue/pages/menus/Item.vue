@@ -11,6 +11,10 @@ import NestedDraggable from './components/NestedDraggable.vue'
 const store = useMenuStore();
 const route = useRoute();
 
+defineOptions({
+    inheritAttrs: false
+})
+
 onMounted(async () => {
 
     /**
