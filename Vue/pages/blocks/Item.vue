@@ -8,7 +8,9 @@ import VhViewRow from '../../vaahvue/vue-three/primeflex/VhViewRow.vue';
 
 const store = useBlockStore();
 const route = useRoute();
-
+defineOptions({
+    inheritAttrs: false
+})
 onMounted(async () => {
 
     /**

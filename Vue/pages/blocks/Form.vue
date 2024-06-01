@@ -12,7 +12,9 @@ import { JoditEditor } from 'jodit-vue'
 
 const store = useBlockStore();
 const route = useRoute();
-
+defineOptions({
+    inheritAttrs: false
+})
 onMounted(async () => {
     if(route.params && route.params.id)
     {

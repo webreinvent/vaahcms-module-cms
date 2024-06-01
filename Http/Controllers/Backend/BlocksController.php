@@ -53,6 +53,8 @@ class BlocksController extends Controller
             $data['empty_item'][$column] = null;
         }
 
+        $data['empty_item']['content'] = '';
+
         $data['actions'] = [];
 
         $response['success'] = true;
