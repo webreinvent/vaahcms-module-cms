@@ -1173,7 +1173,7 @@ export const useMenuStore = defineStore({
             };
 
             vaah().ajax(
-                this.ajax_url+'/actions/bulk-delete',
+                this.ajax_url+'/action/delete',
                 this.deleteItemAfter,
                 options
             );

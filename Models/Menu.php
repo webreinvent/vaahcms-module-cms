@@ -323,56 +323,14 @@ class Menu extends MenuBase
     //-------------------------------------------------
     public static function listAction($request, $type): array
     {
+
         $inputs = $request->all();
 
-        if(isset($inputs['items']))
-        {
-            $items_id = collect($inputs['items'])
-                ->pluck('id')
-                ->toArray();
-
-            $items = self::whereIn('id', $items_id)
-                ->withTrashed();
-        }
-
-
         switch ($type) {
-            case 'deactivate':
-                if($items->count() > 0) {
-                    $items->update(['is_active' => null]);
-                }
-                break;
-            case 'activate':
-                if($items->count() > 0) {
-                    $items->update(['is_active' => 1]);
-                }
-                break;
-            case 'trash':
-                if(isset($items_id) && count($items_id) > 0) {
-                    self::whereIn('id', $items_id)->delete();
-                }
-                break;
-            case 'restore':
-                if(isset($items_id) && count($items_id) > 0) {
-                    self::whereIn('id', $items_id)->restore();
-                }
-                break;
             case 'delete':
-                if(isset($items_id) && count($items_id) > 0) {
-                    self::whereIn('id', $items_id)->forceDelete();
+                if(isset($inputs['inputs']) && count($inputs['inputs']) > 0) {
+                    self::whereIn('id', $inputs['inputs'])->forceDelete();
                 }
-                break;
-            case 'activate-all':
-                self::query()->update(['is_active' => 1]);
-                break;
-            case 'deactivate-all':
-                self::query()->update(['is_active' => null]);
-                break;
-            case 'trash-all':
-                self::query()->delete();
-                break;
-            case 'restore-all':
-                self::withTrashed()->restore();
                 break;
             case 'delete-all':
                 self::withTrashed()->forceDelete();
