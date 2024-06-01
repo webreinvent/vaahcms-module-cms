@@ -116,12 +116,9 @@ class Menu extends MenuBase
 
 
         $item = static::getItem($item->id);
-
-        $menu = new MenusController();
-
+        
         $response['success'] = true;
         $response['data']['item'] =$item['data'];
-        $response['data']['assets'] = $menu->getAssets($request);
         $response['messages'][] = 'Saved successfully.';
 
         return $response;
