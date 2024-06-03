@@ -9,7 +9,9 @@ import {useRoute} from 'vue-router';
 
 const store = useContentStore();
 const route = useRoute();
-
+defineOptions({
+    inheritAttrs: false
+})
 onMounted(async () => {
     if(route.params && route.params.id)
     {

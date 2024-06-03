@@ -1,16 +1,11 @@
 <script setup>
-import {onMounted, reactive, ref} from "vue";
+import {onMounted} from "vue";
 import {useRoute} from 'vue-router';
 
 import {useMenuStore} from '../../stores/store-menus'
-import VhField from './../../vaahvue/vue-three/primeflex/VhField.vue'
 
 const store = useMenuStore();
 const route = useRoute();
-
-import { useConfirm } from "primevue/useconfirm";
-const confirm = useConfirm();
-
 
 onMounted(async () => {
 
@@ -20,18 +15,6 @@ onMounted(async () => {
      */
     await store.onLoad(route);
 
-    /**
-     * watch routes to update view, column width
-     * and get new item when routes get changed
-     */
-    await store.watchRoutes(route);
-
-    /**
-     * watch states like `query.filter` to
-     * call specific actions if a state gets
-     * changed
-     */
-    await store.watchStates();
 
     /**
      * fetch assets required for the crud
@@ -39,10 +22,6 @@ onMounted(async () => {
      */
     await store.getAssets();
 
-    /**
-     * fetch list of records
-     */
-    await store.getList();
 });
 
 </script>
