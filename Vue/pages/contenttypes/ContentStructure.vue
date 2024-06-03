@@ -9,7 +9,9 @@ import VhViewRow from '../../vaahvue/vue-three/primeflex/VhViewRow.vue';
 const store = useContentTypeStore();
 const route = useRoute();
 const useVaah = vaah();
-
+defineOptions({
+    inheritAttrs: false
+})
 onMounted(async () => {
 
     /**

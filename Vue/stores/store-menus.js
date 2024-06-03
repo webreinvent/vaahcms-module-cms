@@ -3,9 +3,6 @@ import {acceptHMRUpdate, defineStore} from 'pinia'
 import qs from 'qs'
 import {vaah} from '../vaahvue/pinia/vaah'
 
-let model_namespace = 'VaahCms\Modules\Cms\\Models\\Menu';
-
-
 let base_url = document.getElementsByTagName('base')[0].getAttribute("href");
 let ajax_url = base_url + "/cms/menus";
 
@@ -32,7 +29,6 @@ export const useMenuStore = defineStore({
     state: () => ({
         base_url: base_url,
         ajax_url: ajax_url,
-        model: model_namespace,
         assets_is_fetching: true,
         app: null,
         active_menu: null,
@@ -102,30 +98,10 @@ export const useMenuStore = defineStore({
             this.route = route;
 
             /**
-             * Update with view and list css column number
-             */
-            this.setViewAndWidth(route.name);
-
-            /**
              * Update query state with the query parameters of url
              */
             this.updateQueryFromUrl(route);
 
-        },
-        //---------------------------------------------------------------------
-        setViewAndWidth(route_name)
-        {
-            switch(route_name)
-            {
-                case 'menus.index':
-                    this.view = 'large';
-                    this.list_view_width = 12;
-                    break;
-                default:
-                    this.view = 'small';
-                    this.list_view_width = 6;
-                    break
-            }
         },
         //---------------------------------------------------------------------
         async updateQueryFromUrl(route)
@@ -146,31 +122,6 @@ export const useMenuStore = defineStore({
                     this.countFilters(route.query);
                 }
             }
-        },
-        //---------------------------------------------------------------------
-        watchRoutes(route)
-        {
-            //watch routes
-            watch(route.params, (newVal,oldVal) =>
-                {
-
-                    console.log(newVal , oldVal);
-                    /*this.route = newVal;
-                    if(newVal.params.id != oldVal.params.id){
-                        this.getItem(newVal.params.id);
-                    }
-                    this.setViewAndWidth(newVal.name);*/
-                }, { deep: true }
-            )
-        },
-        //---------------------------------------------------------------------
-        watchStates()
-        {
-            watch(this.query.filter, (newVal,oldVal) =>
-                {
-                    this.delayedSearch();
-                },{deep: true}
-            )
         },
         //---------------------------------------------------------------------
         watchItem()
@@ -216,42 +167,23 @@ export const useMenuStore = defineStore({
             }
         },
         //---------------------------------------------------------------------
-        setActiveItems()
+        async setActiveItems()
         {
             if(this.query.vh_theme_id){
-                this.active_theme = vaah().findInArrayByKey(this.assets.themes,
+                this.active_theme = await vaah().findInArrayByKey(this.assets.themes,
                     'id', this.query.vh_theme_id);
             }
 
             if(this.query.vh_theme_location_id){
 
-                this.active_location = vaah().findInArrayByKey(this.active_theme.locations,
+                this.active_location = await vaah().findInArrayByKey(this.active_theme.locations,
                     'id', this.query.vh_theme_location_id);
 
             }
 
-            this.setActiveMenu();
+            await this.setActiveMenu();
 
-            this.getContentList();
-        },
-        //---------------------------------------------------------------------
-        async getList() {
-            let options = {
-                query: vaah().clone(this.query)
-            };
-            await vaah().ajax(
-                this.ajax_url,
-                this.afterGetList,
-                options
-            );
-        },
-        //---------------------------------------------------------------------
-        afterGetList: function (data, res)
-        {
-            if(data)
-            {
-                this.list = data;
-            }
+            await this.getContentList();
         },
         //---------------------------------------------------------------------
 
@@ -500,36 +432,6 @@ export const useMenuStore = defineStore({
         {
             await this.getAssets();
             await this.getList();
-        },
-        //---------------------------------------------------------------------
-        async getFaker () {
-            let params = {
-                model_namespace: this.model,
-                except: this.assets.fillable.except,
-            };
-
-            let url = this.base_url+'/faker';
-
-            let options = {
-                params: params,
-                method: 'post',
-            };
-
-            await vaah().ajax(
-                url,
-                this.getFakerAfter,
-                options
-            );
-        },
-        //---------------------------------------------------------------------
-        getFakerAfter: function (data, res) {
-            if(data)
-            {
-                let self = this;
-                Object.keys(data.fill).forEach(function(key) {
-                    self.item[key] = data.fill[key];
-                });
-            }
         },
 
         //---------------------------------------------------------------------
@@ -977,18 +879,18 @@ export const useMenuStore = defineStore({
         },
 
         //---------------------------------------------------------------------
-        setActiveMenu: function () {
+        setActiveMenu: async function () {
 
             this.updateUrlQueryString(this.query);
 
             this.active_menu =  null;
 
             if(this.query.vh_menu_id){
-                this.active_menu = vaah().findInArrayByKey(this.active_location.menus,
+                this.active_menu = await vaah().findInArrayByKey(this.active_location.menus,
                     'id', this.query.vh_menu_id);
 
-                this.getItem(this.active_menu.id);
-                this.getMenuItems();
+                await this.getItem(this.active_menu.id);
+                await this.getMenuItems();
             }
 
         },
@@ -1038,15 +940,15 @@ export const useMenuStore = defineStore({
 
         },
         //---------------------------------------------------------------------
-        createItemAfter: function (data, res) {
+        createItemAfter: async function (data, res) {
 
             if(data){
                 this.new_item.name = null;
                 this.item = data.item;
                 this.query.vh_menu_id = data.item.id;
 
-                this.assets = data.assets.data;
-                this.setActiveItems();
+                this.assets_is_fetching = true;
+                await this.getAssets();
             }
 
         },
@@ -1173,16 +1075,19 @@ export const useMenuStore = defineStore({
             };
 
             vaah().ajax(
-                this.ajax_url+'/actions/bulk-delete',
+                this.ajax_url+'/action/delete',
                 this.deleteItemAfter,
                 options
             );
         },
         //---------------------------------------------------------------------
-        deleteItemAfter (data, res) {
+        async deleteItemAfter (data, res) {
             if(data){
                 this.query.vh_menu_id = null;
-                this.toList();
+                this.assets_is_fetching = true;
+                await this.toList();
+                await this.getAssets();
+
 
             }
 

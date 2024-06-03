@@ -7,7 +7,9 @@ import { useContentStore } from '../../stores/store-contents'
 import VhViewRow from '../../vaahvue/vue-three/primeflex/VhViewRow.vue';
 const store = useContentStore();
 const route = useRoute();
-
+defineOptions({
+    inheritAttrs: false
+})
 onMounted(async () => {
 
     /**

@@ -8,7 +8,9 @@ import { vaah } from "../../vaahvue/pinia/vaah";
 const store = useContentTypeStore();
 const route = useRoute();
 const useVaah = vaah();
-
+defineOptions({
+    inheritAttrs: false
+})
 onMounted(async () => {
 
     /**

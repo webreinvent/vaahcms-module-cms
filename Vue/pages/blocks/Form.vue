@@ -12,7 +12,9 @@ import { JoditEditor } from 'jodit-vue'
 
 const store = useBlockStore();
 const route = useRoute();
-
+defineOptions({
+    inheritAttrs: false
+})
 onMounted(async () => {
     if(route.params && route.params.id)
     {
@@ -54,7 +56,7 @@ const toggleFormMenu = (event) => {
             <div v-if="store.item" class="py-1">
                 <jodit-editor name="blocks-content"
                               data-testid="blocks-content"
-                              v-model="store.item.content" :buttons="buttons" />
+                              v-model="store.item.content" />
 
             </div>
         </Panel>
