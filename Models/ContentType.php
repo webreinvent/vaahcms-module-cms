@@ -56,7 +56,7 @@ class ContentType extends Model
     //-------------------------------------------------
     protected function serializeDate(DateTimeInterface $date)
     {
-        $date_time_format = config('settings.global.datetime_format');
+        $date_time_format = config('settings.global.datetime_format','Y-m-d H:i:s');
 
         return $date->format($date_time_format);
 
